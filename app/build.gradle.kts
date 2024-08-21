@@ -40,13 +40,13 @@ plugins {
 setupKover()
 
 android {
-    namespace = "io.element.android.x"
+    namespace = "fr.gouv.tchap.android.x"
 
     defaultConfig {
         applicationId = if (isEnterpriseBuild) {
             "io.element.enterprise"
         } else {
-            "io.element.android.x"
+            "fr.gouv.tchap.android.x"
         }
         targetSdk = Versions.targetSdk
         versionCode = Versions.versionCode
@@ -100,7 +100,7 @@ android {
     val baseAppName = if (isEnterpriseBuild) {
         "Element Enterprise"
     } else {
-        "Element X"
+        "Tchap X"
     }
     logger.warnInBox("Building $baseAppName")
 
