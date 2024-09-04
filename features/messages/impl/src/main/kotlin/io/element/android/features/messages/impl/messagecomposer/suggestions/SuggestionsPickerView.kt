@@ -45,6 +45,7 @@ import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.RoomMembershipState
+import io.element.android.libraries.matrix.api.room.getBestName
 import io.element.android.libraries.matrix.ui.components.aRoomSummaryDetails
 import io.element.android.libraries.matrix.ui.model.getAvatarData
 import io.element.android.libraries.textcomposer.mentions.ResolvedSuggestion
@@ -53,6 +54,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun SuggestionsPickerView(
+    isDebugBuild: Boolean,
     roomId: RoomId,
     roomName: String?,
     roomAvatarData: AvatarData?,
@@ -75,6 +77,7 @@ fun SuggestionsPickerView(
         ) {
             Column(modifier = Modifier.fillParentMaxWidth()) {
                 SuggestionItemView(
+                    isDebugBuild = isDebugBuild,
                     suggestion = it,
                     roomId = roomId.value,
                     roomName = roomName,
@@ -90,6 +93,7 @@ fun SuggestionsPickerView(
 
 @Composable
 private fun SuggestionItemView(
+    isDebugBuild: Boolean,
     suggestion: ResolvedSuggestion,
     roomId: String,
     roomName: String?,
@@ -109,12 +113,12 @@ private fun SuggestionItemView(
         }
         val title = when (suggestion) {
             is ResolvedSuggestion.AtRoom -> stringResource(R.string.screen_room_mentions_at_room_title)
-            is ResolvedSuggestion.Member -> suggestion.roomMember.displayName
+            is ResolvedSuggestion.Member -> suggestion.roomMember.getBestName() // TCHAP TODO should be applied in Element X
             is ResolvedSuggestion.Alias -> suggestion.roomSummary.name
         }
         val subtitle = when (suggestion) {
             is ResolvedSuggestion.AtRoom -> "@room"
-            is ResolvedSuggestion.Member -> suggestion.roomMember.userId.value
+            is ResolvedSuggestion.Member -> suggestion.roomMember.userId.value.takeIf { isDebugBuild } // TCHAP hide the Matrix Id in release mode
             is ResolvedSuggestion.Alias -> suggestion.roomAlias.value
         }
 
@@ -134,13 +138,15 @@ private fun SuggestionItemView(
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-            Text(
-                text = subtitle,
-                style = ElementTheme.typography.fontBodySmRegular,
-                color = ElementTheme.colors.textSecondary,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            subtitle?.let {
+                Text(
+                    text = subtitle,
+                    style = ElementTheme.typography.fontBodySmRegular,
+                    color = ElementTheme.colors.textSecondary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
     }
 }
@@ -167,6 +173,7 @@ internal fun SuggestionsPickerViewPreview() {
             )
         }
         SuggestionsPickerView(
+            isDebugBuild = false,
             roomId = RoomId("!room:matrix.org"),
             roomName = "Room",
             roomAvatarData = null,
