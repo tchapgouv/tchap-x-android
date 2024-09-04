@@ -29,6 +29,7 @@ internal fun aRoomsContentState(
     summaries: ImmutableList<RoomListRoomSummary> = aRoomListRoomSummaryList(),
     fullScreenIntentPermissionsState: FullScreenIntentPermissionsState = aFullScreenIntentPermissionsState(),
 ) = RoomListContentState.Rooms(
+    isDebugBuild = false,
     securityBannerState = securityBannerState,
     fullScreenIntentPermissionsState = fullScreenIntentPermissionsState,
     summaries = summaries,

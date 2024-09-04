@@ -1057,9 +1057,9 @@ class MessagesPresenterTest {
             }
         }
         val featureFlagService = FakeFeatureFlagService()
-        val readReceiptBottomSheetPresenter = ReadReceiptBottomSheetPresenter()
+        val readReceiptBottomSheetPresenter = ReadReceiptBottomSheetPresenter(buildMeta = aBuildMeta())
         val customReactionPresenter = CustomReactionPresenter(emojibaseProvider = FakeEmojibaseProvider())
-        val reactionSummaryPresenter = ReactionSummaryPresenter(room = matrixRoom)
+        val reactionSummaryPresenter = ReactionSummaryPresenter(buildMeta = aBuildMeta(), room = matrixRoom)
         return MessagesPresenter(
             room = matrixRoom,
             composerPresenter = messageComposerPresenter,
