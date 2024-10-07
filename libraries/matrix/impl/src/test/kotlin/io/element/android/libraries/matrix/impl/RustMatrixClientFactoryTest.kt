@@ -50,7 +50,7 @@ fun TestScope.createRustMatrixClientFactory(
     userCertificatesProvider = FakeUserCertificatesProvider(),
     proxyProvider = FakeProxyProvider(),
     clock = FakeSystemClock(),
-    utdTracker = UtdTracker(FakeAnalyticsService()),
+    analyticsService = FakeAnalyticsService(),
     featureFlagService = FakeFeatureFlagService(),
     timelineEventTypeFilterFactory = FakeTimelineEventTypeFilterFactory(),
     clientBuilderProvider = FakeClientBuilderProvider(),

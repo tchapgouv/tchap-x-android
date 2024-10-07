@@ -113,7 +113,7 @@ private fun SettingsCategory(
 private fun ElementCallCategory(
     state: DeveloperSettingsState,
 ) {
-    PreferenceCategory(title = "Element Call", showTopDivider = true) {
+    PreferenceCategory(title = "Tchap Call", showTopDivider = true) {
         val callUrlState = state.customElementCallBaseUrlState
         fun isUsingDefaultUrl(value: String?): Boolean {
             return value.isNullOrEmpty() || value == callUrlState.defaultUrl
