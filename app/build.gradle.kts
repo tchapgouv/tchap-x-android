@@ -40,7 +40,7 @@ plugins {
 setupKover()
 
 android {
-    namespace = "fr.gouv.tchap.android.x"
+    namespace = "io.element.android.x"
 
     defaultConfig {
         applicationId = if (isEnterpriseBuild) {
