@@ -16,6 +16,7 @@ import io.element.android.libraries.matrix.api.core.SessionId
 import io.element.android.libraries.matrix.api.core.TransactionId
 import io.element.android.libraries.matrix.api.core.UniqueId
 import io.element.android.libraries.matrix.api.core.UserId
+import io.element.android.libraries.matrix.api.encryption.identity.IdentityStateChange
 import io.element.android.libraries.matrix.api.media.AudioInfo
 import io.element.android.libraries.matrix.api.media.FileInfo
 import io.element.android.libraries.matrix.api.media.ImageInfo
@@ -23,7 +24,6 @@ import io.element.android.libraries.matrix.api.media.MediaUploadHandler
 import io.element.android.libraries.matrix.api.media.VideoInfo
 import io.element.android.libraries.matrix.api.notificationsettings.NotificationSettingsService
 import io.element.android.libraries.matrix.api.poll.PollKind
-import io.element.android.libraries.matrix.api.room.CurrentUserMembership
 import io.element.android.libraries.matrix.api.room.IntentionalMention
 import io.element.android.libraries.matrix.api.room.MatrixRoom
 import io.element.android.libraries.matrix.api.room.MatrixRoomInfo
@@ -31,7 +31,6 @@ import io.element.android.libraries.matrix.api.room.MatrixRoomMembersState
 import io.element.android.libraries.matrix.api.room.MatrixRoomNotificationSettingsState
 import io.element.android.libraries.matrix.api.room.MessageEventType
 import io.element.android.libraries.matrix.api.room.RoomMember
-import io.element.android.libraries.matrix.api.room.RoomNotificationMode
 import io.element.android.libraries.matrix.api.room.StateEventType
 import io.element.android.libraries.matrix.api.room.draft.ComposerDraft
 import io.element.android.libraries.matrix.api.room.location.AssetType
@@ -39,26 +38,21 @@ import io.element.android.libraries.matrix.api.room.powerlevels.MatrixRoomPowerL
 import io.element.android.libraries.matrix.api.room.powerlevels.UserRoleChange
 import io.element.android.libraries.matrix.api.timeline.ReceiptType
 import io.element.android.libraries.matrix.api.timeline.Timeline
-import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.matrix.api.widget.MatrixWidgetDriver
 import io.element.android.libraries.matrix.api.widget.MatrixWidgetSettings
-import io.element.android.libraries.matrix.test.AN_AVATAR_URL
 import io.element.android.libraries.matrix.test.A_ROOM_ID
-import io.element.android.libraries.matrix.test.A_ROOM_NAME
 import io.element.android.libraries.matrix.test.A_SESSION_ID
 import io.element.android.libraries.matrix.test.media.FakeMediaUploadHandler
 import io.element.android.libraries.matrix.test.notificationsettings.FakeNotificationSettingsService
 import io.element.android.libraries.matrix.test.timeline.FakeTimeline
 import io.element.android.tests.testutils.lambda.lambdaError
 import io.element.android.tests.testutils.simulateLongTask
-import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.persistentMapOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 
 class FakeMatrixRoom(
@@ -67,7 +61,7 @@ class FakeMatrixRoom(
     override val displayName: String = "",
     override val topic: String? = null,
     override val avatarUrl: String? = null,
-    override val isEncrypted: Boolean = false,
+    override var isEncrypted: Boolean = false,
     override val alias: RoomAlias? = null,
     override val alternativeAliases: List<RoomAlias> = emptyList(),
     override val isPublic: Boolean = true,
@@ -137,7 +131,7 @@ class FakeMatrixRoom(
     private val subscribeToSyncLambda: () -> Unit = { lambdaError() },
     private val ignoreDeviceTrustAndResendResult: (Map<UserId, List<DeviceId>>, TransactionId) -> Result<Unit> = { _, _ -> lambdaError() },
     private val withdrawVerificationAndResendResult: (List<UserId>, TransactionId) -> Result<Unit> = { _, _ -> lambdaError() },
-    ) : MatrixRoom {
+) : MatrixRoom {
     private val _roomInfoFlow: MutableSharedFlow<MatrixRoomInfo> = MutableSharedFlow(replay = 1)
     override val roomInfoFlow: Flow<MatrixRoomInfo> = _roomInfoFlow
 
@@ -150,6 +144,13 @@ class FakeMatrixRoom(
 
     fun givenRoomTypingMembers(typingMembers: List<UserId>) {
         _roomTypingMembersFlow.tryEmit(typingMembers)
+    }
+
+    private val _identityStateChangesFlow: MutableSharedFlow<List<IdentityStateChange>> = MutableSharedFlow(replay = 1)
+    override val identityStateChangesFlow: Flow<List<IdentityStateChange>> = _identityStateChangesFlow
+
+    fun emitIdentityStateChanges(identityStateChanges: List<IdentityStateChange>) {
+        _identityStateChangesFlow.tryEmit(identityStateChanges)
     }
 
     override val membersStateFlow: MutableStateFlow<MatrixRoomMembersState> = MutableStateFlow(MatrixRoomMembersState.Unknown)
@@ -173,7 +174,17 @@ class FakeMatrixRoom(
         return Result.success(Unit)
     }
 
-    override val syncUpdateFlow: StateFlow<Long> = MutableStateFlow(0L)
+    fun enableEncryption() {
+        isEncrypted = true
+        emitSyncUpdate()
+    }
+
+    private val _syncUpdateFlow = MutableStateFlow(0L)
+    override val syncUpdateFlow: StateFlow<Long> = _syncUpdateFlow.asStateFlow()
+
+    fun emitSyncUpdate() {
+        _syncUpdateFlow.tryEmit(_syncUpdateFlow.value + 1)
+    }
 
     override suspend fun timelineFocusedOnEvent(eventId: EventId): Result<Timeline> = simulateLongTask {
         timelineFocusedOnEventResult(eventId)
@@ -507,62 +518,6 @@ class FakeMatrixRoom(
         membersStateFlow.value = state
     }
 }
-
-fun aRoomInfo(
-    id: RoomId = A_ROOM_ID,
-    name: String? = A_ROOM_NAME,
-    rawName: String? = name,
-    topic: String? = "A topic",
-    avatarUrl: String? = AN_AVATAR_URL,
-    isDirect: Boolean = false,
-    isPublic: Boolean = true,
-    isSpace: Boolean = false,
-    isTombstoned: Boolean = false,
-    isFavorite: Boolean = false,
-    canonicalAlias: RoomAlias? = null,
-    alternativeAliases: List<RoomAlias> = emptyList(),
-    currentUserMembership: CurrentUserMembership = CurrentUserMembership.JOINED,
-    inviter: RoomMember? = null,
-    activeMembersCount: Long = 1,
-    invitedMembersCount: Long = 0,
-    joinedMembersCount: Long = 1,
-    highlightCount: Long = 0,
-    notificationCount: Long = 0,
-    userDefinedNotificationMode: RoomNotificationMode? = null,
-    hasRoomCall: Boolean = false,
-    userPowerLevels: ImmutableMap<UserId, Long> = persistentMapOf(),
-    activeRoomCallParticipants: List<UserId> = emptyList(),
-    heroes: List<MatrixUser> = emptyList(),
-    pinnedEventIds: List<EventId> = emptyList(),
-    roomCreator: UserId? = null,
-) = MatrixRoomInfo(
-    id = id,
-    name = name,
-    rawName = rawName,
-    topic = topic,
-    avatarUrl = avatarUrl,
-    isDirect = isDirect,
-    isPublic = isPublic,
-    isSpace = isSpace,
-    isTombstoned = isTombstoned,
-    isFavorite = isFavorite,
-    canonicalAlias = canonicalAlias,
-    alternativeAliases = alternativeAliases.toImmutableList(),
-    currentUserMembership = currentUserMembership,
-    inviter = inviter,
-    activeMembersCount = activeMembersCount,
-    invitedMembersCount = invitedMembersCount,
-    joinedMembersCount = joinedMembersCount,
-    highlightCount = highlightCount,
-    notificationCount = notificationCount,
-    userDefinedNotificationMode = userDefinedNotificationMode,
-    hasRoomCall = hasRoomCall,
-    userPowerLevels = userPowerLevels,
-    activeRoomCallParticipants = activeRoomCallParticipants.toImmutableList(),
-    heroes = heroes.toImmutableList(),
-    pinnedEventIds = pinnedEventIds.toImmutableList(),
-    creator = roomCreator,
-)
 
 fun defaultRoomPowerLevels() = MatrixRoomPowerLevels(
     ban = 50,
