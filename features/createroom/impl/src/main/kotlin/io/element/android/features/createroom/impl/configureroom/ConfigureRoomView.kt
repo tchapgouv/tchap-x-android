@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
+import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.createroom.impl.R
 import io.element.android.libraries.architecture.coverage.ExcludeFromCoverage
@@ -133,7 +134,14 @@ fun ConfigureRoomView(
                     },
                 )
             }
-            if (state.config.invites.any { it.userId.toString().isExternalTchapUser() }) RoomExternalGuestsWarning() // TCHAP external user
+            // TCHAP external user
+            val hasExternalUsers = state.config.invites.any { it.userId.toString().isExternalTchapUser() }
+            if (hasExternalUsers) {
+                RoomExternalGuestsWarning()
+                if (state.config.roomVisibility is RoomVisibilityState.Public) {
+                    state.eventSink(ConfigureRoomEvents.RoomVisibilityChanged(RoomVisibilityItem.Private))
+                }
+            }
             RoomVisibilityOptions(
                 selected = when (state.config.roomVisibility) {
                     is RoomVisibilityState.Private -> RoomVisibilityItem.Private
@@ -144,6 +152,7 @@ fun ConfigureRoomView(
                     focusManager.clearFocus()
                     state.eventSink(ConfigureRoomEvents.RoomVisibilityChanged(it))
                 },
+                hasExternalUsers = hasExternalUsers,
             )
             if (state.config.roomVisibility is RoomVisibilityState.Public && state.isKnockFeatureEnabled) {
                 RoomAccessOptions(
@@ -287,20 +296,20 @@ private fun ConfigureRoomOptions(
 private fun RoomExternalGuestsWarning() {
     val externalGuestText = buildAnnotatedString {
         val learnMoreStr = stringResource(CommonStrings.action_learn_more)
-        val extGuetsStr = stringResource(R.string.tchap_screen_create_room_external_guests_content)
+        val externalUsersStr = stringResource(R.string.tchap_screen_create_room_external_guests_content)
         val fullText = stringResource(
             id = R.string.tchap_screen_create_room_external_guests_warning_title,
-            extGuetsStr,
+            externalUsersStr,
             learnMoreStr,
         )
         append(fullText)
-        val extGuetsStartIndex = fullText.indexOf(extGuetsStr)
+        val externalUsersStartIndex = fullText.indexOf(externalUsersStr)
         addStyle(
             style = SpanStyle(
                 fontWeight = FontWeight.Bold,
             ),
-            start = extGuetsStartIndex,
-            end = extGuetsStartIndex + extGuetsStr.length,
+            start = externalUsersStartIndex,
+            end = externalUsersStartIndex + externalUsersStr.length,
         )
         val learnMoreStartIndex = fullText.lastIndexOf(learnMoreStr)
         addStyle(
@@ -312,7 +321,7 @@ private fun RoomExternalGuestsWarning() {
         )
         addStringAnnotation(
             tag = LINK_TAG,
-            annotation = "https://aide.tchap.beta.gouv.fr",
+            annotation = "${LearnMoreConfig.FAQ_URL}/fr/article/comment-inviter-un-partenaire-externe-sur-tchap-android-j29jmh/",
             start = learnMoreStartIndex,
             end = learnMoreStartIndex + learnMoreStr.length
         )
@@ -338,6 +347,7 @@ private fun RoomExternalGuestsWarning() {
 
 @Composable
 private fun RoomVisibilityOptions(
+    hasExternalUsers: Boolean,
     selected: RoomVisibilityItem,
     onOptionClick: (RoomVisibilityItem) -> Unit,
     modifier: Modifier = Modifier,
@@ -360,6 +370,7 @@ private fun RoomVisibilityOptions(
                 supportingContent = { Text(text = stringResource(item.description)) },
                 trailingContent = ListItemContent.RadioButton(selected = isSelected),
                 onClick = { onOptionClick(item) },
+                enabled = !(hasExternalUsers && item == RoomVisibilityItem.Public)
             )
         }
     }
