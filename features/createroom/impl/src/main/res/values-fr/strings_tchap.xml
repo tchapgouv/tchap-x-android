@@ -34,4 +34,6 @@
     <string name="tchap_screen_create_room_public_option_description">"• Messages non‑chiffrés
 • Accessible à tous les agents depuis la liste des salons publics
 • Nombre de membres illimité."</string>
+    <string name="tchap_screen_create_room_external_guests_warning_title">"Ce salon compte des %1$s. %2$s."</string>
+    <string name="tchap_screen_create_room_external_guests_content">"invités externes"</string>
 </resources>

@@ -34,4 +34,6 @@
     <string name="tchap_screen_create_room_public_option_description">"• Not encrypted messages
 • Accessible to all agents from public rooms directory
 • Unlimited members"</string>
+    <string name="tchap_screen_create_room_external_guests_warning_title">"This room contains some %1$s. %2$s."</string>
+    <string name="tchap_screen_create_room_external_guests_content">"external guests"</string>
 </resources>

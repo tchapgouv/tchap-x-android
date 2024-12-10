@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -26,12 +27,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
+import io.element.android.libraries.designsystem.theme.badgeNegativeBackgroundColor
+import io.element.android.libraries.designsystem.theme.badgeNegativeContentColor
 import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.Surface
 import io.element.android.libraries.designsystem.theme.components.Text
@@ -55,14 +59,33 @@ fun SelectedUser(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Avatar(matrixUser.getAvatarData(size = AvatarSize.SelectedUser))
-            Text(
-                modifier = Modifier.clipToBounds(),
-                text = matrixUser.getBestName(),
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 2,
-                style = ElementTheme.typography.fontBodyMdRegular,
-                textAlign = TextAlign.Center,
-            )
+            // TCHAP external user
+            if (matrixUser.userId.toString().isExternalTchapUser()) {
+                Surface(
+                    color = ElementTheme.colors.badgeNegativeBackgroundColor,
+                    contentColor = ElementTheme.colors.badgeNegativeContentColor,
+                    shape = RoundedCornerShape(9.dp),
+                ) {
+                    Text(
+                        modifier = Modifier.clipToBounds()
+                            .padding(4.dp),
+                        text = matrixUser.getBestName(),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 2,
+                        style = ElementTheme.typography.fontBodyMdRegular,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            } else {
+                Text(
+                    modifier = Modifier.clipToBounds(),
+                    text = matrixUser.getBestName(),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2,
+                    style = ElementTheme.typography.fontBodyMdRegular,
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
         if (canRemove) {
             Surface(
