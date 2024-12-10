@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,14 +31,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.createroom.impl.R
 import io.element.android.libraries.architecture.coverage.ExcludeFromCoverage
 import io.element.android.libraries.designsystem.atomic.atoms.RoundedIconAtom
 import io.element.android.libraries.designsystem.atomic.atoms.RoundedIconAtomSize
+import io.element.android.libraries.designsystem.components.ClickableLinkText
+import io.element.android.libraries.designsystem.components.LINK_TAG
 import io.element.android.libraries.designsystem.components.async.AsyncActionView
 import io.element.android.libraries.designsystem.components.async.AsyncActionViewDefaults
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
@@ -48,8 +57,12 @@ import io.element.android.libraries.designsystem.modifiers.clearFocusOnTap
 import io.element.android.libraries.designsystem.preview.ElementPreviewDark
 import io.element.android.libraries.designsystem.preview.ElementPreviewLight
 import io.element.android.libraries.designsystem.preview.PreviewWithLargeHeight
+import io.element.android.libraries.designsystem.theme.aliasScreenTitle
+import io.element.android.libraries.designsystem.theme.badgeNegativeBackgroundColor
+import io.element.android.libraries.designsystem.theme.badgeNegativeContentColor
 import io.element.android.libraries.designsystem.theme.components.ListItem
 import io.element.android.libraries.designsystem.theme.components.Scaffold
+import io.element.android.libraries.designsystem.theme.components.Surface
 import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.designsystem.theme.components.TextButton
 import io.element.android.libraries.designsystem.theme.components.TextField
@@ -120,6 +133,7 @@ fun ConfigureRoomView(
                     },
                 )
             }
+            if (state.config.invites.any { it.userId.toString().isExternalTchapUser() }) RoomExternalGuestsWarning() // TCHAP external user
             RoomVisibilityOptions(
                 selected = when (state.config.roomVisibility) {
                     is RoomVisibilityState.Private -> RoomVisibilityItem.Private
@@ -266,6 +280,59 @@ private fun ConfigureRoomOptions(
             modifier = Modifier.padding(horizontal = 16.dp),
         )
         content()
+    }
+}
+
+@Composable
+private fun RoomExternalGuestsWarning() {
+    val externalGuestText = buildAnnotatedString {
+        val learnMoreStr = stringResource(CommonStrings.action_learn_more)
+        val extGuetsStr = stringResource(R.string.tchap_screen_create_room_external_guests_content)
+        val fullText = stringResource(
+            id = R.string.tchap_screen_create_room_external_guests_warning_title,
+            extGuetsStr,
+            learnMoreStr,
+        )
+        append(fullText)
+        val extGuetsStartIndex = fullText.indexOf(extGuetsStr)
+        addStyle(
+            style = SpanStyle(
+                fontWeight = FontWeight.Bold,
+            ),
+            start = extGuetsStartIndex,
+            end = extGuetsStartIndex + extGuetsStr.length,
+        )
+        val learnMoreStartIndex = fullText.lastIndexOf(learnMoreStr)
+        addStyle(
+            style = SpanStyle(
+                textDecoration = TextDecoration.Underline,
+            ),
+            start = learnMoreStartIndex,
+            end = learnMoreStartIndex + learnMoreStr.length,
+        )
+        addStringAnnotation(
+            tag = LINK_TAG,
+            annotation = "https://aide.tchap.beta.gouv.fr",
+            start = learnMoreStartIndex,
+            end = learnMoreStartIndex + learnMoreStr.length
+        )
+    }
+    Surface(
+        modifier = Modifier.padding(16.dp),
+        color = ElementTheme.colors.badgeNegativeBackgroundColor,
+        contentColor = ElementTheme.colors.badgeNegativeContentColor,
+        shape = RoundedCornerShape(9.dp),
+    ) {
+        ClickableLinkText(
+            annotatedString = externalGuestText,
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth(),
+            style = ElementTheme.typography.fontBodyMdRegular
+                .copy(
+                    textAlign = TextAlign.Center,
+                )
+        )
     }
 }
 
