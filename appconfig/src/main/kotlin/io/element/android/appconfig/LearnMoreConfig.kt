@@ -11,4 +11,5 @@ object LearnMoreConfig {
     const val ENCRYPTION_URL: String = "https://element.io/help#encryption"
     const val SECURE_BACKUP_URL: String = "https://element.io/help#encryption5"
     const val IDENTITY_CHANGE_URL: String = "https://element.io/help#encryption18"
+    const val FAQ_URL: String = "https://aide.tchap.beta.gouv.fr"
 }
