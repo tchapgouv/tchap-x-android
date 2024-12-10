@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright 2024 New Vector Ltd.
+  ~
+  ~ SPDX-License-Identifier: AGPL-3.0-only
+  ~ Please see LICENSE in the repository root for full details.
+  -->
+
+<resources>
+    <string name="tchap_screen_create_room_room_access_encryption_section_title">"Sécurité et accès du salon"</string>
+    <string name="tchap_screen_create_room_private_encrypted_option_description">"• Messages chiffrés
+• Accessible sur invitation
+• Limité à 500 membres."</string>
+    <string name="tchap_screen_create_room_private_encrypted_option_title">"Salon privé sécurisé"</string>
+    <string name="tchap_screen_create_room_private_not_encrypted_option_description">"• Messages non‑chiffrés
+• Accessible sur invitation
+• Nombre de membres illimité."</string>
+    <string name="tchap_screen_create_room_private_not_encrypted_option_title">"Salon privé non‑sécurisé"</string>
+    <string name="tchap_screen_create_room_public_option_description">"• Messages non‑chiffrés
+• Accessible à tous les agents depuis la liste des salons publics
+• Nombre de membres illimité."</string>
+    <string name="tchap_screen_create_room_public_option_title">"Salon public non‑sécurisé"</string>
+</resources>

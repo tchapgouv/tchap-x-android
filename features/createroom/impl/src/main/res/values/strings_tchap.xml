@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright 2024 New Vector Ltd.
+  ~
+  ~ SPDX-License-Identifier: AGPL-3.0-only
+  ~ Please see LICENSE in the repository root for full details.
+  -->
+
+<resources>
+    <string name="tchap_screen_create_room_room_access_encryption_section_title">"Room Access and Security"</string>
+    <string name="tchap_screen_create_room_private_encrypted_option_description">"• Encrypted messages
+• Access by invite
+• Limited to 500 members"</string>
+    <string name="tchap_screen_create_room_private_encrypted_option_title">"Secure private room"</string>
+    <string name="tchap_screen_create_room_private_not_encrypted_option_description">"• Not encrypted messages
+• Access by invite
+• Unlimited members"</string>
+    <string name="tchap_screen_create_room_private_not_encrypted_option_title">"Not secure private room"</string>
+    <string name="tchap_screen_create_room_public_option_description">"• Not encrypted messages
+• Accessible to all agents from public rooms directory
+• Unlimited members"</string>
+    <string name="tchap_screen_create_room_public_option_title">"Not secure public room"</string>
+</resources>
