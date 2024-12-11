@@ -31,9 +31,7 @@
     <string name="tchap_screen_create_room_private_not_encrypted_option_description">"• Not encrypted messages
 • Access by invite
 • Unlimited members"</string>
-    <string name="tchap_screen_create_room_private_not_encrypted_option_title">"Not secure private room"</string>
     <string name="tchap_screen_create_room_public_option_description">"• Not encrypted messages
 • Accessible to all agents from public rooms directory
 • Unlimited members"</string>
-    <string name="tchap_screen_create_room_public_option_title">"Not secure public room"</string>
 </resources>
