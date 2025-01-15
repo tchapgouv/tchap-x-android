@@ -264,6 +264,10 @@ class RustMatrixRoom(
         liveTimeline.close()
     }
 
+    override val accessRules: String
+        get() = ""
+//        get() = runCatching { innerRoom.accessRules }.getOrDefault("") // TCHAP todo
+
     override val displayName: String
         get() = runCatching { innerRoom.displayName() ?: "" }.getOrDefault("")
 
@@ -558,6 +562,12 @@ class RustMatrixRoom(
     override suspend fun removeAvatar(): Result<Unit> = withContext(roomDispatcher) {
         runCatching {
             innerRoom.removeAvatar()
+        }
+    }
+
+    override suspend fun setAccessRules(rule: String): Result<Unit> = withContext(roomDispatcher) {
+        runCatching {
+            innerRoom.setAccessRules(rule)
         }
     }
 

@@ -42,6 +42,7 @@ import java.io.File
 interface MatrixRoom : Closeable {
     val sessionId: SessionId
     val roomId: RoomId
+    val accessRules: String?
     val displayName: String
     val alias: RoomAlias?
     val alternativeAliases: List<RoomAlias>
@@ -213,6 +214,8 @@ interface MatrixRoom : Closeable {
     suspend fun updateAvatar(mimeType: String, data: ByteArray): Result<Unit>
 
     suspend fun removeAvatar(): Result<Unit>
+
+    suspend fun setAccessRules(rule: String): Result<Unit>
 
     suspend fun setName(name: String): Result<Unit>
 

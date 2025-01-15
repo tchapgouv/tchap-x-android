@@ -24,6 +24,7 @@ import io.element.android.libraries.matrix.api.room.MatrixRoom
 import io.element.android.libraries.ui.strings.CommonStrings
 import io.element.android.services.analytics.api.AnalyticsService
 import io.element.android.services.apperror.api.AppErrorStateService
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
@@ -61,6 +62,10 @@ class RoomInviteMembersNode @AssistedInject constructor(
                 navigateUp()
 
                 coroutineScope.launch {
+                    val hasExternalUsers = users.any { it.userId.toString().isExternalTchapUser() }
+                    if (hasExternalUsers && room.accessRules == "restricted") {
+                        room.setAccessRules("unrestricted")
+                    }
                     val anyInviteFailed = users
                         .map { room.inviteUserById(it.userId) }
                         .any { it.isFailure }

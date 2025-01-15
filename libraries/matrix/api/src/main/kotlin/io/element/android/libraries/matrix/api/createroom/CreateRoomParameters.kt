@@ -11,6 +11,7 @@ import io.element.android.libraries.matrix.api.core.UserId
 import java.util.Optional
 
 data class CreateRoomParameters(
+    val accessRules: String? = null,
     val name: String?,
     val topic: String? = null,
     val isEncrypted: Boolean,

@@ -62,6 +62,7 @@ import java.io.File
 class FakeMatrixRoom(
     override val sessionId: SessionId = A_SESSION_ID,
     override val roomId: RoomId = A_ROOM_ID,
+    override val accessRules: String? = null,
     override val displayName: String = "",
     override val topic: String? = null,
     override val avatarUrl: String? = null,
@@ -102,6 +103,7 @@ class FakeMatrixRoom(
         { _, _, _, _, _ -> lambdaError() },
     private val sendVoiceMessageResult: (File, AudioInfo, List<Float>, ProgressCallback?) -> Result<FakeMediaUploadHandler> =
         { _, _, _, _ -> lambdaError() },
+    private val setAccessRulesResult: (String) -> Result<Unit> = { lambdaError() },
     private val setNameResult: (String) -> Result<Unit> = { lambdaError() },
     private val setTopicResult: (String) -> Result<Unit> = { lambdaError() },
     private val updateAvatarResult: (String, ByteArray) -> Result<Unit> = { _, _ -> lambdaError() },
@@ -418,6 +420,10 @@ class FakeMatrixRoom(
 
     override suspend fun removeAvatar(): Result<Unit> = simulateLongTask {
         removeAvatarResult()
+    }
+
+    override suspend fun setAccessRules(rule: String): Result<Unit> = simulateLongTask {
+        setAccessRulesResult(rule)
     }
 
     override suspend fun setName(name: String): Result<Unit> = simulateLongTask {
