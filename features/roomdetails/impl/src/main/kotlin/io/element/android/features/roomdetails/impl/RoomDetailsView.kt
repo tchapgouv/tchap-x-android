@@ -451,6 +451,13 @@ private fun BadgeList(
 @Composable
 private fun RoomBadge.toMatrixBadgeData(): MatrixBadgeAtom.MatrixBadgeData {
     return when (this) {
+        RoomBadge.EXTERNAL -> {
+            MatrixBadgeAtom.MatrixBadgeData(
+                text = stringResource(R.string.tchap_screen_room_details_badge_external),
+                icon = CompoundIcons.UserSolid(),
+                type = MatrixBadgeAtom.Type.External,
+            )
+        }
         RoomBadge.ENCRYPTED -> {
             MatrixBadgeAtom.MatrixBadgeData(
                 text = stringResource(R.string.screen_room_details_badge_encrypted),

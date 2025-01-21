@@ -30,6 +30,7 @@ fun aMatrixUser(
 )
 
 fun aMatrixUserList() = listOf(
+    aMatrixUser("@guest:e.server.org", "Guest"),
     aMatrixUser("@alice:server.org", "Alice"),
     aMatrixUser("@bob:server.org", "Bob"),
     aMatrixUser("@carol:server.org", "Carol"),

@@ -62,7 +62,7 @@ object TchapPatterns {
      *
      * @return true if external.
      */
-     fun String.isExternalTchapServer() = this.isEmpty() || this.startsWith("e.") || this.startsWith("agent.externe.")
+    fun String.isExternalTchapServer() = this.isEmpty() || this.startsWith("e.") || this.startsWith("agent.externe.") || this.startsWith("ext01")
 
     /**
      * Get name part of a display name by removing the domain part if any.

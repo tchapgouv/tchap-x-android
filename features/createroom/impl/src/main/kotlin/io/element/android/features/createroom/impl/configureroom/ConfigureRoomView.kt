@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.compound.theme.ElementTheme
+import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.createroom.impl.R
 import io.element.android.libraries.architecture.coverage.ExcludeFromCoverage
 import io.element.android.libraries.designsystem.atomic.atoms.RoundedIconAtom
@@ -58,11 +59,10 @@ import io.element.android.libraries.designsystem.preview.ElementPreviewDark
 import io.element.android.libraries.designsystem.preview.ElementPreviewLight
 import io.element.android.libraries.designsystem.preview.PreviewWithLargeHeight
 import io.element.android.libraries.designsystem.theme.aliasScreenTitle
-import io.element.android.libraries.designsystem.theme.badgeNegativeBackgroundColor
-import io.element.android.libraries.designsystem.theme.badgeNegativeContentColor
+import io.element.android.libraries.designsystem.theme.badgeExternalContentColor
+import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.ListItem
 import io.element.android.libraries.designsystem.theme.components.Scaffold
-import io.element.android.libraries.designsystem.theme.components.Surface
 import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.designsystem.theme.components.TextButton
 import io.element.android.libraries.designsystem.theme.components.TextField
@@ -325,17 +325,20 @@ private fun RoomExternalGuestsWarning() {
             end = learnMoreStartIndex + learnMoreStr.length
         )
     }
-    Surface(
-        modifier = Modifier.padding(16.dp),
-        color = ElementTheme.colors.badgeNegativeBackgroundColor,
-        contentColor = ElementTheme.colors.badgeNegativeContentColor,
-        shape = RoundedCornerShape(9.dp),
+
+    Row(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
+        Icon(imageVector = CompoundIcons.InfoSolid(),
+            contentDescription = null,
+            tint = ElementTheme.colors.badgeExternalContentColor,
+            modifier = Modifier.padding(end = 8.dp)
+        )
         ClickableLinkText(
             annotatedString = externalGuestText,
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth(),
             style = ElementTheme.typography.fontBodyMdRegular
                 .copy(
                     textAlign = TextAlign.Center,
@@ -357,6 +360,7 @@ private fun RoomVisibilityOptions(
     ) {
         RoomVisibilityItem.entries.forEach { item ->
             val isSelected = item == selected
+            val enabled = !(hasExternalUsers && item == RoomVisibilityItem.Public)
             ListItem(
                 leadingContent = ListItemContent.Custom {
                     RoundedIconAtom(
@@ -366,10 +370,26 @@ private fun RoomVisibilityOptions(
                     )
                 },
                 headlineContent = { Text(text = stringResource(item.title)) },
-                supportingContent = { Text(text = stringResource(item.description)) },
+                supportingContent = {
+                    val content = stringResource(id = item.description)
+                    if (enabled) {
+                        Text(text = content)
+                    } else {
+                        val disabledContent = buildAnnotatedString {
+                            append(content)
+                            val externalDescriptionIndex = content.lastIndexOf('•')
+                            addStyle(
+                                style = SpanStyle(color = ElementTheme.colors.badgeExternalContentColor),
+                                start = externalDescriptionIndex,
+                                end = content.length,
+                            )
+                        }
+                        Text(text = disabledContent)
+                    }
+                },
                 trailingContent = ListItemContent.RadioButton(selected = isSelected),
                 onClick = { onOptionClick(item) },
-                enabled = !(hasExternalUsers && item == RoomVisibilityItem.Public)
+                enabled = enabled
             )
         }
     }

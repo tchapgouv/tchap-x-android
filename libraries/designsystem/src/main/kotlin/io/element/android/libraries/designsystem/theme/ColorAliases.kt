@@ -143,6 +143,14 @@ val SemanticColors.highlightedMessageBackgroundColor
 // Badge colors
 
 @OptIn(CoreColorToken::class)
+val SemanticColors.badgeExternalBackgroundColor
+    get() = if (isLight) LightColorTokens.colorAlphaOrange300 else DarkColorTokens.colorAlphaOrange300
+
+@OptIn(CoreColorToken::class)
+val SemanticColors.badgeExternalContentColor
+    get() = if (isLight) LightColorTokens.colorOrange1100 else DarkColorTokens.colorOrange1100
+
+@OptIn(CoreColorToken::class)
 val SemanticColors.badgePositiveBackgroundColor
     get() = if (isLight) LightColorTokens.colorAlphaGreen300 else DarkColorTokens.colorAlphaGreen300
 

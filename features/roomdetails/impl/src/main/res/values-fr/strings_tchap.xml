@@ -23,16 +23,5 @@
   -->
 
 <resources>
-    <string name="tchap_screen_create_room_room_access_encryption_section_title">"Sécurité et accès du salon"</string>
-    <string name="tchap_screen_create_room_private_encrypted_option_description">"• Chiffré de bout en bout
-• Accessible uniquement sur invitation
-• Conseillé jusqu’à 500 membres"</string>
-    <string name="tchap_screen_create_room_private_encrypted_option_title">"Salon privé sécurisé"</string>
-    <string name="tchap_screen_create_room_private_not_encrypted_option_description">"• Non‑chiffré
-• Accessible uniquement sur invitation"</string>
-    <string name="tchap_screen_create_room_public_option_description">"• Non‑chiffré
-• Accessible depuis la liste des salons
-• Non accessible aux invités externes"</string>
-    <string name="tchap_screen_create_room_external_guests_warning_title">"Ce salon compte des %1$s. %2$s."</string>
-    <string name="tchap_screen_create_room_external_guests_content">"invités externes"</string>
+    <string name="tchap_screen_room_details_badge_external">"Invités externes"</string>
 </resources>
