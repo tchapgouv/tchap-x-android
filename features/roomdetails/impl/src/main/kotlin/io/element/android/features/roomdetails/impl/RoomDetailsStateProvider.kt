@@ -85,6 +85,8 @@ fun aDmRoomMember(
 )
 
 fun aRoomDetailsState(
+    isDebugBuild: Boolean = false,
+    isExternal: Boolean = true,
     roomId: RoomId = RoomId("!aRoomId:domain.com"),
     roomName: String = "Marketing",
     roomAlias: RoomAlias? = RoomAlias("#marketing:domain.com"),
@@ -123,7 +125,8 @@ fun aRoomDetailsState(
     showDebugInfo: Boolean = false,
     eventSink: (RoomDetailsEvent) -> Unit = {},
 ) = RoomDetailsState(
-    isDebugBuild = false,
+    isDebugBuild = isDebugBuild,
+    isExternal = isExternal,
     roomId = roomId,
     roomName = roomName,
     roomAlias = roomAlias,

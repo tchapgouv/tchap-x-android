@@ -79,8 +79,8 @@ internal fun UserRow(
             if (subtext != null && subtext.startsWith('@') && subtext.isExternalTchapUser()) {
                 MatrixBadgeAtom.View(MatrixBadgeAtom.MatrixBadgeData(
                     text = stringResource(id = CommonStrings.tchap_contact_external),
-                    icon = CompoundIcons.User(),
-                    type = MatrixBadgeAtom.Type.Negative,
+                    icon = CompoundIcons.UserSolid(),
+                    type = MatrixBadgeAtom.Type.External,
                 ))
             }
         }

@@ -190,6 +190,7 @@ class RoomDetailsPresenter @Inject constructor(
 
         return RoomDetailsState(
             isDebugBuild = buildMeta.isDebuggable,
+            isExternal = true, // TCHAP TODO get the value from the SDK
             roomId = room.roomId,
             roomName = roomName,
             roomAlias = canonicalAlias,

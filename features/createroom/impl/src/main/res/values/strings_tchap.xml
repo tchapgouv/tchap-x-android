@@ -24,16 +24,15 @@
 
 <resources>
     <string name="tchap_screen_create_room_room_access_encryption_section_title">"Room Access and Security"</string>
-    <string name="tchap_screen_create_room_private_encrypted_option_description">"• Encrypted messages
-• Access by invite
-• Limited to 500 members"</string>
+    <string name="tchap_screen_create_room_private_encrypted_option_description">"• End to end Encrypted
+• Access by invite only
+• Recommended for up to 500 members"</string>
     <string name="tchap_screen_create_room_private_encrypted_option_title">"Secure private room"</string>
-    <string name="tchap_screen_create_room_private_not_encrypted_option_description">"• Not encrypted messages
-• Access by invite
-• Unlimited members"</string>
+    <string name="tchap_screen_create_room_private_not_encrypted_option_description">"• Not encrypted
+• Access by invite only</string>
     <string name="tchap_screen_create_room_public_option_description">"• Not encrypted messages
-• Accessible to all agents from public rooms directory
-• Unlimited members"</string>
+• Accessible from rooms directory
+• Not accessible to external guests"</string>
     <string name="tchap_screen_create_room_external_guests_warning_title">"This room contains some %1$s. %2$s."</string>
     <string name="tchap_screen_create_room_external_guests_content">"external guests"</string>
 </resources>
