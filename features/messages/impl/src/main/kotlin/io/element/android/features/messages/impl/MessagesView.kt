@@ -182,6 +182,9 @@ fun MessagesView(
             Column {
                 ConnectivityIndicatorView(isOnline = state.hasNetworkConnection)
                 MessagesViewTopBar(
+                    isEncrypted = state.isEncrypted,
+                    isPublic = state.isPublic,
+                    isExternal = state.isExternal,
                     roomName = state.roomName.dataOrNull(),
                     roomAvatar = state.roomAvatar.dataOrNull(),
                     heroes = state.heroes,
@@ -443,6 +446,9 @@ private fun MessagesViewComposerBottomSheetContents(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MessagesViewTopBar(
+    isEncrypted: Boolean,
+    isPublic: Boolean,
+    isExternal: Boolean,
     roomName: String?,
     roomAvatar: AvatarData?,
     heroes: ImmutableList<AvatarData>,
@@ -461,12 +467,18 @@ private fun MessagesViewTopBar(
                     .clip(roundedCornerShape)
                     .clickable { onRoomDetailsClick() }
             if (roomName != null && roomAvatar != null) {
-                RoomAvatarAndNameRow(
-                    roomName = roomName,
-                    roomAvatar = roomAvatar,
-                    heroes = heroes,
-                    modifier = titleModifier
-                )
+                Column {
+                    RoomAvatarAndNameRow(
+                        roomName = roomName,
+                        roomAvatar = roomAvatar,
+                        heroes = heroes,
+                        modifier = titleModifier
+                    )
+                    Text(
+                        text = "mes badges",
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                }
             } else {
                 IconTitlePlaceholdersRowMolecule(
                     iconSize = AvatarSize.TimelineRoom.dp,

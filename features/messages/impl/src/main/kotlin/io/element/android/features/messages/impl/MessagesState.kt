@@ -28,6 +28,9 @@ import kotlinx.collections.immutable.ImmutableList
 @Immutable
 data class MessagesState(
     val isDebugBuild: Boolean,
+    val isEncrypted: Boolean,
+    val isPublic: Boolean,
+    val isExternal: Boolean,
     val roomId: RoomId,
     val roomName: AsyncData<String>,
     val roomAvatar: AsyncData<AvatarData>,

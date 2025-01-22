@@ -8,12 +8,10 @@
 package io.element.android.libraries.designsystem.atomic.atoms
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.element.android.compound.annotations.CoreColorToken
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
-import io.element.android.compound.tokens.generated.internal.LightColorTokens
 import io.element.android.libraries.designsystem.components.Badge
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
@@ -40,7 +38,6 @@ object MatrixBadgeAtom {
         Negative
     }
 
-    @OptIn(CoreColorToken::class)
     @Composable
     fun View(
         data: MatrixBadgeData,
