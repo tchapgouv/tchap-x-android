@@ -242,6 +242,9 @@ class MessagesPresenter @AssistedInject constructor(
 
         return MessagesState(
             isDebugBuild = buildMeta.isDebuggable,
+            isEncrypted = room.isEncrypted,
+            isPublic = room.isPublic,
+            isExternal = true, // TCHAP TODO get value from room
             roomId = room.roomId,
             roomName = roomInfo.name,
             roomAvatar = roomAvatar,

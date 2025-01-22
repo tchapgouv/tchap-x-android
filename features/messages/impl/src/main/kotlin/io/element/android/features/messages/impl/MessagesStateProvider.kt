@@ -122,6 +122,9 @@ fun aMessagesState(
     eventSink: (MessagesEvents) -> Unit = {},
 ) = MessagesState(
     isDebugBuild = false,
+    isEncrypted = true,
+    isPublic = true,
+    isExternal = true,
     roomId = RoomId("!id:domain"),
     roomName = roomName,
     roomAvatar = roomAvatar,

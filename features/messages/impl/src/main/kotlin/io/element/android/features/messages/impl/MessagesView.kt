@@ -197,6 +197,9 @@ fun MessagesView(
                     Column {
                         ConnectivityIndicatorView(isOnline = state.hasNetworkConnection)
                         MessagesViewTopBar(
+                            isEncrypted = state.isEncrypted,
+                            isPublic = state.isPublic,
+                            isExternal = state.isExternal,
                             roomName = state.roomName,
                             roomAvatar = state.roomAvatar,
                             isTombstoned = state.isTombstoned,
@@ -481,6 +484,9 @@ private fun MessagesViewComposerBottomSheetContents(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MessagesViewTopBar(
+    isEncrypted: Boolean,
+    isPublic: Boolean,
+    isExternal: Boolean,
     roomName: String?,
     roomAvatar: AvatarData,
     isTombstoned: Boolean,
