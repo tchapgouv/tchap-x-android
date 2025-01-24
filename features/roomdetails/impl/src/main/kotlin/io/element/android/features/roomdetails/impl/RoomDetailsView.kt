@@ -485,7 +485,7 @@ private fun TitleAndSubtitle(
 }
 
 @Composable
-private fun BadgeList(
+fun BadgeList(
     roomBadge: ImmutableList<RoomBadge>,
     modifier: Modifier = Modifier,
 ) {
@@ -501,7 +501,7 @@ private fun BadgeList(
 }
 
 @Composable
-private fun RoomBadge.toMatrixBadgeData(): MatrixBadgeAtom.MatrixBadgeData {
+fun RoomBadge.toMatrixBadgeData(): MatrixBadgeAtom.MatrixBadgeData {
     return when (this) {
         RoomBadge.EXTERNAL -> {
             MatrixBadgeAtom.MatrixBadgeData(
