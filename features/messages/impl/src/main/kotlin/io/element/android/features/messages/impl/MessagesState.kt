@@ -19,11 +19,13 @@ import io.element.android.features.messages.impl.timeline.components.receipt.bot
 import io.element.android.features.messages.impl.timeline.protection.TimelineProtectionState
 import io.element.android.features.messages.impl.voicemessages.composer.VoiceMessageComposerState
 import io.element.android.features.roomcall.api.RoomCallState
+import io.element.android.features.roomdetails.impl.RoomBadge
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.matrix.api.core.RoomId
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 
 @Immutable
 data class MessagesState(
@@ -55,4 +57,20 @@ data class MessagesState(
     val appName: String,
     val pinnedMessagesBannerState: PinnedMessagesBannerState,
     val eventSink: (MessagesEvents) -> Unit
-)
+) {
+    val roomBadges = buildList {
+        if (isEncrypted || isPublic) {
+            if (isEncrypted) {
+                add(RoomBadge.ENCRYPTED)
+            } else {
+                add(RoomBadge.NOT_ENCRYPTED)
+            }
+        }
+        if (isPublic) {
+            add(RoomBadge.PUBLIC)
+        }
+        if (isExternal) {
+            add(RoomBadge.EXTERNAL)
+        }
+    }.toPersistentList()
+}

@@ -50,6 +50,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import io.element.android.compound.theme.ElementTheme
+import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.messages.impl.actionlist.ActionListEvents
 import io.element.android.features.messages.impl.actionlist.ActionListView
 import io.element.android.features.messages.impl.actionlist.model.TimelineItemAction
@@ -77,8 +78,12 @@ import io.element.android.features.messages.impl.voicemessages.composer.VoiceMes
 import io.element.android.features.messages.impl.voicemessages.composer.VoiceMessageSendingFailedDialog
 import io.element.android.features.networkmonitor.api.ui.ConnectivityIndicatorView
 import io.element.android.features.roomcall.api.RoomCallState
+import io.element.android.features.roomdetails.impl.BadgeList
+import io.element.android.features.roomdetails.impl.RoomBadge
 import io.element.android.libraries.androidutils.ui.hideKeyboard
+import io.element.android.libraries.designsystem.atomic.atoms.MatrixBadgeAtom
 import io.element.android.libraries.designsystem.atomic.molecules.IconTitlePlaceholdersRowMolecule
+import io.element.android.libraries.designsystem.atomic.molecules.MatrixBadgeRowMolecule
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.components.avatar.CompositeAvatar
@@ -182,9 +187,7 @@ fun MessagesView(
             Column {
                 ConnectivityIndicatorView(isOnline = state.hasNetworkConnection)
                 MessagesViewTopBar(
-                    isEncrypted = state.isEncrypted,
-                    isPublic = state.isPublic,
-                    isExternal = state.isExternal,
+                    roomBadges = state.roomBadges,
                     roomName = state.roomName.dataOrNull(),
                     roomAvatar = state.roomAvatar.dataOrNull(),
                     heroes = state.heroes,
@@ -446,9 +449,7 @@ private fun MessagesViewComposerBottomSheetContents(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MessagesViewTopBar(
-    isEncrypted: Boolean,
-    isPublic: Boolean,
-    isExternal: Boolean,
+    roomBadges: ImmutableList<RoomBadge>,
     roomName: String?,
     roomAvatar: AvatarData?,
     heroes: ImmutableList<AvatarData>,
@@ -474,9 +475,9 @@ private fun MessagesViewTopBar(
                         heroes = heroes,
                         modifier = titleModifier
                     )
-                    Text(
-                        text = "mes badges",
-                        style = MaterialTheme.typography.titleSmall
+                    BadgeList(
+                        roomBadge = roomBadges,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
                     )
                 }
             } else {
