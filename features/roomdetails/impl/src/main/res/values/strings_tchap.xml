@@ -23,5 +23,5 @@
   -->
 
 <resources>
-    <string name="tchap_screen_room_details_badge_external">"External guests"</string>
+    <string name="tchap_screen_room_details_badge_external">"Externals"</string>
 </resources>
