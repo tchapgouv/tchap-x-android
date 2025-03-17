@@ -99,6 +99,7 @@ class IdentityChangeStateViewTest {
     ) {
         setContent {
             IdentityChangeStateView(
+                isDebugBuild = false,
                 state = state,
                 onLinkClick = { _, _ -> },
             )

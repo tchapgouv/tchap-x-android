@@ -23,6 +23,10 @@ android {
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }
+
+    defaultConfig {
+        missingDimensionStrategy("environment", "prod")
+    }
 }
 
 setupAnvil()

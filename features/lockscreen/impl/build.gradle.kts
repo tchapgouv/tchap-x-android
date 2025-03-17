@@ -14,6 +14,10 @@ plugins {
 
 android {
     namespace = "io.element.android.features.lockscreen.impl"
+
+    defaultConfig {
+        missingDimensionStrategy("environment", "prod")
+    }
 }
 
 setupAnvil()

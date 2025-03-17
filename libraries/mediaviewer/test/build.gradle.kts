@@ -11,6 +11,10 @@ plugins {
 
 android {
     namespace = "io.element.android.libraries.mediaviewer.test"
+
+    defaultConfig {
+        missingDimensionStrategy("environment", "prod")
+    }
 }
 
 dependencies {

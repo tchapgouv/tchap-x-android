@@ -11,6 +11,10 @@ plugins {
 
 android {
     namespace = "io.element.android.libraries.push.test"
+
+    defaultConfig {
+        missingDimensionStrategy("environment", "prod")
+    }
 }
 
 dependencies {

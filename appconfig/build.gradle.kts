@@ -10,6 +10,23 @@ plugins {
 
 android {
     namespace = "io.element.android.appconfig"
+    
+    flavorDimensions += "environment"
+    productFlavors {
+        create("prod") {
+            dimension = "environment"
+        }
+        create("stg") {
+            dimension = "environment"
+        }
+        create("dev") {
+            dimension = "environment"
+        }
+    }
+
+    defaultConfig {
+        missingDimensionStrategy("environment", "prod")
+    }
 }
 
 dependencies {

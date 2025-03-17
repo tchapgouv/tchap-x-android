@@ -22,6 +22,10 @@ android {
             isIncludeAndroidResources = true
         }
     }
+
+    defaultConfig {
+        missingDimensionStrategy("environment", "prod")
+    }
 }
 
 setupAnvil(componentMergingStrategy = ComponentMergingStrategy.KSP)

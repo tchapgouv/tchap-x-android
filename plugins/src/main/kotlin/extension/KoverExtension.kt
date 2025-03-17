@@ -236,8 +236,6 @@ fun Project.applyKoverPluginToAllSubProjects() = rootProject.subprojects {
 
 fun KoverVariantCreateConfig.defaultVariants(project: Project) {
     if (project.name == "app") {
-        addWithDependencies("gplayDebug")
-    } else {
         addWithDependencies("debug", "jvm", optional = true)
     }
 }

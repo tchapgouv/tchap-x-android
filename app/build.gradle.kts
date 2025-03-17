@@ -99,13 +99,11 @@ android {
 
     buildTypes {
         getByName("debug") {
-            resValue("string", "app_name", "$baseAppName dbg")
             applicationIdSuffix = ".debug"
             signingConfig = signingConfigs.getByName("debug")
         }
 
         getByName("release") {
-            resValue("string", "app_name", baseAppName)
             signingConfig = signingConfigs.getByName("debug")
 
             postprocessing {
@@ -152,6 +150,25 @@ android {
                     "1:912726360885:android:e17435e0beb0303000427c"
                 }
             }
+        }
+    }
+
+    flavorDimensions += "environment"
+
+    productFlavors {
+        create("prod") {
+            dimension = "environment"
+            resValue("string", "app_name", baseAppName)
+        }
+        create("stg") {
+            dimension = "environment"
+            resValue("string", "app_name", "$baseAppName stg")
+            applicationIdSuffix = ".staging"
+        }
+        create("dev") {
+            dimension = "environment"
+            resValue("string", "app_name", "$baseAppName dev")
+            applicationIdSuffix = ".dev"
         }
     }
 

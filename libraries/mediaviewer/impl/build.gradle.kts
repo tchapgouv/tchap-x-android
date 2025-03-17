@@ -18,6 +18,10 @@ android {
             isIncludeAndroidResources = true
         }
     }
+
+    defaultConfig {
+        missingDimensionStrategy("environment", "prod")
+    }
 }
 
 setupAnvil()

@@ -7,7 +7,9 @@
 
 package io.element.android.appconfig
 
-object MatrixConfiguration {
-    const val MATRIX_TO_PERMALINK_BASE_URL: String = "https://matrix.to/#/"
-    val clientPermalinkBaseUrl: String? = null
+object PushConfig {
+    /**
+     * Note: pusher_app_id cannot exceed 64 chars.
+     */
+    const val PUSHER_APP_ID: String = "fr.gouv.tchap.a.android"
 }

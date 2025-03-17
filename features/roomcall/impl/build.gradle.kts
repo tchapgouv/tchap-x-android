@@ -13,6 +13,10 @@ plugins {
 
 android {
     namespace = "io.element.android.features.roomcall.impl"
+
+    defaultConfig {
+        missingDimensionStrategy("environment", "prod")
+    }
 }
 
 setupAnvil()

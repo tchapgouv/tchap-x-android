@@ -43,6 +43,10 @@ android {
             )
         }
     }
+
+    defaultConfig {
+        missingDimensionStrategy("environment", "prod")
+    }
 }
 
 setupAnvil()
