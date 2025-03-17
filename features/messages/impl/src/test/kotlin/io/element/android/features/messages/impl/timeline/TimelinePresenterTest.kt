@@ -12,6 +12,7 @@ import app.cash.molecule.moleculeFlow
 import app.cash.turbine.ReceiveTurbine
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
 import io.element.android.features.messages.impl.FakeMessagesNavigator
 import io.element.android.features.messages.impl.crypto.sendfailure.resolve.aResolveVerifiedUserSendFailureState
 import io.element.android.features.messages.impl.fixtures.aMessageEvent
@@ -38,6 +39,7 @@ import io.element.android.libraries.matrix.api.timeline.item.event.EventReaction
 import io.element.android.libraries.matrix.api.timeline.item.event.ReactionSender
 import io.element.android.libraries.matrix.api.timeline.item.event.Receipt
 import io.element.android.libraries.matrix.api.timeline.item.virtual.VirtualTimelineItem
+import io.element.android.libraries.matrix.api.timeline.item.virtual.VirtualTimelineItem.BwiScanStateChanged
 import io.element.android.libraries.matrix.test.AN_EVENT_ID
 import io.element.android.libraries.matrix.test.AN_EVENT_ID_2
 import io.element.android.libraries.matrix.test.A_UNIQUE_ID
@@ -78,6 +80,32 @@ import kotlin.time.Duration.Companion.seconds
 @OptIn(ExperimentalCoroutinesApi::class) class TimelinePresenterTest {
     @get:Rule
     val warmUpRule = WarmUpRule()
+
+    @Test
+    fun `BWI - present - ScanStateChanged event is filtered`() = runTest {
+        val timeline = FakeTimeline(
+            timelineItems = flowOf(
+                listOf(
+                    MatrixTimelineItem.Virtual(A_UNIQUE_ID_2, BwiScanStateChanged(A_UNIQUE_ID.toString(), BwiContentScannerScanState.INFECTED)),
+                    MatrixTimelineItem.Event(A_UNIQUE_ID, anEventTimelineItem()),
+                )
+            )
+        )
+
+        val room = FakeMatrixRoom(
+            liveTimeline = timeline,
+            canUserSendMessageResult = { _, _ -> Result.success(true) },
+        )
+
+        val presenter = createTimelinePresenter(timeline, room)
+        moleculeFlow(RecompositionMode.Immediate) {
+            presenter.present()
+        }.test {
+            val initialState = consumeItemsUntilPredicate(30.seconds) { it.timelineItems.isNotEmpty() }.last()
+            assertThat(initialState.timelineItems.size).isEqualTo(1)
+            assertThat(initialState.timelineItems[0].identifier()).isEqualTo(A_UNIQUE_ID)
+        }
+    }
 
     @Test
     fun `present - initial state`() = runTest {

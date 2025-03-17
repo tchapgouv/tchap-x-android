@@ -333,7 +333,7 @@ class RustMatrixClient(
                 historyVisibilityOverride = createRoomParams.historyVisibilityOverride?.map(),
                 canonicalAlias = createRoomParams.roomAliasName.getOrNull(),
             )
-            val roomId = RoomId(innerClient.createRoom(rustParams))
+            val roomId = RoomId(innerClient.createRoom(rustParams, isFederated = true)) // TODO fix the federated value
             // Wait to receive the room back from the sync but do not returns failure if it fails.
             try {
                 awaitRoom(roomId.toRoomIdOrAlias(), 30.seconds, CurrentUserMembership.JOINED)

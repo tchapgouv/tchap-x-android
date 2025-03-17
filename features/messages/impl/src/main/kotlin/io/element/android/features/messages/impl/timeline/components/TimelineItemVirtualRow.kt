@@ -21,6 +21,7 @@ import io.element.android.features.messages.impl.timeline.components.virtual.Tim
 import io.element.android.features.messages.impl.timeline.components.virtual.TimelineItemRoomBeginningView
 import io.element.android.features.messages.impl.timeline.components.virtual.TimelineLoadingMoreIndicator
 import io.element.android.features.messages.impl.timeline.model.TimelineItem
+import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemBwiScanStateChangedModel
 import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemDaySeparatorModel
 import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemLastForwardIndicatorModel
 import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemLoadingIndicatorModel
@@ -39,6 +40,9 @@ fun TimelineItemVirtualRow(
 ) {
     Box(modifier = modifier) {
         when (virtual.model) {
+            is TimelineItemBwiScanStateChangedModel -> {
+                Timber.e("###BWI### Unexpected virtual event TimelineItemBwiScanStateModel ${virtual.model.eventId} ${virtual.model.newScanState}")
+            }
             is TimelineItemDaySeparatorModel -> TimelineItemDaySeparatorView(virtual.model)
             TimelineItemReadMarkerModel -> TimelineItemReadMarkerView()
             TimelineItemRoomBeginningModel -> TimelineItemRoomBeginningView(roomName = timelineRoomInfo.name)

@@ -23,6 +23,7 @@ fun Throwable.mapAuthenticationException(): AuthenticationException {
             is ClientBuildException.WellKnownDeserializationException -> AuthenticationException.Generic(message)
             is ClientBuildException.WellKnownLookupFailed -> AuthenticationException.Generic(message)
             is ClientBuildException.EventCache -> AuthenticationException.Generic(message)
+            is ClientBuildException.ServerIsNotVerified -> AuthenticationException.Generic(message)
         }
         else -> AuthenticationException.Generic(message)
     }
