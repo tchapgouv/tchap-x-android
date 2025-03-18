@@ -11,5 +11,5 @@ object PushConfig {
     /**
      * Note: pusher_app_id cannot exceed 64 chars.
      */
-    const val PUSHER_APP_ID: String = "fr.gouv.tchap.a.android"
+    const val PUSHER_APP_ID: String = "fr.gouv.tchap.android.x.dev"
 }

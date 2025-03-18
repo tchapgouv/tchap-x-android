@@ -15,7 +15,7 @@ android {
     namespace = "io.element.android.libraries.pushproviders.unifiedpush"
 
     defaultConfig {
-        missingDimensionStrategy("environment", "prod")
+        missingDimensionStrategy("environment", "dev")
     }
 }
 

@@ -45,7 +45,7 @@ android {
     }
 
     defaultConfig {
-        missingDimensionStrategy("environment", "prod")
+        missingDimensionStrategy("environment", "dev")
     }
 }
 

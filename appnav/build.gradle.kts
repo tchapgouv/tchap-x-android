@@ -19,7 +19,7 @@ android {
     namespace = "io.element.android.appnav"
 
     defaultConfig {
-        missingDimensionStrategy("environment", "prod")
+        missingDimensionStrategy("environment", "dev")
     }
 }
 

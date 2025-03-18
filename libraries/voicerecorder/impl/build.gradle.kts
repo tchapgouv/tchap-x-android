@@ -14,7 +14,7 @@ android {
     namespace = "io.element.android.libraries.voicerecorder.impl"
 
     defaultConfig {
-        missingDimensionStrategy("environment", "prod")
+        missingDimensionStrategy("environment", "dev")
     }
 }
 

@@ -99,11 +99,13 @@ android {
 
     buildTypes {
         getByName("debug") {
-            applicationIdSuffix = ".debug"
+//            resValue("string", "app_name", "$baseAppName dbg")
+//            applicationIdSuffix = ".debug"
             signingConfig = signingConfigs.getByName("debug")
         }
 
         getByName("release") {
+//            resValue("string", "app_name", baseAppName)
             signingConfig = signingConfigs.getByName("debug")
 
             postprocessing {

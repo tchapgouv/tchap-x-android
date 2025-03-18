@@ -16,7 +16,7 @@ android {
     namespace = "io.element.android.features.invite.impl"
 
     defaultConfig {
-        missingDimensionStrategy("environment", "prod")
+        missingDimensionStrategy("environment", "dev")
     }
 }
 

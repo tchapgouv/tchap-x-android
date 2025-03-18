@@ -19,7 +19,7 @@ android {
     namespace = "ui"
 
     defaultConfig {
-        missingDimensionStrategy("environment", "prod")
+        missingDimensionStrategy("environment", "dev")
     }
 }
 

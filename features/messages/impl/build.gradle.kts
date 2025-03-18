@@ -21,7 +21,7 @@ android {
     }
 
     defaultConfig {
-        missingDimensionStrategy("environment", "prod")
+        missingDimensionStrategy("environment", "dev")
     }
 }
 
@@ -34,7 +34,7 @@ dependencies {
     implementation(projects.features.location.api)
     implementation(projects.features.poll.api)
     implementation(projects.features.roomcall.api)
-    implementation(projects.libraries.bwi.api)
+//    implementation(projects.libraries.bwi.api)
     implementation(projects.libraries.androidutils)
     implementation(projects.libraries.core)
     implementation(projects.libraries.architecture)

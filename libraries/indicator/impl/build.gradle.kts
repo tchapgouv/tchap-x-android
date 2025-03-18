@@ -17,7 +17,7 @@ android {
     namespace = "io.element.android.libraries.indicator.impl"
 
     defaultConfig {
-        missingDimensionStrategy("environment", "prod")
+        missingDimensionStrategy("environment", "dev")
     }
 }
 

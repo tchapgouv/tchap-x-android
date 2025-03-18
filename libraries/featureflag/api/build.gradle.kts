@@ -13,7 +13,7 @@ android {
     namespace = "io.element.android.libraries.featureflag.api"
 
     defaultConfig {
-        missingDimensionStrategy("environment", "prod")
+        missingDimensionStrategy("environment", "dev")
     }
 }
 
