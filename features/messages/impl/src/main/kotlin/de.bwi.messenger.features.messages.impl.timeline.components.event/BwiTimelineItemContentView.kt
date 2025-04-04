@@ -57,13 +57,14 @@ import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.textcomposer.ElementRichTextEditorStyle
 import io.element.android.wysiwyg.compose.EditorStyledText
+import io.element.android.wysiwyg.link.Link
 
 @Composable
 fun BwiTimelineItemContentView(
     content: TimelineItemEventContentWithAttachment,
     blurHash: String?,
     aspectRatio: Float?,
-    onLinkClick: (String) -> Unit,
+    onLinkClick: (Link) -> Unit,
     onContentLayoutChange: (ContentAvoidingLayoutData) -> Unit,
     modifier: Modifier = Modifier,
     containerModifier: Modifier = Modifier,

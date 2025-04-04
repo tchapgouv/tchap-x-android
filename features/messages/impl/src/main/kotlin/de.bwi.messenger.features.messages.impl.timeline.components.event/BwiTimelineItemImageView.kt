@@ -39,6 +39,7 @@ import io.element.android.features.messages.impl.timeline.protection.ProtectedVi
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.ui.strings.CommonStrings
+import io.element.android.wysiwyg.link.Link
 
 @Composable
 fun BwiTimelineItemImageView(
@@ -46,7 +47,7 @@ fun BwiTimelineItemImageView(
     hideMediaContent: Boolean,
     onContentClick: (() -> Unit)?,
     onLongClick: (() -> Unit)?,
-    onLinkClick: (String) -> Unit,
+    onLinkClick: (Link) -> Unit,
     onShowContentClick: () -> Unit,
     onContentLayoutChange: (ContentAvoidingLayoutData) -> Unit,
     modifier: Modifier = Modifier,

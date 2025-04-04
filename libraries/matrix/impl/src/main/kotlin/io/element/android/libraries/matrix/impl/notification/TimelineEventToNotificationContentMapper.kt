@@ -65,6 +65,7 @@ private fun StateEventContent.toContent(): NotificationContent.StateEvent {
         StateEventContent.RoomTopic -> NotificationContent.StateEvent.RoomTopic
         StateEventContent.SpaceChild -> NotificationContent.StateEvent.SpaceChild
         StateEventContent.SpaceParent -> NotificationContent.StateEvent.SpaceParent
+        is StateEventContent.RoomAccessRule -> TODO() // TCHAP TODO room access rule
     }
 }
 

@@ -51,6 +51,7 @@ import io.element.android.libraries.matrix.ui.media.MAX_THUMBNAIL_WIDTH
 import io.element.android.libraries.matrix.ui.media.MediaRequestData
 import io.element.android.libraries.matrix.ui.media.MediaRequestData.Kind.Thumbnail
 import io.element.android.libraries.ui.strings.CommonStrings
+import io.element.android.wysiwyg.link.Link
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -60,7 +61,7 @@ fun BwiTimelineItemVideoView(
     onContentClick: (() -> Unit)?,
     onLongClick: (() -> Unit)?,
     onShowContentClick: () -> Unit,
-    onLinkClick: (String) -> Unit,
+    onLinkClick: (Link) -> Unit,
     onContentLayoutChange: (ContentAvoidingLayoutData) -> Unit,
     modifier: Modifier = Modifier,
 ) {

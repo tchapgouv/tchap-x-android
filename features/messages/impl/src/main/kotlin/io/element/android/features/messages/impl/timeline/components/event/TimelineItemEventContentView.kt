@@ -86,7 +86,7 @@ fun TimelineItemEventContentView(
             onLongClick = onLongClick,
             onShowContentClick = onShowContentClick,
             onLinkClick = onLinkClick,
-            onLinkLongClick = onLinkLongClick,
+//            onLinkLongClick = onLinkLongClick,
             onContentLayoutChange = onContentLayoutChange,
             modifier = modifier,
         )
@@ -105,7 +105,7 @@ fun TimelineItemEventContentView(
             onLongClick = onLongClick,
             onShowContentClick = onShowContentClick,
             onLinkClick = onLinkClick,
-            onLinkLongClick = onLinkLongClick,
+//            onLinkLongClick = onLinkLongClick,
             onContentLayoutChange = onContentLayoutChange,
             modifier = modifier
         )
