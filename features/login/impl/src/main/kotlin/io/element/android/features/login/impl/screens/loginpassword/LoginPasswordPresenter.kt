@@ -67,7 +67,11 @@ class LoginPasswordPresenter @Inject constructor(
 
     private fun CoroutineScope.submit(formState: LoginFormState, loggedInState: MutableState<AsyncData<SessionId>>) = launch {
         loggedInState.value = AsyncData.Loading()
-        authenticationService.login(formState.login.trim(), formState.password)
+
+        // Tchap: [beta DINUM] - intercept login here in formState.login.
+        val matrixId = tchapConvertEmailToMatrixId(formState.login)
+
+        authenticationService.login(matrixId.trim(), formState.password)
             .onSuccess { sessionId ->
                 // We will not navigate to the WaitList screen, so the login user story is done
                 defaultLoginUserStory.setLoginFlowIsDone(true)
@@ -80,5 +84,32 @@ class LoginPasswordPresenter @Inject constructor(
 
     private fun updateFormState(formState: MutableState<LoginFormState>, updateLambda: LoginFormState.() -> LoginFormState) {
         formState.value = updateLambda(formState.value)
+    }
+
+    // Tchap: [beta DINUM] - convert matrixID to email if necessary
+    private fun tchapConvertEmailToMatrixId(identifier: String): String {
+        // If the user email doesn't contain an '@' character, it can be the start of a matrixID (e.g. 'firstname.lastname-myDomain').
+        // Try to replace last hyphen ('-') by an '@' to make it looks like a email address.
+
+        // Don't touch the identifier if it is not an email address.
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(identifier).matches()) {
+            return identifier
+        }
+
+        // Find last '@' in identifier.
+        val lastIndexOfArobase = identifier.lastIndexOf('@')
+
+        if (lastIndexOfArobase < 0) {
+            return identifier
+        }
+
+        // Split identifier around last '@'.
+        val prefix = identifier.substring(0, lastIndexOfArobase)
+        val suffix = identifier.substring(lastIndexOfArobase + 1, identifier.length)
+
+        // Build MatrixID joining prefix and suffix with a '-' sign.
+        val matrixId = "${prefix}-${suffix}"
+
+        return matrixId
     }
 }
