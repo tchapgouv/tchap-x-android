@@ -174,4 +174,38 @@ object TchapPatterns {
         val charPool = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         return (1..length).map { charPool.random() }.joinToString("")
     }
+
+
+    // Tchap: [beta DINUM] - convert matrixID to email if necessary
+    /**
+     * Convert a login ID to a MatrixId if it is an email.
+     *
+     * @param the ID to try to convert.
+     * @return the corresponding MatrixID.
+     */
+    fun convertIdToMatrixId(identifier: String): String {
+        // If the user email doesn't contain an '@' character, it can be the start of a matrixID (e.g. 'firstname.lastname-myDomain').
+        // Try to replace last hyphen ('-') by an '@' to make it looks like a email address.
+
+        // Don't touch the identifier if it is not an email address.
+        if (!"^[a-zA-Z0-9_!#\$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#\$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*\$".toPattern().matcher(identifier).matches()) {
+            return identifier
+        }
+
+        // Find last '@' in identifier.
+        val lastIndexOfArobase = identifier.lastIndexOf('@')
+
+        if (lastIndexOfArobase < 0) {
+            return identifier
+        }
+
+        // Split identifier around last '@'.
+        val prefix = identifier.substring(0, lastIndexOfArobase)
+        val suffix = identifier.substring(lastIndexOfArobase + 1, identifier.length)
+
+        // Build MatrixID joining prefix and suffix with a '-' sign.
+        val matrixId = "${prefix}-${suffix}"
+
+        return matrixId
+    }
 }
