@@ -21,7 +21,9 @@ class AccountProviderDataSource @Inject constructor(
     enterpriseService: EnterpriseService,
 ) {
     private val defaultAccountProvider =
-        (enterpriseService.defaultHomeserverList().firstOrNull { it != EnterpriseService.ANY_ACCOUNT_PROVIDER } ?: AuthenticationConfig.MATRIX_ORG_URL)
+        // Tchap: [beta DINUM] - use Tchap DINUM HomeServer as default HomeServer.
+//        (enterpriseService.defaultHomeserverList().firstOrNull { it != EnterpriseService.ANY_ACCOUNT_PROVIDER } ?: AuthenticationConfig.MATRIX_ORG_URL)
+        (enterpriseService.defaultHomeserverList().firstOrNull { it != EnterpriseService.ANY_ACCOUNT_PROVIDER } ?: AuthenticationConfig.TCHAP_DINUM_URL)
             .let { url ->
                 AccountProvider(
                     url = url,

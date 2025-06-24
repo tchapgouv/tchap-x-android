@@ -9,6 +9,8 @@ package io.element.android.appconfig
 
 object AuthenticationConfig {
     const val MATRIX_ORG_URL = "https://matrix.org"
+    // Tchap: [beta DINUM] - define Tchap DINUM HomeServer url.
+    const val TCHAP_DINUM_URL = "https://matrix.agent.dinum.tchap.gouv.fr"
 
     /**
      * URL with some docs that explain what's sliding sync and how to add it to your home server.
