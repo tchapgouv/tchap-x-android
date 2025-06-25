@@ -23,6 +23,7 @@ import io.element.android.services.analytics.impl.store.AnalyticsStore
 import io.element.android.services.analyticsproviders.api.AnalyticsProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
@@ -46,7 +47,7 @@ class DefaultAnalyticsService @Inject constructor(
     private var pendingUserProperties: UserProperties? = null
 
     override val userConsentFlow: Flow<Boolean> = analyticsStore.userConsentFlow
-    override val didAskUserConsentFlow: Flow<Boolean> = analyticsStore.didAskUserConsentFlow
+    override val didAskUserConsentFlow: Flow<Boolean> = flowOf(true) // TCHAP disabled the consent dialog
     override val analyticsIdFlow: Flow<String> = analyticsStore.analyticsIdFlow
 
     init {
