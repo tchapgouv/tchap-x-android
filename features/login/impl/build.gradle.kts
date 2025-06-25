@@ -38,6 +38,7 @@ dependencies {
     implementation(projects.libraries.matrix.api)
     implementation(projects.libraries.network)
     implementation(projects.libraries.designsystem)
+    implementation(projects.libraries.tchaputils)
     implementation(projects.libraries.testtags)
     implementation(projects.libraries.uiStrings)
     implementation(projects.libraries.permissions.api)

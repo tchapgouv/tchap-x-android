@@ -27,6 +27,8 @@ package fr.gouv.tchap.libraries.tchaputils
 import java.util.Locale
 
 object TchapPatterns {
+    private val EMAIL_REGEX = "^[a-zA-Z0-9_!#\$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#\$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*\$".toRegex()
+
     /**
      * Get the homeserver name of a matrix identifier.
      * The identifier type may be any matrix identifier type: user id, room id, ...
@@ -173,5 +175,20 @@ object TchapPatterns {
     fun getRandomString(length: Int): String {
         val charPool = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         return (1..length).map { charPool.random() }.joinToString("")
+    }
+
+
+    /**
+     * Converts a login ID to a Matrix ID if it is an email address.
+     *
+     * If the identifier is a valid email address, it is converted to a Matrix ID by replacing the '@' with a '-'.
+     * Otherwise, the identifier is returned unchanged.
+     *
+     * @param identifier The login ID to convert.
+     * @return The corresponding Matrix ID, or the original identifier if it is not an email.
+     */
+    fun convertIdToMatrixId(identifier: String): String {
+        if (!EMAIL_REGEX.matches(identifier)) return identifier
+        return identifier.replace('@', '-')
     }
 }

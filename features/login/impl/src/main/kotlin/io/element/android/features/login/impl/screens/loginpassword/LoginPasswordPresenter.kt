@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.convertIdToMatrixId
 import io.element.android.features.login.impl.DefaultLoginUserStory
 import io.element.android.features.login.impl.accountprovider.AccountProviderDataSource
 import io.element.android.libraries.architecture.AsyncData
@@ -67,7 +68,11 @@ class LoginPasswordPresenter @Inject constructor(
 
     private fun CoroutineScope.submit(formState: LoginFormState, loggedInState: MutableState<AsyncData<SessionId>>) = launch {
         loggedInState.value = AsyncData.Loading()
-        authenticationService.login(formState.login.trim(), formState.password)
+
+        // Tchap: [beta DINUM] - intercept login here in formState.login.
+        val matrixId = convertIdToMatrixId(formState.login)
+
+        authenticationService.login(matrixId.trim(), formState.password)
             .onSuccess { sessionId ->
                 // We will not navigate to the WaitList screen, so the login user story is done
                 defaultLoginUserStory.setLoginFlowIsDone(true)
