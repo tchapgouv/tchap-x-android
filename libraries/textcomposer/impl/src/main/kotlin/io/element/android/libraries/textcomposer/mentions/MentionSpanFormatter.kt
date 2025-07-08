@@ -8,6 +8,7 @@
 package io.element.android.libraries.textcomposer.mentions
 
 import com.squareup.anvil.annotations.ContributesBinding
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.toUserDisplayName
 import io.element.android.libraries.di.RoomScope
 import io.element.android.libraries.matrix.api.core.RoomIdOrAlias
 import io.element.android.libraries.matrix.api.core.UserId
@@ -53,7 +54,7 @@ class DefaultMentionSpanFormatter @Inject constructor(
         return if (displayName != null) {
             "@$displayName"
         } else {
-            userId.value
+            userId.value.toUserDisplayName() // TCHAP hide the Matrix Id
         }
     }
 

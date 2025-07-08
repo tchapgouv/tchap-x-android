@@ -60,7 +60,7 @@ class MarkdownTextEditorState(
             }
             is ResolvedSuggestion.Member -> {
                 val currentText = SpannableStringBuilder(text.value())
-                val mentionSpan = mentionSpanProvider.createUserMentionSpan(resolvedSuggestion.roomMember.userId) // TCHAP TODO check needed about mxid displaying
+                val mentionSpan = mentionSpanProvider.createUserMentionSpan(resolvedSuggestion.roomMember.userId)
                 currentText.replace(suggestion.start, suggestion.end, "@ ")
                 val end = suggestion.start + 1
                 currentText.setSpan(mentionSpan, suggestion.start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)

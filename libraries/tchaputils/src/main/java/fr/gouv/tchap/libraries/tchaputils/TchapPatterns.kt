@@ -177,7 +177,6 @@ object TchapPatterns {
         return (1..length).map { charPool.random() }.joinToString("")
     }
 
-
     /**
      * Converts a login ID to a Matrix ID if it is an email address.
      *

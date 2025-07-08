@@ -22,6 +22,7 @@ android {
 setupAnvil()
 
 dependencies {
+    implementation(projects.libraries.tchaputils)
     implementation(projects.libraries.architecture)
     implementation(projects.libraries.uiStrings)
     implementation(projects.libraries.androidutils)
