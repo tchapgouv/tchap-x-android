@@ -27,6 +27,8 @@ import io.element.android.features.messages.impl.R
 import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
+import io.element.android.libraries.designsystem.components.avatar.AvatarType
+import io.element.android.libraries.designsystem.components.avatar.anAvatarData
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.components.HorizontalDivider
@@ -47,7 +49,7 @@ fun SuggestionsPickerView(
     isDebugBuild: Boolean,
     roomId: RoomId,
     roomName: String?,
-    roomAvatarData: AvatarData?,
+    roomAvatarData: AvatarData,
     suggestions: ImmutableList<ResolvedSuggestion>,
     onSelectSuggestion: (ResolvedSuggestion) -> Unit,
     modifier: Modifier = Modifier,
@@ -101,6 +103,11 @@ private fun SuggestionItemView(
             is ResolvedSuggestion.Member -> suggestion.roomMember.getAvatarData(avatarSize)
             is ResolvedSuggestion.Alias -> suggestion.getAvatarData(avatarSize)
         }
+        val avatarType = when (suggestion) {
+            is ResolvedSuggestion.Alias -> AvatarType.Room()
+            ResolvedSuggestion.AtRoom,
+            is ResolvedSuggestion.Member -> AvatarType.User
+        }
         val title = when (suggestion) {
             is ResolvedSuggestion.AtRoom -> stringResource(R.string.screen_room_mentions_at_room_title)
             is ResolvedSuggestion.Member -> suggestion.roomMember.getBestName() // TCHAP TODO should be applied in Element X
@@ -111,9 +118,11 @@ private fun SuggestionItemView(
             is ResolvedSuggestion.Member -> suggestion.roomMember.userId.value.takeIf { isDebugBuild } // TCHAP hide the Matrix Id in release mode
             is ResolvedSuggestion.Alias -> suggestion.roomAlias.value
         }
-
-        Avatar(avatarData = avatarData, modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 12.dp))
-
+        Avatar(
+            avatarData = avatarData,
+            avatarType = avatarType,
+            modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 12.dp),
+        )
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -162,7 +171,7 @@ internal fun SuggestionsPickerViewPreview() {
             isDebugBuild = false,
             roomId = RoomId("!room:matrix.org"),
             roomName = "Room",
-            roomAvatarData = null,
+            roomAvatarData = anAvatarData(),
             suggestions = persistentListOf(
                 ResolvedSuggestion.AtRoom,
                 ResolvedSuggestion.Member(roomMember),

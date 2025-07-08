@@ -94,6 +94,7 @@ import io.element.android.libraries.designsystem.colors.AvatarColorsProvider
 import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
+import io.element.android.libraries.designsystem.components.avatar.AvatarType
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewGroup
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
@@ -370,7 +371,7 @@ fun Modifier.avatarBloom(
         val initialsBitmap = initialsBitmap(
             width = BloomDefaults.ENCODE_SIZE_PX.toDp(),
             height = BloomDefaults.ENCODE_SIZE_PX.toDp(),
-            text = avatarData.initial,
+            text = avatarData.initialLetter,
             textColor = avatarColors.foreground,
             backgroundColor = avatarColors.background,
         )
@@ -498,6 +499,7 @@ internal fun BloomPreview() {
                                     url = "aURL",
                                     size = AvatarSize.CurrentUserTopBar,
                                 ),
+                                avatarType = AvatarType.User,
                             )
                         },
                         actions = {

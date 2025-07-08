@@ -27,7 +27,7 @@
   </plurals>
   <string name="a11y_read_receipts_single">"Gelezen door %1$s"</string>
   <string name="a11y_read_receipts_tap_to_show_all">"Tik om alles weer te geven"</string>
-  <string name="a11y_remove_reaction_with">"Verwijder reactie met %1$s"</string>
+  <string name="a11y_remove_reaction">"Verwijder reactie met %1$s"</string>
   <string name="a11y_send_files">"Bestanden verzenden"</string>
   <string name="a11y_show_password">"Wachtwoord weergeven"</string>
   <string name="a11y_start_call">"Begin een oproep"</string>
@@ -323,7 +323,6 @@ Reden: %1$s."</string>
   <string name="screen_room_pinned_banner_loading_description">"Bericht laden…"</string>
   <string name="screen_room_pinned_banner_view_all_button_title">"Bekijk alles"</string>
   <string name="screen_room_title">"Chat"</string>
-  <string name="screen_roomlist_knock_event_sent_description">"Verzoek om toe te treden verzonden"</string>
   <string name="screen_share_location_title">"Locatie delen"</string>
   <string name="screen_share_my_location_action">"Deel mijn locatie"</string>
   <string name="screen_share_open_apple_maps">"Openen in Apple Maps"</string>

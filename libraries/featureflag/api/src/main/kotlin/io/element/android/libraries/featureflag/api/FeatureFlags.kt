@@ -112,10 +112,28 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
+    EnableKeyShareOnInvite(
+        key = "feature.enableKeyShareOnInvite",
+        title = "Share encrypted history with new members",
+        description = "When inviting a user to an encrypted room that has history visibility set to \"shared\"," +
+            " share encrypted history with that user, and accept encrypted history when you are invited to such a room." +
+            "\nRequires an app restart to take effect." +
+            "\n\nWARNING: this feature is EXPERIMENTAL and not all security precautions are implemented." +
+            " Do not enable on production accounts.",
+        defaultValue = { false },
+        isFinished = false,
+    ),
     Knock(
         key = "feature.knock",
         title = "Ask to join",
         description = "Allow creating rooms which users can request access to.",
+        defaultValue = { false },
+        isFinished = false,
+    ),
+    Space(
+        key = "feature.space",
+        title = "Spaces",
+        description = "Spaces are under active development, only developers should enable this flog for now.",
         defaultValue = { false },
         isFinished = false,
     ),

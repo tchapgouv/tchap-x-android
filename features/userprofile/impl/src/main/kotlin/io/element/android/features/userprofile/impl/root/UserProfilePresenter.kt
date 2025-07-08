@@ -21,7 +21,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.element.android.features.createroom.api.StartDMAction
-import io.element.android.features.enterprise.api.EnterpriseService
+import io.element.android.features.enterprise.api.SessionEnterpriseService
 import io.element.android.features.userprofile.api.UserProfileEvents
 import io.element.android.features.userprofile.api.UserProfileState
 import io.element.android.features.userprofile.api.UserProfileState.ConfirmationDialog
@@ -47,7 +47,7 @@ class UserProfilePresenter @AssistedInject constructor(
     private val buildMeta: BuildMeta,
     private val client: MatrixClient,
     private val startDMAction: StartDMAction,
-    private val enterpriseService: EnterpriseService,
+    private val sessionEnterpriseService: SessionEnterpriseService,
 ) : Presenter<UserProfileState> {
     @AssistedFactory
     interface Factory {
@@ -64,7 +64,7 @@ class UserProfilePresenter @AssistedInject constructor(
     @Composable
     private fun getCanCall(roomId: RoomId?): State<Boolean> {
         val isElementCallAvailable by produceState(initialValue = false, roomId) {
-            value = enterpriseService.isElementCallAvailable()
+            value = sessionEnterpriseService.isElementCallAvailable()
         }
 
         return produceState(initialValue = false, isElementCallAvailable, roomId) {

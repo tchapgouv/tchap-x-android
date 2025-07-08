@@ -34,6 +34,7 @@ import org.matrix.rustcomponents.sdk.SlidingSyncVersionBuilder
 import org.matrix.rustcomponents.sdk.use
 import timber.log.Timber
 import uniffi.matrix_sdk_crypto.CollectStrategy
+import uniffi.matrix_sdk_crypto.DecryptionSettings
 import uniffi.matrix_sdk_crypto.TrustRequirement
 import java.io.File
 import javax.inject.Inject
@@ -120,13 +121,16 @@ class RustMatrixClientFactory @Inject constructor(
                     CollectStrategy.ALL_DEVICES // TCHAP accepts all devices for room key sharing
                 }
             )
-            .roomDecryptionTrustRequirement(
-                trustRequirement = if (featureFlagService.isFeatureEnabled(FeatureFlags.OnlySignedDeviceIsolationMode)) {
-                    TrustRequirement.CROSS_SIGNED_OR_LEGACY
-                } else {
-                    TrustRequirement.UNTRUSTED
-                }
+            .decryptionSettings(
+                DecryptionSettings(
+                    senderDeviceTrustRequirement = if (featureFlagService.isFeatureEnabled(FeatureFlags.OnlySignedDeviceIsolationMode)) {
+                        TrustRequirement.CROSS_SIGNED_OR_LEGACY
+                    } else {
+                        TrustRequirement.UNTRUSTED
+                    }
+                )
             )
+            .enableShareHistoryOnInvite(featureFlagService.isFeatureEnabled(FeatureFlags.EnableKeyShareOnInvite))
             .run {
                 // Apply sliding sync version settings
                 when (slidingSyncType) {

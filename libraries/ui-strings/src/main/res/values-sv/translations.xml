@@ -27,7 +27,7 @@
   </plurals>
   <string name="a11y_read_receipts_single">"Läst av %1$s"</string>
   <string name="a11y_read_receipts_tap_to_show_all">"Tryck för att visa alla"</string>
-  <string name="a11y_remove_reaction_with">"Ta bort reaktionen med %1$s"</string>
+  <string name="a11y_remove_reaction">"Ta bort reaktionen med %1$s"</string>
   <string name="a11y_send_files">"Skicka filer"</string>
   <string name="a11y_show_password">"Visa lösenord"</string>
   <string name="a11y_start_call">"Starta ett samtal"</string>
@@ -372,7 +372,6 @@ Anledning:%1$s."</string>
   <string name="screen_room_pinned_banner_loading_description">"Laddar meddelande …"</string>
   <string name="screen_room_pinned_banner_view_all_button_title">"Visa alla"</string>
   <string name="screen_room_title">"Chatt"</string>
-  <string name="screen_roomlist_knock_event_sent_description">"Begäran om att gå med skickad"</string>
   <string name="screen_share_location_title">"Dela plats"</string>
   <string name="screen_share_my_location_action">"Dela min plats"</string>
   <string name="screen_share_open_apple_maps">"Öppna i Apple Maps"</string>

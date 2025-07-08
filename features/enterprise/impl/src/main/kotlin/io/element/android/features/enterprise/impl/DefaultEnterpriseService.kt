@@ -25,8 +25,6 @@ class DefaultEnterpriseService @Inject constructor() : EnterpriseService {
     override fun defaultHomeserverList(): List<String> = listOf("matrix.agent.dinum.tchap.gouv.fr")
     override suspend fun isAllowedToConnectToHomeserver(homeserverUrl: String) = true
 
-    override suspend fun isElementCallAvailable(): Boolean = true
-
     override fun semanticColorsLight(): SemanticColors = compoundColorsLight
 
     override fun semanticColorsDark(): SemanticColors = compoundColorsDark

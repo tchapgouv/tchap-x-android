@@ -8,7 +8,6 @@
 package io.element.android.features.poll.impl.history
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +29,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.isTraversalGroup
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -41,7 +42,6 @@ import io.element.android.features.poll.impl.history.model.PollHistoryItem
 import io.element.android.libraries.designsystem.components.button.BackButton
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
-import io.element.android.libraries.designsystem.theme.aliasScreenTitle
 import io.element.android.libraries.designsystem.theme.components.Button
 import io.element.android.libraries.designsystem.theme.components.Scaffold
 import io.element.android.libraries.designsystem.theme.components.SegmentedButton
@@ -52,7 +52,7 @@ import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.ui.strings.CommonStrings
 import kotlinx.collections.immutable.ImmutableList
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PollHistoryView(
     state: PollHistoryState,
@@ -76,12 +76,7 @@ fun PollHistoryView(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.screen_polls_history_title),
-                        style = ElementTheme.typography.aliasScreenTitle,
-                    )
-                },
+                titleStr = stringResource(R.string.screen_polls_history_title),
                 navigationIcon = {
                     BackButton(onClick = goBack)
                 },
@@ -179,7 +174,9 @@ private fun PollHistoryList(
         if (pollHistoryItems.isEmpty()) {
             item {
                 Column(
-                    modifier = Modifier.fillParentMaxSize().padding(bottom = 24.dp),
+                    modifier = Modifier
+                        .fillParentMaxSize()
+                        .padding(bottom = 24.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -192,7 +189,9 @@ private fun PollHistoryList(
                         text = emptyStringResource,
                         style = ElementTheme.typography.fontBodyLgRegular,
                         color = ElementTheme.colors.textSecondary,
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp, horizontal = 16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 24.dp, horizontal = 16.dp),
                         textAlign = TextAlign.Center,
                     )
 
@@ -228,7 +227,10 @@ private fun PollHistoryItemRow(
     modifier: Modifier = Modifier,
 ) {
     Surface(
-        modifier = modifier,
+        modifier = modifier.semantics(mergeDescendants = true) {
+            // Allow the answers to be traversed by Talkback
+            isTraversalGroup = true
+        },
         border = BorderStroke(1.dp, ElementTheme.colors.borderInteractiveSecondary),
         shape = RoundedCornerShape(size = 12.dp)
     ) {
