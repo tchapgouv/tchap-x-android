@@ -23,6 +23,7 @@ import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.RoomIdOrAlias
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.createroom.CreateRoomParameters
+import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
 import io.element.android.libraries.matrix.api.createroom.RoomPreset
 import io.element.android.libraries.matrix.api.encryption.EncryptionService
 import io.element.android.libraries.matrix.api.media.MatrixMediaLoader
@@ -330,10 +331,10 @@ class RustMatrixClient(
         runCatchingExceptions {
             val rustParams = RustCreateRoomParameters(
                 accessRulesOverride = when (createRoomParams.accessRules) {
-                    "direct" -> AccessRule.DIRECT
-                    "unrestricted" -> AccessRule.UNRESTRICTED
-                    "restricted" -> AccessRule.RESTRICTED
-                    else -> AccessRule.RESTRICTED
+                    RoomAccessRules.DIRECT -> AccessRule.DIRECT
+                    RoomAccessRules.UNRESTRICTED  -> AccessRule.UNRESTRICTED
+                    RoomAccessRules.RESTRICTED  -> AccessRule.RESTRICTED
+                    else -> null
                 },
                 name = createRoomParams.name,
                 topic = createRoomParams.topic,

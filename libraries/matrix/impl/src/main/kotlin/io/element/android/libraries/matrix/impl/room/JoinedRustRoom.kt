@@ -17,6 +17,7 @@ import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.RoomAlias
 import io.element.android.libraries.matrix.api.core.SendHandle
 import io.element.android.libraries.matrix.api.core.UserId
+import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityStateChange
 import io.element.android.libraries.matrix.api.notificationsettings.NotificationSettingsService
 import io.element.android.libraries.matrix.api.room.BaseRoom
@@ -93,8 +94,8 @@ class JoinedRustRoom(
 
     override val syncUpdateFlow = MutableStateFlow(0L)
 
-    override val accessRules: String
-        get() = ""
+    override val accessRules: RoomAccessRules?
+        get() = null
 //        get() = runCatching { innerRoom.accessRules }.getOrDefault("") // TCHAP todo
 
     override val roomTypingMembersFlow: Flow<List<UserId>> = mxCallbackFlow {
@@ -493,13 +494,12 @@ class JoinedRustRoom(
         )
     }
 
-    override suspend fun setAccessRules(rule: String): Result<Unit> = withContext(roomDispatcher) {
+    override suspend fun setAccessRules(rule: RoomAccessRules): Result<Unit> = withContext(roomDispatcher) {
         runCatching {
             innerRoom.setAccessRules(when (rule) {
-                "direct" -> AccessRule.DIRECT
-                "unrestricted" -> AccessRule.UNRESTRICTED
-                "restricted" -> AccessRule.RESTRICTED
-                else -> AccessRule.RESTRICTED
+                RoomAccessRules.DIRECT -> AccessRule.DIRECT
+                RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
+                RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
             },)
         }
     }

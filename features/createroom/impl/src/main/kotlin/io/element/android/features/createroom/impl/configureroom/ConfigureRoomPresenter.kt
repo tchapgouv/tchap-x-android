@@ -31,6 +31,7 @@ import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.createroom.CreateRoomParameters
+import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
 import io.element.android.libraries.matrix.api.createroom.RoomPreset
 import io.element.android.libraries.matrix.api.room.alias.RoomAliasHelper
 import io.element.android.libraries.matrix.api.room.history.RoomHistoryVisibility
@@ -161,9 +162,9 @@ class ConfigureRoomPresenter @Inject constructor(
         suspend {
             val accessRules =
                 if (config.roomVisibility is RoomVisibilityState.Public || !config.invites.any { it.userId.toString().isExternalTchapUser() }) {
-                    "restricted"
+                    RoomAccessRules.RESTRICTED
                 } else {
-                    "unrestricted"
+                    RoomAccessRules.UNRESTRICTED
                 }
             val avatarUrl = config.avatarUri?.let { uploadAvatar(it) }
             val params = when (config.roomVisibility) {
