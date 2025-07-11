@@ -116,6 +116,7 @@ import org.matrix.rustcomponents.sdk.SendQueueRoomErrorListener
 import org.matrix.rustcomponents.sdk.TaskHandle
 import org.matrix.rustcomponents.sdk.use
 import timber.log.Timber
+import uniffi.matrix_sdk.AccessRule
 import java.io.File
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -328,7 +329,12 @@ class RustMatrixClient(
     override suspend fun createRoom(createRoomParams: CreateRoomParameters): Result<RoomId> = withContext(sessionDispatcher) {
         runCatchingExceptions {
             val rustParams = RustCreateRoomParameters(
-                accessRules = createRoomParams.accessRules,
+                accessRulesOverride = when (createRoomParams.accessRules) {
+                    "direct" -> AccessRule.DIRECT
+                    "unrestricted" -> AccessRule.UNRESTRICTED
+                    "restricted" -> AccessRule.RESTRICTED
+                    else -> AccessRule.RESTRICTED
+                },
                 name = createRoomParams.name,
                 topic = createRoomParams.topic,
                 isEncrypted = createRoomParams.isEncrypted,

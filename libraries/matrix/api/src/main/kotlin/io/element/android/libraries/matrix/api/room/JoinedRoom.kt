@@ -31,6 +31,7 @@ interface JoinedRoom : BaseRoom {
     val roomTypingMembersFlow: Flow<List<UserId>>
     val identityStateChangesFlow: Flow<List<IdentityStateChange>>
     val roomNotificationSettingsStateFlow: StateFlow<RoomNotificationSettingsState>
+    val accessRules: String?
 
     /**
      * The current knock requests in the room as a Flow.
@@ -65,6 +66,8 @@ interface JoinedRoom : BaseRoom {
     suspend fun removeAvatar(): Result<Unit>
 
     suspend fun updateRoomNotificationSettings(): Result<Unit>
+
+    suspend fun setAccessRules(rule: String): Result<Unit>
 
     /**
      * Update the canonical alias of the room.

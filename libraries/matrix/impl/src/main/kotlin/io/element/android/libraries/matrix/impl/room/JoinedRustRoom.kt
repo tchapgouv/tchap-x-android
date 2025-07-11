@@ -71,6 +71,7 @@ import org.matrix.rustcomponents.sdk.WidgetCapabilitiesProvider
 import org.matrix.rustcomponents.sdk.getElementCallRequiredPermissions
 import org.matrix.rustcomponents.sdk.use
 import timber.log.Timber
+import uniffi.matrix_sdk.AccessRule
 import uniffi.matrix_sdk.RoomPowerLevelChanges
 import kotlin.coroutines.cancellation.CancellationException
 import org.matrix.rustcomponents.sdk.IdentityStatusChange as RustIdentityStateChange
@@ -91,6 +92,10 @@ class JoinedRustRoom(
     private val innerRoom = baseRoom.innerRoom
 
     override val syncUpdateFlow = MutableStateFlow(0L)
+
+    override val accessRules: String
+        get() = ""
+//        get() = runCatching { innerRoom.accessRules }.getOrDefault("") // TCHAP todo
 
     override val roomTypingMembersFlow: Flow<List<UserId>> = mxCallbackFlow {
         val initial = emptyList<UserId>()
@@ -486,5 +491,16 @@ class JoinedRustRoom(
             onNewSyncedEvent = onNewSyncedEvent,
             featureFlagsService = featureFlagService,
         )
+    }
+
+    override suspend fun setAccessRules(rule: String): Result<Unit> = withContext(roomDispatcher) {
+        runCatching {
+            innerRoom.setAccessRules(when (rule) {
+                "direct" -> AccessRule.DIRECT
+                "unrestricted" -> AccessRule.UNRESTRICTED
+                "restricted" -> AccessRule.RESTRICTED
+                else -> AccessRule.RESTRICTED
+            },)
+        }
     }
 }
