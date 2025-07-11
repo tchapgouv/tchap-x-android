@@ -10,9 +10,11 @@ package io.element.android.libraries.matrix.api.room
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.SessionId
+import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.room.draft.ComposerDraft
-import io.element.android.libraries.matrix.api.room.powerlevels.RoomPowerLevels
+import io.element.android.libraries.matrix.api.room.powerlevels.RoomPowerLevelsValues
+import io.element.android.libraries.matrix.api.room.tombstone.PredecessorRoom
 import io.element.android.libraries.matrix.api.roomdirectory.RoomVisibility
 import io.element.android.libraries.matrix.api.timeline.ReceiptType
 import kotlinx.coroutines.CoroutineScope
@@ -55,6 +57,8 @@ interface BaseRoom : Closeable {
      */
     fun info(): RoomInfo = roomInfoFlow.value
 
+    fun predecessorRoom(): PredecessorRoom?
+
     /**
      * A one-to-one is a room with exactly 2 members.
      * See [the Matrix spec](https://spec.matrix.org/latest/client-server-api/#default-underride-rules).
@@ -85,7 +89,7 @@ interface BaseRoom : Closeable {
     /**
      * Gets the power levels of the room.
      */
-    suspend fun powerLevels(): Result<RoomPowerLevels>
+    suspend fun powerLevels(): Result<RoomPowerLevelsValues>
 
     /**
      * Gets the role of the user with the provided [userId] in the room.
@@ -216,17 +220,17 @@ interface BaseRoom : Closeable {
     /**
      * Store the given `ComposerDraft` in the state store of this room.
      */
-    suspend fun saveComposerDraft(composerDraft: ComposerDraft): Result<Unit>
+    suspend fun saveComposerDraft(composerDraft: ComposerDraft, threadRoot: ThreadId?): Result<Unit>
 
     /**
      * Retrieve the `ComposerDraft` stored in the state store for this room.
      */
-    suspend fun loadComposerDraft(): Result<ComposerDraft?>
+    suspend fun loadComposerDraft(threadRoot: ThreadId?): Result<ComposerDraft?>
 
     /**
      * Clear the `ComposerDraft` stored in the state store for this room.
      */
-    suspend fun clearComposerDraft(): Result<Unit>
+    suspend fun clearComposerDraft(threadRoot: ThreadId?): Result<Unit>
 
     /**
      * Reports a room as inappropriate to the server.

@@ -27,6 +27,7 @@ import io.element.android.compound.theme.ElementTheme
 import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
+import io.element.android.libraries.designsystem.components.avatar.AvatarType
 import io.element.android.libraries.designsystem.components.avatar.anAvatarData
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
@@ -39,7 +40,7 @@ import io.element.android.libraries.ui.strings.CommonStrings
 
 @Composable
 fun ComposerAlertMolecule(
-    avatar: AvatarData,
+    avatar: AvatarData?,
     content: AnnotatedString,
     onSubmitClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -71,9 +72,12 @@ fun ComposerAlertMolecule(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Avatar(
-                        avatarData = avatar,
-                    )
+                    if (avatar != null) {
+                        Avatar(
+                            avatarData = avatar,
+                            avatarType = AvatarType.User,
+                        )
+                    }
                     Text(
                         text = content,
                         modifier = Modifier.weight(1f),

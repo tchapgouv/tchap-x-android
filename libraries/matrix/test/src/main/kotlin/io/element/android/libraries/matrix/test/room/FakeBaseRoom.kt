@@ -11,6 +11,7 @@ import io.element.android.libraries.core.bool.orFalse
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.SessionId
+import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.room.BaseRoom
 import io.element.android.libraries.matrix.api.room.MessageEventType
@@ -19,7 +20,8 @@ import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.RoomMembersState
 import io.element.android.libraries.matrix.api.room.StateEventType
 import io.element.android.libraries.matrix.api.room.draft.ComposerDraft
-import io.element.android.libraries.matrix.api.room.powerlevels.RoomPowerLevels
+import io.element.android.libraries.matrix.api.room.powerlevels.RoomPowerLevelsValues
+import io.element.android.libraries.matrix.api.room.tombstone.PredecessorRoom
 import io.element.android.libraries.matrix.api.roomdirectory.RoomVisibility
 import io.element.android.libraries.matrix.api.timeline.ReceiptType
 import io.element.android.libraries.matrix.test.A_ROOM_ID
@@ -55,7 +57,7 @@ class FakeBaseRoom(
     private val canUserPinUnpinResult: (UserId) -> Result<Boolean> = { lambdaError() },
     private val setIsFavoriteResult: (Boolean) -> Result<Unit> = { lambdaError() },
     private val markAsReadResult: (ReceiptType) -> Result<Unit> = { Result.success(Unit) },
-    private val powerLevelsResult: () -> Result<RoomPowerLevels> = { lambdaError() },
+    private val powerLevelsResult: () -> Result<RoomPowerLevelsValues> = { lambdaError() },
     private val leaveRoomLambda: () -> Result<Unit> = { lambdaError() },
     private val updateMembersResult: () -> Unit = { lambdaError() },
     private val getMembersResult: (Int) -> Result<List<RoomMember>> = { lambdaError() },
@@ -66,6 +68,7 @@ class FakeBaseRoom(
     private val getRoomVisibilityResult: () -> Result<RoomVisibility> = { lambdaError() },
     private val forgetResult: () -> Result<Unit> = { lambdaError() },
     private val reportRoomResult: (String?) -> Result<Unit> = { lambdaError() },
+    private val predecessorRoomResult: () -> PredecessorRoom? = { null },
 ) : BaseRoom {
     private val _roomInfoFlow: MutableStateFlow<RoomInfo> = MutableStateFlow(initialRoomInfo)
     override val roomInfoFlow: StateFlow<RoomInfo> = _roomInfoFlow
@@ -90,7 +93,7 @@ class FakeBaseRoom(
         subscribeToSyncLambda()
     }
 
-    override suspend fun powerLevels(): Result<RoomPowerLevels> {
+    override suspend fun powerLevels(): Result<RoomPowerLevelsValues> {
         return powerLevelsResult()
     }
 
@@ -196,11 +199,14 @@ class FakeBaseRoom(
         return Result.success(Unit)
     }
 
-    override suspend fun saveComposerDraft(composerDraft: ComposerDraft) = saveComposerDraftLambda(composerDraft)
+    override suspend fun saveComposerDraft(
+        composerDraft: ComposerDraft,
+        threadRoot: ThreadId?
+    ) = saveComposerDraftLambda(composerDraft)
 
-    override suspend fun loadComposerDraft() = loadComposerDraftLambda()
+    override suspend fun loadComposerDraft(threadRoot: ThreadId?) = loadComposerDraftLambda()
 
-    override suspend fun clearComposerDraft() = clearComposerDraftLambda()
+    override suspend fun clearComposerDraft(threadRoot: ThreadId?) = clearComposerDraftLambda()
 
     override suspend fun getUpdatedIsEncrypted(): Result<Boolean> = simulateLongTask {
         Result.success(info().isEncrypted.orFalse())
@@ -215,9 +221,11 @@ class FakeBaseRoom(
     }
 
     override suspend fun reportRoom(reason: String?) = reportRoomResult(reason)
+
+    override fun predecessorRoom(): PredecessorRoom? = predecessorRoomResult()
 }
 
-fun defaultRoomPowerLevels() = RoomPowerLevels(
+fun defaultRoomPowerLevelValues() = RoomPowerLevelsValues(
     ban = 50,
     invite = 0,
     kick = 50,

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="a11y_add_reaction">"Add reaction: %1$s"</string>
   <string name="a11y_avatar">"Avatar"</string>
   <string name="a11y_delete">"Delete"</string>
   <plurals name="a11y_digits_entered">
@@ -11,6 +12,7 @@
   <string name="a11y_jump_to_bottom">"Jump to bottom"</string>
   <string name="a11y_notifications_mentions_only">"Mentions only"</string>
   <string name="a11y_notifications_muted">"Muted"</string>
+  <string name="a11y_other_user_avatar">"Other user\'s avatar"</string>
   <string name="a11y_page_n">"Page %1$d"</string>
   <string name="a11y_pause">"Pause"</string>
   <string name="a11y_paused_voice_message">"Voice message, duration: %1$s, current position: %2$s"</string>
@@ -27,15 +29,20 @@
   </plurals>
   <string name="a11y_read_receipts_single">"Read by %1$s"</string>
   <string name="a11y_read_receipts_tap_to_show_all">"Tap to show all"</string>
+  <string name="a11y_remove_reaction">"Remove reaction: %1$s"</string>
   <string name="a11y_remove_reaction_with">"Remove reaction with %1$s"</string>
+  <string name="a11y_room_avatar">"Room avatar"</string>
   <string name="a11y_send_files">"Send files"</string>
   <string name="a11y_show_password">"Show password"</string>
   <string name="a11y_start_call">"Start a call"</string>
+  <string name="a11y_user_avatar">"User avatar"</string>
   <string name="a11y_user_menu">"User menu"</string>
+  <string name="a11y_view_avatar">"View avatar"</string>
   <string name="a11y_view_details">"View details"</string>
   <string name="a11y_voice_message">"Voice message, duration: %1$s"</string>
   <string name="a11y_voice_message_record">"Record voice message."</string>
   <string name="a11y_voice_message_stop_recording">"Stop recording"</string>
+  <string name="a11y_your_avatar">"Your avatar"</string>
   <string name="action_accept">"Accept"</string>
   <string name="action_add_caption">"Add caption"</string>
   <string name="action_add_to_timeline">"Add to timeline"</string>
@@ -94,6 +101,7 @@
   <string name="action_no">"No"</string>
   <string name="action_not_now">"Not now"</string>
   <string name="action_ok">"OK"</string>
+  <string name="action_open_context_menu">"Open context menu"</string>
   <string name="action_open_settings">"Settings"</string>
   <string name="action_open_with">"Open with"</string>
   <string name="action_pin">"Pin"</string>
@@ -118,7 +126,9 @@
   <string name="action_save">"Save"</string>
   <string name="action_search">"Search"</string>
   <string name="action_send">"Send"</string>
+  <string name="action_send_edited_message">"Send edited message"</string>
   <string name="action_send_message">"Send message"</string>
+  <string name="action_send_voice_message">"Send voice message"</string>
   <string name="action_share">"Share"</string>
   <string name="action_share_link">"Share link"</string>
   <string name="action_show">"Show"</string>
@@ -134,6 +144,7 @@
   <string name="action_tap_for_options">"Tap for options"</string>
   <string name="action_try_again">"Try again"</string>
   <string name="action_unpin">"Unpin"</string>
+  <string name="action_view">"View"</string>
   <string name="action_view_in_timeline">"View in timeline"</string>
   <string name="action_view_source">"View source"</string>
   <string name="action_yes">"Yes"</string>
@@ -144,6 +155,7 @@
   <string name="common_acceptable_use_policy">"Acceptable use policy"</string>
   <string name="common_adding_caption">"Adding caption"</string>
   <string name="common_advanced_settings">"Advanced settings"</string>
+  <string name="common_an_image">"an image"</string>
   <string name="common_analytics">"Analytics"</string>
   <string name="common_appearance">"Appearance"</string>
   <string name="common_audio">"Audio"</string>
@@ -240,6 +252,10 @@ Reason: %1$s."</string>
   <string name="common_reason">"Reason"</string>
   <string name="common_recovery_key">"Recovery key"</string>
   <string name="common_refreshing">"Refreshing…"</string>
+  <plurals name="common_replies">
+    <item quantity="one">"%1$d reply"</item>
+    <item quantity="other">"%1$d replies"</item>
+  </plurals>
   <string name="common_replying_to">"Replying to %1$s"</string>
   <string name="common_report_a_bug">"Report a bug"</string>
   <string name="common_report_a_problem">"Report a problem"</string>
@@ -259,6 +275,7 @@ Reason: %1$s."</string>
   <string name="common_sending">"Sending…"</string>
   <string name="common_sending_failed">"Sending failed"</string>
   <string name="common_sent">"Sent"</string>
+  <string name="common_sentence_delimiter">". "</string>
   <string name="common_server_not_supported">"Server not supported"</string>
   <string name="common_server_url">"Server URL"</string>
   <string name="common_settings">"Settings"</string>
@@ -324,6 +341,7 @@ Are you sure you want to continue?"</string>
   <string name="error_failed_loading_messages">"Failed loading messages"</string>
   <string name="error_failed_locating_user">"%1$s could not access your location. Please try again later."</string>
   <string name="error_failed_uploading_voice_message">"Failed to upload your voice message."</string>
+  <string name="error_invalid_invite">"The room no longer exists or the invite is no longer valid."</string>
   <string name="error_message_not_found">"Message not found"</string>
   <string name="error_missing_location_auth_android">"%1$s does not have permission to access your location. You can enable access in Settings."</string>
   <string name="error_missing_location_rationale_android">"%1$s does not have permission to access your location. Enable access below."</string>
@@ -333,6 +351,7 @@ Are you sure you want to continue?"</string>
   <string name="error_room_address_invalid_symbols">"Some characters are not allowed. Only letters, digits and the following symbols are supported ! $ &amp; ‘ ( ) * + / ; = ? @ [ ] - . _"</string>
   <string name="error_some_messages_have_not_been_sent">"Some messages have not been sent"</string>
   <string name="error_unknown">"Sorry, an error occurred"</string>
+  <string name="event_shield_mismatched_sender">"The sender of the event does not match the owner of the device that sent it."</string>
   <string name="event_shield_reason_authenticity_not_guaranteed">"The authenticity of this encrypted message can\'t be guaranteed on this device."</string>
   <string name="event_shield_reason_previously_verified">"Encrypted by a previously-verified user."</string>
   <string name="event_shield_reason_sent_in_clear">"Not encrypted."</string>
@@ -343,6 +362,10 @@ Are you sure you want to continue?"</string>
   <string name="invite_friends_text">"Hey, talk to me on %1$s: %2$s"</string>
   <string name="login_initial_device_name_android">"%1$s Android"</string>
   <string name="preference_rageshake">"Rageshake to report bug"</string>
+  <string name="screen_create_poll_option_accessibility_label">"%1$s: %2$s"</string>
+  <string name="screen_create_poll_options_section_title">"Options"</string>
+  <string name="screen_create_poll_remove_accessibility_label">"Remove %1$s"</string>
+  <string name="screen_create_poll_settings_section_title">"Settings"</string>
   <string name="screen_media_picker_error_failed_selection">"Failed selecting media, please try again."</string>
   <string name="screen_media_upload_preview_caption_warning">"Captions might not be visible to people using older apps."</string>
   <string name="screen_media_upload_preview_error_failed_processing">"Failed processing media to upload, please try again."</string>
@@ -367,12 +390,14 @@ Are you sure you want to continue?"</string>
   <string name="screen_room_error_failed_processing_media">"Failed processing media to upload, please try again."</string>
   <string name="screen_room_error_failed_retrieving_user_details">"Could not retrieve user details"</string>
   <string name="screen_room_event_pill">"Message in %1$s"</string>
+  <string name="screen_room_grouped_state_events_expand">"Expand"</string>
+  <string name="screen_room_grouped_state_events_reduce">"Reduce"</string>
+  <string name="screen_room_permalink_same_room_android">"Already viewing this room!"</string>
   <string name="screen_room_pinned_banner_indicator">"%1$s of %2$s"</string>
   <string name="screen_room_pinned_banner_indicator_description">"%1$s Pinned messages"</string>
   <string name="screen_room_pinned_banner_loading_description">"Loading message…"</string>
   <string name="screen_room_pinned_banner_view_all_button_title">"View All"</string>
   <string name="screen_room_title">"Chat"</string>
-  <string name="screen_roomlist_knock_event_sent_description">"Request to join sent"</string>
   <string name="screen_share_location_title">"Share location"</string>
   <string name="screen_share_my_location_action">"Share my location"</string>
   <string name="screen_share_open_apple_maps">"Open in Apple Maps"</string>

@@ -7,7 +7,6 @@
 
 package io.element.android.libraries.mediaviewer.impl.gallery.ui
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
@@ -84,7 +83,6 @@ fun VoiceItemView(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun VoiceInfoRow(
     state: VoiceMessageState,
@@ -102,7 +100,11 @@ private fun VoiceInfoRow(
                 color = ElementTheme.colors.bgSubtleSecondary,
                 shape = RoundedCornerShape(12.dp),
             )
-            .combinedClickable(onClick = {}, onLongClick = onLongClick)
+            .combinedClickable(
+                onClick = {},
+                onLongClick = onLongClick,
+                onLongClickLabel = stringResource(CommonStrings.action_open_context_menu),
+            )
             .fillMaxWidth()
             .padding(start = 12.dp, end = 36.dp, top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically,

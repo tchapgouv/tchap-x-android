@@ -18,7 +18,7 @@ import org.matrix.rustcomponents.sdk.RequestConfig
 import org.matrix.rustcomponents.sdk.SlidingSyncVersionBuilder
 import uniffi.matrix_sdk.BackupDownloadStrategy
 import uniffi.matrix_sdk_crypto.CollectStrategy
-import uniffi.matrix_sdk_crypto.TrustRequirement
+import uniffi.matrix_sdk_crypto.DecryptionSettings
 
 class FakeFfiClientBuilder : ClientBuilder(NoPointer) {
     override fun addRootCertificates(certificates: List<ByteArray>) = this
@@ -27,7 +27,7 @@ class FakeFfiClientBuilder : ClientBuilder(NoPointer) {
     override fun backupDownloadStrategy(backupDownloadStrategy: BackupDownloadStrategy) = this
     override fun disableAutomaticTokenRefresh() = this
     override fun disableBuiltInRootCertificates() = this
-    override fun roomDecryptionTrustRequirement(trustRequirement: TrustRequirement) = this
+    override fun decryptionSettings(decryptionSettings: DecryptionSettings): ClientBuilder = this
     override fun disableSslVerification() = this
     override fun homeserverUrl(url: String) = this
     override fun sessionPassphrase(passphrase: String?) = this
@@ -41,6 +41,7 @@ class FakeFfiClientBuilder : ClientBuilder(NoPointer) {
     override fun slidingSyncVersionBuilder(versionBuilder: SlidingSyncVersionBuilder) = this
     override fun userAgent(userAgent: String) = this
     override fun username(username: String) = this
+    override fun enableShareHistoryOnInvite(enableShareHistoryOnInvite: Boolean): ClientBuilder = this
 
     override suspend fun buildWithQrCode(qrCodeData: QrCodeData, oidcConfiguration: OidcConfiguration, progressListener: QrLoginProgressListener): Client {
         return FakeFfiClient()

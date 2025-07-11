@@ -14,12 +14,13 @@ import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.room.CurrentUserMembership
 import io.element.android.libraries.matrix.api.room.RoomInfo
 import io.element.android.libraries.matrix.api.room.RoomNotificationMode
-import io.element.android.libraries.matrix.api.room.SuccessorRoom
+import io.element.android.libraries.matrix.api.room.powerlevels.RoomPowerLevels
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.matrix.impl.room.history.map
 import io.element.android.libraries.matrix.impl.room.join.map
 import io.element.android.libraries.matrix.impl.room.member.RoomMemberMapper
-import kotlinx.collections.immutable.ImmutableMap
+import io.element.android.libraries.matrix.impl.room.powerlevels.RoomPowerLevelsValuesMapper
+import io.element.android.libraries.matrix.impl.room.tombstone.map
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentMap
 import org.matrix.rustcomponents.sdk.Membership
@@ -28,7 +29,7 @@ import uniffi.matrix_sdk_base.EncryptionState
 import org.matrix.rustcomponents.sdk.Membership as RustMembership
 import org.matrix.rustcomponents.sdk.RoomInfo as RustRoomInfo
 import org.matrix.rustcomponents.sdk.RoomNotificationMode as RustRoomNotificationMode
-import org.matrix.rustcomponents.sdk.SuccessorRoom as RustSuccessorRoom
+import org.matrix.rustcomponents.sdk.RoomPowerLevels as RustRoomPowerLevels
 
 class RoomInfoMapper {
     fun map(rustRoomInfo: RustRoomInfo): RoomInfo = rustRoomInfo.let {
@@ -56,7 +57,7 @@ class RoomInfoMapper {
             activeMembersCount = it.activeMembersCount.toLong(),
             invitedMembersCount = it.invitedMembersCount.toLong(),
             joinedMembersCount = it.joinedMembersCount.toLong(),
-            userPowerLevels = mapPowerLevels(it.userPowerLevels),
+            roomPowerLevels = it.powerLevels?.let(::mapPowerLevels),
             highlightCount = it.highlightCount.toLong(),
             notificationCount = it.notificationCount.toLong(),
             userDefinedNotificationMode = it.cachedUserDefinedNotificationMode?.map(),
@@ -88,11 +89,6 @@ fun RustRoomNotificationMode.map(): RoomNotificationMode = when (this) {
     RustRoomNotificationMode.MUTE -> RoomNotificationMode.MUTE
 }
 
-fun RustSuccessorRoom.map(): SuccessorRoom = SuccessorRoom(
-    roomId = RoomId(roomId),
-    reason = reason,
-)
-
 /**
  * Map a RoomHero to a MatrixUser. There is not need to create a RoomHero type on the application side.
  */
@@ -102,6 +98,9 @@ fun RoomHero.map(): MatrixUser = MatrixUser(
     avatarUrl = avatarUrl
 )
 
-fun mapPowerLevels(powerLevels: Map<String, Long>): ImmutableMap<UserId, Long> {
-    return powerLevels.mapKeys { (key, _) -> UserId(key) }.toPersistentMap()
+fun mapPowerLevels(roomPowerLevels: RustRoomPowerLevels): RoomPowerLevels {
+    return RoomPowerLevels(
+        values = RoomPowerLevelsValuesMapper.map(roomPowerLevels.values()),
+        users = roomPowerLevels.userPowerLevels().mapKeys { (key, _) -> UserId(key) }.toPersistentMap()
+    )
 }

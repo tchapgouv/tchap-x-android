@@ -7,12 +7,8 @@
 
 package io.element.android.features.messages.impl.timeline.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ripple
@@ -21,24 +17,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.components.Surface
+import io.element.android.libraries.ui.strings.CommonStrings
 
 private val CORNER_RADIUS = 8.dp
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MessageStateEventContainer(
-    @Suppress("UNUSED_PARAMETER") isHighlighted: Boolean,
     interactionSource: MutableInteractionSource,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {},
 ) {
-    // Ignore isHighlighted for now, we need a design decision on it.
     val backgroundColor = Color.Transparent
     val shape = RoundedCornerShape(CORNER_RADIUS)
     Surface(
@@ -48,6 +43,7 @@ fun MessageStateEventContainer(
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongClick,
+                onLongClickLabel = stringResource(CommonStrings.action_open_context_menu),
                 indication = ripple(),
                 interactionSource = interactionSource
             ),
@@ -60,22 +56,9 @@ fun MessageStateEventContainer(
 @PreviewsDayNight
 @Composable
 internal fun MessageStateEventContainerPreview() = ElementPreview {
-    Column {
-        MessageStateEventContainer(
-            isHighlighted = false,
-            interactionSource = remember { MutableInteractionSource() },
-            onClick = {},
-            onLongClick = {},
-        ) {
-            Spacer(modifier = Modifier.size(width = 120.dp, height = 32.dp))
-        }
-        MessageStateEventContainer(
-            isHighlighted = true,
-            interactionSource = remember { MutableInteractionSource() },
-            onClick = {},
-            onLongClick = {},
-        ) {
-            Spacer(modifier = Modifier.size(width = 120.dp, height = 32.dp))
-        }
-    }
+    MessageStateEventContainer(
+        interactionSource = remember { MutableInteractionSource() },
+        onClick = {},
+        onLongClick = {},
+    )
 }

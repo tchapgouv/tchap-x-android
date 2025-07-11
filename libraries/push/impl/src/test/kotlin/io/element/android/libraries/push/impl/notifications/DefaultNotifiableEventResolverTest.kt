@@ -43,8 +43,6 @@ import io.element.android.libraries.matrix.test.FakeMatrixClientProvider
 import io.element.android.libraries.matrix.test.notification.FakeNotificationService
 import io.element.android.libraries.matrix.test.notification.aNotificationData
 import io.element.android.libraries.matrix.test.permalink.FakePermalinkParser
-import io.element.android.libraries.preferences.api.store.AppPreferencesStore
-import io.element.android.libraries.preferences.test.InMemoryAppPreferencesStore
 import io.element.android.libraries.push.impl.notifications.fake.FakeNotificationMediaRepo
 import io.element.android.libraries.push.impl.notifications.fixtures.aNotifiableMessageEvent
 import io.element.android.libraries.push.impl.notifications.model.FallbackNotifiableEvent
@@ -608,7 +606,32 @@ class DefaultNotifiableEventResolverTest {
                 roomId = A_ROOM_ID,
                 eventId = AN_EVENT_ID,
                 editedEventId = null,
-                description = "Notification",
+                description = "You have new messages.",
+                canBeReplaced = true,
+                isRedacted = false,
+                isUpdated = false,
+                timestamp = A_FAKE_TIMESTAMP,
+            )
+        )
+        assertThat(result.getEvent(request)).isEqualTo(Result.success(expectedResult))
+    }
+
+    @Test
+    fun `resolve UnableToResolve`() = runTest {
+        val sut = createDefaultNotifiableEventResolver(
+            notificationResult = Result.success(
+                mapOf(AN_EVENT_ID to aNotificationData(content = NotificationContent.MessageLike.UnableToResolve))
+            )
+        )
+        val request = NotificationEventRequest(A_SESSION_ID, A_ROOM_ID, AN_EVENT_ID, "firebase")
+        val result = sut.resolveEvents(A_SESSION_ID, listOf(request))
+        val expectedResult = ResolvedPushEvent.Event(
+            FallbackNotifiableEvent(
+                sessionId = A_SESSION_ID,
+                roomId = A_ROOM_ID,
+                eventId = AN_EVENT_ID,
+                editedEventId = null,
+                description = "You have new messages.",
                 canBeReplaced = true,
                 isRedacted = false,
                 isUpdated = false,
@@ -801,7 +824,6 @@ class DefaultNotifiableEventResolverTest {
     private fun createDefaultNotifiableEventResolver(
         notificationService: FakeNotificationService? = FakeNotificationService(),
         notificationResult: Result<Map<EventId, NotificationData>> = Result.success(emptyMap()),
-        appPreferencesStore: AppPreferencesStore = InMemoryAppPreferencesStore(),
         callNotificationEventResolver: FakeCallNotificationEventResolver = FakeCallNotificationEventResolver(),
     ): DefaultNotifiableEventResolver {
         val context = RuntimeEnvironment.getApplication() as Context
@@ -824,7 +846,6 @@ class DefaultNotifiableEventResolverTest {
             context = context,
             permalinkParser = FakePermalinkParser(),
             callNotificationEventResolver = callNotificationEventResolver,
-            appPreferencesStore = appPreferencesStore,
         )
     }
 }

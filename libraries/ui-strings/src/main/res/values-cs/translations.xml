@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="a11y_add_reaction">"Přidat reakci: %1$s"</string>
   <string name="a11y_avatar">"Profilový obrázek"</string>
   <string name="a11y_delete">"Smazat"</string>
   <plurals name="a11y_digits_entered">
@@ -29,7 +30,8 @@
   </plurals>
   <string name="a11y_read_receipts_single">"%1$s přečetl(a)"</string>
   <string name="a11y_read_receipts_tap_to_show_all">"Klepnutím zobrazíte vše"</string>
-  <string name="a11y_remove_reaction_with">"Odstraňit reakci s %1$s"</string>
+  <string name="a11y_remove_reaction">"Odstraňit reakci s %1$s"</string>
+  <string name="a11y_remove_reaction_with">"Odstranit reakci pomocí %1$s"</string>
   <string name="a11y_send_files">"Odeslat soubory"</string>
   <string name="a11y_show_password">"Zobrazit heslo"</string>
   <string name="a11y_start_call">"Zahájit hovor"</string>
@@ -146,6 +148,7 @@
   <string name="common_acceptable_use_policy">"Zásady používání"</string>
   <string name="common_adding_caption">"Přidání titulku"</string>
   <string name="common_advanced_settings">"Pokročilá nastavení"</string>
+  <string name="common_an_image">"obrázek"</string>
   <string name="common_analytics">"Analytika"</string>
   <string name="common_appearance">"Vzhled"</string>
   <string name="common_audio">"Zvuk"</string>
@@ -245,6 +248,9 @@ Důvod: %1$s."</string>
   <string name="common_reason">"Důvod"</string>
   <string name="common_recovery_key">"Klíč pro obnovení"</string>
   <string name="common_refreshing">"Obnovování…"</string>
+  <plurals name="common_replies">
+    <item quantity="other">"%1$d odpovědí"</item>
+  </plurals>
   <string name="common_replying_to">"Odpověď na %1$s"</string>
   <string name="common_report_a_bug">"Nahlásit chybu"</string>
   <string name="common_report_a_problem">"Nahlásit problém"</string>
@@ -264,6 +270,7 @@ Důvod: %1$s."</string>
   <string name="common_sending">"Odesílání…"</string>
   <string name="common_sending_failed">"Odeslání se nezdařilo"</string>
   <string name="common_sent">"Odesláno"</string>
+  <string name="common_sentence_delimiter">". "</string>
   <string name="common_server_not_supported">"Server není podporován"</string>
   <string name="common_server_url">"URL serveru"</string>
   <string name="common_settings">"Nastavení"</string>
@@ -338,6 +345,7 @@ Opravdu chcete pokračovat?"</string>
   <string name="error_room_address_invalid_symbols">"Některé znaky nejsou povoleny. Podporovány jsou pouze písmena, číslice a následující symboly ! $ &amp; ‘ ( ) * + / ; = ? @ [ ] - . _"</string>
   <string name="error_some_messages_have_not_been_sent">"Některé zprávy nebyly odeslány"</string>
   <string name="error_unknown">"Omlouváme se, došlo k chybě"</string>
+  <string name="event_shield_mismatched_sender">"Odesílatel události se neshoduje s vlastníkem zařízení, které ji odeslalo."</string>
   <string name="event_shield_reason_authenticity_not_guaranteed">"Autenticitu této zašifrované zprávy nelze na tomto zařízení zaručit."</string>
   <string name="event_shield_reason_previously_verified">"Zašifrováno dříve ověřeným uživatelem."</string>
   <string name="event_shield_reason_sent_in_clear">"Není zašifrováno."</string>
@@ -348,6 +356,10 @@ Opravdu chcete pokračovat?"</string>
   <string name="invite_friends_text">"Ahoj, ozvi se mi na %1$s: %2$s"</string>
   <string name="login_initial_device_name_android">"%1$s Android"</string>
   <string name="preference_rageshake">"Zatřeste zařízením pro nahlášení chyby"</string>
+  <string name="screen_create_poll_option_accessibility_label">"%1$s: %2$s"</string>
+  <string name="screen_create_poll_options_section_title">"Možnosti"</string>
+  <string name="screen_create_poll_remove_accessibility_label">"Odstranit %1$s"</string>
+  <string name="screen_create_poll_settings_section_title">"Nastavení"</string>
   <string name="screen_media_picker_error_failed_selection">"Výběr média se nezdařil, zkuste to prosím znovu."</string>
   <string name="screen_media_upload_preview_caption_warning">"Titulky nemusí být viditelné pro lidi, kteří používají starší aplikace."</string>
   <string name="screen_media_upload_preview_error_failed_processing">"Nahrání média se nezdařilo, zkuste to prosím znovu."</string>
@@ -373,12 +385,14 @@ Opravdu chcete pokračovat?"</string>
   <string name="screen_room_error_failed_processing_media">"Nahrání média se nezdařilo, zkuste to prosím znovu."</string>
   <string name="screen_room_error_failed_retrieving_user_details">"Nepodařilo se načíst údaje o uživateli"</string>
   <string name="screen_room_event_pill">"Zpráva v %1$s"</string>
+  <string name="screen_room_grouped_state_events_expand">"Rozbalit"</string>
+  <string name="screen_room_grouped_state_events_reduce">"Zmenšit"</string>
+  <string name="screen_room_permalink_same_room_android">"Již si prohlížíte tuto místnost!"</string>
   <string name="screen_room_pinned_banner_indicator">"%1$s z %2$s"</string>
   <string name="screen_room_pinned_banner_indicator_description">"%1$s Připnuté zprávy"</string>
   <string name="screen_room_pinned_banner_loading_description">"Načítání zprávy…"</string>
   <string name="screen_room_pinned_banner_view_all_button_title">"Zobrazit vše"</string>
   <string name="screen_room_title">"Chat"</string>
-  <string name="screen_roomlist_knock_event_sent_description">"Žádost o vstup odeslána"</string>
   <string name="screen_share_location_title">"Sdílet polohu"</string>
   <string name="screen_share_my_location_action">"Sdílet moji polohu"</string>
   <string name="screen_share_open_apple_maps">"Otevřít v Mapách Apple"</string>

@@ -13,7 +13,6 @@
     <item quantity="one">"%d notificación"</item>
     <item quantity="other">"%d notificaciones"</item>
   </plurals>
-  <string name="notification_fallback_content">"Notificación"</string>
   <string name="notification_incoming_call">"📹 Llamada entrante"</string>
   <string name="notification_inline_reply_failed">"** No se ha podido enviar - por favor, abre la sala"</string>
   <string name="notification_invitation_action_join">"Unirse"</string>
@@ -64,6 +63,7 @@
     <item quantity="one">"Se encontró %1$d proveedor de push: %2$s"</item>
     <item quantity="other">"Se encontraron %1$d proveedores de push: %2$s"</item>
   </plurals>
+  <string name="troubleshoot_notifications_test_detect_push_provider_success_2">"La aplicación se compiló con compatibilidad para: %1$s"</string>
   <string name="troubleshoot_notifications_test_detect_push_provider_title">"Detectar proveedores de push"</string>
   <string name="troubleshoot_notifications_test_display_notification_description">"Verificar que la aplicación pueda mostrar notificaciones."</string>
   <string name="troubleshoot_notifications_test_display_notification_failure">"No se ha hecho clic en la notificación."</string>

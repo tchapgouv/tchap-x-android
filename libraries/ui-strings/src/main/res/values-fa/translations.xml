@@ -22,7 +22,7 @@
   <string name="a11y_read_receipts_multiple">"خوانده به دست %1$s و %2$s"</string>
   <string name="a11y_read_receipts_single">"خوانده به دست %1$s"</string>
   <string name="a11y_read_receipts_tap_to_show_all">"زدن برای نمایش همه"</string>
-  <string name="a11y_remove_reaction_with">"برداشتن واکنش با %1$s"</string>
+  <string name="a11y_remove_reaction">"برداشتن واکنش با %1$s"</string>
   <string name="a11y_send_files">"ارسال پرونده‌ها"</string>
   <string name="a11y_show_password">"نمایش گذرواژه"</string>
   <string name="a11y_start_call">"آغاز یک تماس"</string>
@@ -296,9 +296,14 @@
   <string name="dialog_unsaved_changes_description_android">"تغییراتتان ذخیره نشده‌اند. مطمئنید که می‌خواهید برگردید؟"</string>
   <string name="dialog_unsaved_changes_title">"ذخیرهٔ تغییرات؟"</string>
   <string name="error_failed_creating_the_permalink">"شکست در ایجاد پایاپیوند"</string>
+  <string name="error_failed_loading_map">"%1$s نتوانست نقشه را بارگیری کند. لطفا بعدا دوباره امتحان کنید."</string>
   <string name="error_failed_loading_messages">"شکست در بار کردن پیام‌ها"</string>
+  <string name="error_failed_locating_user">"%1$s نمی تواند به موقعیت مکانی شما دسترسی داشته باشد. لطفا بعدا دوباره امتحان کنید."</string>
   <string name="error_failed_uploading_voice_message">"شکست در بارگذاری پیام صوتیتان."</string>
   <string name="error_message_not_found">"پیام پیدا نشد"</string>
+  <string name="error_missing_location_auth_android">"%1$s اجازه دسترسی به موقعیت مکانی شما را ندارد. می توانید دسترسی را در تنظیمات فعال کنید."</string>
+  <string name="error_missing_location_rationale_android">"%1$s اجازه دسترسی به موقعیت مکانی شما را ندارد. دسترسی را در زیر فعال کنید."</string>
+  <string name="error_missing_microphone_voice_rationale_android">"%1$s اجازه دسترسی به میکروفون شما را ندارد. دسترسی را برای ضبط پیام صوتی فعال کنید."</string>
   <string name="error_some_messages_have_not_been_sent">"برخی پیام‌ها ارسال نشده‌اند"</string>
   <string name="error_unknown">"متأسفیم ، خطایی رخ داد"</string>
   <string name="event_shield_reason_authenticity_not_guaranteed">"اعتبار این پیام رمز شده نمی‌تواند روی این افزاره تأیید شود."</string>
@@ -310,6 +315,7 @@
   <string name="invite_friends_rich_title">"🔐️ پییوستن به من روی %1$s"</string>
   <string name="invite_friends_text">"درود. با من روی %1$s صحبت کن: %2$s"</string>
   <string name="login_initial_device_name_android">"%1$s اندروید"</string>
+  <string name="preference_rageshake">"Rageshake برای گزارش اشکال"</string>
   <string name="screen_media_picker_error_failed_selection">"گزینش رسانه شکست خورد. لطفاً دوباره تلاش کنید."</string>
   <string name="screen_media_upload_preview_error_failed_processing">"پردازش رسانه برای بارگذاری شکست خورد. لطفاً دوباره تلاش کنید."</string>
   <string name="screen_media_upload_preview_error_failed_sending">"بارگذاری رسانه شکست خورد. لطفاً دوباره تلاش کنید."</string>
@@ -317,13 +323,13 @@
   <string name="screen_reset_identity_confirmation_subtitle">"داردید برای بازنشانی هویتتان به حساب %1$s می‌روید. پس از آن به کاره برگردانده خواهید شد."</string>
   <string name="screen_resolve_send_failure_unsigned_device_primary_button_title">"فرستادن پیام به هر روی"</string>
   <string name="screen_room_error_failed_processing_media">"پردازش رسانه برای بارگذاری شکست خورد. لطفاً دوباره تلاش کنید."</string>
+  <string name="screen_room_error_failed_retrieving_user_details">"نمی توان جزئیات کاربر را بازیابی کرد"</string>
   <string name="screen_room_event_pill">"پیام در %1$s"</string>
   <string name="screen_room_pinned_banner_indicator">"%1$s از %2$s"</string>
   <string name="screen_room_pinned_banner_indicator_description">"%1$s پیام‌های سنجاق شده"</string>
   <string name="screen_room_pinned_banner_loading_description">"بار کردن پشام‌ها…"</string>
   <string name="screen_room_pinned_banner_view_all_button_title">"نمایش همه"</string>
   <string name="screen_room_title">"گپ"</string>
-  <string name="screen_roomlist_knock_event_sent_description">"درخواست پیوستن فرستاده شد"</string>
   <string name="screen_share_location_title">"هم‌رسانی موقعیت"</string>
   <string name="screen_share_my_location_action">"هم‌رسانی مکانم"</string>
   <string name="screen_share_open_apple_maps">"گشودن در نقشه‌های اپل"</string>

@@ -7,7 +7,6 @@
 
 package io.element.android.features.messages.impl.timeline.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -47,7 +46,6 @@ import io.element.android.libraries.designsystem.theme.components.Surface
 import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.designsystem.theme.messageFromMeBackground
 import io.element.android.libraries.designsystem.theme.messageFromOtherBackground
-import io.element.android.libraries.designsystem.utils.LocalUiTestMode
 import io.element.android.libraries.testtags.TestTags
 import io.element.android.libraries.testtags.testTag
 import io.element.android.libraries.ui.utils.time.isTalkbackActive
@@ -59,7 +57,6 @@ private val avatarRadius = AvatarSize.TimelineSender.dp / 2
 private const val BUBBLE_WIDTH_RATIO = 0.78f
 private val MIN_BUBBLE_WIDTH = 80.dp
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MessageEventBubble(
     state: BubbleState,
@@ -113,9 +110,7 @@ fun MessageEventBubble(
         state.isMine -> ElementTheme.colors.messageFromMeBackground
         else -> ElementTheme.colors.messageFromOtherBackground
     }
-    // If we're running in UI test mode, we want to use a different shape to avoid
-    // this issue: https://issuetracker.google.com/issues/366255137
-    val bubbleShape = if (LocalUiTestMode.current) RoundedCornerShape(12.dp) else bubbleShape()
+    val bubbleShape = bubbleShape()
     val radiusPx = (avatarRadius + SENDER_AVATAR_BORDER_WIDTH).toPx()
     val yOffsetPx = -(NEGATIVE_MARGIN_FOR_BUBBLE + avatarRadius).toPx()
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
@@ -184,7 +179,7 @@ internal fun MessageEventBubblePreview(@PreviewParameter(BubbleStateProvider::cl
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "${state.groupPosition.javaClass.simpleName} m:${state.isMine.to01()} h:${state.isHighlighted.to01()}",
+                    text = "${state.groupPosition.javaClass.simpleName} isMine:${state.isMine.to01()}",
                     style = ElementTheme.typography.fontBodyXsRegular,
                 )
             }
