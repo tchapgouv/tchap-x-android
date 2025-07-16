@@ -19,12 +19,13 @@ android {
 setupAnvil()
 
 dependencies {
-    releaseImplementation(libs.matrix.sdk)
     if (file("${rootDir.path}/libraries/rustsdk/matrix-rust-sdk.aar").exists()) {
         println("\nNote: Using local binary of the Rust SDK.\n")
         debugImplementation(projects.libraries.rustsdk)
+        releaseImplementation(projects.libraries.rustsdk)
     } else {
         debugImplementation(libs.matrix.sdk)
+        releaseImplementation(libs.matrix.sdk)
     }
     implementation(projects.appconfig)
     implementation(projects.libraries.androidutils)
