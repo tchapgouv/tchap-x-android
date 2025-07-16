@@ -20,9 +20,9 @@ appId: ${MAESTRO_APP_ID}
 - back
 
 - tapOn:
-    text: "About"
+    text: "Legals"
 - assertVisible: "Copyright"
-- assertVisible: "Acceptable use policy"
+- assertVisible: "Terms of use"
 - assertVisible: "Privacy policy"
 - back
 
