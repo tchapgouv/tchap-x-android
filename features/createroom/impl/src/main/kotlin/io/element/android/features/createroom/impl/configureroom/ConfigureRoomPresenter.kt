@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import im.vector.app.features.analytics.plan.CreatedRoom
 import io.element.android.features.createroom.impl.CreateRoomConfig

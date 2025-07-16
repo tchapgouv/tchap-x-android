@@ -10,7 +10,6 @@ package io.element.android.features.roomdetails.impl
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -46,7 +45,6 @@ import io.element.android.features.userprofile.shared.blockuser.BlockUserSection
 import io.element.android.libraries.androidutils.system.copyToClipboard
 import io.element.android.libraries.architecture.coverage.ExcludeFromCoverage
 import io.element.android.libraries.designsystem.atomic.atoms.MatrixBadgeAtom
-import io.element.android.libraries.designsystem.atomic.molecules.MatrixBadgeRowMolecule
 import io.element.android.libraries.designsystem.components.ClickableLinkText
 import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
@@ -89,7 +87,6 @@ import io.element.android.libraries.ui.strings.CommonStrings
 import io.element.android.services.analytics.compose.LocalAnalyticsService
 import io.element.android.services.analyticsproviders.api.trackers.captureInteraction
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
@@ -479,22 +476,6 @@ private fun TitleAndSubtitle(
                 style = ElementTheme.typography.fontBodyLgRegular,
                 color = ElementTheme.colors.textSecondary,
                 textAlign = TextAlign.Center,
-            )
-        }
-    }
-}
-
-@Composable
-fun BadgeList(
-    roomBadge: ImmutableList<RoomBadge>,
-    modifier: Modifier = Modifier,
-) {
-    Box(modifier = modifier) {
-        if (roomBadge.isNotEmpty()) {
-            MatrixBadgeRowMolecule(
-                data = roomBadge.map {
-                    it.toMatrixBadgeData()
-                }.toImmutableList(),
             )
         }
     }

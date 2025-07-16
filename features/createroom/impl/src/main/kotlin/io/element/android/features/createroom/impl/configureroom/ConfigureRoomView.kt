@@ -29,7 +29,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -60,7 +59,6 @@ import io.element.android.libraries.designsystem.modifiers.clearFocusOnTap
 import io.element.android.libraries.designsystem.preview.ElementPreviewDark
 import io.element.android.libraries.designsystem.preview.ElementPreviewLight
 import io.element.android.libraries.designsystem.preview.PreviewWithLargeHeight
-import io.element.android.libraries.designsystem.theme.aliasScreenTitle
 import io.element.android.libraries.designsystem.theme.badgeExternalContentColor
 import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.ListItem
@@ -334,7 +332,8 @@ private fun RoomExternalGuestsWarning() {
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(imageVector = CompoundIcons.InfoSolid(),
+        Icon(
+            imageVector = CompoundIcons.InfoSolid(),
             contentDescription = null,
             tint = ElementTheme.colors.badgeExternalContentColor,
             modifier = Modifier.padding(end = 8.dp)

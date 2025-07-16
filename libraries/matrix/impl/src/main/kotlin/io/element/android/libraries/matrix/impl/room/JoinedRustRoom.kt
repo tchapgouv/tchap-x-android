@@ -96,7 +96,7 @@ class JoinedRustRoom(
 
     override val accessRules: RoomAccessRules?
         get() = null
-//        get() = runCatching { innerRoom.accessRules }.getOrDefault("") // TCHAP todo
+//        get() = runCatchingExceptions { innerRoom.accessRules }.getOrDefault("") // TCHAP todo
 
     override val roomTypingMembersFlow: Flow<List<UserId>> = mxCallbackFlow {
         val initial = emptyList<UserId>()
@@ -495,12 +495,14 @@ class JoinedRustRoom(
     }
 
     override suspend fun setAccessRules(rule: RoomAccessRules): Result<Unit> = withContext(roomDispatcher) {
-        runCatching {
-            innerRoom.setAccessRules(when (rule) {
-                RoomAccessRules.DIRECT -> AccessRule.DIRECT
-                RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
-                RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
-            },)
+        runCatchingExceptions {
+            innerRoom.setAccessRules(
+                when (rule) {
+                    RoomAccessRules.DIRECT -> AccessRule.DIRECT
+                    RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
+                    RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
+                },
+            )
         }
     }
 }

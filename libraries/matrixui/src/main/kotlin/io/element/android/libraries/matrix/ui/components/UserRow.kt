@@ -28,7 +28,6 @@ import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarType
 import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.matrix.ui.R
-import io.element.android.libraries.ui.strings.CommonStrings
 
 @Composable
 internal fun UserRow(

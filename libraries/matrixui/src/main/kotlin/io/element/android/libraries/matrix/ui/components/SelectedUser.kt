@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,8 +37,6 @@ import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.badgeExternalBackgroundColor
 import io.element.android.libraries.designsystem.theme.badgeExternalContentColor
-import io.element.android.libraries.designsystem.theme.badgeNegativeBackgroundColor
-import io.element.android.libraries.designsystem.theme.badgeNegativeContentColor
 import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.Surface
 import io.element.android.libraries.designsystem.theme.components.Text
@@ -120,7 +117,7 @@ fun SelectedUser(
 
 @PreviewsDayNight
 @Composable
-internal fun SelectedExternalUserPreview() = ElementPreview {
+internal fun SelectedUserExternalPreview() = ElementPreview {
     SelectedUser(
         aMatrixUser(displayName = "Guest", id = "@id_of_guest:e.server"),
         canRemove = true,

@@ -332,8 +332,8 @@ class RustMatrixClient(
             val rustParams = RustCreateRoomParameters(
                 accessRulesOverride = when (createRoomParams.accessRules) {
                     RoomAccessRules.DIRECT -> AccessRule.DIRECT
-                    RoomAccessRules.UNRESTRICTED  -> AccessRule.UNRESTRICTED
-                    RoomAccessRules.RESTRICTED  -> AccessRule.RESTRICTED
+                    RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
+                    RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
                     else -> null
                 },
                 name = createRoomParams.name,

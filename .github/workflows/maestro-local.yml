@@ -28,6 +28,7 @@ jobs:
           # Ensure we are building the branch and not the branch after being merged on develop
           # https://github.com/actions/checkout/issues/881
           ref: ${{ github.ref }}
+          lfs: true
       - uses: actions/setup-java@v4
         name: Use JDK 21
         with:
@@ -68,6 +69,7 @@ jobs:
           # Ensure we are building the branch and not the branch after being merged on develop
           # https://github.com/actions/checkout/issues/881
           ref: ${{ github.ref }}
+          lfs: true
       - name: Download APK artifact from previous job
         uses: actions/download-artifact@v4
         with:
