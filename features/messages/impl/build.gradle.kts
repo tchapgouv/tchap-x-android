@@ -25,6 +25,7 @@ setupAnvil()
 
 dependencies {
     api(projects.features.messages.api)
+    implementation(projects.libraries.tchaputils)
     implementation(projects.appconfig)
     implementation(projects.features.call.api)
     implementation(projects.features.location.api)

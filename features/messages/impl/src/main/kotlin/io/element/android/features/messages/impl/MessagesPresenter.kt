@@ -25,6 +25,7 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import im.vector.app.features.analytics.plan.PinUnpinAction
 import io.element.android.appconfig.MessageComposerConfig
 import io.element.android.features.messages.api.timeline.HtmlConverterProvider
@@ -77,6 +78,7 @@ import io.element.android.libraries.matrix.api.room.powerlevels.canPinUnpin
 import io.element.android.libraries.matrix.api.room.powerlevels.canRedactOther
 import io.element.android.libraries.matrix.api.room.powerlevels.canRedactOwn
 import io.element.android.libraries.matrix.api.room.powerlevels.canSendMessage
+import io.element.android.libraries.matrix.api.room.roomMembers
 import io.element.android.libraries.matrix.api.sync.SyncService
 import io.element.android.libraries.matrix.api.timeline.item.event.EventOrTransactionId
 import io.element.android.libraries.matrix.ui.messages.reply.map
@@ -198,6 +200,9 @@ class MessagesPresenter @AssistedInject constructor(
         val dmRoomMember by room.getDirectRoomMember(membersState)
         val roomMemberIdentityStateChanges = identityChangeState.roomMemberIdentityStateChanges
 
+        // TCHAP external user
+        val hasExternalUsers = membersState.roomMembers()?.any { it.userId.toString().isExternalTchapUser() } ?: false
+
         LifecycleResumeEffect(dmRoomMember, roomInfo.isEncrypted) {
             if (roomInfo.isEncrypted == true) {
                 val dmRoomMemberId = dmRoomMember?.userId
@@ -244,7 +249,7 @@ class MessagesPresenter @AssistedInject constructor(
             isDebugBuild = buildMeta.isDebuggable,
             isEncrypted = room.roomInfoFlow.value.isEncrypted ?: false,
             isPublic = room.roomInfoFlow.value.isPublic ?: false,
-            isExternal = true, // TCHAP TODO get value from room
+            isExternal = hasExternalUsers,
             roomId = room.roomId,
             roomName = roomInfo.name,
             roomAvatar = roomAvatar,
