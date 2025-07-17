@@ -126,10 +126,10 @@ fun LoginPasswordView(
                 modifier = Modifier.padding(top = 20.dp, start = 16.dp, end = 16.dp),
                 iconStyle = BigIcon.Style.Default(CompoundIcons.UserProfileSolid()),
                 title = stringResource(
-                    id = R.string.screen_account_provider_signin_title,
+                    id = R.string.tchap_screen_account_provider_signin_title,
                     state.accountProvider.title
                 ),
-                subTitle = stringResource(id = R.string.screen_login_subtitle)
+                subTitle = stringResource(id = R.string.tchap_screen_login_subtitle)
             )
             Spacer(Modifier.height(40.dp))
             LoginForm(
