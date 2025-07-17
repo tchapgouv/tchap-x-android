@@ -49,6 +49,7 @@ fun PreferencesRootView(
     onOpenAnalytics: () -> Unit,
     onOpenRageShake: () -> Unit,
     onOpenLockScreenSettings: () -> Unit,
+    onOpenFAQ: () -> Unit,
     onOpenAbout: () -> Unit,
     onOpenDeveloperSettings: () -> Unit,
     onOpenAdvancedSettings: () -> Unit,
@@ -94,6 +95,7 @@ fun PreferencesRootView(
         // General section
         GeneralSection(
             state = state,
+            onOpenFAQ = onOpenFAQ,
             onOpenAbout = onOpenAbout,
             onOpenAnalytics = onOpenAnalytics,
             onOpenRageShake = onOpenRageShake,
@@ -189,6 +191,7 @@ private fun ColumnScope.ManageAccountSection(
 @Composable
 private fun ColumnScope.GeneralSection(
     state: PreferencesRootState,
+    onOpenFAQ: () -> Unit,
     onOpenAbout: () -> Unit,
     onOpenAnalytics: () -> Unit,
     onOpenRageShake: () -> Unit,
@@ -197,6 +200,11 @@ private fun ColumnScope.GeneralSection(
     onSignOutClick: () -> Unit,
     onDeactivateClick: () -> Unit,
 ) {
+    ListItem(
+        headlineContent = { Text(stringResource(id = CommonStrings.tchap_common_faq)) },
+        leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Info())),
+        onClick = { onOpenFAQ() },
+    )
     ListItem(
         headlineContent = { Text(stringResource(id = CommonStrings.tchap_common_legals)) },
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.ListBulleted())),
@@ -297,6 +305,7 @@ private fun ContentToPreview(matrixUser: MatrixUser) {
         onOpenRageShake = {},
         onOpenDeveloperSettings = {},
         onOpenAdvancedSettings = {},
+        onOpenFAQ = {},
         onOpenAbout = {},
         onSecureBackupClick = {},
         onManageAccountClick = {},

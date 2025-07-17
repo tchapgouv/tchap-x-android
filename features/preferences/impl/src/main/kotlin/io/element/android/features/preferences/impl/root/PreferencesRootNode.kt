@@ -18,6 +18,7 @@ import com.bumble.appyx.core.plugin.plugins
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import io.element.android.anvilannotations.ContributesNode
+import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.logout.api.direct.DirectLogoutEvents
 import io.element.android.features.logout.api.direct.DirectLogoutView
@@ -65,6 +66,17 @@ class PreferencesRootNode @AssistedInject constructor(
 
     private fun onOpenAnalytics() {
         plugins<Callback>().forEach { it.onOpenAnalytics() }
+    }
+
+    private fun onOpenFAQ(
+        activity: Activity,
+        darkTheme: Boolean,
+    ) {
+        activity.openUrlInChromeCustomTab(
+            null,
+            darkTheme,
+            url = LearnMoreConfig.FAQ_URL
+        )
     }
 
     private fun onOpenAbout() {
@@ -120,6 +132,7 @@ class PreferencesRootNode @AssistedInject constructor(
             onBackClick = this::navigateUp,
             onOpenRageShake = this::onOpenBugReport,
             onOpenAnalytics = this::onOpenAnalytics,
+            onOpenFAQ = { onOpenFAQ(activity, isDark) },
             onOpenAbout = this::onOpenAbout,
             onSecureBackupClick = this::onSecureBackupClick,
             onOpenDeveloperSettings = this::onOpenDeveloperSettings,
