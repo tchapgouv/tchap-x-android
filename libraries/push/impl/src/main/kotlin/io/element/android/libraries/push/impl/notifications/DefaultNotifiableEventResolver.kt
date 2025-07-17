@@ -268,6 +268,7 @@ class DefaultNotifiableEventResolver @Inject constructor(
             NotificationContent.StateEvent.RoomTombstone,
             is NotificationContent.StateEvent.RoomTopic,
             NotificationContent.StateEvent.SpaceChild,
+            is NotificationContent.StateEvent.RoomAccessRule, // Tchap TODO : Ignore this event in Beta
             NotificationContent.StateEvent.SpaceParent -> {
                 Timber.tag(loggerTag.value).d("Ignoring notification for state event ${content.javaClass.simpleName}")
                 throw ResolvingException("Ignoring notification for state event ${content.javaClass.simpleName}")
