@@ -20,7 +20,7 @@ sealed class ElementLegal(
     val url: String,
 ) {
     data object Copyright : ElementLegal(CommonStrings.common_copyright, COPYRIGHT_URL)
-    data object AcceptableUsePolicy : ElementLegal(CommonStrings.common_acceptable_use_policy, USE_POLICY_URL)
+    data object AcceptableUsePolicy : ElementLegal(CommonStrings.tchap_common_terms_of_use, USE_POLICY_URL)
     data object PrivacyPolicy : ElementLegal(CommonStrings.common_privacy_policy, PRIVACY_URL)
 }
 

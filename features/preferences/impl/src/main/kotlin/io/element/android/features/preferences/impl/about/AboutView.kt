@@ -29,7 +29,7 @@ fun AboutView(
     PreferencePage(
         modifier = modifier,
         onBackClick = onBackClick,
-        title = stringResource(id = CommonStrings.common_about)
+        title = stringResource(id = CommonStrings.tchap_common_legals)
     ) {
         state.elementLegals.forEach { elementLegal ->
             ListItem(
