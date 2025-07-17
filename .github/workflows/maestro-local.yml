@@ -28,7 +28,7 @@ jobs:
           # Ensure we are building the branch and not the branch after being merged on develop
           # https://github.com/actions/checkout/issues/881
           ref: ${{ github.ref }}
-          lfs: true
+          lfs: true # Tchap TODO : Remove this when maven is using matrix-sdk from Tchap repository
       - uses: actions/setup-java@v4
         name: Use JDK 21
         with:
@@ -69,7 +69,7 @@ jobs:
           # Ensure we are building the branch and not the branch after being merged on develop
           # https://github.com/actions/checkout/issues/881
           ref: ${{ github.ref }}
-          lfs: true
+          lfs: true # Tchap TODO : Remove this when maven is using matrix-sdk from Tchap repository
       - name: Download APK artifact from previous job
         uses: actions/download-artifact@v4
         with:

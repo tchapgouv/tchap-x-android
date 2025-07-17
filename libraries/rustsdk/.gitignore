@@ -1,2 +1,2 @@
 # Built application files
-#*.aar
+#*.aar # Tchap TODO : Remove this when maven is using matrix-sdk from Tchap repository
