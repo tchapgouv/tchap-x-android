@@ -23,6 +23,9 @@
   -->
 
 <resources>
+    <!-- tchap settings -->
+    <string name="tchap_screen_account_provider_signin_title">"Sign in to Tchap"</string>
+    <string name="tchap_screen_login_subtitle">"Instant messaging of public sector."</string>
     <string name="tchap_screen_onboarding_sign_in_to">"Sign in"</string>
     <string name="tchap_screen_onboarding_welcome_message">"Instant messaging of public sector."</string>
     <string name="tchap_screen_onboarding_welcome_title">"Welcome to Tchap"</string>
