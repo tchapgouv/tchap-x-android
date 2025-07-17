@@ -112,6 +112,7 @@ sealed interface NotificationContent {
         data class RoomTopic(val topic: String) : StateEvent
         data object SpaceChild : StateEvent
         data object SpaceParent : StateEvent
+        data class RoomAccessRule(val rule: String) : StateEvent
     }
 
     data class Invite(

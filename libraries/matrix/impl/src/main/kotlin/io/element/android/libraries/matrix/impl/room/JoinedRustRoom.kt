@@ -17,6 +17,7 @@ import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.RoomAlias
 import io.element.android.libraries.matrix.api.core.SendHandle
 import io.element.android.libraries.matrix.api.core.UserId
+import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityStateChange
 import io.element.android.libraries.matrix.api.notificationsettings.NotificationSettingsService
 import io.element.android.libraries.matrix.api.room.BaseRoom
@@ -71,6 +72,7 @@ import org.matrix.rustcomponents.sdk.WidgetCapabilitiesProvider
 import org.matrix.rustcomponents.sdk.getElementCallRequiredPermissions
 import org.matrix.rustcomponents.sdk.use
 import timber.log.Timber
+import uniffi.matrix_sdk.AccessRule
 import uniffi.matrix_sdk.RoomPowerLevelChanges
 import kotlin.coroutines.cancellation.CancellationException
 import org.matrix.rustcomponents.sdk.IdentityStatusChange as RustIdentityStateChange
@@ -91,6 +93,10 @@ class JoinedRustRoom(
     private val innerRoom = baseRoom.innerRoom
 
     override val syncUpdateFlow = MutableStateFlow(0L)
+
+    override val accessRules: RoomAccessRules?
+        get() = null
+//        get() = runCatchingExceptions { innerRoom.accessRules }.getOrDefault("") // TCHAP todo
 
     override val roomTypingMembersFlow: Flow<List<UserId>> = mxCallbackFlow {
         val initial = emptyList<UserId>()
@@ -486,5 +492,17 @@ class JoinedRustRoom(
             onNewSyncedEvent = onNewSyncedEvent,
             featureFlagsService = featureFlagService,
         )
+    }
+
+    override suspend fun setAccessRules(rule: RoomAccessRules): Result<Unit> = withContext(roomDispatcher) {
+        runCatchingExceptions {
+            innerRoom.setAccessRules(
+                when (rule) {
+                    RoomAccessRules.DIRECT -> AccessRule.DIRECT
+                    RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
+                    RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
+                },
+            )
+        }
     }
 }

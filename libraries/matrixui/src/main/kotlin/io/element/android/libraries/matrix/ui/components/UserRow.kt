@@ -16,13 +16,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.compound.theme.ElementTheme
+import io.element.android.compound.tokens.generated.CompoundIcons
+import io.element.android.libraries.designsystem.atomic.atoms.MatrixBadgeAtom
 import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarType
 import io.element.android.libraries.designsystem.theme.components.Text
+import io.element.android.libraries.matrix.ui.R
 
 @Composable
 internal fun UserRow(
@@ -69,6 +74,14 @@ internal fun UserRow(
                         style = ElementTheme.typography.fontBodySmRegular,
                     )
                 }
+            }
+            // TCHAP external user
+            if (subtext != null && subtext.startsWith('@') && subtext.isExternalTchapUser()) {
+                MatrixBadgeAtom.View(MatrixBadgeAtom.MatrixBadgeData(
+                    text = stringResource(R.string.tchap_contact_external),
+                    icon = CompoundIcons.UserSolid(),
+                    type = MatrixBadgeAtom.Type.External,
+                ))
             }
         }
         trailingContent?.invoke()

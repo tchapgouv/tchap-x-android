@@ -22,6 +22,7 @@ import kotlinx.collections.immutable.toPersistentList
 
 data class RoomDetailsState(
     val isDebugBuild: Boolean,
+    val isExternal: Boolean,
     val roomId: RoomId,
     val roomName: String,
     val roomAlias: RoomAlias?,
@@ -63,6 +64,9 @@ data class RoomDetailsState(
         if (isPublic) {
             add(RoomBadge.PUBLIC)
         }
+        if (isExternal) {
+            add(RoomBadge.EXTERNAL)
+        }
     }.toPersistentList()
 }
 
@@ -83,6 +87,7 @@ sealed interface RoomTopicState {
 }
 
 enum class RoomBadge {
+    EXTERNAL,
     ENCRYPTED,
     NOT_ENCRYPTED,
     PUBLIC,

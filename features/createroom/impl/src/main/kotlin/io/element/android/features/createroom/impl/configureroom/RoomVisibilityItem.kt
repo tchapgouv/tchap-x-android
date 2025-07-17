@@ -19,7 +19,7 @@ enum class RoomVisibilityItem(
 ) {
     // TCHAP room type
     Private(
-        icon = CompoundDrawables.ic_compound_lock,
+        icon = CompoundDrawables.ic_compound_lock_solid,
         title = R.string.tchap_screen_create_room_private_encrypted_option_title,
         description = R.string.tchap_screen_create_room_private_encrypted_option_description,
     ),

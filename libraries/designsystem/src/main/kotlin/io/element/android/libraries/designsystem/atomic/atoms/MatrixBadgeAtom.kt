@@ -14,6 +14,8 @@ import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.libraries.designsystem.components.Badge
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
+import io.element.android.libraries.designsystem.theme.badgeExternalBackgroundColor
+import io.element.android.libraries.designsystem.theme.badgeExternalContentColor
 import io.element.android.libraries.designsystem.theme.badgeNegativeBackgroundColor
 import io.element.android.libraries.designsystem.theme.badgeNegativeContentColor
 import io.element.android.libraries.designsystem.theme.badgeNeutralBackgroundColor
@@ -27,6 +29,7 @@ object MatrixBadgeAtom {
     )
 
     enum class Type {
+        External,
         Positive,
         Neutral,
         Negative,
@@ -38,18 +41,21 @@ object MatrixBadgeAtom {
         data: MatrixBadgeData,
     ) {
         val backgroundColor = when (data.type) {
+            Type.External -> ElementTheme.colors.badgeExternalBackgroundColor
             Type.Positive -> ElementTheme.colors.bgBadgeAccent
             Type.Neutral -> ElementTheme.colors.badgeNeutralBackgroundColor
             Type.Negative -> ElementTheme.colors.badgeNegativeBackgroundColor
             Type.Info -> ElementTheme.colors.bgBadgeInfo
         }
         val textColor = when (data.type) {
+            Type.External -> ElementTheme.colors.badgeExternalContentColor
             Type.Positive -> ElementTheme.colors.textBadgeAccent
             Type.Neutral -> ElementTheme.colors.badgeNeutralContentColor
             Type.Negative -> ElementTheme.colors.badgeNegativeContentColor
             Type.Info -> ElementTheme.colors.textBadgeInfo
         }
         val iconColor = when (data.type) {
+            Type.External -> ElementTheme.colors.textDecorative6
             Type.Positive -> ElementTheme.colors.textBadgeAccent
             Type.Neutral -> ElementTheme.colors.iconSecondary
             Type.Negative -> ElementTheme.colors.iconCriticalPrimary
@@ -63,6 +69,18 @@ object MatrixBadgeAtom {
             textColor = textColor,
         )
     }
+}
+
+@PreviewsDayNight
+@Composable
+internal fun MatrixBadgeAtomExternalPreview() = ElementPreview {
+    MatrixBadgeAtom.View(
+        MatrixBadgeAtom.MatrixBadgeData(
+            text = "External guests",
+            icon = CompoundIcons.UserSolid(),
+            type = MatrixBadgeAtom.Type.External,
+        )
+    )
 }
 
 @PreviewsDayNight

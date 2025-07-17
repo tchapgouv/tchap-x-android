@@ -16,10 +16,12 @@ import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.plugin.Plugin
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import im.vector.app.features.analytics.plan.MobileScreen
 import io.element.android.anvilannotations.ContributesNode
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.di.RoomScope
+import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.ui.strings.CommonStrings
 import io.element.android.services.analytics.api.AnalyticsService
@@ -61,6 +63,10 @@ class RoomInviteMembersNode @AssistedInject constructor(
                 navigateUp()
 
                 coroutineScope.launch {
+                    val hasExternalUsers = users.any { it.userId.toString().isExternalTchapUser() }
+                    if (hasExternalUsers && room.accessRules == RoomAccessRules.RESTRICTED) {
+                        room.setAccessRules(RoomAccessRules.UNRESTRICTED)
+                    }
                     val anyInviteFailed = users
                         .map { room.inviteUserById(it.userId) }
                         .any { it.isFailure }

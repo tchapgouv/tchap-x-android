@@ -23,6 +23,7 @@ import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.RoomIdOrAlias
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.createroom.CreateRoomParameters
+import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
 import io.element.android.libraries.matrix.api.createroom.RoomPreset
 import io.element.android.libraries.matrix.api.encryption.EncryptionService
 import io.element.android.libraries.matrix.api.media.MatrixMediaLoader
@@ -116,6 +117,7 @@ import org.matrix.rustcomponents.sdk.SendQueueRoomErrorListener
 import org.matrix.rustcomponents.sdk.TaskHandle
 import org.matrix.rustcomponents.sdk.use
 import timber.log.Timber
+import uniffi.matrix_sdk.AccessRule
 import java.io.File
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -328,6 +330,12 @@ class RustMatrixClient(
     override suspend fun createRoom(createRoomParams: CreateRoomParameters): Result<RoomId> = withContext(sessionDispatcher) {
         runCatchingExceptions {
             val rustParams = RustCreateRoomParameters(
+                accessRulesOverride = when (createRoomParams.accessRules) {
+                    RoomAccessRules.DIRECT -> AccessRule.DIRECT
+                    RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
+                    RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
+                    else -> null
+                },
                 name = createRoomParams.name,
                 topic = createRoomParams.topic,
                 isEncrypted = createRoomParams.isEncrypted,

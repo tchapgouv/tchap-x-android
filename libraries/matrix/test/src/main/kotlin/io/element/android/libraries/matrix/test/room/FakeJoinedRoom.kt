@@ -14,6 +14,7 @@ import io.element.android.libraries.matrix.api.core.ProgressCallback
 import io.element.android.libraries.matrix.api.core.RoomAlias
 import io.element.android.libraries.matrix.api.core.SendHandle
 import io.element.android.libraries.matrix.api.core.UserId
+import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityStateChange
 import io.element.android.libraries.matrix.api.room.BaseRoom
 import io.element.android.libraries.matrix.api.room.CreateTimelineParams
@@ -52,6 +53,7 @@ class FakeJoinedRoom(
     override val roomNotificationSettingsStateFlow: StateFlow<RoomNotificationSettingsState> =
         MutableStateFlow(RoomNotificationSettingsState.Unknown),
     override val knockRequestsFlow: Flow<List<KnockRequest>> = MutableStateFlow(emptyList()),
+    override val accessRules: RoomAccessRules? = null,
     private val roomNotificationSettingsService: FakeNotificationSettingsService = FakeNotificationSettingsService(),
     private var createTimelineResult: (CreateTimelineParams) -> Result<Timeline> = { lambdaError() },
     private val editMessageLambda: (EventId, String, String?, List<IntentionalMention>) -> Result<Unit> = { _, _, _, _ -> lambdaError() },
@@ -82,6 +84,7 @@ class FakeJoinedRoom(
     private val enableEncryptionResult: () -> Result<Unit> = { lambdaError() },
     private val updateJoinRuleResult: (JoinRule) -> Result<Unit> = { lambdaError() },
     private val setSendQueueEnabledResult: (Boolean) -> Unit = { _: Boolean -> },
+    private val setAccessRulesResult: (RoomAccessRules) -> Result<Unit> = { lambdaError() },
 ) : JoinedRoom, BaseRoom by baseRoom {
     fun givenRoomMembersState(state: RoomMembersState) {
         baseRoom.givenRoomMembersState(state)
@@ -221,6 +224,10 @@ class FakeJoinedRoom(
 
     override suspend fun withdrawVerificationAndResend(userIds: List<UserId>, sendHandle: SendHandle): Result<Unit> = simulateLongTask {
         withdrawVerificationAndResendResult(userIds, sendHandle)
+    }
+
+    override suspend fun setAccessRules(rule: RoomAccessRules): Result<Unit> = simulateLongTask {
+        setAccessRulesResult(rule)
     }
 
     private suspend fun simulateSendMediaProgress(progressCallback: ProgressCallback?) {

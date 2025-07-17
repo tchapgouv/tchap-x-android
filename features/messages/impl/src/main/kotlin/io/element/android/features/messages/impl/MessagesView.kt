@@ -78,6 +78,8 @@ import io.element.android.features.messages.impl.voicemessages.composer.VoiceMes
 import io.element.android.features.messages.impl.voicemessages.composer.VoiceMessageSendingFailedDialog
 import io.element.android.features.networkmonitor.api.ui.ConnectivityIndicatorView
 import io.element.android.features.roomcall.api.RoomCallState
+import io.element.android.features.roomdetails.impl.BadgeList
+import io.element.android.features.roomdetails.impl.RoomBadge
 import io.element.android.libraries.androidutils.ui.hideKeyboard
 import io.element.android.libraries.designsystem.atomic.molecules.ComposerAlertMolecule
 import io.element.android.libraries.designsystem.components.ExpandableBottomSheetLayout
@@ -197,6 +199,7 @@ fun MessagesView(
                     Column {
                         ConnectivityIndicatorView(isOnline = state.hasNetworkConnection)
                         MessagesViewTopBar(
+                            roomBadges = state.roomBadges,
                             roomName = state.roomName,
                             roomAvatar = state.roomAvatar,
                             isTombstoned = state.isTombstoned,
@@ -481,6 +484,7 @@ private fun MessagesViewComposerBottomSheetContents(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MessagesViewTopBar(
+    roomBadges: ImmutableList<RoomBadge>,
     roomName: String?,
     roomAvatar: AvatarData,
     isTombstoned: Boolean,
@@ -505,13 +509,19 @@ private fun MessagesViewTopBar(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 val titleModifier = Modifier.weight(1f, fill = false)
-                RoomAvatarAndNameRow(
-                    roomName = roomName,
-                    roomAvatar = roomAvatar,
-                    isTombstoned = isTombstoned,
-                    heroes = heroes,
-                    modifier = titleModifier
-                )
+                Column {
+                    RoomAvatarAndNameRow(
+                        roomName = roomName,
+                        roomAvatar = roomAvatar,
+                        isTombstoned = isTombstoned,
+                        heroes = heroes,
+                        modifier = titleModifier
+                    )
+                    BadgeList(
+                        roomBadge = roomBadges,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    )
+                }
 
                 when (dmUserIdentityState) {
                     IdentityState.Verified -> {

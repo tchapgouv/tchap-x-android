@@ -12,6 +12,7 @@ import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.RoomAlias
 import io.element.android.libraries.matrix.api.core.SendHandle
 import io.element.android.libraries.matrix.api.core.UserId
+import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityStateChange
 import io.element.android.libraries.matrix.api.room.history.RoomHistoryVisibility
 import io.element.android.libraries.matrix.api.room.join.JoinRule
@@ -31,6 +32,7 @@ interface JoinedRoom : BaseRoom {
     val roomTypingMembersFlow: Flow<List<UserId>>
     val identityStateChangesFlow: Flow<List<IdentityStateChange>>
     val roomNotificationSettingsStateFlow: StateFlow<RoomNotificationSettingsState>
+    val accessRules: RoomAccessRules?
 
     /**
      * The current knock requests in the room as a Flow.
@@ -65,6 +67,8 @@ interface JoinedRoom : BaseRoom {
     suspend fun removeAvatar(): Result<Unit>
 
     suspend fun updateRoomNotificationSettings(): Result<Unit>
+
+    suspend fun setAccessRules(rule: RoomAccessRules): Result<Unit>
 
     /**
      * Update the canonical alias of the room.

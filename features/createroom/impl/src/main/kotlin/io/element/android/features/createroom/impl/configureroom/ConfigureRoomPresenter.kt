@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import im.vector.app.features.analytics.plan.CreatedRoom
 import io.element.android.features.createroom.impl.CreateRoomConfig
 import io.element.android.features.createroom.impl.CreateRoomDataStore
@@ -29,6 +30,7 @@ import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.createroom.CreateRoomParameters
+import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
 import io.element.android.libraries.matrix.api.createroom.RoomPreset
 import io.element.android.libraries.matrix.api.room.alias.RoomAliasHelper
 import io.element.android.libraries.matrix.api.room.history.RoomHistoryVisibility
@@ -157,10 +159,17 @@ class ConfigureRoomPresenter @Inject constructor(
         createRoomAction: MutableState<AsyncAction<RoomId>>
     ) = launch {
         suspend {
+            val accessRules =
+                if (config.roomVisibility is RoomVisibilityState.Public || !config.invites.any { it.userId.toString().isExternalTchapUser() }) {
+                    RoomAccessRules.RESTRICTED
+                } else {
+                    RoomAccessRules.UNRESTRICTED
+                }
             val avatarUrl = config.avatarUri?.let { uploadAvatar(it) }
             val params = when (config.roomVisibility) {
                 is RoomVisibilityState.Public -> {
                     CreateRoomParameters(
+                        accessRules = accessRules,
                         name = config.roomName,
                         topic = config.topic,
                         isEncrypted = false,
@@ -175,6 +184,7 @@ class ConfigureRoomPresenter @Inject constructor(
                 }
                 is RoomVisibilityState.Private -> {
                     CreateRoomParameters(
+                        accessRules = accessRules,
                         name = config.roomName,
                         topic = config.topic,
                         isEncrypted = true,
@@ -188,6 +198,7 @@ class ConfigureRoomPresenter @Inject constructor(
                 }
                 is RoomVisibilityState.PrivateNotEncrypted -> { // TCHAP room type
                     CreateRoomParameters(
+                        accessRules = accessRules,
                         name = config.roomName,
                         topic = config.topic,
                         isEncrypted = false,

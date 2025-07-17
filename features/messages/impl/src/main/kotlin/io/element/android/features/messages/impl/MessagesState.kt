@@ -20,6 +20,7 @@ import io.element.android.features.messages.impl.timeline.components.receipt.bot
 import io.element.android.features.messages.impl.timeline.protection.TimelineProtectionState
 import io.element.android.features.messages.impl.voicemessages.composer.VoiceMessageComposerState
 import io.element.android.features.roomcall.api.RoomCallState
+import io.element.android.features.roomdetails.impl.RoomBadge
 import io.element.android.features.roommembermoderation.api.RoomMemberModerationState
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
@@ -28,10 +29,14 @@ import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityState
 import io.element.android.libraries.matrix.api.room.tombstone.SuccessorRoom
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 
 @Immutable
 data class MessagesState(
     val isDebugBuild: Boolean,
+    val isEncrypted: Boolean,
+    val isPublic: Boolean,
+    val isExternal: Boolean,
     val roomId: RoomId,
     val roomName: String?,
     val roomAvatar: AvatarData,
@@ -61,5 +66,20 @@ data class MessagesState(
     val successorRoom: SuccessorRoom?,
     val eventSink: (MessagesEvents) -> Unit
 ) {
+    val roomBadges = buildList {
+        if (isEncrypted || isPublic) {
+            if (isEncrypted) {
+                add(RoomBadge.ENCRYPTED)
+            } else {
+                add(RoomBadge.NOT_ENCRYPTED)
+            }
+        }
+        if (isPublic) {
+            add(RoomBadge.PUBLIC)
+        }
+        if (isExternal) {
+            add(RoomBadge.EXTERNAL)
+        }
+    }.toPersistentList()
     val isTombstoned = successorRoom != null
 }

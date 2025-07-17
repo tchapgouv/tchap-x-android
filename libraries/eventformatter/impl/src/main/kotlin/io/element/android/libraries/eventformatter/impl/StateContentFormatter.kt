@@ -7,6 +7,7 @@
 
 package io.element.android.libraries.eventformatter.impl
 
+import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.eventformatter.impl.mode.RenderingMode
 import io.element.android.libraries.matrix.api.timeline.item.event.OtherState
 import io.element.android.libraries.matrix.api.timeline.item.event.StateContent
@@ -16,6 +17,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class StateContentFormatter @Inject constructor(
+    private val buildMeta: BuildMeta,
     private val sp: StringProvider,
 ) {
     fun format(
@@ -25,6 +27,16 @@ class StateContentFormatter @Inject constructor(
         renderingMode: RenderingMode,
     ): CharSequence? {
         return when (val content = stateContent.content) {
+//            is OtherState.RoomAccessRules -> {
+//                val guestCanJoin = content.rule == "unrestricted"
+//                when {
+//                    senderIsYou && !guestCanJoin -> sp.getString(R.string.tchap_state_event_room_guest_access_forbidden_by_you)
+//                    senderIsYou && guestCanJoin -> sp.getString(R.string.tchap_state_event_room_guest_access_can_join_by_you)
+//                    !senderIsYou && !guestCanJoin -> sp.getString(R.string.tchap_state_event_room_guest_access_forbidden)
+//                    !senderIsYou && guestCanJoin -> sp.getString(R.string.tchap_state_event_room_guest_access_can_join)
+//                    else -> "Custom event ${content.rule}"
+//                }
+//            }
             is OtherState.RoomAvatar -> {
                 val hasAvatarUrl = content.url != null
                 when {
@@ -86,7 +98,7 @@ class StateContentFormatter @Inject constructor(
                     null
                 }
                 RenderingMode.Timeline -> {
-                    "Custom event ${content.eventType}"
+                    if (buildMeta.isDebuggable) "Custom event ${content.eventType}" else null
                 }
             }
             OtherState.PolicyRuleRoom -> when (renderingMode) {
