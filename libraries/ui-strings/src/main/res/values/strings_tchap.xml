@@ -24,6 +24,7 @@
 
 <resources>
     <!-- tchap settings -->
+    <string name="tchap_common_faq">"Frequently Asked Questions"</string>
     <string name="tchap_common_legals">"Legals"</string>
     <string name="tchap_common_terms_of_use">"Terms of use"</string>
 </resources>

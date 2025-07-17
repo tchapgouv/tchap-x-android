@@ -24,6 +24,7 @@
 
 <resources>
     <!-- tchap settings -->
+    <string name="tchap_common_faq">"Foire Aux Questions"</string>
     <string name="tchap_common_legals">"Mentions légales"</string>
     <string name="tchap_common_terms_of_use">"Conditions Générales d'Utilisation"</string>
 </resources>
