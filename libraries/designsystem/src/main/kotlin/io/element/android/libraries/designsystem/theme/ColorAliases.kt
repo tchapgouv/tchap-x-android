@@ -106,18 +106,22 @@ val SemanticColors.highlightedMessageBackgroundColor
 
 // Badge colors
 
+// Tchap TODO : This color is not present in Tchap Semantic color, so put hard-coded value for now
 @OptIn(CoreColorToken::class)
 val SemanticColors.badgeExternalBackgroundColor
     get() = if (isLight) LightColorTokens.colorAlphaOrange300 else DarkColorTokens.colorAlphaOrange300
 
+// Tchap TODO : This color is not present in Tchap Semantic color, so put hard-coded value for now
 @OptIn(CoreColorToken::class)
 val SemanticColors.badgeExternalContentColor
     get() = if (isLight) LightColorTokens.colorOrange1100 else DarkColorTokens.colorOrange1100
 
+// Tchap TODO : This color is not present in Tchap Semantic color, so put hard-coded value for now
 @OptIn(CoreColorToken::class)
 val SemanticColors.badgePositiveBackgroundColor
     get() = if (isLight) LightColorTokens.colorAlphaGreen300 else DarkColorTokens.colorAlphaGreen300
 
+// Tchap TODO : This color is not present in Tchap Semantic color, so put hard-coded value for now
 @OptIn(CoreColorToken::class)
 val SemanticColors.badgePositiveContentColor
     get() = if (isLight) LightColorTokens.colorGreen1100 else DarkColorTokens.colorGreen1100
