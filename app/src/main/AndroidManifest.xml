@@ -146,6 +146,18 @@
                 <data android:host="user" />
                 <data android:host="room" />
             </intent-filter>
+            <!--
+              tchap.gouv.fr links
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="tchap.gouv.fr" />
+            </intent-filter>
         </activity>
 
         <!-- Using an activity-alias for incoming share intent, in order

@@ -37,10 +37,13 @@ class DefaultMatrixToConverter @Inject constructor() : MatrixToConverter {
             // Handle links coming from the matrix.to website.
             .replacePrefix(MATRIX_TO_CUSTOM_SCHEME_BASE_URL, "https://app.element.io/#/")
         val baseUrl = MatrixConfiguration.MATRIX_TO_PERMALINK_BASE_URL
+        val tchapBaseUrl = MatrixConfiguration.TCHAP_PERMALINK_BASE_URL // Parse tchap.gouv.fr permalinks
 
         return when {
             // URL is already a matrix.to
             uriString.startsWith(baseUrl) -> uri
+            // URL is already a tchap.gouv.fr
+            uriString.startsWith(tchapBaseUrl) -> uri
             // Web or client url
             SUPPORTED_PATHS.any { it in uriString } -> {
                 val path = SUPPORTED_PATHS.first { it in uriString }
