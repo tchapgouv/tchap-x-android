@@ -42,13 +42,13 @@ class DefaultMatrixToConverter @Inject constructor() : MatrixToConverter {
         return when {
             // URL is already a matrix.to
             uriString.startsWith(baseUrl) -> uri
-            // URL is already a tchap.gouv.fr
-            uriString.startsWith(tchapBaseUrl) -> uri
             // Web or client url
             SUPPORTED_PATHS.any { it in uriString } -> {
                 val path = SUPPORTED_PATHS.first { it in uriString }
                 (baseUrl + uriString.substringAfter(path)).toUri()
             }
+            // URL is already a tchap.gouv.fr (match after SUPPORTED_PATHS to allow https://tchap.gouv.fr/#/[room|user|group])
+            uriString.startsWith(tchapBaseUrl) -> uri
             // URL is not supported
             else -> null
         }
