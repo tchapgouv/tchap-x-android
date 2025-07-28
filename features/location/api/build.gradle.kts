@@ -45,7 +45,7 @@ android {
                     ?: readLocalProperty("services.maptiler.lightMapId")
             }
             // fall back to maptiler's default light map.
-                ?: "basic-v2"
+                ?: "osm-bright"
         )
         buildConfigFieldStr(
             name = "MAPTILER_DARK_MAP_ID",
@@ -56,7 +56,7 @@ android {
                     ?: readLocalProperty("services.maptiler.darkMapId")
             }
             // fall back to maptiler's default dark map.
-                ?: "basic-v2-dark"
+                ?: "dark-matter"
         )
     }
 }

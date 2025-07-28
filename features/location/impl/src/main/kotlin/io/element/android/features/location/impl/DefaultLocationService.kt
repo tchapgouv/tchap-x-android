@@ -16,6 +16,6 @@ import javax.inject.Inject
 @ContributesBinding(AppScope::class)
 class DefaultLocationService @Inject constructor() : LocationService {
     override fun isServiceAvailable(): Boolean {
-        return BuildConfig.MAPTILER_API_KEY.isNotEmpty()
+        return BuildConfig.MAPTILER_BASE_URL.isNotEmpty()
     }
 }
