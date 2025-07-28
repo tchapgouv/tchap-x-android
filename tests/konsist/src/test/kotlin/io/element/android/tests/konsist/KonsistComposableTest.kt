@@ -32,6 +32,11 @@ class KonsistComposableTest {
             .withoutReceiverType()
             .withoutName(
                 // Add some exceptions...
+                "AvatarColorsPreviewLight",
+                "AvatarColorsPreviewDark",
+                "IconsCompoundPreviewLight",
+                "IconsCompoundPreviewRtl",
+                "IconsCompoundPreviewDark",
                 "InvisibleButton",
                 "OutlinedButton",
                 "SimpleAlertDialogContent",

@@ -29,6 +29,8 @@ jobs:
           # https://github.com/actions/checkout/issues/881
           ref: ${{ github.ref }}
           lfs: true # Tchap TODO : Remove this when maven is using matrix-sdk from Tchap repository
+      - name: Clone Tchap Compound submodule
+        run: git submodule update --init --recursive checkouts/compound-android # Tchap using compound from tchap repository
       - uses: actions/setup-java@v4
         name: Use JDK 21
         with:
