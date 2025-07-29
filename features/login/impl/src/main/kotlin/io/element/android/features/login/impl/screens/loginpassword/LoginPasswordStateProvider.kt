@@ -25,11 +25,13 @@ open class LoginPasswordStateProvider : PreviewParameterProvider<LoginPasswordSt
 }
 
 fun aLoginPasswordState(
+    applicationName: String = "Tchap",
     accountProvider: AccountProvider = anAccountProvider(),
     formState: LoginFormState = LoginFormState.Default,
     loginAction: AsyncData<SessionId> = AsyncData.Uninitialized,
     eventSink: (LoginPasswordEvents) -> Unit = {},
 ) = LoginPasswordState(
+    applicationName = applicationName,
     accountProvider = accountProvider,
     formState = formState,
     loginAction = loginAction,
