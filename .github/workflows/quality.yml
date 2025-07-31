@@ -79,6 +79,8 @@ jobs:
           # https://github.com/actions/checkout/issues/881
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.ref }}
           lfs: true # Tchap TODO : Remove this when maven is using matrix-sdk from Tchap repository
+      - name: Clone Tchap Compound submodule
+        run: git submodule update --init --recursive checkouts/compound-android # Tchap using compound from tchap repository
       - name: Add SSH private keys for submodule repositories
         uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
         # Skip in forks
@@ -122,6 +124,8 @@ jobs:
           # https://github.com/actions/checkout/issues/881
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.ref }}
           lfs: true # Tchap TODO : Remove this when maven is using matrix-sdk from Tchap repository
+      - name: Clone Tchap Compound submodule
+        run: git submodule update --init --recursive checkouts/compound-android # Tchap using compound from tchap repository
       - name: Add SSH private keys for submodule repositories
         uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
         # Skip in forks
@@ -169,6 +173,8 @@ jobs:
           # https://github.com/actions/checkout/issues/881
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.ref }}
           lfs: true # Tchap TODO : Remove this when maven is using matrix-sdk from Tchap repository
+      - name: Clone Tchap Compound submodule
+        run: git submodule update --init --recursive checkouts/compound-android # Tchap using compound from tchap repository
       - name: Add SSH private keys for submodule repositories
         uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
         # Skip in forks
@@ -212,6 +218,8 @@ jobs:
           # https://github.com/actions/checkout/issues/881
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.ref }}
           lfs: true # Tchap TODO : Remove this when maven is using matrix-sdk from Tchap repository
+      - name: Clone Tchap Compound submodule
+        run: git submodule update --init --recursive checkouts/compound-android # Tchap using compound from tchap repository
       - name: Add SSH private keys for submodule repositories
         uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
         # Skip in forks
@@ -260,6 +268,8 @@ jobs:
         if: ${{ github.repository == 'element-hq/element-x-android' }}
         with:
           ssh-private-key: ${{ secrets.ELEMENT_ENTERPRISE_DEPLOY_KEY }}
+      - name: Clone Tchap Compound submodule
+        run: git submodule update --init --recursive checkouts/compound-android # Tchap using compound from tchap repository
       - name: Clone submodules
         # Skip in forks
         if: ${{ github.repository == 'element-hq/element-x-android' }}
