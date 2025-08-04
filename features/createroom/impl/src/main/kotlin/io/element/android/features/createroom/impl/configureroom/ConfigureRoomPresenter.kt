@@ -196,19 +196,20 @@ class ConfigureRoomPresenter @Inject constructor(
                         avatar = avatarUrl,
                     )
                 }
-                is RoomVisibilityState.PrivateNotEncrypted -> { // TCHAP room type
-                    CreateRoomParameters(
-                        accessRules = accessRules,
-                        name = config.roomName,
-                        topic = config.topic,
-                        isEncrypted = false,
-                        isDirect = false,
-                        visibility = RoomVisibility.Private,
-                        preset = RoomPreset.PRIVATE_CHAT,
-                        invite = config.invites.map { it.userId },
-                        avatar = avatarUrl,
-                    )
-                }
+                // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
+//                is RoomVisibilityState.PrivateNotEncrypted -> { // TCHAP room type
+//                    CreateRoomParameters(
+//                        accessRules = accessRules,
+//                        name = config.roomName,
+//                        topic = config.topic,
+//                        isEncrypted = false,
+//                        isDirect = false,
+//                        visibility = RoomVisibility.Private,
+//                        preset = RoomPreset.PRIVATE_CHAT,
+//                        invite = config.invites.map { it.userId },
+//                        avatar = avatarUrl,
+//                    )
+//                }
             }
             matrixClient.createRoom(params)
                 .onFailure { failure ->

@@ -23,11 +23,12 @@ enum class RoomVisibilityItem(
         title = R.string.tchap_screen_create_room_private_encrypted_option_title,
         description = R.string.tchap_screen_create_room_private_encrypted_option_description,
     ),
-    PrivateNotEncrypted(
-        icon = CompoundDrawables.ic_compound_lock_off,
-        title = R.string.screen_create_room_private_option_title,
-        description = R.string.tchap_screen_create_room_private_not_encrypted_option_description,
-    ),
+    // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
+//    PrivateNotEncrypted(
+//        icon = CompoundDrawables.ic_compound_lock_off,
+//        title = R.string.screen_create_room_private_option_title,
+//        description = R.string.tchap_screen_create_room_private_not_encrypted_option_description,
+//    ),
     Public(
         icon = CompoundDrawables.ic_compound_public,
         title = R.string.screen_create_room_public_option_title,

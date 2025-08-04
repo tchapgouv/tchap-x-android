@@ -144,7 +144,8 @@ fun ConfigureRoomView(
             RoomVisibilityOptions(
                 selected = when (state.config.roomVisibility) {
                     is RoomVisibilityState.Private -> RoomVisibilityItem.Private
-                    is RoomVisibilityState.PrivateNotEncrypted -> RoomVisibilityItem.PrivateNotEncrypted // TCHAP room type
+                    // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
+//                    is RoomVisibilityState.PrivateNotEncrypted -> RoomVisibilityItem.PrivateNotEncrypted // TCHAP room type
                     is RoomVisibilityState.Public -> RoomVisibilityItem.Public
                 },
                 onOptionClick = {

@@ -86,7 +86,8 @@ class CreateRoomDataStore @Inject constructor(
             config.copy(
                 roomVisibility = when (visibility) {
                     RoomVisibilityItem.Private -> RoomVisibilityState.Private
-                    RoomVisibilityItem.PrivateNotEncrypted -> RoomVisibilityState.PrivateNotEncrypted // TCHAP room type
+                    // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
+//                    RoomVisibilityItem.PrivateNotEncrypted -> RoomVisibilityState.PrivateNotEncrypted // TCHAP room type
                     RoomVisibilityItem.Public -> {
                         val roomAliasName = roomAliasHelper.roomAliasNameFromRoomDisplayName(config.roomName.orEmpty())
                         RoomVisibilityState.Public(
