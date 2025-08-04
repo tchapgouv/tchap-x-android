@@ -215,7 +215,9 @@ class MessagesFlowNode @AssistedInject constructor(
                     override fun onEventClick(isLive: Boolean, event: TimelineItem.Event): Boolean {
                         // TCHAP content scanner
                         if (event.content is TimelineItemEventContentWithAttachment &&
-                            event.content.scanState != BwiContentScannerScanState.TRUSTED) return false
+                            event.content.scanState != BwiContentScannerScanState.TRUSTED) {
+                            return false
+                        }
                         return processEventClick(
                             timelineMode = if (isLive) Timeline.Mode.LIVE else Timeline.Mode.FOCUSED_ON_EVENT,
                             event = event,

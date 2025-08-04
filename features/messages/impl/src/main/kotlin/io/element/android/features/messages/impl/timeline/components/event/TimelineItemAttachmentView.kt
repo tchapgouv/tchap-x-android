@@ -109,20 +109,3 @@ private fun TimelineItemAttachmentHeaderView(
         }
     }
 }
-
-@Composable
-fun TimelineItemAttachmentCaptionView(
-    caption: String,
-    onContentLayoutChange: (ContentAvoidingLayoutData) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        modifier = modifier,
-        text = caption,
-        color = ElementTheme.colors.textPrimary,
-        style = ElementTheme.typography.fontBodyLgRegular,
-        onTextLayout = ContentAvoidingLayout.measureLastTextLine(
-            onContentLayoutChange = onContentLayoutChange,
-        )
-    )
-}

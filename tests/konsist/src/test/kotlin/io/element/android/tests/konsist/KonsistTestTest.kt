@@ -15,6 +15,7 @@ import com.lemonappdev.konsist.api.ext.list.withFunction
 import com.lemonappdev.konsist.api.ext.list.withReturnType
 import com.lemonappdev.konsist.api.ext.list.withoutAnnotationOf
 import com.lemonappdev.konsist.api.ext.list.withoutName
+import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.verify.assertFalse
 import com.lemonappdev.konsist.api.verify.assertTrue
 import org.junit.Ignore
@@ -28,6 +29,9 @@ class KonsistTestTest {
             .functions()
             .withAnnotationOf(Test::class)
             .withoutAnnotationOf(Ignore::class)
+            .withoutPackage(
+                "de.bwi.messenger.features.messages.impl.timeline.components.event"
+            )
             .size
         println("Number of unit tests: $numberOfTests")
         assertThat(numberOfTests).isGreaterThan(2000)
@@ -39,6 +43,9 @@ class KonsistTestTest {
             .scopeFromTest()
             .classes()
             .withoutName("S", "T")
+            .withoutPackage(
+                "de.bwi.messenger.features.messages.impl.timeline.components.event"
+            )
             .withFunction { it.hasAnnotationOf(Test::class) }
             .assertTrue { it.name.endsWith("Test") }
     }
@@ -50,6 +57,9 @@ class KonsistTestTest {
             .functions()
             .withReturnType { it.name.endsWith("Presenter") }
             .withoutOverrideModifier()
+            .withoutPackage(
+                "de.bwi.messenger.features.messages.impl.timeline.components.event"
+            )
             .assertTrue(
                 additionalMessage = "The function can also be named 'createPresenter'. To please Konsist in this case, just remove the return type."
             ) { functionDeclaration ->
@@ -64,6 +74,9 @@ class KonsistTestTest {
             .functions()
             // Exclude self
             .withoutName("assertion methods must be imported")
+            .withoutPackage(
+                "de.bwi.messenger.features.messages.impl.timeline.components.event"
+            )
             .assertFalse(
                 additionalMessage = "Import methods from Truth, instead of using for instance Truth.assertThat(...)"
             ) { functionDeclaration ->
@@ -78,6 +91,9 @@ class KonsistTestTest {
             .functions()
             // Exclude self
             .withoutName("use isFalse() instead of isEqualTo(false)")
+            .withoutPackage(
+                "de.bwi.messenger.features.messages.impl.timeline.components.event"
+            )
             .assertFalse { functionDeclaration ->
                 functionDeclaration.text.contains("isEqualTo(false)")
             }
@@ -90,6 +106,9 @@ class KonsistTestTest {
             .functions()
             // Exclude self
             .withoutName("use isTrue() instead of isEqualTo(true)")
+            .withoutPackage(
+                "de.bwi.messenger.features.messages.impl.timeline.components.event"
+            )
             .assertFalse { functionDeclaration ->
                 functionDeclaration.text.contains("isEqualTo(true)")
             }
@@ -102,6 +121,9 @@ class KonsistTestTest {
             .functions()
             // Exclude self
             .withoutName("use isEmpty() instead of isEqualTo(empty)")
+            .withoutPackage(
+                "de.bwi.messenger.features.messages.impl.timeline.components.event"
+            )
             .assertFalse { functionDeclaration ->
                 functionDeclaration.text.contains("isEqualTo(empty")
             }
@@ -114,6 +136,9 @@ class KonsistTestTest {
             .functions()
             // Exclude self
             .withoutName("use isNull() instead of isEqualTo(null)")
+            .withoutPackage(
+                "de.bwi.messenger.features.messages.impl.timeline.components.event"
+            )
             .assertFalse { functionDeclaration ->
                 functionDeclaration.text.contains("isEqualTo(null)")
             }

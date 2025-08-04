@@ -30,7 +30,6 @@ import io.element.android.features.messages.impl.timeline.factories.TimelineItem
 import io.element.android.features.messages.impl.timeline.factories.TimelineItemsFactoryConfig
 import io.element.android.features.messages.impl.timeline.model.NewEventState
 import io.element.android.features.messages.impl.timeline.model.TimelineItem
-import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemTypingNotificationModel
 import io.element.android.features.messages.impl.timeline.model.TimelineItem.Virtual
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemAudioContent
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemEventContentWithAttachment
@@ -39,6 +38,7 @@ import io.element.android.features.messages.impl.timeline.model.event.TimelineIt
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemVideoContent
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemVoiceContent
 import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemBwiScanStateChangedModel
+import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemTypingNotificationModel
 import io.element.android.features.messages.impl.typing.TypingNotificationState
 import io.element.android.features.messages.impl.voicemessages.timeline.RedactedVoiceMessageManager
 import io.element.android.features.poll.api.actions.EndPollAction
@@ -323,7 +323,6 @@ class TimelinePresenter @AssistedInject constructor(
         }
         return list.toImmutableList()
 
-
 //        if (items.isEmpty()) return items
 //        val (scanStateItems, regularItems) = items.partition { item -> item.getBwiScanStateModel() == null }
 //
@@ -350,9 +349,6 @@ class TimelinePresenter @AssistedInject constructor(
 //                }
 //            } ?: scanStateItem
 //        }.toImmutableList()
-
-
-
 
 //        if (items.isEmpty()) return items
 //        val (scanStateItems, regularItems) = items.partition { it.getBwiScanStateModel() != null }

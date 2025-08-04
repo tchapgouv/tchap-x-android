@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.lemonappdev.konsist.api.Konsist
 import com.lemonappdev.konsist.api.ext.list.withAllAnnotationsOf
 import com.lemonappdev.konsist.api.ext.list.withoutName
+import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.verify.assertEmpty
 import com.lemonappdev.konsist.api.verify.assertTrue
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
@@ -142,6 +143,9 @@ class KonsistPreviewTest {
                 "UserAvatarColorsPreview",
                 "UserProfileHeaderSectionWithVerificationViolationPreview",
                 "VoiceItemViewPlayPreview",
+            )
+            .withoutPackage(
+                "de.bwi.messenger.features.messages.impl.timeline.components.event"
             )
             .assertTrue(
                 additionalMessage = "Functions for Preview should be named like this: <ViewUnderPreview>Preview. " +

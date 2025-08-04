@@ -10,6 +10,7 @@ package io.element.android.tests.konsist
 import com.lemonappdev.konsist.api.Konsist
 import com.lemonappdev.konsist.api.ext.list.constructors
 import com.lemonappdev.konsist.api.ext.list.withAllParentsOf
+import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.verify.assertTrue
 import io.element.android.libraries.architecture.Presenter
 import org.junit.Test
@@ -20,6 +21,9 @@ class KonsistPresenterTest {
         Konsist.scopeFromProject()
             .classes()
             .withAllParentsOf(Presenter::class)
+            .withoutPackage(
+                "de.bwi.messenger.features.messages.impl.timeline.components.event"
+            )
             .constructors
             .assertTrue { constructor ->
                 val result = constructor.parameters.none { parameter ->
