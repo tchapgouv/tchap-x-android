@@ -12,7 +12,8 @@ import java.util.Optional
 sealed interface RoomVisibilityState {
     data object Private : RoomVisibilityState
 
-    data object PrivateNotEncrypted : RoomVisibilityState // TCHAP room type
+    // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
+//    data object PrivateNotEncrypted : RoomVisibilityState // TCHAP room type
 
     data class Public(
         val roomAddress: RoomAddress,
@@ -21,7 +22,8 @@ sealed interface RoomVisibilityState {
 
     fun roomAddress(): Optional<String> {
         return when (this) {
-            is PrivateNotEncrypted, // TCHAP room type
+            // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
+//            is PrivateNotEncrypted, // TCHAP room type
             is Private -> Optional.empty()
             is Public -> Optional.of(roomAddress.value)
         }
