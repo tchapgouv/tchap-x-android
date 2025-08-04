@@ -100,7 +100,7 @@ class OnBoardingPresenter @AssistedInject constructor(
         }
 
         return OnBoardingState(
-            productionApplicationName = buildMeta.productionApplicationName,
+            productionApplicationName = buildMeta.applicationName,
             defaultAccountProvider = defaultAccountProvider,
             mustChooseAccountProvider = mustChooseAccountProvider,
             canLoginWithQrCode = canLoginWithQrCode,

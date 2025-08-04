@@ -24,9 +24,9 @@
 
 <resources>
     <!-- tchap settings -->
-    <string name="tchap_screen_account_provider_signin_title">"Se connecter à Tchap"</string>
+    <string name="tchap_screen_account_provider_signin_title">"Se connecter à %1$s"</string>
     <string name="tchap_screen_login_subtitle">"La messagerie instantanée du secteur public."</string>
     <string name="tchap_screen_onboarding_sign_in_to">"Se connecter"</string>
     <string name="tchap_screen_onboarding_welcome_message">"La messagerie instantanée du secteur public."</string>
-    <string name="tchap_screen_onboarding_welcome_title">"Bienvenue dans Tchap"</string>
+    <string name="tchap_screen_onboarding_welcome_title">"Bienvenue dans %1$s"</string>
 </resources>
