@@ -7,12 +7,14 @@
 
 package io.element.android.features.messages.impl.timeline.model.event
 
+import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.media.MediaSource
 import kotlinx.collections.immutable.ImmutableList
 import kotlin.time.Duration
 
 data class TimelineItemVoiceContent(
+    override val scanState: BwiContentScannerScanState = BwiContentScannerScanState.UNKNOWN,
     val eventId: EventId?,
     override val filename: String,
     override val caption: String?,

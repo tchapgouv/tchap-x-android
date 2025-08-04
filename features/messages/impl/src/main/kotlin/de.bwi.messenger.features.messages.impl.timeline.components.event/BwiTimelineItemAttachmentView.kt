@@ -1,18 +1,17 @@
 /*
  * Copyright 2024 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
- * Please see LICENSE files in the repository root for full details.
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * Please see LICENSE in the repository root for full details.
  */
 
-package io.element.android.features.messages.impl.timeline.components.event
+package de.bwi.messenger.features.messages.impl.timeline.components.event
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -21,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.messages.impl.timeline.components.layout.ContentAvoidingLayout
@@ -30,39 +30,11 @@ import io.element.android.libraries.designsystem.theme.components.Text
 /**
  * package-private, you should only use TimelineItemFileView and TimelineItemAudioView.
  */
-@Composable
-fun TimelineItemAttachmentView(
-    filename: String,
-    fileExtensionAndSize: String,
-    caption: String?,
-    onContentLayoutChange: (ContentAvoidingLayoutData) -> Unit,
-    modifier: Modifier = Modifier,
-    icon: (@Composable () -> Unit) = {},
-) {
-    Column(
-        modifier = modifier,
-    ) {
-        TimelineItemAttachmentHeaderView(
-            filename = filename,
-            fileExtensionAndSize = fileExtensionAndSize,
-            hasCaption = caption != null,
-            onContentLayoutChange = onContentLayoutChange,
-            icon = icon,
-        )
-        if (caption != null) {
-            TimelineItemAttachmentCaptionView(
-                modifier = Modifier.padding(top = 4.dp),
-                caption = caption,
-                onContentLayoutChange = onContentLayoutChange,
-            )
-        }
-    }
-}
 
 @Composable
-private fun TimelineItemAttachmentHeaderView(
-    filename: String,
-    fileExtensionAndSize: String,
+fun BwiTimelineItemAttachmentHeaderView(
+    firstLine: String,
+    secondLine: String,
     hasCaption: Boolean,
     onContentLayoutChange: (ContentAvoidingLayoutData) -> Unit,
     modifier: Modifier = Modifier,
@@ -85,16 +57,16 @@ private fun TimelineItemAttachmentHeaderView(
         Spacer(Modifier.width(spacing))
         Column {
             Text(
-                text = filename,
-                color = ElementTheme.colors.textPrimary,
+                text = firstLine,
+                color = ElementTheme.materialColors.primary,
                 maxLines = 2,
                 style = ElementTheme.typography.fontBodyLgRegular,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = fileExtensionAndSize,
+                text = secondLine,
                 color = ElementTheme.colors.textSecondary,
-                style = ElementTheme.typography.fontBodySmRegular,
+                style = ElementTheme.typography.fontBodyXsRegular,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 onTextLayout = if (hasCaption) {
@@ -110,19 +82,15 @@ private fun TimelineItemAttachmentHeaderView(
     }
 }
 
+@Preview
 @Composable
-fun TimelineItemAttachmentCaptionView(
-    caption: String,
-    onContentLayoutChange: (ContentAvoidingLayoutData) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        modifier = modifier,
-        text = caption,
-        color = ElementTheme.colors.textPrimary,
-        style = ElementTheme.typography.fontBodyLgRegular,
-        onTextLayout = ContentAvoidingLayout.measureLastTextLine(
-            onContentLayoutChange = onContentLayoutChange,
-        )
+private fun BwiTimelineItemAttachmentHeaderViewPreview() {
+    BwiTimelineItemAttachmentHeaderView(
+        firstLine = "First Line",
+        secondLine = "Second Line",
+        hasCaption = true,
+        onContentLayoutChange = { },
+        modifier = Modifier,
+        icon = {}
     )
 }

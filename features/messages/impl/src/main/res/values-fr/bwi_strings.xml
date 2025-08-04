@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="screen_room_timeline_media_scanning">Scan en cours…</string>
+    <string name="screen_room_timeline_media_blocked">Bloqué</string>
+    <string name="screen_room_timeline_media_not_available">Ce fichier n’est plus disponible</string>
+    <string name="screen_room_timeline_media_contentscanner_error">Fichier temporairement indisponible</string>
+</resources>
+

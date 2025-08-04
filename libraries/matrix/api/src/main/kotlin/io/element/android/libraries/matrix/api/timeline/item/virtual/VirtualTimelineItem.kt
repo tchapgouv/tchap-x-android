@@ -7,9 +7,15 @@
 
 package io.element.android.libraries.matrix.api.timeline.item.virtual
 
+import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
 import io.element.android.libraries.matrix.api.timeline.Timeline
 
 sealed interface VirtualTimelineItem {
+    data class BwiScanStateChanged(
+        val eventId: String,
+        val newScanState: BwiContentScannerScanState,
+    ) : VirtualTimelineItem
+
     data class DayDivider(
         val timestamp: Long
     ) : VirtualTimelineItem

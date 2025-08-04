@@ -8,6 +8,7 @@
 package io.element.android.features.messages.impl.timeline.model.event
 
 import androidx.compose.runtime.Immutable
+import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
 import io.element.android.libraries.matrix.api.media.MediaSource
 import kotlin.time.Duration
 
@@ -25,6 +26,7 @@ interface TimelineItemEventMutableContent {
 sealed interface TimelineItemEventContentWithAttachment :
     TimelineItemEventContent,
     TimelineItemEventMutableContent {
+    val scanState: BwiContentScannerScanState
     val filename: String
     val caption: String?
     val formattedCaption: CharSequence?
