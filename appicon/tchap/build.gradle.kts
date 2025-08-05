@@ -27,8 +27,4 @@ plugins {
 
 android {
     namespace = "fr.gouv.tchap.android.appicon.tchap"
-
-    buildTypes {
-        register("nightly")
-    }
 }

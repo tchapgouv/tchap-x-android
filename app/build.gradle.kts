@@ -96,7 +96,7 @@ android {
                 ?: project.property("signing.element.nightly.keyId") as? String?
             keyPassword = System.getenv("ELEMENT_ANDROID_NIGHTLY_KEYPASSWORD")
                 ?: project.property("signing.element.nightly.keyPassword") as? String?
-            storeFile = file("./signature/nightly.keystore")
+            storeFile = file("./signature/debug.keystore")
             storePassword = System.getenv("ELEMENT_ANDROID_NIGHTLY_STOREPASSWORD")
                 ?: project.property("signing.element.nightly.storePassword") as? String?
         }
@@ -141,7 +141,7 @@ android {
             initWith(release)
             applicationIdSuffix = ".nightly"
             versionNameSuffix = "-nightly"
-            resValue("string", "app_name", "$baseAppName nightly")
+            resValue("string", "app_name", "$baseAppName beta")
             resValue(
                 "string",
                 "login_redirect_scheme",
