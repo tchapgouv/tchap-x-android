@@ -8,6 +8,7 @@
 package io.element.android.features.messages.impl.timeline.factories.virtual
 
 import io.element.android.features.messages.impl.timeline.model.TimelineItem
+import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemBwiScanStateChangedModel
 import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemLastForwardIndicatorModel
 import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemLoadingIndicatorModel
 import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemReadMarkerModel
@@ -32,6 +33,7 @@ class TimelineItemVirtualFactory @Inject constructor(
 
     private fun MatrixTimelineItem.Virtual.computeModel(): TimelineItemVirtualModel {
         return when (val inner = virtual) {
+            is VirtualTimelineItem.BwiScanStateChanged -> TimelineItemBwiScanStateChangedModel(inner.eventId, inner.newScanState)
             is VirtualTimelineItem.DayDivider -> daySeparatorFactory.create(inner)
             is VirtualTimelineItem.ReadMarker -> TimelineItemReadMarkerModel
             is VirtualTimelineItem.RoomBeginning -> TimelineItemRoomBeginningModel

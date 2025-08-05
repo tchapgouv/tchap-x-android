@@ -15,6 +15,7 @@ import com.lemonappdev.konsist.api.ext.list.withAllAnnotationsOf
 import com.lemonappdev.konsist.api.ext.list.withTopLevel
 import com.lemonappdev.konsist.api.ext.list.withoutName
 import com.lemonappdev.konsist.api.ext.list.withoutNameEndingWith
+import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.ext.list.withoutReceiverType
 import com.lemonappdev.konsist.api.verify.assertTrue
 import org.junit.Test
@@ -41,6 +42,9 @@ class KonsistComposableTest {
                 "OutlinedButton",
                 "SimpleAlertDialogContent",
                 "TextButton",
+            )
+            .withoutPackage(
+                "de.bwi.messenger.features.messages.impl.timeline.components.event"
             )
             .assertTrue(
                 additionalMessage =

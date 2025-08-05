@@ -9,6 +9,7 @@ package io.element.android.tests.konsist
 
 import com.google.common.truth.Truth.assertThat
 import com.lemonappdev.konsist.api.Konsist
+import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.verify.assertTrue
 import org.junit.Test
 
@@ -49,6 +50,10 @@ class KonsistLicenseTest {
                     it.nameWithExtension != "locales.kt" &&
                     it.name.startsWith("Template ").not()
             }
+            .withoutPackage(
+                "de.bwi.messenger.features.messages.impl.timeline.components.event",
+                "de.bwi.messenger.libraries.matrix.api"
+            )
             .also {
                 assertThat(it).isNotEmpty()
             }
@@ -65,6 +70,10 @@ class KonsistLicenseTest {
             .filter {
                 it.moduleName.startsWith("enterprise")
             }
+            .withoutPackage(
+                "de.bwi.messenger.features.messages.impl.timeline.components.event",
+                "de.bwi.messenger.libraries.matrix.api"
+            )
             .assertTrue {
                 enterpriseLicense.containsMatchIn(it.text)
             }

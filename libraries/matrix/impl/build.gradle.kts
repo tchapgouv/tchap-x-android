@@ -28,6 +28,7 @@ dependencies {
         releaseImplementation(libs.matrix.sdk)
     }
     implementation(projects.appconfig)
+    implementation(projects.libraries.bwi.api)
     implementation(projects.libraries.androidutils)
     implementation(projects.libraries.di)
     implementation(projects.libraries.featureflag.api)

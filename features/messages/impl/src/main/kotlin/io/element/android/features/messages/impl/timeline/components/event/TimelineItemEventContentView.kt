@@ -9,6 +9,11 @@ package io.element.android.features.messages.impl.timeline.components.event
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import de.bwi.messenger.features.messages.impl.timeline.components.event.BwiTimelineItemAudioView
+import de.bwi.messenger.features.messages.impl.timeline.components.event.BwiTimelineItemFileView
+import de.bwi.messenger.features.messages.impl.timeline.components.event.BwiTimelineItemImageView
+import de.bwi.messenger.features.messages.impl.timeline.components.event.BwiTimelineItemVideoView
+import de.bwi.messenger.features.messages.impl.timeline.components.event.BwiTimelineItemVoiceView
 import io.element.android.features.messages.impl.timeline.TimelineEvents
 import io.element.android.features.messages.impl.timeline.components.layout.ContentAvoidingLayoutData
 import io.element.android.features.messages.impl.timeline.di.LocalTimelineItemPresenterFactories
@@ -74,14 +79,14 @@ fun TimelineItemEventContentView(
             content = content,
             modifier = modifier
         )
-        is TimelineItemImageContent -> TimelineItemImageView(
+        is TimelineItemImageContent -> BwiTimelineItemImageView(
             content = content,
             hideMediaContent = hideMediaContent,
             onContentClick = onContentClick,
             onLongClick = onLongClick,
             onShowContentClick = onShowContentClick,
             onLinkClick = onLinkClick,
-            onLinkLongClick = onLinkLongClick,
+//            onLinkLongClick = onLinkLongClick,
             onContentLayoutChange = onContentLayoutChange,
             modifier = modifier,
         )
@@ -93,23 +98,23 @@ fun TimelineItemEventContentView(
             onShowClick = onShowContentClick,
             modifier = modifier,
         )
-        is TimelineItemVideoContent -> TimelineItemVideoView(
+        is TimelineItemVideoContent -> BwiTimelineItemVideoView(
             content = content,
             hideMediaContent = hideMediaContent,
             onContentClick = onContentClick,
             onLongClick = onLongClick,
             onShowContentClick = onShowContentClick,
             onLinkClick = onLinkClick,
-            onLinkLongClick = onLinkLongClick,
+//            onLinkLongClick = onLinkLongClick,
             onContentLayoutChange = onContentLayoutChange,
             modifier = modifier
         )
-        is TimelineItemFileContent -> TimelineItemFileView(
+        is TimelineItemFileContent -> BwiTimelineItemFileView(
             content = content,
             onContentLayoutChange = onContentLayoutChange,
             modifier = modifier
         )
-        is TimelineItemAudioContent -> TimelineItemAudioView(
+        is TimelineItemAudioContent -> BwiTimelineItemAudioView(
             content = content,
             onContentLayoutChange = onContentLayoutChange,
             modifier = modifier
@@ -126,7 +131,7 @@ fun TimelineItemEventContentView(
         )
         is TimelineItemVoiceContent -> {
             val presenter: Presenter<VoiceMessageState> = presenterFactories.rememberPresenter(content)
-            TimelineItemVoiceView(
+            BwiTimelineItemVoiceView(
                 state = presenter.present(),
                 content = content,
                 onContentLayoutChange = onContentLayoutChange,

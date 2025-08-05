@@ -7,9 +7,11 @@
 
 package io.element.android.features.messages.impl.timeline.model.event
 
+import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
 import io.element.android.libraries.matrix.api.media.MediaSource
 
 data class TimelineItemStickerContent(
+    override val scanState: BwiContentScannerScanState = BwiContentScannerScanState.UNKNOWN,
     override val filename: String,
     override val caption: String?,
     override val formattedCaption: CharSequence?,

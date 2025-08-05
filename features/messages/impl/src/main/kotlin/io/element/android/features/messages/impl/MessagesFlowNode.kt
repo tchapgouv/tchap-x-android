@@ -22,6 +22,7 @@ import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.push
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
 import im.vector.app.features.analytics.plan.Interaction
 import io.element.android.anvilannotations.ContributesNode
 import io.element.android.features.call.api.CallType
@@ -212,6 +213,11 @@ class MessagesFlowNode @AssistedInject constructor(
                     }
 
                     override fun onEventClick(isLive: Boolean, event: TimelineItem.Event): Boolean {
+                        // TCHAP content scanner
+                        if (event.content is TimelineItemEventContentWithAttachment &&
+                            event.content.scanState != BwiContentScannerScanState.TRUSTED) {
+                            return false
+                        }
                         return processEventClick(
                             timelineMode = if (isLive) Timeline.Mode.LIVE else Timeline.Mode.FOCUSED_ON_EVENT,
                             event = event,

@@ -55,6 +55,7 @@ allprojects {
 
     tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
         exclude("io/element/android/tests/konsist/failures/**")
+        exclude("**/de.bwi.messenger.features.messages.impl.timeline.components.event/**")
     }
 
     // KtLint

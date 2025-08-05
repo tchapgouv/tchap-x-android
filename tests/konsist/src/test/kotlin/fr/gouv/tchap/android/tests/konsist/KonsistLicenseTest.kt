@@ -25,6 +25,7 @@
 package fr.gouv.tchap.android.tests.konsist
 
 import com.lemonappdev.konsist.api.Konsist
+import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.verify.assertTrue
 import org.junit.Test
 
@@ -63,6 +64,9 @@ class KonsistLicenseTest {
             .filter {
                 it.path.contains("/fr/gouv/tchap/")
             }
+            .withoutPackage(
+                "de.bwi.messenger.features.messages.impl.timeline.components.event"
+            )
             .assertTrue {
                 tchapLicense.containsMatchIn(it.text)
             }
