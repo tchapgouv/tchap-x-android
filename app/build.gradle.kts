@@ -108,7 +108,6 @@ android {
     buildTypes {
         val oidcRedirectSchemeBase = BuildTimeConfig.METADATA_HOST_REVERSED ?: "io.element.android"
         getByName("debug") {
-            resValue("string", "app_name", "$baseAppName dbg")
             resValue(
                 "string",
                 "login_redirect_scheme",
@@ -119,7 +118,6 @@ android {
         }
 
         getByName("release") {
-            resValue("string", "app_name", baseAppName)
             resValue(
                 "string",
                 "login_redirect_scheme",
@@ -141,7 +139,6 @@ android {
             initWith(release)
             applicationIdSuffix = ".nightly"
             versionNameSuffix = "-nightly"
-            resValue("string", "app_name", "$baseAppName beta")
             resValue(
                 "string",
                 "login_redirect_scheme",
@@ -159,7 +156,7 @@ android {
                 // We upload the universal APK to fix this error:
                 // "App Distribution found more than 1 output file for this variant.
                 // Please contact firebase-support@google.com for help using APK splits with App Distribution."
-                artifactPath = "$rootDir/app/build/outputs/apk/gplay/nightly/app-gplay-universal-nightly.apk"
+                artifactPath = "$rootDir/app/build/outputs/apk/gplayTchap/nightly/app-gplay-tchap-universal-nightly.apk"
                 // artifactType = "AAB"
                 // artifactPath = "$rootDir/app/build/outputs/bundle/nightly/app-nightly.aab"
                 releaseNotesFile = "tools/release/ReleaseNotesNightly.md"
@@ -182,7 +179,7 @@ android {
     buildFeatures {
         buildConfig = true
     }
-    flavorDimensions += "store"
+    flavorDimensions += listOf("store", "target")
     productFlavors {
         create("gplay") {
             dimension = "store"
@@ -194,6 +191,29 @@ android {
             dimension = "store"
             buildConfigFieldStr("SHORT_FLAVOR_DESCRIPTION", "F")
             buildConfigFieldStr("FLAVOR_DESCRIPTION", "FDroid")
+        }
+
+        // TCHAP productFlavors configs
+        create("devTchap") {
+            dimension = "target"
+
+            resValue("string", "app_name", "DevTchap")
+
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "_dev"
+        }
+        create("btchap") {
+            dimension = "target"
+
+            resValue("string", "app_name", "Btchap")
+
+            applicationIdSuffix = ".staging"
+            versionNameSuffix = "_b"
+        }
+        create("tchap") {
+            dimension = "target"
+
+            resValue("string", "app_name", "Tchap")
         }
     }
 }

@@ -41,7 +41,7 @@ jobs:
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/develop' }}
       - name: Assemble debug APK
-        run: ./gradlew :app:assembleGplayDebug $CI_GRADLE_ARG_PROPERTIES
+        run: ./gradlew :app:assembleGplayTchapDebug $CI_GRADLE_ARG_PROPERTIES
         env:
           ELEMENT_ANDROID_MAPTILER_API_KEY: ${{ secrets.MAPTILER_KEY }}
           ELEMENT_ANDROID_MAPTILER_LIGHT_MAP_ID: ${{ secrets.MAPTILER_LIGHT_MAP_ID }}
@@ -51,7 +51,7 @@ jobs:
         with:
           name: elementx-apk-maestro
           path: |
-            app/build/outputs/apk/gplay/debug/app-gplay-x86_64-debug.apk
+            app/build/outputs/apk/gplayTchap/debug/app-gplay-tchap-x86_64-debug.apk
           retention-days: 5
           overwrite: true
           if-no-files-found: error
@@ -104,7 +104,7 @@ jobs:
           disable-animations: true
           disk-size: 3G
           script: |
-            .github/workflows/scripts/maestro/maestro-local-with-screen-recording.sh app-gplay-x86_64-debug.apk
+            .github/workflows/scripts/maestro/maestro-local-with-screen-recording.sh app-gplay-tchap-x86_64-debug.apk
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
