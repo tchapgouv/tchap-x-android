@@ -26,20 +26,15 @@ package fr.gouv.tchap.android.features.location.api
 
 import java.io.File
 
-interface TchapMapRenderer {
-    /**
-     * Returns the cached file corresponding to the snapshot of the given LocationUiData.
-     *
-     * @param locationUiData LocationUiData to get the snapshot file for
-     * @return The file corresponding to the snapshot of the given LocationUiData.
-     */
-    fun getStaticMapFileFromLocation(locationUiData: LocationUiData): File
+class FakeTchapMapRenderer : TchapMapRenderer {
+    override fun getStaticMapFileFromLocation(locationUiData: LocationUiData): File {
+        return File("snapshot")
+    }
 
-    /**
-     * Generates a map snapshot for the given LocationUiData.
-     *
-     * @param locationUiData LocationUiData to generate the snapshot for
-     * @param onComplete Callback to be called when the snapshot generation is complete
-     */
-    fun generateMapSnapshot(locationUiData: LocationUiData, onComplete: () -> Unit)
+    override fun generateMapSnapshot(
+        locationUiData: LocationUiData,
+        onComplete: () -> Unit
+    ) {
+        return
+    }
 }

@@ -22,11 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.dp
 import coil3.Extras
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
+import fr.gouv.tchap.android.features.location.api.DefaultTchapMapRenderer
+import fr.gouv.tchap.android.features.location.api.FakeTchapMapRenderer
 import fr.gouv.tchap.android.features.location.api.LocationUiData
 import fr.gouv.tchap.android.features.location.api.TchapMapRenderer
 import io.element.android.compound.theme.ElementTheme
@@ -49,9 +52,14 @@ fun StaticMapView(
     contentDescription: String?,
     modifier: Modifier = Modifier,
     darkMode: Boolean = !ElementTheme.isLightTheme,
-) {
+    ) {
     val context = LocalContext.current
-    val tchapMapRenderer = TchapMapRenderer(darkMode, context) // Tchap: Generate locally snapshot of location
+    // Tchap: Create the map renderer or Fake it in preview context
+    val tchapMapRenderer: TchapMapRenderer = if (LocalInspectionMode.current) {
+        FakeTchapMapRenderer()
+    } else {
+        DefaultTchapMapRenderer(darkMode, LocalContext.current)
+    }
 
     // Using BoxWithConstraints to:
     // 1) Size the inner Image to the same Dp size of the outer BoxWithConstraints.
