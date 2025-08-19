@@ -7,6 +7,7 @@
 
 package io.element.android.features.location.api
 
+import android.util.Size
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.size
@@ -21,12 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import coil3.Extras
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
+import fr.gouv.tchap.android.features.location.api.LocationUiData
+import fr.gouv.tchap.android.features.location.api.TchapMapRenderer
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.location.api.internal.StaticMapPlaceholder
 import io.element.android.features.location.api.internal.StaticMapUrlBuilder
@@ -48,6 +50,9 @@ fun StaticMapView(
     modifier: Modifier = Modifier,
     darkMode: Boolean = !ElementTheme.isLightTheme,
 ) {
+    val context = LocalContext.current
+    val tchapMapRenderer = TchapMapRenderer(darkMode, context) // Tchap: Generate locally snapshot of location
+
     // Using BoxWithConstraints to:
     // 1) Size the inner Image to the same Dp size of the outer BoxWithConstraints.
     // 2) Request the static map image of the exact required size in Px to fill the AsyncImage.
@@ -55,26 +60,19 @@ fun StaticMapView(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        val context = LocalContext.current
         var retryHash by remember { mutableIntStateOf(0) }
         val builder = remember { StaticMapUrlBuilder() }
+
+        val locationUiData = LocationUiData(Location(lat, lon, 0f), zoom, Size(constraints.maxWidth, constraints.maxHeight))
+        val imageFile = tchapMapRenderer.getStaticMapFileFromLocation(locationUiData)
+
         val painter = rememberAsyncImagePainter(
             model = if (constraints.isZero) {
                 // Avoid building a URL if any of the size constraints is zero (else it will thrown an exception).
                 null
             } else {
                 ImageRequest.Builder(context)
-                    .data(
-                        builder.build(
-                            lat = lat,
-                            lon = lon,
-                            zoom = zoom,
-                            darkMode = darkMode,
-                            width = constraints.maxWidth,
-                            height = constraints.maxHeight,
-                            density = LocalDensity.current.density,
-                        )
-                    )
+                    .data(imageFile) // Tchap: use the locally generated snapshot of location (instead of request call)
                     .size(width = constraints.maxWidth, height = constraints.maxHeight)
                     .apply {
                         extras.set(Extras.Key("retry_hash"), retryHash).build()
@@ -82,6 +80,13 @@ fun StaticMapView(
                     .build()
             }
         )
+
+        // Tchap: Generate locally snapshot of location if it doesn't exist
+        if (!imageFile.exists()) {
+            tchapMapRenderer.generateMapSnapshot(locationUiData) {
+                painter.restart()
+            }
+        }
 
         val collectedState = painter.state.collectAsState()
         if (collectedState.value is AsyncImagePainter.State.Success) {

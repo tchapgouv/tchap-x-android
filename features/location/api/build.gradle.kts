@@ -68,6 +68,7 @@ dependencies {
     implementation(projects.libraries.matrixui)
     implementation(projects.libraries.uiStrings)
     implementation(libs.coil.compose)
+    implementation(libs.maplibre)
 
     testImplementation(libs.test.junit)
     testImplementation(libs.test.truth)
