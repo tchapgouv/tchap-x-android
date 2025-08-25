@@ -14,6 +14,16 @@ plugins {
 
 android {
     namespace = "io.element.android.libraries.matrix.impl"
+
+    flavorDimensions += listOf("pinning")
+    productFlavors {
+        create("withpinning") {
+            dimension = "pinning"
+        }
+        create("withoutpinning") {
+            dimension = "pinning"
+        }
+    }
 }
 
 setupAnvil()
@@ -27,6 +37,7 @@ dependencies {
         debugImplementation(libs.matrix.sdk)
         releaseImplementation(libs.matrix.sdk)
     }
+    implementation(projects.appcertificates)
     implementation(projects.appconfig)
     implementation(projects.libraries.bwi.api)
     implementation(projects.libraries.androidutils)
