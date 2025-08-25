@@ -27,6 +27,7 @@ android {
     }
 
     defaultConfig {
+        missingDimensionStrategy(dimension = "pinning", requestedValue = "withpinning")
         buildConfigFieldStr(
             name = "SENTRY_DSN",
             value = System.getenv("ELEMENT_CALL_SENTRY_DSN")

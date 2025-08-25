@@ -53,6 +53,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "TchapX"
 include(":app")
 include(":appnav")
+include(":appcertificates")
 include(":appconfig")
 include(":appicon:tchap")
 include(":appicon:element")

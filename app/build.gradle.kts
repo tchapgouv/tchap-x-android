@@ -179,7 +179,7 @@ android {
     buildFeatures {
         buildConfig = true
     }
-    flavorDimensions += listOf("store", "target")
+    flavorDimensions += listOf("store", "target", "pinning")
     productFlavors {
         create("gplay") {
             dimension = "store"
@@ -214,6 +214,13 @@ android {
             dimension = "target"
 
             resValue("string", "app_name", "Tchap X beta")
+        }
+
+        create("withpinning") {
+            dimension = "pinning"
+        }
+        create("withoutpinning") {
+            dimension = "pinning"
         }
     }
 }
@@ -285,6 +292,7 @@ dependencies {
     allFeaturesImpl(project)
     implementation(projects.features.migration.api)
     implementation(projects.appnav)
+    implementation(projects.appcertificates)
     implementation(projects.appconfig)
     implementation(projects.libraries.uiStrings)
     implementation(projects.services.analytics.compose)
