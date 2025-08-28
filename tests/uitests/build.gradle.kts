@@ -17,6 +17,10 @@ plugins {
 android {
     // Keep it as short as possible
     namespace = "ui"
+
+    defaultConfig {
+        missingDimensionStrategy(dimension = "pinning", requestedValue = "withpinning")
+    }
 }
 
 dependencies {

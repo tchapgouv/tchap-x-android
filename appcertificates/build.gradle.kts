@@ -36,11 +36,11 @@ android {
     productFlavors {
         create("withpinning") {
             dimension = "pinning"
-            buildConfigField(type = "boolean", name= "ENABLE_CERTIFICATE_PINNING", value = "true")
+            buildConfigField(type = "boolean", name = "ENABLE_CERTIFICATE_PINNING", value = "true")
         }
         create("withoutpinning") {
             dimension = "pinning"
-            buildConfigField(type = "boolean", name= "ENABLE_CERTIFICATE_PINNING", value =" false")
+            buildConfigField(type = "boolean", name = "ENABLE_CERTIFICATE_PINNING", value = " false")
         }
     }
 }

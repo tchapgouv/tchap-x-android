@@ -156,7 +156,7 @@ android {
                 // We upload the universal APK to fix this error:
                 // "App Distribution found more than 1 output file for this variant.
                 // Please contact firebase-support@google.com for help using APK splits with App Distribution."
-                artifactPath = "$rootDir/app/build/outputs/apk/gplayTchap/nightly/app-gplay-tchap-universal-nightly.apk"
+                artifactPath = "$rootDir/app/build/outputs/apk/gplayTchapWithpinning/nightly/app-gplay-tchap-withpinning-universal-nightly.apk"
                 // artifactType = "AAB"
                 // artifactPath = "$rootDir/app/build/outputs/bundle/nightly/app-nightly.aab"
                 releaseNotesFile = "tools/release/ReleaseNotesNightly.md"

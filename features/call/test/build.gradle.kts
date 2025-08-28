@@ -12,6 +12,10 @@ plugins {
 
 android {
     namespace = "io.element.android.features.call.test"
+
+    defaultConfig {
+        missingDimensionStrategy(dimension = "pinning", requestedValue = "withpinning")
+    }
 }
 
 dependencies {
