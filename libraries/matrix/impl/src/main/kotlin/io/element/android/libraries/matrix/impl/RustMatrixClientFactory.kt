@@ -8,7 +8,6 @@
 package io.element.android.libraries.matrix.impl
 
 import android.content.Context
-import android.content.res.Resources
 import fr.gouv.tchap.android.appcertificates.BuildConfig
 import fr.gouv.tchap.android.appcertificates.R
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
@@ -42,7 +41,6 @@ import uniffi.matrix_sdk_crypto.CollectStrategy
 import uniffi.matrix_sdk_crypto.DecryptionSettings
 import uniffi.matrix_sdk_crypto.TrustRequirement
 import java.io.File
-import java.io.IOException
 import javax.inject.Inject
 
 class RustMatrixClientFactory @Inject constructor(
@@ -118,7 +116,7 @@ class RustMatrixClientFactory @Inject constructor(
             .setSessionDelegate(sessionDelegate)
             .sessionPassphrase(passphrase)
             .userAgent(userAgentProvider.provide())
-            .addRootCertificates(userCertificatesProvider.provides());
+            .addRootCertificates(userCertificatesProvider.provides())
 
         // TCHAP : Disable Root Certificates & add in-app Certificates when ENABLE_CERTIFICATE_PINNING (withpinning) is enabled
         if (BuildConfig.ENABLE_CERTIFICATE_PINNING) {

@@ -53,22 +53,22 @@ jobs:
           ELEMENT_CALL_POSTHOG_API_HOST: ${{ secrets.ELEMENT_CALL_POSTHOG_API_HOST }}
           ELEMENT_CALL_POSTHOG_API_KEY: ${{ secrets.ELEMENT_CALL_POSTHOG_API_KEY }}
           ELEMENT_CALL_RAGESHAKE_URL: ${{ secrets.ELEMENT_CALL_RAGESHAKE_URL }}
-        run: ./gradlew :app:assembleGplayTchapDebug app:assembleFDroidTchapDebug -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
+        run: ./gradlew :app:assembleGplayTchapWithpinningDebug app:assembleFDroidTchapWithpinningDebug -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
       - name: Upload debug APKs
         if: ${{ matrix.variant == 'debug' }}
         uses: actions/upload-artifact@v4
         with:
           name: elementx-debug
           path: |
-            app/build/outputs/apk/gplayTchap/debug/*-universal-debug.apk
-            app/build/outputs/apk/fdroidTchap/debug/*-universal-debug.apk
+            app/build/outputs/apk/gplayTchapWithpinning/debug/*-universal-debug.apk
+            app/build/outputs/apk/fdroidTchapWithpinning/debug/*-universal-debug.apk
       - name: Upload x86_64 APK for Maestro
         if: ${{ matrix.variant == 'debug' }}
         uses: actions/upload-artifact@v4
         with:
           name: elementx-apk-maestro
           path: |
-            app/build/outputs/apk/gplayTchap/debug/app-gplay-tchap-x86_64-debug.apk
+            app/build/outputs/apk/gplayTchapWithpinning/debug/app-gplay-tchap-withpinning-x86_64-debug.apk
           retention-days: 5
           overwrite: true
           if-no-files-found: error
@@ -81,7 +81,7 @@ jobs:
         if: ${{ matrix.variant == 'debug' && github.event_name == 'pull_request' && env.token != '' }}
         with:
           token: ${{ env.token }}
-          file: app/build/outputs/apk/gplayTchap/debug/app-gplay-tchap-arm64-v8a-debug.apk
+          file: app/build/outputs/apk/gplayTchapWithpinning/debug/app-gplay-tchap-withpinning-arm64-v8a-debug.apk
       - name: Add or update PR comment with QR Code to download APK.
         if: ${{ matrix.variant == 'debug' && github.event_name == 'pull_request' && steps.diawi.conclusion == 'success' }}
         uses: NejcZdovc/comment-pr@a423635d183a8259308e80593c96fecf31539c26 # v2.1.0
@@ -96,7 +96,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Compile release sources
         if: ${{ matrix.variant == 'release' }}
-        run: ./gradlew bundleGplayTchapRelease -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
+        run: ./gradlew bundleGplayTchapWithpinningRelease -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
       - name: Compile nightly sources
         if: ${{ matrix.variant == 'nightly' }}
-        run: ./gradlew compileGplayTchapNightlySources -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
+        run: ./gradlew compileGplayTchapWithpinningNightlySources -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES

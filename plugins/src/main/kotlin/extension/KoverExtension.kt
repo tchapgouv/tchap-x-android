@@ -52,7 +52,7 @@ fun Project.setupKover() {
     tasks.register("koverVerifyAll") {
         group = "verification"
         description = "Verifies the code coverage of all subprojects."
-        val dependencies = listOf(":app:koverVerifyGplayTchapDebug") + koverVariants.map { ":app:koverVerify${it.replaceFirstChar(Char::titlecase)}" }
+        val dependencies = listOf(":app:koverVerifyGplayTchapWithpinningDebug") + koverVariants.map { ":app:koverVerify${it.replaceFirstChar(Char::titlecase)}" }
         dependsOn(dependencies)
     }
     // https://kotlin.github.io/kotlinx-kover/

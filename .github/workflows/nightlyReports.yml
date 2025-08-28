@@ -54,7 +54,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           ORG_GRADLE_PROJECT_SONAR_LOGIN: ${{ secrets.SONAR_TOKEN }}
         if: ${{ always() && env.SONAR_TOKEN != '' && env.ORG_GRADLE_PROJECT_SONAR_LOGIN != '' }}
-        run: ./gradlew assembleDebug createFullJarDebugTestFixtures :app:createFullJarGplayTchapDebugTestFixtures $CI_GRADLE_ARG_PROPERTIES
+        run: ./gradlew assembleDebug createFullJarDebugTestFixtures :app:createFullJarGplayTchapWithpinningDebugTestFixtures $CI_GRADLE_ARG_PROPERTIES
 
   # Gradle dependency analysis using https://github.com/autonomousapps/dependency-analysis-android-gradle-plugin
   dependency-analysis:
