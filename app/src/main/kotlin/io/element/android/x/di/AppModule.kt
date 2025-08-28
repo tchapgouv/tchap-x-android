@@ -76,7 +76,7 @@ object AppModule {
         buildType: BuildType,
         enterpriseService: EnterpriseService,
     ): BuildMeta {
-        val applicationName = ApplicationConfig.APPLICATION_NAME.takeIf { it.isNotEmpty() } ?: context.getString(R.string.app_name)
+        val applicationName = context.getString(R.string.app_name)
         return BuildMeta(
             isDebuggable = BuildConfig.DEBUG,
             buildType = buildType,

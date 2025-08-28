@@ -28,15 +28,15 @@ import org.gradle.jvm.toolchain.JavaLanguageVersion
  * - the version code: 20250100a (202_501_00a) where `a` stands for the architecture code
  */
 
-private const val versionYear = 25
-private const val versionMonth = 7
+private const val versionYear = 0
+private const val versionMonth = 1
 
 // Note: must be in [0,99]
 private const val versionReleaseNumber = 0
 
 object Versions {
-    const val VERSION_CODE = (2000 + versionYear) * 10_000 + versionMonth * 100 + versionReleaseNumber
-    val VERSION_NAME = "$versionYear.${versionMonth.toString().padStart(2, '0')}.$versionReleaseNumber"
+    const val VERSION_CODE = versionYear * 10_000 + versionMonth * 100 + versionReleaseNumber
+    val VERSION_NAME = "$versionYear.$versionMonth.$versionReleaseNumber"
 
     const val COMPILE_SDK = 35
     const val TARGET_SDK = 35

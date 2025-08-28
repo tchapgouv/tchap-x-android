@@ -172,7 +172,7 @@ allprojects {
 // Register quality check tasks.
 tasks.register("runQualityChecks") {
     dependsOn(":tests:konsist:testDebugUnitTest")
-    dependsOn(":app:lintGplayDebug")
+    dependsOn(":app:lintGplayTchapDebug")
     project.subprojects {
         tasks.findByPath("$path:lintDebug")?.let { dependsOn(it) }
         tasks.findByName("detekt")?.let { dependsOn(it) }

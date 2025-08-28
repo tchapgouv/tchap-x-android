@@ -146,11 +146,11 @@ jobs:
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/develop' }}
       - name: Build Gplay Debug
-        run: ./gradlew :app:compileGplayDebugKotlin $CI_GRADLE_ARG_PROPERTIES
+        run: ./gradlew :app:compileGplayTchapDebugKotlin $CI_GRADLE_ARG_PROPERTIES
       - name: Build Fdroid Debug
-        run: ./gradlew :app:compileFdroidDebugKotlin $CI_GRADLE_ARG_PROPERTIES
+        run: ./gradlew :app:compileFdroidTchapDebugKotlin $CI_GRADLE_ARG_PROPERTIES
       - name: Run lint
-        run: ./gradlew :app:lintGplayDebug :app:lintFdroidDebug lintDebug $CI_GRADLE_ARG_PROPERTIES --continue
+        run: ./gradlew :app:lintGplayTchapDebug :app:lintFdroidTchapDebug lintDebug $CI_GRADLE_ARG_PROPERTIES --continue
       - name: Upload reports
         if: always()
         uses: actions/upload-artifact@v4

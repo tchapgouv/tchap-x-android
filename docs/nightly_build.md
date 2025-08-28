@@ -42,7 +42,7 @@ Then you can run the following commands (which are also used in the file for [th
 
 ```sh
 git checkout develop
-./gradlew assembleGplayNightly appDistributionUploadGplayNightly
+./gradlew assembleGplayTchapNightly appDistributionUploadGplayTchapNightly
 ```
 
 Then you can reset the change on the codebase.
