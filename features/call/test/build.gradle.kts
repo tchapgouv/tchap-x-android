@@ -13,8 +13,14 @@ plugins {
 android {
     namespace = "io.element.android.features.call.test"
 
-    defaultConfig {
-        missingDimensionStrategy(dimension = "pinning", requestedValue = "withpinning")
+    flavorDimensions += listOf("pinning")
+    productFlavors {
+        create("withpinning") {
+            dimension = "pinning"
+        }
+        create("withoutpinning") {
+            dimension = "pinning"
+        }
     }
 }
 
