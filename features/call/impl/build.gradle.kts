@@ -27,7 +27,6 @@ android {
     }
 
     defaultConfig {
-        missingDimensionStrategy(dimension = "pinning", requestedValue = "withpinning")
         buildConfigFieldStr(
             name = "SENTRY_DSN",
             value = System.getenv("ELEMENT_CALL_SENTRY_DSN")
@@ -58,6 +57,16 @@ android {
                 ?: readLocalProperty("features.call.regeshake.url")
                 ?: ""
         )
+    }
+
+    flavorDimensions += listOf("pinning")
+    productFlavors {
+        create("withpinning") {
+            dimension = "pinning"
+        }
+        create("withoutpinning") {
+            dimension = "pinning"
+        }
     }
 }
 

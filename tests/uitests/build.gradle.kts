@@ -18,8 +18,14 @@ android {
     // Keep it as short as possible
     namespace = "ui"
 
-    defaultConfig {
-        missingDimensionStrategy(dimension = "pinning", requestedValue = "withpinning")
+    flavorDimensions += listOf("pinning")
+    productFlavors {
+        create("withpinning") {
+            dimension = "pinning"
+        }
+        create("withoutpinning") {
+            dimension = "pinning"
+        }
     }
 }
 
