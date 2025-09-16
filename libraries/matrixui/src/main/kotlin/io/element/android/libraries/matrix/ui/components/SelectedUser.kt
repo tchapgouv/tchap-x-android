@@ -60,39 +60,10 @@ fun SelectedUser(
         maxLines = 2,
         a11yContentDescription = matrixUser.getBestName(),
         canRemove = canRemove,
+        isExternalTchapUser =matrixUser.userId.toString().isExternalTchapUser(), // TCHAP external user
         onRemoveClick = { onUserRemove(matrixUser) },
         modifier = modifier,
     )
-    // TODO : Tchap merge
-            // TCHAP external user
-            if (matrixUser.userId.toString().isExternalTchapUser()) {
-                Surface(
-                    color = ElementTheme.colors.badgeExternalBackgroundColor,
-                    contentColor = ElementTheme.colors.badgeExternalContentColor,
-                    shape = RoundedCornerShape(9.dp),
-                ) {
-                    Text(
-                        modifier = Modifier.clipToBounds()
-                            .padding(4.dp),
-                        text = matrixUser.getBestName(),
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 2,
-                        style = ElementTheme.typography.fontBodyMdRegular,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            } else {
-                Text(
-                    modifier = Modifier.clipToBounds(),
-                    text = matrixUser.getBestName(),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 2,
-                    style = ElementTheme.typography.fontBodyMdRegular,
-                    textAlign = TextAlign.Center,
-                )
-            }
-        }
-        // END TODO : Tchap merge
 }
 
 @PreviewsDayNight

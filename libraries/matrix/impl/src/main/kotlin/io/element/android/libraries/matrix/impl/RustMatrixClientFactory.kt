@@ -13,9 +13,9 @@ import fr.gouv.tchap.android.appcertificates.BuildConfig
 import fr.gouv.tchap.android.appcertificates.R
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.di.BaseDirectory
-import io.element.android.libraries.di.ApplicationContext
 import io.element.android.libraries.di.CacheDirectory
 import io.element.android.libraries.di.annotations.AppCoroutineScope
+import io.element.android.libraries.di.annotations.ApplicationContext
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.impl.analytics.UtdTracker
@@ -49,7 +49,6 @@ import java.io.File
 class RustMatrixClientFactory(
     @BaseDirectory private val baseDirectory: File,
     @ApplicationContext private val context: Context,
-    private val baseDirectory: File,
     @CacheDirectory private val cacheDirectory: File,
     @AppCoroutineScope
     private val appCoroutineScope: CoroutineScope,

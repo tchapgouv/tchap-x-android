@@ -17,7 +17,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import dev.zacsweers.metro.Inject
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.convertIdToMatrixId
-import io.element.android.features.login.impl.DefaultLoginUserStory
 import io.element.android.features.login.impl.accountprovider.AccountProviderDataSource
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter

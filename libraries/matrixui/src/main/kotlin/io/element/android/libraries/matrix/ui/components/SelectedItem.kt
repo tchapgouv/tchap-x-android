@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -38,15 +39,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarType
 import io.element.android.libraries.designsystem.text.toPx
+import io.element.android.libraries.designsystem.theme.badgeExternalBackgroundColor
+import io.element.android.libraries.designsystem.theme.badgeExternalContentColor
 import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.Surface
 import io.element.android.libraries.designsystem.theme.components.Text
+import io.element.android.libraries.matrix.ui.model.getBestName
 import io.element.android.libraries.ui.strings.CommonStrings
 
 @Composable
@@ -57,6 +62,7 @@ fun SelectedItem(
     maxLines: Int,
     a11yContentDescription: String,
     canRemove: Boolean,
+    isExternalTchapUser: Boolean = false,
     onRemoveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -112,15 +118,35 @@ fun SelectedItem(
                         }
                     },
             )
-            Text(
-                modifier = Modifier.clipToBounds(),
-                text = text,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = maxLines,
-                style = MaterialTheme.typography.bodyMedium,
-                color = ElementTheme.colors.textSecondary,
-                textAlign = TextAlign.Center,
-            )
+            // TCHAP external user
+            if (isExternalTchapUser) {
+                Surface(
+                    color = ElementTheme.colors.badgeExternalBackgroundColor,
+                    contentColor = ElementTheme.colors.badgeExternalContentColor,
+                    shape = RoundedCornerShape(9.dp),
+                ) {
+                    Text(
+                        modifier = Modifier.clipToBounds()
+                            .padding(4.dp),
+                        text = text,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = maxLines,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = ElementTheme.colors.textSecondary,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            } else {
+                Text(
+                    modifier = Modifier.clipToBounds(),
+                    text = text,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = maxLines,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = ElementTheme.colors.textSecondary,
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
         if (canRemove) {
             Surface(

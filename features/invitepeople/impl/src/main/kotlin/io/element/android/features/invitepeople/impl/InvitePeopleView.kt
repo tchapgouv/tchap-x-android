@@ -82,6 +82,7 @@ private fun InvitePeopleContentView(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         InvitePeopleSearchBar(
+            isDebugBuild = state.isDebugBuild,
             modifier = Modifier.fillMaxWidth(),
             query = state.searchQuery,
             showLoader = state.showSearchLoader,
@@ -114,6 +115,7 @@ private fun InvitePeopleContentView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InvitePeopleSearchBar(
+    isDebugBuild: Boolean,
     query: String,
     state: SearchBarResultState<ImmutableList<InvitableUser>>,
     showLoader: Boolean,
@@ -189,7 +191,8 @@ private fun InvitePeopleSearchBar(
                         enabled = enabled,
                         data = data,
                         onCheckedChange = { onToggleUser(invitableUser.matrixUser) },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        isDebugBuild = isDebugBuild,
                     )
                 }
             }

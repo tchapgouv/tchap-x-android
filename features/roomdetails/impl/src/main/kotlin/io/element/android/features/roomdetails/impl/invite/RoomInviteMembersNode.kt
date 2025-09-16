@@ -59,27 +59,5 @@ class RoomInviteMembersNode(
         ) {
             invitePeopleRenderer.Render(state, Modifier)
         }
-        // TODO : Tchap merge
-            onSubmitClick = { users ->
-                navigateUp()
-
-                coroutineScope.launch {
-                    val hasExternalUsers = users.any { it.userId.toString().isExternalTchapUser() }
-                    if (hasExternalUsers && room.accessRules == RoomAccessRules.RESTRICTED) {
-                        room.setAccessRules(RoomAccessRules.UNRESTRICTED)
-                    }
-                    val anyInviteFailed = users
-                        .map { room.inviteUserById(it.userId) }
-                        .any { it.isFailure }
-
-                    if (anyInviteFailed) {
-                        appErrorStateService.showError(
-                            title = context.getString(CommonStrings.common_unable_to_invite_title),
-                            body = context.getString(CommonStrings.common_unable_to_invite_message),
-                        )
-                    }
-                }
-            }
-        )
     }
 }

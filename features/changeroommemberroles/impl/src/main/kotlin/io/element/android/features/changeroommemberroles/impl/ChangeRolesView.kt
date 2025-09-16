@@ -265,7 +265,8 @@ private fun SearchResultsList(
                     roomMember = roomMember,
                     canRemoveMember = canRemoveMember,
                     onToggleSelection = onToggleSelection,
-                    selectedUsers = selectedUsers
+                    selectedUsers = selectedUsers,
+                    isDebugBuild = isDebugBuild,
                 )
             }
         }
