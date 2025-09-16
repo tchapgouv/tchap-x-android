@@ -59,10 +59,16 @@
       "name" : ":features:createroom:impl",
       "includeRegex" : [
         "screen_create_room_.*",
-        "screen\\.create_room\\..*",
+        "screen\\.create_room\\..*"
+      ]
+    },
+    {
+      "name" : ":features:startchat:impl",
+      "includeRegex" : [
         "screen_start_chat_.*",
         "screen\\.start_chat\\..*",
-        "screen_room_directory_search_title*"
+        "screen_room_directory_search_title",
+        "screen_create_room_action_create_room"
       ]
     },
     {
@@ -77,7 +83,8 @@
       "name" : ":libraries:textcomposer:impl",
       "includeRegex" : [
         "rich_text_editor.*",
-        ".*voice_message_tooltip"
+        ".*voice_message_tooltip",
+        "screen\\.media_upload_preview.caption_warning"
       ]
     },
     {
@@ -164,6 +171,7 @@
     {
       "name" : ":features:home:impl",
       "includeRegex" : [
+        "screen\\.home\\..*",
         "screen_roomlist_.*",
         "screen\\.roomlist\\..*",
         "session_verification_banner_.*",
@@ -200,6 +208,12 @@
       ]
     },
     {
+      "name" : ":features:invitepeople:impl",
+      "includeRegex" : [
+        "screen\\.invite_users\\..*"
+      ]
+    },
+    {
       "name" : ":features:messages:impl",
       "includeRegex" : [
         "emoji_picker_category_.*",
@@ -212,7 +226,8 @@
         "screen_room_retry.*",
         "screen_room_timeline.*",
         "screen\\.room_timeline.*",
-        "screen_room_typing.*"
+        "screen_room_typing.*",
+        "screen\\.media_upload.*"
       ]
     },
     {
@@ -333,6 +348,14 @@
       "name" : ":features:roommembermoderation:impl",
       "includeRegex" : [
         "screen\\.bottom_sheet\\.manage_room_member\\..*"
+      ]
+    },
+    {
+      "name" : ":features:changeroommemberroles:impl",
+      "includeRegex" : [
+        "screen_room_change_.*",
+        "screen_room_roles_.*",
+        "screen_room_member_list.*"
       ]
     }
   ]

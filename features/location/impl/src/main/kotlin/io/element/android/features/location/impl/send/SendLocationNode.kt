@@ -13,20 +13,30 @@ import com.bumble.appyx.core.lifecycle.subscribe
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.plugin.Plugin
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.Inject
 import im.vector.app.features.analytics.plan.MobileScreen
-import io.element.android.anvilannotations.ContributesNode
+import io.element.android.annotations.ContributesNode
+import io.element.android.libraries.architecture.NodeInputs
+import io.element.android.libraries.architecture.inputs
 import io.element.android.libraries.di.RoomScope
+import io.element.android.libraries.matrix.api.timeline.Timeline
 import io.element.android.services.analytics.api.AnalyticsService
 
 @ContributesNode(RoomScope::class)
-class SendLocationNode @AssistedInject constructor(
+@Inject
+class SendLocationNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
-    private val presenter: SendLocationPresenter,
+    presenterFactory: SendLocationPresenter.Factory,
     analyticsService: AnalyticsService,
 ) : Node(buildContext, plugins = plugins) {
+    data class Inputs(
+        val timelineMode: Timeline.Mode,
+    ) : NodeInputs
+
+    private val presenter = presenterFactory.create(inputs<Inputs>().timelineMode)
+
     init {
         lifecycle.subscribe(
             onResume = {

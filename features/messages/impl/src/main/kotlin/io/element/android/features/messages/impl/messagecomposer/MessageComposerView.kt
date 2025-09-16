@@ -17,10 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import io.element.android.features.messages.impl.voicemessages.composer.VoiceMessageComposerEvents
-import io.element.android.features.messages.impl.voicemessages.composer.VoiceMessageComposerState
-import io.element.android.features.messages.impl.voicemessages.composer.VoiceMessageComposerStateProvider
-import io.element.android.features.messages.impl.voicemessages.composer.aVoiceMessageComposerState
+import io.element.android.features.messages.api.timeline.voicemessages.composer.VoiceMessageComposerEvents
+import io.element.android.features.messages.api.timeline.voicemessages.composer.VoiceMessageComposerState
+import io.element.android.features.messages.api.timeline.voicemessages.composer.VoiceMessageComposerStateProvider
+import io.element.android.features.messages.api.timeline.voicemessages.composer.aVoiceMessageComposerState
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.textcomposer.TextComposer
@@ -33,7 +33,6 @@ import kotlinx.coroutines.launch
 internal fun MessageComposerView(
     state: MessageComposerState,
     voiceMessageState: VoiceMessageComposerState,
-    enableVoiceMessages: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val view = LocalView.current
@@ -104,7 +103,6 @@ internal fun MessageComposerView(
         onResetComposerMode = ::onCloseSpecialMode,
         onAddAttachment = ::onAddAttachment,
         onDismissTextFormatting = ::onDismissTextFormatting,
-        enableVoiceMessages = enableVoiceMessages,
         onVoiceRecorderEvent = onVoiceRecorderEvent,
         onVoicePlayerEvent = onVoicePlayerEvent,
         onSendVoiceMessage = onSendVoiceMessage,
@@ -128,13 +126,11 @@ internal fun MessageComposerViewPreview(
             modifier = Modifier.height(IntrinsicSize.Min),
             state = state,
             voiceMessageState = aVoiceMessageComposerState(),
-            enableVoiceMessages = true,
         )
         MessageComposerView(
             modifier = Modifier.height(200.dp),
             state = state,
             voiceMessageState = aVoiceMessageComposerState(),
-            enableVoiceMessages = true,
         )
         DisabledComposerView()
     }
@@ -150,7 +146,6 @@ internal fun MessageComposerViewVoicePreview(
             modifier = Modifier.height(IntrinsicSize.Min),
             state = aMessageComposerState(),
             voiceMessageState = state,
-            enableVoiceMessages = true,
         )
     }
 }

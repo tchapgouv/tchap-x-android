@@ -10,6 +10,7 @@ package io.element.android.libraries.matrix.impl.room
 import io.element.android.appconfig.TimelineConfig
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.DeviceId
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.SessionId
@@ -98,7 +99,7 @@ class RustRoomFactory(
         )
     }
 
-    suspend fun getJoinedRoomOrPreview(roomId: RoomId): GetRoomResult? = withContext(dispatcher) {
+    suspend fun getJoinedRoomOrPreview(roomId: RoomId, serverNames: List<String>): GetRoomResult? = withContext(dispatcher) {
         mutex.withLock {
             if (isDestroyed.get()) {
                 Timber.d("Room factory is destroyed, returning null for $roomId")
@@ -107,10 +108,11 @@ class RustRoomFactory(
             val sdkRoom = awaitRoomInRoomList(roomId) ?: return@withContext null
 
             if (sdkRoom.membership() == Membership.JOINED) {
+                val hideThreadedEvents = featureFlagService.isFeatureEnabled(FeatureFlags.Threads)
                 // Init the live timeline in the SDK from the Room
                 val timeline = sdkRoom.timelineWithConfiguration(
                     TimelineConfiguration(
-                        focus = TimelineFocus.Live(hideThreadedEvents = false),
+                        focus = TimelineFocus.Live(hideThreadedEvents = hideThreadedEvents),
                         filter = eventFilters?.let(TimelineFilter::EventTypeFilter) ?: TimelineFilter.All,
                         internalIdPrefix = "live",
                         dateDividerMode = DateDividerMode.DAILY,
@@ -132,7 +134,7 @@ class RustRoomFactory(
                 )
             } else {
                 val preview = try {
-                    sdkRoom.previewRoom(via = emptyList())
+                    sdkRoom.previewRoom(via = serverNames)
                 } catch (e: Exception) {
                     Timber.e(e, "Failed to get room preview for $roomId")
                     return@withContext null

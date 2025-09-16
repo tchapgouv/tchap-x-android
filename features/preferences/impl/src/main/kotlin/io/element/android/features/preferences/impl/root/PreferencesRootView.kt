@@ -124,20 +124,16 @@ private fun ColumnScope.ManageAppSection(
     onOpenLockScreenSettings: () -> Unit,
     onSecureBackupClick: () -> Unit,
 ) {
-    if (state.showNotificationSettings) {
-        ListItem(
-            headlineContent = { Text(stringResource(id = R.string.screen_notification_settings_title)) },
-            leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Notifications())),
-            onClick = onOpenNotificationSettings,
-        )
-    }
-    if (state.showLockScreenSettings) {
-        ListItem(
-            headlineContent = { Text(stringResource(id = CommonStrings.common_screen_lock)) },
-            leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Lock())),
-            onClick = onOpenLockScreenSettings,
-        )
-    }
+    ListItem(
+        headlineContent = { Text(stringResource(id = R.string.screen_notification_settings_title)) },
+        leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Notifications())),
+        onClick = onOpenNotificationSettings,
+    )
+    ListItem(
+        headlineContent = { Text(stringResource(id = CommonStrings.common_screen_lock)) },
+        leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Lock())),
+        onClick = onOpenLockScreenSettings,
+    )
     if (state.showSecureBackup) {
         ListItem(
             headlineContent = { Text(stringResource(id = CommonStrings.common_encryption)) },
@@ -146,9 +142,7 @@ private fun ColumnScope.ManageAppSection(
             onClick = onSecureBackupClick,
         )
     }
-    if (state.showNotificationSettings || state.showLockScreenSettings || state.showSecureBackup) {
-        HorizontalDivider()
-    }
+    HorizontalDivider()
 }
 
 @Composable

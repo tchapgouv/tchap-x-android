@@ -9,7 +9,6 @@ package io.element.android.libraries.matrix.test
 
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.DeviceId
-import io.element.android.libraries.matrix.api.core.ProgressCallback
 import io.element.android.libraries.matrix.api.core.RoomAlias
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.RoomIdOrAlias
@@ -31,6 +30,7 @@ import io.element.android.libraries.matrix.api.room.RoomMembershipObserver
 import io.element.android.libraries.matrix.api.room.alias.ResolvedRoomAlias
 import io.element.android.libraries.matrix.api.roomdirectory.RoomDirectoryService
 import io.element.android.libraries.matrix.api.roomlist.RoomListService
+import io.element.android.libraries.matrix.api.spaces.SpaceService
 import io.element.android.libraries.matrix.api.sync.SlidingSyncVersion
 import io.element.android.libraries.matrix.api.user.MatrixSearchUserResults
 import io.element.android.libraries.matrix.api.user.MatrixUser
@@ -43,6 +43,7 @@ import io.element.android.libraries.matrix.test.notificationsettings.FakeNotific
 import io.element.android.libraries.matrix.test.pushers.FakePushersService
 import io.element.android.libraries.matrix.test.roomdirectory.FakeRoomDirectoryService
 import io.element.android.libraries.matrix.test.roomlist.FakeRoomListService
+import io.element.android.libraries.matrix.test.spaces.FakeSpaceService
 import io.element.android.libraries.matrix.test.sync.FakeSyncService
 import io.element.android.libraries.matrix.test.verification.FakeSessionVerificationService
 import io.element.android.tests.testutils.lambda.lambdaError
@@ -66,6 +67,7 @@ class FakeMatrixClient(
     private val userDisplayName: String? = A_USER_NAME,
     private val userAvatarUrl: String? = AN_AVATAR_URL,
     override val roomListService: RoomListService = FakeRoomListService(),
+    override val spaceService: SpaceService = FakeSpaceService(),
     override val mediaLoader: MatrixMediaLoader = FakeMatrixMediaLoader(),
     private val sessionVerificationService: FakeSessionVerificationService = FakeSessionVerificationService(),
     private val pushersService: FakePushersService = FakePushersService(),
@@ -84,7 +86,7 @@ class FakeMatrixClient(
     private val getNotJoinedRoomResult: (RoomIdOrAlias, List<String>) -> Result<NotJoinedRoom> = { _, _ -> lambdaError() },
     private val clearCacheLambda: () -> Unit = { lambdaError() },
     private val userIdServerNameLambda: () -> String = { lambdaError() },
-    private val getUrlLambda: (String) -> Result<String> = { lambdaError() },
+    private val getUrlLambda: (String) -> Result<ByteArray> = { lambdaError() },
     private val canDeactivateAccountResult: () -> Boolean = { lambdaError() },
     private val deactivateAccountResult: (String, Boolean) -> Result<Unit> = { _, _ -> lambdaError() },
     private val currentSlidingSyncVersionLambda: () -> Result<SlidingSyncVersion> = { lambdaError() },
@@ -94,6 +96,8 @@ class FakeMatrixClient(
     private val canReportRoomLambda: () -> Boolean = { false },
     private val isLivekitRtcSupportedLambda: () -> Boolean = { false },
     override val ignoredUsersFlow: StateFlow<ImmutableList<UserId>> = MutableStateFlow(persistentListOf()),
+    private val getMaxUploadSizeResult: () -> Result<Long> = { lambdaError() },
+    private val getJoinedRoomIdsResult: () -> Result<Set<RoomId>> = { Result.success(emptySet()) },
 ) : MatrixClient {
     var setDisplayNameCalled: Boolean = false
         private set
@@ -139,6 +143,10 @@ class FakeMatrixClient(
 
     override suspend fun findDM(userId: UserId): Result<RoomId?> {
         return findDmResult
+    }
+
+    override suspend fun getJoinedRoomIds(): Result<Set<RoomId>> {
+        return getJoinedRoomIdsResult()
     }
 
     override suspend fun ignoreUser(userId: UserId): Result<Unit> = simulateLongTask {
@@ -200,7 +208,6 @@ class FakeMatrixClient(
     override suspend fun uploadMedia(
         mimeType: String,
         data: ByteArray,
-        progressCallback: ProgressCallback?
     ): Result<String> {
         return uploadMediaResult
     }
@@ -324,7 +331,7 @@ class FakeMatrixClient(
         return userIdServerNameLambda()
     }
 
-    override suspend fun getUrl(url: String): Result<String> {
+    override suspend fun getUrl(url: String): Result<ByteArray> {
         return getUrlLambda(url)
     }
 
@@ -342,5 +349,9 @@ class FakeMatrixClient(
 
     override suspend fun isLivekitRtcSupported(): Boolean {
         return isLivekitRtcSupportedLambda()
+    }
+
+    override suspend fun getMaxFileUploadSize(): Result<Long> {
+        return getMaxUploadSizeResult()
     }
 }

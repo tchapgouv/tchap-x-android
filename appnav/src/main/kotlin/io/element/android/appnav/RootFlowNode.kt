@@ -23,19 +23,21 @@ import com.bumble.appyx.core.state.MutableSavedStateMap
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.pop
 import com.bumble.appyx.navmodel.backstack.operation.push
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.Inject
 import im.vector.app.features.analytics.plan.JoinedRoom
-import io.element.android.anvilannotations.ContributesNode
+import io.element.android.annotations.ContributesNode
 import io.element.android.appnav.di.MatrixSessionCache
 import io.element.android.appnav.intent.IntentResolver
 import io.element.android.appnav.intent.ResolvedIntent
 import io.element.android.appnav.root.RootNavStateFlowFactory
 import io.element.android.appnav.root.RootPresenter
 import io.element.android.appnav.root.RootView
-import io.element.android.features.enterprise.api.EnterpriseService
 import io.element.android.features.login.api.LoginParams
+import io.element.android.features.login.api.accesscontrol.AccountProviderAccessControl
 import io.element.android.features.rageshake.api.bugreport.BugReportEntryPoint
+import io.element.android.features.rageshake.api.reporter.BugReporter
 import io.element.android.features.signedout.api.SignedOutEntryPoint
 import io.element.android.features.viewfolder.api.ViewFolderEntryPoint
 import io.element.android.libraries.architecture.BackstackView
@@ -43,9 +45,8 @@ import io.element.android.libraries.architecture.BaseFlowNode
 import io.element.android.libraries.architecture.createNode
 import io.element.android.libraries.architecture.waitForChildAttached
 import io.element.android.libraries.core.uri.ensureProtocol
-import io.element.android.libraries.deeplink.DeeplinkData
+import io.element.android.libraries.deeplink.api.DeeplinkData
 import io.element.android.libraries.designsystem.theme.components.CircularProgressIndicator
-import io.element.android.libraries.di.AppScope
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
 import io.element.android.libraries.matrix.api.core.SessionId
 import io.element.android.libraries.matrix.api.core.toRoomIdOrAlias
@@ -60,11 +61,12 @@ import kotlinx.parcelize.Parcelize
 import timber.log.Timber
 
 @ContributesNode(AppScope::class)
-class RootFlowNode @AssistedInject constructor(
+@Inject
+class RootFlowNode(
     @Assisted val buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
     private val authenticationService: MatrixAuthenticationService,
-    private val enterpriseService: EnterpriseService,
+    private val accountProviderAccessControl: AccountProviderAccessControl,
     private val navStateFlowFactory: RootNavStateFlowFactory,
     private val matrixSessionCache: MatrixSessionCache,
     private val presenter: RootPresenter,
@@ -73,6 +75,7 @@ class RootFlowNode @AssistedInject constructor(
     private val signedOutEntryPoint: SignedOutEntryPoint,
     private val intentResolver: IntentResolver,
     private val oidcActionFlow: OidcActionFlow,
+    private val bugReporter: BugReporter,
 ) : BaseFlowNode<RootFlowNode.NavTarget>(
     backstack = BackStack(
         initialElement = NavTarget.SplashScreen,
@@ -123,6 +126,7 @@ class RootFlowNode @AssistedInject constructor(
 
     private fun switchToNotLoggedInFlow(params: LoginParams?) {
         matrixSessionCache.removeAll()
+        bugReporter.setLogDirectorySubfolder(null)
         backstack.safeRoot(NavTarget.NotLoggedInFlow(params))
     }
 
@@ -293,7 +297,7 @@ class RootFlowNode @AssistedInject constructor(
         val latestSessionId = authenticationService.getLatestSessionId()
         if (latestSessionId == null) {
             // No session, open login
-            if (enterpriseService.isAllowedToConnectToHomeserver(params.accountProvider.ensureProtocol())) {
+            if (accountProviderAccessControl.isAllowedToConnectToAccountProvider(params.accountProvider.ensureProtocol())) {
                 switchToNotLoggedInFlow(params)
             } else {
                 Timber.w("Login link ignored, we are not allowed to connect to the homeserver")

@@ -1,4 +1,4 @@
-import extension.setupAnvil
+import extension.setupDependencyInjection
 
 /*
  * Copyright 2022-2024 New Vector Ltd.
@@ -26,7 +26,7 @@ android {
     }
 }
 
-setupAnvil()
+setupDependencyInjection()
 
 dependencies {
     if (file("${rootDir.path}/libraries/rustsdk/matrix-rust-sdk.aar").exists()) {
@@ -48,7 +48,6 @@ dependencies {
     implementation(projects.services.analytics.api)
     implementation(projects.services.toolbox.api)
     api(projects.libraries.matrix.api)
-    implementation(libs.dagger)
     implementation(projects.libraries.core)
     implementation("net.java.dev.jna:jna:5.17.0@aar")
     implementation(libs.androidx.datastore.preferences)
@@ -61,7 +60,6 @@ dependencies {
     testImplementation(projects.libraries.featureflag.test)
     testImplementation(projects.libraries.matrix.test)
     testImplementation(projects.libraries.preferences.test)
-    testImplementation(projects.libraries.sessionStorage.implMemory)
     testImplementation(projects.libraries.sessionStorage.test)
     testImplementation(projects.services.analytics.test)
     testImplementation(projects.services.toolbox.test)

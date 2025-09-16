@@ -1,4 +1,4 @@
-import extension.setupAnvil
+import extension.setupDependencyInjection
 
 /*
  * Copyright 2023, 2024 New Vector Ltd.
@@ -20,13 +20,14 @@ android {
     }
 }
 
-setupAnvil()
+setupDependencyInjection()
 
 dependencies {
     api(projects.features.lockscreen.api)
     implementation(projects.appconfig)
     implementation(projects.features.enterprise.api)
     implementation(projects.libraries.core)
+    implementation(projects.libraries.androidutils)
     implementation(projects.libraries.architecture)
     implementation(projects.libraries.matrix.api)
     implementation(projects.libraries.matrixui)

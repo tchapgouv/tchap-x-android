@@ -7,49 +7,34 @@
 
 package io.element.android.features.roomdetails.impl.invite
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
-import io.element.android.compound.theme.ElementTheme
+import io.element.android.features.invitepeople.api.InvitePeopleEvents
+import io.element.android.features.invitepeople.api.InvitePeopleState
+import io.element.android.features.invitepeople.api.InvitePeopleStateProvider
 import io.element.android.features.roomdetails.impl.R
-import io.element.android.libraries.designsystem.components.async.AsyncLoading
-import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.components.button.BackButton
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
-import io.element.android.libraries.designsystem.theme.components.HorizontalDivider
 import io.element.android.libraries.designsystem.theme.components.Scaffold
-import io.element.android.libraries.designsystem.theme.components.SearchBar
-import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
-import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.designsystem.theme.components.TextButton
 import io.element.android.libraries.designsystem.theme.components.TopAppBar
-import io.element.android.libraries.matrix.api.user.MatrixUser
-import io.element.android.libraries.matrix.ui.components.CheckableUserRow
-import io.element.android.libraries.matrix.ui.components.CheckableUserRowData
-import io.element.android.libraries.matrix.ui.components.SelectedUsersRowList
-import io.element.android.libraries.matrix.ui.model.getAvatarData
-import io.element.android.libraries.matrix.ui.model.getBestName
 import io.element.android.libraries.ui.strings.CommonStrings
-import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun RoomInviteMembersView(
-    state: RoomInviteMembersState,
+    state: InvitePeopleState,
     onBackClick: () -> Unit,
-    onSubmitClick: (List<MatrixUser>) -> Unit,
+    onDone: () -> Unit,
     modifier: Modifier = Modifier,
+    invitePeopleView: @Composable () -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
@@ -57,23 +42,27 @@ fun RoomInviteMembersView(
             RoomInviteMembersTopBar(
                 onBackClick = {
                     if (state.isSearchActive) {
-                        state.eventSink(RoomInviteMembersEvents.OnSearchActiveChanged(false))
+                        state.eventSink(InvitePeopleEvents.CloseSearch)
                     } else {
                         onBackClick()
                     }
                 },
-                onSubmitClick = { onSubmitClick(state.selectedUsers) },
+                onSubmitClick = {
+                    state.eventSink(InvitePeopleEvents.SendInvites)
+                    onDone()
+                },
                 canSend = state.canInvite,
             )
         }
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(padding)
                 .consumeWindowInsets(padding),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+            invitePeopleView()
+            // TODO : Tchap merge
             RoomInviteMembersSearchBar(
                 isDebugBuild = state.isDebugBuild,
                 modifier = Modifier.fillMaxWidth(),
@@ -96,6 +85,7 @@ fun RoomInviteMembersView(
                     contentPadding = PaddingValues(16.dp),
                 )
             }
+            // END TODO : Tchap merge
         }
     }
 }
@@ -123,7 +113,6 @@ private fun RoomInviteMembersTopBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RoomInviteMembersSearchBar(
-    isDebugBuild: Boolean,
     query: String,
     state: SearchBarResultState<ImmutableList<InvitableUser>>,
     showLoader: Boolean,
@@ -194,7 +183,6 @@ private fun RoomInviteMembersSearchBar(
                         )
                     }
                     CheckableUserRow(
-                        isDebugBuild = isDebugBuild,
                         checked = invitableUser.isSelected,
                         enabled = enabled,
                         data = data,
@@ -213,10 +201,11 @@ private fun RoomInviteMembersSearchBar(
 
 @PreviewsDayNight
 @Composable
-internal fun RoomInviteMembersViewPreview(@PreviewParameter(RoomInviteMembersStateProvider::class) state: RoomInviteMembersState) = ElementPreview {
+internal fun RoomInviteMembersViewPreview(@PreviewParameter(InvitePeopleStateProvider::class) state: InvitePeopleState) = ElementPreview {
     RoomInviteMembersView(
         state = state,
+        invitePeopleView = {},
         onBackClick = {},
-        onSubmitClick = {},
+        onDone = {},
     )
 }

@@ -1,6 +1,6 @@
 import config.BuildTimeConfig
 import extension.buildConfigFieldStr
-import extension.setupAnvil
+import extension.setupDependencyInjection
 
 /*
  * Copyright 2022-2024 New Vector Ltd.
@@ -14,6 +14,8 @@ plugins {
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.serialization)
 }
+
+setupDependencyInjection()
 
 android {
     namespace = "io.element.android.libraries.matrix.api"
@@ -41,8 +43,6 @@ android {
         )
     }
 }
-
-setupAnvil()
 
 dependencies {
     implementation(projects.libraries.bwi.api)

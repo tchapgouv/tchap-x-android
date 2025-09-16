@@ -10,7 +10,6 @@ package io.element.android.libraries.matrix.api
 import io.element.android.libraries.core.data.tryOrNull
 import io.element.android.libraries.matrix.api.core.DeviceId
 import io.element.android.libraries.matrix.api.core.MatrixPatterns
-import io.element.android.libraries.matrix.api.core.ProgressCallback
 import io.element.android.libraries.matrix.api.core.RoomAlias
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.RoomIdOrAlias
@@ -32,6 +31,7 @@ import io.element.android.libraries.matrix.api.room.RoomMembershipObserver
 import io.element.android.libraries.matrix.api.room.alias.ResolvedRoomAlias
 import io.element.android.libraries.matrix.api.roomdirectory.RoomDirectoryService
 import io.element.android.libraries.matrix.api.roomlist.RoomListService
+import io.element.android.libraries.matrix.api.spaces.SpaceService
 import io.element.android.libraries.matrix.api.sync.SlidingSyncVersion
 import io.element.android.libraries.matrix.api.sync.SyncService
 import io.element.android.libraries.matrix.api.user.MatrixSearchUserResults
@@ -48,12 +48,14 @@ interface MatrixClient {
     val deviceId: DeviceId
     val userProfile: StateFlow<MatrixUser>
     val roomListService: RoomListService
+    val spaceService: SpaceService
     val mediaLoader: MatrixMediaLoader
     val sessionCoroutineScope: CoroutineScope
     val ignoredUsersFlow: StateFlow<ImmutableList<UserId>>
     suspend fun getJoinedRoom(roomId: RoomId): JoinedRoom?
     suspend fun getRoom(roomId: RoomId): BaseRoom?
     suspend fun findDM(userId: UserId): Result<RoomId?>
+    suspend fun getJoinedRoomIds(): Result<Set<RoomId>>
     suspend fun ignoreUser(userId: UserId): Result<Unit>
     suspend fun unignoreUser(userId: UserId): Result<Unit>
     suspend fun createRoom(createRoomParams: CreateRoomParameters): Result<RoomId>
@@ -94,7 +96,7 @@ interface MatrixClient {
      */
     suspend fun getUserProfile(): Result<MatrixUser>
     suspend fun getAccountManagementUrl(action: AccountManagementAction?): Result<String?>
-    suspend fun uploadMedia(mimeType: String, data: ByteArray, progressCallback: ProgressCallback?): Result<String>
+    suspend fun uploadMedia(mimeType: String, data: ByteArray): Result<String>
     fun roomMembershipObserver(): RoomMembershipObserver
 
     /**
@@ -142,7 +144,7 @@ interface MatrixClient {
     /**
      * Execute generic GET requests through the SDKs internal HTTP client.
      */
-    suspend fun getUrl(url: String): Result<String>
+    suspend fun getUrl(url: String): Result<ByteArray>
 
     /**
      * Get a room preview for a given room ID or alias. This is especially useful for rooms that the user is not a member of, or hasn't joined yet.
@@ -171,6 +173,11 @@ interface MatrixClient {
      * Return true if Livekit Rtc is supported, i.e. if Element Call is available.
      */
     suspend fun isLivekitRtcSupported(): Boolean
+
+    /**
+     * Returns the maximum file upload size allowed by the Matrix server.
+     */
+    suspend fun getMaxFileUploadSize(): Result<Long>
 }
 
 /**

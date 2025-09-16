@@ -23,7 +23,7 @@ jobs:
       group: ${{ format('maestro-{0}', github.ref) }}
       cancel-in-progress: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           # Ensure we are building the branch and not the branch after being merged on develop
           # https://github.com/actions/checkout/issues/881
@@ -31,7 +31,7 @@ jobs:
           lfs: true # Tchap TODO : Remove this when maven is using matrix-sdk from Tchap repository
       - name: Clone Tchap Compound submodule
         run: git submodule update --init --recursive checkouts/compound-android # Tchap using compound from tchap repository
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         name: Use JDK 21
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
@@ -65,7 +65,7 @@ jobs:
       group: ${{ format('maestro-{0}', github.ref) }}
       cancel-in-progress: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: (github.event_name == 'pull_request' && github.event.pull_request.fork == null) || github.event_name == 'workflow_dispatch'
         with:
           # Ensure we are building the branch and not the branch after being merged on develop
@@ -73,7 +73,7 @@ jobs:
           ref: ${{ github.ref }}
           lfs: true # Tchap TODO : Remove this when maven is using matrix-sdk from Tchap repository
       - name: Download APK artifact from previous job
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: elementx-apk-maestro
       - name: Enable KVM group perms

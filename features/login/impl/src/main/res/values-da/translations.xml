@@ -13,6 +13,9 @@
   <string name="screen_change_account_provider_other">"Anden"</string>
   <string name="screen_change_account_provider_subtitle">"Brug en anden kontoudbyder, f.eks. din egen private server eller en arbejdskonto."</string>
   <string name="screen_change_account_provider_title">"Skift kontoudbyder"</string>
+  <string name="screen_change_server_error_element_pro_required_action_android">"Google Play"</string>
+  <string name="screen_change_server_error_element_pro_required_message">"Element Pro-appen er påkrævet på %1$s Download den venligst fra din app store."</string>
+  <string name="screen_change_server_error_element_pro_required_title">"Element Pro kræves"</string>
   <string name="screen_change_server_error_invalid_homeserver">"Vi kunne ikke nå denne hjemmeserver. Kontroller, at du har indtastet hjemmeserverens URL korrekt. Hvis URL-adressen er korrekt, skal du kontakte administratoren på din hjemmeserver for at få yderligere hjælp."</string>
   <string name="screen_change_server_error_invalid_well_known">"Serveren er ikke tilgængelig på grund af et problem i .well-known-filen: 
 %1$s"</string>
@@ -83,7 +86,7 @@ Prøv at logge ind manuelt, eller scan QR-koden med en anden enhed."</string>
   <string name="screen_qr_code_login_start_over_button">"Begynd forfra"</string>
   <string name="screen_qr_code_login_unknown_error_description">"Der opstod en uventet fejl. Prøv venligst igen."</string>
   <string name="screen_qr_code_login_verify_code_loading">"Venter på din anden enhed"</string>
-  <string name="screen_qr_code_login_verify_code_subtitle">"Din kontoudbyder kan bede om følgende kode for at bekræfte login."</string>
+  <string name="screen_qr_code_login_verify_code_subtitle">"Din kontoudbyder kan bede om følgende kode for at verificere login\'et."</string>
   <string name="screen_qr_code_login_verify_code_title">"Din bekræftelseskode"</string>
   <string name="screen_server_confirmation_change_server">"Skift kontoudbyder"</string>
   <string name="screen_server_confirmation_message_login_element_dot_io">"En privat server til Element-medarbejdere."</string>

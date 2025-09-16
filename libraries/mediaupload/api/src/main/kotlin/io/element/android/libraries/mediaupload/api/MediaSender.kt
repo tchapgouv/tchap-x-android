@@ -8,38 +8,52 @@
 package io.element.android.libraries.mediaupload.api
 
 import android.net.Uri
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.Inject
+import io.element.android.libraries.androidutils.hash.hash
+import io.element.android.libraries.core.extensions.flatMap
 import io.element.android.libraries.core.extensions.flatMapCatching
-import io.element.android.libraries.matrix.api.core.ProgressCallback
+import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.media.MediaUploadHandler
+import io.element.android.libraries.matrix.api.room.CreateTimelineParams
 import io.element.android.libraries.matrix.api.room.JoinedRoom
-import io.element.android.libraries.matrix.api.room.message.ReplyParameters
 import io.element.android.libraries.matrix.api.timeline.Timeline
-import io.element.android.libraries.preferences.api.store.SessionPreferencesStore
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.first
+import timber.log.Timber
+import java.io.File
 import java.util.concurrent.ConcurrentHashMap
-import javax.inject.Inject
 
-class MediaSender @Inject constructor(
+@Inject
+class MediaSender(
     private val preProcessor: MediaPreProcessor,
     private val room: JoinedRoom,
-    private val sessionPreferencesStore: SessionPreferencesStore,
+    @Assisted private val timelineMode: Timeline.Mode,
+    private val mediaOptimizationConfigProvider: MediaOptimizationConfigProvider,
 ) {
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            timelineMode: Timeline.Mode,
+        ): MediaSender
+    }
+
     private val ongoingUploadJobs = ConcurrentHashMap<Job.Key, MediaUploadHandler>()
     val hasOngoingMediaUploads get() = ongoingUploadJobs.isNotEmpty()
 
     suspend fun preProcessMedia(
         uri: Uri,
         mimeType: String,
+        mediaOptimizationConfig: MediaOptimizationConfig,
     ): Result<MediaUploadInfo> {
-        val compressIfPossible = sessionPreferencesStore.doesCompressMedia().first()
+        Timber.d("Pre-processing media | uri: ${mediaId(uri)} | mimeType: $mimeType")
         return preProcessor
             .process(
                 uri = uri,
                 mimeType = mimeType,
                 deleteOriginal = false,
-                compressIfPossible = compressIfPossible,
+                mediaOptimizationConfig = mediaOptimizationConfig,
             )
     }
 
@@ -47,17 +61,19 @@ class MediaSender @Inject constructor(
         mediaUploadInfo: MediaUploadInfo,
         caption: String?,
         formattedCaption: String?,
-        progressCallback: ProgressCallback?,
-        replyParameters: ReplyParameters?,
+        inReplyToEventId: EventId?,
     ): Result<Unit> {
-        return room.liveTimeline.sendMedia(
-            uploadInfo = mediaUploadInfo,
-            progressCallback = progressCallback,
-            caption = caption,
-            formattedCaption = formattedCaption,
-            replyParameters = replyParameters,
-        )
-            .handleSendResult()
+        val mediaLogId = mediaId(mediaUploadInfo.file)
+        return getTimeline().flatMap {
+            Timber.d("Started sending media $mediaLogId using timeline: ${it.mode}")
+            it.sendMedia(
+                uploadInfo = mediaUploadInfo,
+                caption = caption,
+                formattedCaption = formattedCaption,
+                inReplyToEventId = inReplyToEventId,
+            )
+        }
+            .handleSendResult(mediaLogId)
     }
 
     suspend fun sendMedia(
@@ -65,42 +81,39 @@ class MediaSender @Inject constructor(
         mimeType: String,
         caption: String? = null,
         formattedCaption: String? = null,
-        progressCallback: ProgressCallback? = null,
-        replyParameters: ReplyParameters? = null,
+        inReplyToEventId: EventId? = null,
+        mediaOptimizationConfig: MediaOptimizationConfig,
     ): Result<Unit> {
-        val compressIfPossible = sessionPreferencesStore.doesCompressMedia().first()
         return preProcessor
             .process(
                 uri = uri,
                 mimeType = mimeType,
                 deleteOriginal = false,
-                compressIfPossible = compressIfPossible,
+                mediaOptimizationConfig = mediaOptimizationConfig,
             )
             .flatMapCatching { info ->
-                room.liveTimeline.sendMedia(
+                getTimeline().getOrThrow().sendMedia(
                     uploadInfo = info,
-                    progressCallback = progressCallback,
                     caption = caption,
                     formattedCaption = formattedCaption,
-                    replyParameters = replyParameters,
+                    inReplyToEventId = inReplyToEventId,
                 )
             }
-            .handleSendResult()
+            .handleSendResult(mediaId(uri))
     }
 
     suspend fun sendVoiceMessage(
         uri: Uri,
         mimeType: String,
         waveForm: List<Float>,
-        progressCallback: ProgressCallback? = null,
-        replyParameters: ReplyParameters? = null,
+        inReplyToEventId: EventId? = null,
     ): Result<Unit> {
         return preProcessor
             .process(
                 uri = uri,
                 mimeType = mimeType,
                 deleteOriginal = true,
-                compressIfPossible = false,
+                mediaOptimizationConfig = mediaOptimizationConfigProvider.get(),
             )
             .flatMapCatching { info ->
                 val audioInfo = (info as MediaUploadInfo.Audio).audioInfo
@@ -109,34 +122,34 @@ class MediaSender @Inject constructor(
                     audioInfo = audioInfo,
                     waveform = waveForm,
                 )
-                room.liveTimeline.sendMedia(
+                getTimeline().getOrThrow().sendMedia(
                     uploadInfo = newInfo,
-                    progressCallback = progressCallback,
                     caption = null,
                     formattedCaption = null,
-                    replyParameters = replyParameters,
+                    inReplyToEventId = inReplyToEventId,
                 )
             }
-            .handleSendResult()
+            .handleSendResult(mediaId(uri))
     }
 
-    private fun Result<Unit>.handleSendResult() = this
+    private fun Result<Unit>.handleSendResult(mediaId: String) = this
         .onFailure { error ->
             val job = ongoingUploadJobs.remove(Job)
+            Timber.e(error, "Sending media $mediaId failed. Removing ongoing upload job. Total: ${ongoingUploadJobs.size}")
             if (error !is CancellationException) {
                 job?.cancel()
             }
         }
         .onSuccess {
+            Timber.d("Sent media $mediaId successfully. Removing ongoing upload job. Total: ${ongoingUploadJobs.size}")
             ongoingUploadJobs.remove(Job)
         }
 
     private suspend fun Timeline.sendMedia(
         uploadInfo: MediaUploadInfo,
-        progressCallback: ProgressCallback?,
         caption: String?,
         formattedCaption: String?,
-        replyParameters: ReplyParameters?,
+        inReplyToEventId: EventId?,
     ): Result<Unit> {
         val handler = when (uploadInfo) {
             is MediaUploadInfo.Image -> {
@@ -146,8 +159,7 @@ class MediaSender @Inject constructor(
                     imageInfo = uploadInfo.imageInfo,
                     caption = caption,
                     formattedCaption = formattedCaption,
-                    progressCallback = progressCallback,
-                    replyParameters = replyParameters,
+                    inReplyToEventId = inReplyToEventId,
                 )
             }
             is MediaUploadInfo.Video -> {
@@ -157,8 +169,7 @@ class MediaSender @Inject constructor(
                     videoInfo = uploadInfo.videoInfo,
                     caption = caption,
                     formattedCaption = formattedCaption,
-                    progressCallback = progressCallback,
-                    replyParameters = replyParameters,
+                    inReplyToEventId = inReplyToEventId,
                 )
             }
             is MediaUploadInfo.Audio -> {
@@ -167,8 +178,7 @@ class MediaSender @Inject constructor(
                     audioInfo = uploadInfo.audioInfo,
                     caption = caption,
                     formattedCaption = formattedCaption,
-                    progressCallback = progressCallback,
-                    replyParameters = replyParameters,
+                    inReplyToEventId = inReplyToEventId,
                 )
             }
             is MediaUploadInfo.VoiceMessage -> {
@@ -176,8 +186,7 @@ class MediaSender @Inject constructor(
                     file = uploadInfo.file,
                     audioInfo = uploadInfo.audioInfo,
                     waveform = uploadInfo.waveform,
-                    progressCallback = progressCallback,
-                    replyParameters = replyParameters,
+                    inReplyToEventId = inReplyToEventId,
                 )
             }
             is MediaUploadInfo.AnyFile -> {
@@ -186,8 +195,7 @@ class MediaSender @Inject constructor(
                     fileInfo = uploadInfo.fileInfo,
                     caption = caption,
                     formattedCaption = formattedCaption,
-                    progressCallback = progressCallback,
-                    replyParameters = replyParameters,
+                    inReplyToEventId = inReplyToEventId,
                 )
             }
         }
@@ -196,8 +204,26 @@ class MediaSender @Inject constructor(
         @Suppress("RunCatchingNotAllowed")
         return handler
             .mapCatching { uploadHandler ->
+                Timber.d("Added ongoing upload job, total: ${ongoingUploadJobs.size + 1}")
                 ongoingUploadJobs[Job] = uploadHandler
                 uploadHandler.await()
             }
     }
+
+    private suspend fun getTimeline(): Result<Timeline> {
+        return when (timelineMode) {
+            is Timeline.Mode.Thread -> {
+                room.createTimeline(CreateTimelineParams.Threaded(threadRootEventId = timelineMode.threadRootId))
+            }
+            else -> Result.success(room.liveTimeline)
+        }
+    }
+
+    /**
+     * Clean up any temporary files or resources used during the media processing.
+     */
+    fun cleanUp() = preProcessor.cleanUp()
 }
+
+private fun mediaId(uri: Uri?): String = uri?.path.orEmpty().hash()
+private fun mediaId(file: File): String = file.path.orEmpty().hash()

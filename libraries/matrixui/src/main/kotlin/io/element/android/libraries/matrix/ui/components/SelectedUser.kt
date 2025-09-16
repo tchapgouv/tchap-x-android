@@ -18,9 +18,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.res.stringResource
@@ -43,7 +45,6 @@ import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.matrix.ui.model.getAvatarData
 import io.element.android.libraries.matrix.ui.model.getBestName
-import io.element.android.libraries.ui.strings.CommonStrings
 
 @Composable
 fun SelectedUser(
@@ -52,17 +53,17 @@ fun SelectedUser(
     onUserRemove: (MatrixUser) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier
-            .width(AvatarSize.SelectedUser.dp)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Avatar(
-                avatarData = matrixUser.getAvatarData(size = AvatarSize.SelectedUser),
-                avatarType = AvatarType.User,
-            )
+    SelectedItem(
+        avatarData = matrixUser.getAvatarData(size = AvatarSize.SelectedUser),
+        avatarType = AvatarType.User,
+        text = matrixUser.getBestName(),
+        maxLines = 2,
+        a11yContentDescription = matrixUser.getBestName(),
+        canRemove = canRemove,
+        onRemoveClick = { onUserRemove(matrixUser) },
+        modifier = modifier,
+    )
+    // TODO : Tchap merge
             // TCHAP external user
             if (matrixUser.userId.toString().isExternalTchapUser()) {
                 Surface(
@@ -91,33 +92,12 @@ fun SelectedUser(
                 )
             }
         }
-        if (canRemove) {
-            Surface(
-                color = ElementTheme.colors.textPrimary,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(20.dp)
-                    .align(Alignment.TopEnd)
-                    .clickable(
-                        indication = ripple(),
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = { onUserRemove(matrixUser) }
-                    ),
-            ) {
-                Icon(
-                    imageVector = CompoundIcons.Close(),
-                    contentDescription = stringResource(id = CommonStrings.action_remove),
-                    tint = ElementTheme.colors.iconOnSolidPrimary,
-                    modifier = Modifier.padding(2.dp)
-                )
-            }
-        }
-    }
+        // END TODO : Tchap merge
 }
 
 @PreviewsDayNight
 @Composable
-internal fun SelectedUserExternalPreview() = ElementPreview {
+internal fun SelectedUserExternalPreview(@PreviewParameter(MatrixUserWithAvatarProvider::class) user: MatrixUser) = ElementPreview {
     SelectedUser(
         aMatrixUser(displayName = "Guest", id = "@id_of_guest:e.server"),
         canRemove = true,
@@ -127,9 +107,9 @@ internal fun SelectedUserExternalPreview() = ElementPreview {
 
 @PreviewsDayNight
 @Composable
-internal fun SelectedUserPreview() = ElementPreview {
+internal fun SelectedUserPreview(@PreviewParameter(MatrixUserWithAvatarProvider::class) user: MatrixUser) = ElementPreview {
     SelectedUser(
-        aMatrixUser(displayName = "John Doe"),
+        matrixUser = user,
         canRemove = true,
         onUserRemove = {},
     )
@@ -137,9 +117,23 @@ internal fun SelectedUserPreview() = ElementPreview {
 
 @PreviewsDayNight
 @Composable
+internal fun SelectedUserRtlPreview() = CompositionLocalProvider(
+    LocalLayoutDirection provides LayoutDirection.Rtl,
+) {
+    ElementPreview {
+        SelectedUser(
+            matrixUser = aMatrixUser(displayName = "John Doe"),
+            canRemove = true,
+            onUserRemove = {},
+        )
+    }
+}
+
+@PreviewsDayNight
+@Composable
 internal fun SelectedUserCannotRemovePreview() = ElementPreview {
     SelectedUser(
-        aMatrixUser(),
+        matrixUser = aMatrixUser(),
         canRemove = false,
         onUserRemove = {},
     )

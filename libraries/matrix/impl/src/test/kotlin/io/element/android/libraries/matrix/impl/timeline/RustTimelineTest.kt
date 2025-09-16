@@ -10,15 +10,12 @@ package io.element.android.libraries.matrix.impl.timeline
 
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.timeline.MatrixTimelineItem
 import io.element.android.libraries.matrix.api.timeline.Timeline
 import io.element.android.libraries.matrix.api.timeline.item.virtual.VirtualTimelineItem
 import io.element.android.libraries.matrix.impl.fixtures.fakes.FakeFfiRoomListService
 import io.element.android.libraries.matrix.impl.fixtures.fakes.FakeFfiTimeline
-import io.element.android.libraries.matrix.impl.fixtures.fakes.FakeFfiTimelineDiff
 import io.element.android.libraries.matrix.impl.room.RoomContentForwarder
 import io.element.android.libraries.matrix.test.room.FakeJoinedRoom
 import io.element.android.libraries.matrix.test.room.aRoomInfo
@@ -33,7 +30,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import org.matrix.rustcomponents.sdk.TimelineChange
+import org.matrix.rustcomponents.sdk.TimelineDiff
 import uniffi.matrix_sdk.RoomPaginationStatus
 import org.matrix.rustcomponents.sdk.Timeline as InnerTimeline
 
@@ -51,10 +48,7 @@ class RustTimelineTest {
             runCurrent()
             inner.emitDiff(
                 listOf(
-                    FakeFfiTimelineDiff(
-                        item = null,
-                        change = TimelineChange.RESET,
-                    )
+                    TimelineDiff.Reset(emptyList())
                 )
             )
             with(awaitItem()) {
@@ -96,13 +90,12 @@ class RustTimelineTest {
 
 private fun TestScope.createRustTimeline(
     inner: InnerTimeline,
-    mode: Timeline.Mode = Timeline.Mode.LIVE,
+    mode: Timeline.Mode = Timeline.Mode.Live,
     systemClock: SystemClock = FakeSystemClock(),
     joinedRoom: JoinedRoom = FakeJoinedRoom().apply { givenRoomInfo(aRoomInfo()) },
     coroutineScope: CoroutineScope = backgroundScope,
     dispatcher: CoroutineDispatcher = testCoroutineDispatchers().io,
     roomContentForwarder: RoomContentForwarder = RoomContentForwarder(FakeFfiRoomListService()),
-    featureFlagsService: FeatureFlagService = FakeFeatureFlagService(),
     onNewSyncedEvent: () -> Unit = {},
 ): RustTimeline {
     return RustTimeline(
@@ -113,7 +106,6 @@ private fun TestScope.createRustTimeline(
         coroutineScope = coroutineScope,
         dispatcher = dispatcher,
         roomContentForwarder = roomContentForwarder,
-        featureFlagsService = featureFlagsService,
         onNewSyncedEvent = onNewSyncedEvent,
     )
 }

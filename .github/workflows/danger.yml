@@ -9,7 +9,7 @@ jobs:
     # Skip in forks, it doesn't work even with the fallback token
     if: ${{ github.repository == 'element-hq/element-x-android' && ('pull_request' != github.event_name || github.event.pull_request.head.repo.full_name == github.repository) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Add SSH private keys for submodule repositories
         uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
         with:

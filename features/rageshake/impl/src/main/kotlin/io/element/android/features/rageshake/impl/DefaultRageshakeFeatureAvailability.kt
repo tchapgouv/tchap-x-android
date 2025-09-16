@@ -7,16 +7,21 @@
 
 package io.element.android.features.rageshake.impl
 
-import com.squareup.anvil.annotations.ContributesBinding
-import io.element.android.appconfig.RageshakeConfig
-import io.element.android.appconfig.isEnabled
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import io.element.android.features.rageshake.api.RageshakeFeatureAvailability
-import io.element.android.libraries.di.AppScope
-import javax.inject.Inject
+import io.element.android.features.rageshake.impl.reporter.BugReporterUrlProvider
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 @ContributesBinding(AppScope::class)
-class DefaultRageshakeFeatureAvailability @Inject constructor() : RageshakeFeatureAvailability {
-    override fun isAvailable(): Boolean {
-        return RageshakeConfig.isEnabled
+@Inject
+class DefaultRageshakeFeatureAvailability(
+    private val bugReporterUrlProvider: BugReporterUrlProvider,
+) : RageshakeFeatureAvailability {
+    override fun isAvailable(): Flow<Boolean> {
+        return bugReporterUrlProvider.provide()
+            .map { it != null }
     }
 }

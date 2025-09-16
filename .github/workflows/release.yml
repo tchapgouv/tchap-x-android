@@ -18,9 +18,9 @@ jobs:
       group: ${{ format('build-release-main-gplay-{0}', github.sha) }}
       cancel-in-progress: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Use JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
@@ -53,7 +53,7 @@ jobs:
       group: ${{ format('build-release-main-enterprise-{0}', github.sha) }}
       cancel-in-progress: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Add SSH private keys for submodule repositories
         uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
         # Skip in forks
@@ -63,7 +63,7 @@ jobs:
       - name: Clone submodules
         run: git submodule update --init --recursive
       - name: Use JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
@@ -89,9 +89,9 @@ jobs:
       group: ${{ format('build-release-main-fdroid-{0}', github.sha) }}
       cancel-in-progress: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Use JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
