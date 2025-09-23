@@ -80,6 +80,7 @@ class OnBoardingPresenter(
         }
         val canLoginWithQrCode by produceState(initialValue = false, linkAccountProvider) {
             value = linkAccountProvider == null
+                && OnBoardingConfig.CAN_LOGIN_WITH_QR_CODE // TCHAP specific config for QR code login
         }
         val canReportBug by remember { rageshakeFeatureAvailability.isAvailable() }.collectAsState(false)
         var showReportBug by rememberSaveable { mutableStateOf(false) }
