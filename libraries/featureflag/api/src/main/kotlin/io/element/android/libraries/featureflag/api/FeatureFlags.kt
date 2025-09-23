@@ -97,7 +97,7 @@ enum class FeatureFlags(
         key = "feature.thread_timeline",
         title = "Threads",
         description = "Renders thread messages as a dedicated timeline. Restarting the app is required for this setting to fully take effect.",
-        defaultValue = { false },
+        defaultValue = { true }, // TCHAP enable Threads display by default
         isFinished = false,
     )
 }
