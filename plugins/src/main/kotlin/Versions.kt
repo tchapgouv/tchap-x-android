@@ -32,7 +32,7 @@ private const val versionYear = 0
 private const val versionMonth = 1
 
 // Note: must be in [0,99]
-private const val versionReleaseNumber = 1
+private const val versionReleaseNumber = 2
 
 object Versions {
     const val VERSION_CODE = versionYear * 10_000 + versionMonth * 100 + versionReleaseNumber
