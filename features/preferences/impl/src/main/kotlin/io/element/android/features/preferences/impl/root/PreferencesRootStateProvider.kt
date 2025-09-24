@@ -28,8 +28,6 @@ fun aPreferencesRootState(
     showAnalyticsSettings = true,
     canReportBug = true,
     showDeveloperSettings = true,
-    showNotificationSettings = true,
-    showLockScreenSettings = true,
     showBlockedUsersItem = true,
     canDeactivateAccount = true,
     snackbarMessage = SnackbarMessage(CommonStrings.common_verification_complete),

@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.home.impl.R
@@ -44,14 +45,13 @@ import io.element.android.features.home.impl.model.RoomSummaryDisplayType
 import io.element.android.features.home.impl.roomlist.RoomListEvents
 import io.element.android.libraries.core.extensions.orEmpty
 import io.element.android.libraries.designsystem.atomic.atoms.UnreadIndicatorAtom
+import io.element.android.libraries.designsystem.atomic.molecules.InviteButtonsRowMolecule
 import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarType
+import io.element.android.libraries.designsystem.modifiers.onKeyboardContextMenuAction
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
-import io.element.android.libraries.designsystem.theme.components.Button
-import io.element.android.libraries.designsystem.theme.components.ButtonSize
 import io.element.android.libraries.designsystem.theme.components.Icon
-import io.element.android.libraries.designsystem.theme.components.OutlinedButton
 import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.designsystem.theme.roomListRoomMessage
 import io.element.android.libraries.designsystem.theme.roomListRoomMessageDate
@@ -100,7 +100,7 @@ internal fun RoomSummaryRow(
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
-                    InviteButtonsRow(
+                    InviteButtonsRowMolecule(
                         onAcceptClick = {
                             eventSink(RoomListEvents.AcceptInvite(room))
                         },
@@ -171,14 +171,15 @@ private fun RoomSummaryScaffoldRow(
     hideAvatarImage: Boolean = false,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val clickModifier = Modifier.combinedClickable(
-        onClick = { onClick(room) },
-        onLongClick = { onLongClick(room) },
-        onLongClickLabel = stringResource(CommonStrings.action_open_context_menu),
-        indication = ripple(),
-        interactionSource = remember { MutableInteractionSource() }
-    )
-
+    val clickModifier = Modifier
+        .combinedClickable(
+            onClick = { onClick(room) },
+            onLongClick = { onLongClick(room) },
+            onLongClickLabel = stringResource(CommonStrings.action_open_context_menu),
+            indication = ripple(),
+            interactionSource = remember { MutableInteractionSource() }
+        )
+        .onKeyboardContextMenuAction { onLongClick(room) }
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -220,7 +221,7 @@ private fun NameAndTimestampRow(
             style = ElementTheme.typography.fontBodyLgMedium,
             text = name ?: stringResource(id = CommonStrings.common_no_room_name),
             fontStyle = FontStyle.Italic.takeIf { name == null },
-            color = ElementTheme.roomListRoomName(),
+            color = ElementTheme.colors.roomListRoomName,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -231,7 +232,7 @@ private fun NameAndTimestampRow(
             color = if (isHighlighted) {
                 ElementTheme.colors.unreadIndicator
             } else {
-                ElementTheme.roomListRoomMessageDate()
+                ElementTheme.colors.roomListRoomMessageDate
             },
         )
     }
@@ -255,7 +256,7 @@ private fun InviteSubtitle(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = ElementTheme.typography.fontBodyMdRegular,
-            color = ElementTheme.roomListRoomMessage(),
+            color = ElementTheme.colors.roomListRoomMessage,
             modifier = modifier,
         )
     }
@@ -279,15 +280,19 @@ private fun MessagePreviewAndIndicatorRow(
         Text(
             modifier = Modifier.weight(1f),
             text = annotatedMessagePreview,
-            color = ElementTheme.roomListRoomMessage(),
+            color = ElementTheme.colors.roomListRoomMessage,
             style = ElementTheme.typography.fontBodyMdRegular,
             minLines = 2,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
+
         // Call and unread
         Row(
-            modifier = Modifier.height(16.dp),
+            modifier = Modifier
+                .height(16.dp)
+                // Used to force this line to be read aloud earlier than the latest event when using Talkback
+                .zIndex(-1f),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -303,8 +308,10 @@ private fun MessagePreviewAndIndicatorRow(
                 MentionIndicatorAtom()
             }
             if (room.hasNewContent) {
+                val contentDescription = stringResource(CommonStrings.a11y_notifications_new_messages)
                 UnreadIndicatorAtom(
-                    color = tint
+                    color = tint,
+                    contentDescription = contentDescription,
                 )
             }
         }
@@ -327,7 +334,7 @@ private fun InviteNameAndIndicatorRow(
             style = ElementTheme.typography.fontBodyLgMedium,
             text = name ?: stringResource(id = CommonStrings.common_no_room_name),
             fontStyle = FontStyle.Italic.takeIf { name == null },
-            color = ElementTheme.roomListRoomName(),
+            color = ElementTheme.colors.roomListRoomName,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -340,38 +347,13 @@ private fun InviteNameAndIndicatorRow(
 }
 
 @Composable
-private fun InviteButtonsRow(
-    onAcceptClick: () -> Unit,
-    onDeclineClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = spacedBy(12.dp)
-    ) {
-        OutlinedButton(
-            text = stringResource(CommonStrings.action_decline),
-            onClick = onDeclineClick,
-            size = ButtonSize.MediumLowPadding,
-            modifier = Modifier.weight(1f),
-        )
-        Button(
-            text = stringResource(CommonStrings.action_accept),
-            onClick = onAcceptClick,
-            size = ButtonSize.MediumLowPadding,
-            modifier = Modifier.weight(1f),
-        )
-    }
-}
-
-@Composable
 private fun OnGoingCallIcon(
     color: Color,
 ) {
     Icon(
         modifier = Modifier.size(16.dp),
         imageVector = CompoundIcons.VideoCallSolid(),
-        contentDescription = null,
+        contentDescription = stringResource(CommonStrings.a11y_notifications_ongoing_call),
         tint = color,
     )
 }
@@ -380,7 +362,7 @@ private fun OnGoingCallIcon(
 private fun NotificationOffIndicatorAtom() {
     Icon(
         modifier = Modifier.size(16.dp),
-        contentDescription = null,
+        contentDescription = stringResource(CommonStrings.a11y_notifications_muted),
         imageVector = CompoundIcons.NotificationsOffSolid(),
         tint = ElementTheme.colors.iconQuaternary,
     )
@@ -390,7 +372,7 @@ private fun NotificationOffIndicatorAtom() {
 private fun MentionIndicatorAtom() {
     Icon(
         modifier = Modifier.size(16.dp),
-        contentDescription = null,
+        contentDescription = stringResource(CommonStrings.a11y_notifications_new_mentions),
         imageVector = CompoundIcons.Mention(),
         tint = ElementTheme.colors.unreadIndicator,
     )

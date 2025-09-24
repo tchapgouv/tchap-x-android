@@ -32,14 +32,16 @@ private const val versionYear = 0
 private const val versionMonth = 1
 
 // Note: must be in [0,99]
-private const val versionReleaseNumber = 0
+private const val versionReleaseNumber = 1
 
 object Versions {
     const val VERSION_CODE = versionYear * 10_000 + versionMonth * 100 + versionReleaseNumber
     val VERSION_NAME = "$versionYear.$versionMonth.$versionReleaseNumber"
 
-    const val COMPILE_SDK = 35
-    const val TARGET_SDK = 35
+    // When updating COMPILE_SDK, please do not forget to update the value for `buildToolsVersion`
+    // in the file `tools/release/release.sh`
+    const val COMPILE_SDK = 36
+    const val TARGET_SDK = 36
 
     // When updating the `minSdk`, make sure to update the value of `minSdkVersion` in the file `tools/release/release.sh`
     private const val MIN_SDK_FOSS = 24

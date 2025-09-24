@@ -7,10 +7,11 @@
 
 package io.element.android.libraries.matrix.impl.widget
 
-import com.squareup.anvil.annotations.ContributesBinding
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.core.meta.BuildType
-import io.element.android.libraries.di.AppScope
 import io.element.android.libraries.matrix.api.widget.CallAnalyticCredentialsProvider
 import io.element.android.libraries.matrix.api.widget.CallWidgetSettingsProvider
 import io.element.android.libraries.matrix.api.widget.MatrixWidgetSettings
@@ -19,17 +20,18 @@ import kotlinx.coroutines.flow.first
 import org.matrix.rustcomponents.sdk.newVirtualElementCallWidget
 import uniffi.matrix_sdk.EncryptionSystem
 import uniffi.matrix_sdk.HeaderStyle
+import uniffi.matrix_sdk.NotificationType
 import uniffi.matrix_sdk.VirtualElementCallWidgetOptions
-import javax.inject.Inject
 import uniffi.matrix_sdk.Intent as CallIntent
 
 @ContributesBinding(AppScope::class)
-class DefaultCallWidgetSettingsProvider @Inject constructor(
+@Inject
+class DefaultCallWidgetSettingsProvider(
     private val buildMeta: BuildMeta,
     private val callAnalyticsCredentialsProvider: CallAnalyticCredentialsProvider,
     private val analyticsService: AnalyticsService,
 ) : CallWidgetSettingsProvider {
-    override suspend fun provide(baseUrl: String, widgetId: String, encrypted: Boolean): MatrixWidgetSettings {
+    override suspend fun provide(baseUrl: String, widgetId: String, encrypted: Boolean, direct: Boolean): MatrixWidgetSettings {
         val isAnalyticsEnabled = analyticsService.userConsentFlow.first()
         val options = VirtualElementCallWidgetOptions(
             elementCallUrl = baseUrl,
@@ -53,6 +55,7 @@ class DefaultCallWidgetSettingsProvider @Inject constructor(
             hideHeader = true,
             controlledMediaDevices = true,
             header = HeaderStyle.APP_BAR,
+            sendNotificationType = if (direct) NotificationType.RING else NotificationType.NOTIFICATION,
         )
         val rustWidgetSettings = newVirtualElementCallWidget(options)
         return MatrixWidgetSettings.fromRustWidgetSettings(rustWidgetSettings)

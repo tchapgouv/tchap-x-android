@@ -30,6 +30,7 @@ private fun DependencyHandlerScope.implementation(
 private fun DependencyHandlerScope.androidTestImplementation(dependency: Any) = dependencies.add("androidTestImplementation", dependency)
 
 private fun DependencyHandlerScope.debugImplementation(dependency: Any) = dependencies.add("debugImplementation", dependency)
+private fun DependencyHandlerScope.releaseImplementation(dependency: Any) = dependencies.add("releaseImplementation", dependency)
 
 /**
  * Dependencies used by all the modules
@@ -53,13 +54,12 @@ fun DependencyHandlerScope.composeDependencies(libs: LibrariesForLibs) {
     implementation(libs.androidx.activity.compose)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-    implementation(libs.showkase)
     implementation(libs.kotlinx.collections.immutable)
 }
 
 fun DependencyHandlerScope.allLibrariesImpl() {
     implementation(project(":libraries:androidutils"))
-    implementation(project(":libraries:deeplink"))
+    implementation(project(":libraries:deeplink:impl"))
     implementation(project(":libraries:designsystem"))
     implementation(project(":libraries:matrix:impl"))
     implementation(project(":libraries:matrixui"))
@@ -89,6 +89,7 @@ fun DependencyHandlerScope.allLibrariesImpl() {
     implementation(project(":libraries:mediaviewer:impl"))
     implementation(project(":libraries:troubleshoot:impl"))
     implementation(project(":libraries:fullscreenintent:impl"))
+    implementation(project(":libraries:wellknown:impl"))
     implementation(project(":libraries:oidc:impl"))
 }
 

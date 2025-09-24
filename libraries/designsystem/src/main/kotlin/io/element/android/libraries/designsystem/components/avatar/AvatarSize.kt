@@ -17,6 +17,8 @@ enum class AvatarSize(val dp: Dp) {
     RoomHeader(96.dp),
     RoomListItem(52.dp),
 
+    SpaceListItem(52.dp),
+
     RoomSelectRoomListItem(36.dp),
 
     UserPreference(56.dp),
@@ -24,7 +26,7 @@ enum class AvatarSize(val dp: Dp) {
     UserHeader(96.dp),
     UserListItem(36.dp),
 
-    SelectedUser(56.dp),
+    SelectedUser(52.dp),
     SelectedRoom(56.dp),
 
     DmCluster(75.dp),
@@ -63,4 +65,8 @@ enum class AvatarSize(val dp: Dp) {
     DmCreationConfirmation(64.dp),
 
     UserVerification(52.dp),
+
+    OrganizationHeader(64.dp),
+    SpaceHeader(64.dp),
+    SpaceMember(24.dp),
 }

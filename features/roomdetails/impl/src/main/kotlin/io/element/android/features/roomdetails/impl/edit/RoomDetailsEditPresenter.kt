@@ -20,6 +20,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
+import dev.zacsweers.metro.Inject
 import io.element.android.libraries.androidutils.file.TemporaryUriDeleter
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
@@ -34,6 +35,7 @@ import io.element.android.libraries.matrix.ui.room.avatarUrl
 import io.element.android.libraries.matrix.ui.room.rawName
 import io.element.android.libraries.matrix.ui.room.topic
 import io.element.android.libraries.mediapickers.api.PickerProvider
+import io.element.android.libraries.mediaupload.api.MediaOptimizationConfigProvider
 import io.element.android.libraries.mediaupload.api.MediaPreProcessor
 import io.element.android.libraries.permissions.api.PermissionsEvents
 import io.element.android.libraries.permissions.api.PermissionsPresenter
@@ -41,14 +43,15 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
-class RoomDetailsEditPresenter @Inject constructor(
+@Inject
+class RoomDetailsEditPresenter(
     private val room: JoinedRoom,
     private val mediaPickerProvider: PickerProvider,
     private val mediaPreProcessor: MediaPreProcessor,
     private val temporaryUriDeleter: TemporaryUriDeleter,
     permissionsPresenterFactory: PermissionsPresenter.Factory,
+    private val mediaOptimizationConfigProvider: MediaOptimizationConfigProvider,
 ) : Presenter<RoomDetailsEditState> {
     private val cameraPermissionPresenter = permissionsPresenterFactory.create(android.Manifest.permission.CAMERA)
     private var pendingPermissionRequest = false
@@ -223,7 +226,7 @@ class RoomDetailsEditPresenter @Inject constructor(
                     uri = avatarUri,
                     mimeType = MimeTypes.Jpeg,
                     deleteOriginal = false,
-                    compressIfPossible = false,
+                    mediaOptimizationConfig = mediaOptimizationConfigProvider.get(),
                 ).getOrThrow()
                 room.updateAvatar(MimeTypes.Jpeg, preprocessed.file.readBytes()).getOrThrow()
             } else {

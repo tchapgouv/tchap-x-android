@@ -1,4 +1,4 @@
-import extension.setupAnvil
+import extension.setupDependencyInjection
 
 /*
  * Copyright 2022-2024 New Vector Ltd.
@@ -15,13 +15,16 @@ android {
     namespace = "io.element.android.features.leaveroom.impl"
 }
 
-setupAnvil()
+setupDependencyInjection()
 
 dependencies {
+    api(projects.features.leaveroom.api)
     implementation(projects.libraries.core)
     implementation(projects.libraries.architecture)
     implementation(projects.libraries.matrix.api)
-    api(projects.features.leaveroom.api)
+    implementation(projects.libraries.designsystem)
+    implementation(projects.libraries.uiStrings)
+    implementation(projects.libraries.push.api)
 
     testImplementation(libs.test.junit)
     testImplementation(libs.coroutines.test)
@@ -30,5 +33,6 @@ dependencies {
     testImplementation(libs.test.truth)
     testImplementation(libs.test.turbine)
     testImplementation(projects.libraries.matrix.test)
+    testImplementation(projects.libraries.push.test)
     testImplementation(projects.tests.testutils)
 }

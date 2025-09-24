@@ -22,6 +22,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import dev.zacsweers.metro.Inject
 import im.vector.app.features.analytics.plan.Interaction
 import io.element.android.features.home.impl.datasource.RoomListDataSource
 import io.element.android.features.home.impl.filters.RoomListFiltersState
@@ -31,7 +32,7 @@ import io.element.android.features.invite.api.SeenInvitesStore
 import io.element.android.features.invite.api.acceptdecline.AcceptDeclineInviteEvents.AcceptInvite
 import io.element.android.features.invite.api.acceptdecline.AcceptDeclineInviteEvents.DeclineInvite
 import io.element.android.features.invite.api.acceptdecline.AcceptDeclineInviteState
-import io.element.android.features.leaveroom.api.LeaveRoomEvent.ShowConfirmation
+import io.element.android.features.leaveroom.api.LeaveRoomEvent
 import io.element.android.features.leaveroom.api.LeaveRoomState
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
@@ -66,17 +67,16 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 private const val EXTENDED_RANGE_SIZE = 40
 private const val SUBSCRIBE_TO_VISIBLE_ROOMS_DEBOUNCE_IN_MILLIS = 300L
 
-class RoomListPresenter @Inject constructor(
+@Inject
+class RoomListPresenter(
     private val buildMeta: BuildMeta,
     private val client: MatrixClient,
     private val leaveRoomPresenter: Presenter<LeaveRoomState>,
     private val roomListDataSource: RoomListDataSource,
-    private val featureFlagService: FeatureFlagService,
     private val filtersPresenter: Presenter<RoomListFiltersState>,
     private val searchPresenter: Presenter<RoomListSearchState>,
     private val sessionPreferencesStore: SessionPreferencesStore,
@@ -129,7 +129,9 @@ class RoomListPresenter @Inject constructor(
                 is RoomListEvents.HideContextMenu -> {
                     contextMenu.value = RoomListState.ContextMenu.Hidden
                 }
-                is RoomListEvents.LeaveRoom -> leaveRoomState.eventSink(ShowConfirmation(event.roomId))
+                is RoomListEvents.LeaveRoom -> {
+                    leaveRoomState.eventSink(LeaveRoomEvent.LeaveRoom(event.roomId, needsConfirmation = event.needsConfirmation))
+                }
                 is RoomListEvents.SetRoomIsFavorite -> coroutineScope.setRoomIsFavorite(event.roomId, event.isFavorite)
                 is RoomListEvents.MarkAsRead -> coroutineScope.markAsRead(event.roomId)
                 is RoomListEvents.MarkAsUnread -> coroutineScope.markAsUnread(event.roomId)
@@ -245,7 +247,6 @@ class RoomListPresenter @Inject constructor(
             roomName = event.roomSummary.name,
             isDm = event.roomSummary.isDm,
             isFavorite = event.roomSummary.isFavorite,
-            markAsUnreadFeatureFlagEnabled = featureFlagService.isFeatureEnabled(FeatureFlags.MarkAsUnread),
             hasNewContent = event.roomSummary.hasNewContent,
             displayClearRoomCacheAction = appPreferencesStore.isDeveloperModeEnabledFlow().first(),
         )

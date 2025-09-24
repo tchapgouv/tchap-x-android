@@ -7,13 +7,12 @@
 
 package io.element.android.features.messages.impl.pinned
 
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.coroutine.mapState
 import io.element.android.libraries.di.RoomScope
-import io.element.android.libraries.di.SingleIn
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.room.CreateTimelineParams
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.sync.SyncService
@@ -23,19 +22,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 @SingleIn(RoomScope::class)
-class PinnedEventsTimelineProvider @Inject constructor(
+@Inject
+class PinnedEventsTimelineProvider(
     private val room: JoinedRoom,
     private val syncService: SyncService,
-    private val featureFlagService: FeatureFlagService,
     private val dispatchers: CoroutineDispatchers,
 ) : TimelineProvider {
     private val _timelineStateFlow: MutableStateFlow<AsyncData<Timeline>> =
@@ -66,20 +63,10 @@ class PinnedEventsTimelineProvider @Inject constructor(
     }
 
     private suspend fun onActive() = coroutineScope {
-        combine(
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.PinnedEvents),
-            syncService.syncState,
-        ) { isEnabled, _ ->
+        syncService.syncState.onEach {
             // do not use syncState here as data can be loaded from cache, it's just to trigger retry if needed
-            isEnabled
+            loadTimelineIfNeeded()
         }
-            .onEach { isFeatureEnabled ->
-                if (isFeatureEnabled) {
-                    loadTimelineIfNeeded()
-                } else {
-                    resetTimeline()
-                }
-            }
             .launchIn(this)
     }
 

@@ -34,10 +34,8 @@
   <string name="screen_room_change_role_unsaved_changes_description">"تغییراتی ذخیره نشده دارید."</string>
   <string name="screen_room_change_role_unsaved_changes_title">"ذخیرهٔ تغییرات؟"</string>
   <string name="screen_room_details_add_topic_title">"افزودن موضوع"</string>
-  <string name="screen_room_details_already_a_member">"از پیش عضو است"</string>
-  <string name="screen_room_details_already_invited">"از پیش دعوت شده"</string>
   <string name="screen_room_details_badge_encrypted">"رمز شده"</string>
-  <string name="screen_room_details_badge_not_encrypted">"رمزنگارش نشده"</string>
+  <string name="screen_room_details_badge_not_encrypted">"رمزنگاری نشده"</string>
   <string name="screen_room_details_badge_public">"اتاق عمومی"</string>
   <string name="screen_room_details_edit_room_title">"ویرایش اتاق"</string>
   <string name="screen_room_details_edition_error">"خطایی ناشناخته رخ داد و اطّلاعات قابل تغییر نبودند."</string>
@@ -50,6 +48,7 @@
   <string name="screen_room_details_invite_people_title">"دعوت افراد"</string>
   <string name="screen_room_details_leave_conversation_title">"ترک گفت‌وگو"</string>
   <string name="screen_room_details_leave_room_title">"ترک اتاق"</string>
+  <string name="screen_room_details_media_gallery_title">"رسانه‌ها و پرونده‌ها"</string>
   <string name="screen_room_details_notification_mode_custom">"سفارشی"</string>
   <string name="screen_room_details_notification_mode_default">"پیش‌گزیده"</string>
   <string name="screen_room_details_notification_title">"آگاهی‌ها"</string>
@@ -78,10 +77,11 @@
   <string name="screen_room_member_list_pending_header_title">"منتظر"</string>
   <string name="screen_room_member_list_role_administrator">"مدیر"</string>
   <string name="screen_room_member_list_role_moderator">"ناظمر"</string>
+  <string name="screen_room_member_list_role_owner">"مالک"</string>
   <string name="screen_room_member_list_room_members_header_title">"اعضای اتاق"</string>
   <string name="screen_room_member_list_unbanning_user">"رفع تحریم %1$s"</string>
   <string name="screen_room_notification_settings_allow_custom">"اجازه به تنظیمت شخصی"</string>
-  <string name="screen_room_notification_settings_allow_custom_footnote">"روشن کردن این گزینه تنظیمات پیش فرض شما را لغو می کند"</string>
+  <string name="screen_room_notification_settings_allow_custom_footnote">"روشن کردنش تنظیمات پیش‌گزیده‌تان را پایمال می‌کند"</string>
   <string name="screen_room_notification_settings_custom_settings_title">"آگاهی من در این گپ برای"</string>
   <string name="screen_room_notification_settings_default_setting_footnote">"می‌توانید در %1$sتان تغییرش دهید."</string>
   <string name="screen_room_notification_settings_default_setting_footnote_content_link">"تنظیمات جهانی"</string>
@@ -112,7 +112,7 @@
   <string name="screen_security_and_privacy_enable_encryption_alert_title">"رمزگذاری فعال شود؟"</string>
   <string name="screen_security_and_privacy_encryption_section_footer">"پس از به کار افتادن، رمزنگاری قابل از کار انداختن نیست."</string>
   <string name="screen_security_and_privacy_encryption_section_header">"رمزنگاری"</string>
-  <string name="screen_security_and_privacy_room_access_anyone_option_description">"هرکسی می تواند یافته و بپیوندد"</string>
+  <string name="screen_security_and_privacy_room_access_anyone_option_description">"هرکسی می‌تواند یافته و بپیوندد"</string>
   <string name="screen_security_and_privacy_room_access_anyone_option_title">"هرکسی"</string>
   <string name="screen_security_and_privacy_room_access_invite_only_option_description">"افراد فقط در صورت دعوت می‌توانند بپیوندند"</string>
   <string name="screen_security_and_privacy_room_access_invite_only_option_title">"فقط دعوتی"</string>

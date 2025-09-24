@@ -7,12 +7,13 @@
 
 package io.element.android.libraries.matrix.impl.auth
 
-import com.squareup.anvil.annotations.ContributesBinding
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.extensions.mapFailure
 import io.element.android.libraries.core.extensions.runCatchingExceptions
-import io.element.android.libraries.di.AppScope
-import io.element.android.libraries.di.SingleIn
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
 import io.element.android.libraries.matrix.api.auth.MatrixHomeServerDetails
@@ -43,18 +44,17 @@ import kotlinx.coroutines.withContext
 import org.matrix.rustcomponents.sdk.Client
 import org.matrix.rustcomponents.sdk.ClientBuilder
 import org.matrix.rustcomponents.sdk.HumanQrLoginException
-import org.matrix.rustcomponents.sdk.OidcConfiguration
 import org.matrix.rustcomponents.sdk.QrCodeData
 import org.matrix.rustcomponents.sdk.QrCodeDecodeException
 import org.matrix.rustcomponents.sdk.QrLoginProgress
 import org.matrix.rustcomponents.sdk.QrLoginProgressListener
 import timber.log.Timber
 import uniffi.matrix_sdk.OAuthAuthorizationData
-import javax.inject.Inject
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
-class RustMatrixAuthenticationService @Inject constructor(
+@Inject
+class RustMatrixAuthenticationService(
     private val sessionPathsFactory: SessionPathsFactory,
     private val coroutineDispatchers: CoroutineDispatchers,
     private val sessionStore: SessionStore,
@@ -72,9 +72,9 @@ class RustMatrixAuthenticationService @Inject constructor(
     private var currentClient: Client? = null
     private var currentHomeserver = MutableStateFlow<MatrixHomeServerDetails?>(null)
 
-    private var newMatrixClientObserver: ((MatrixClient) -> Unit)? = null
+    private val newMatrixClientObservers = mutableListOf<(MatrixClient) -> Unit>()
     override fun listenToNewMatrixClients(lambda: (MatrixClient) -> Unit) {
-        newMatrixClientObserver = lambda
+        newMatrixClientObservers.add(lambda)
     }
 
     private fun rotateSessionPath(): SessionPaths {
@@ -156,7 +156,8 @@ class RustMatrixAuthenticationService @Inject constructor(
                         passphrase = pendingPassphrase,
                         sessionPaths = currentSessionPaths,
                     )
-                newMatrixClientObserver?.invoke(rustMatrixClientFactory.create(client))
+                val matrixClient = rustMatrixClientFactory.create(client)
+                newMatrixClientObservers.forEach { it.invoke(matrixClient) }
                 sessionStore.storeData(sessionData)
 
                 // Clean up the strong reference held here since it's no longer necessary
@@ -199,6 +200,9 @@ class RustMatrixAuthenticationService @Inject constructor(
                     oidcConfiguration = oidcConfigurationProvider.get(),
                     prompt = prompt.toRustPrompt(),
                     loginHint = loginHint,
+                    // If we want to restore a previous session for which we have encryption keys, we can pass the deviceId here. At the moment, we don't
+                    deviceId = null,
+                    additionalScopes = emptyList(),
                 )
                 val url = oAuthAuthorizationData.loginUrl()
                 pendingOAuthAuthorizationData = oAuthAuthorizationData
@@ -244,7 +248,8 @@ class RustMatrixAuthenticationService @Inject constructor(
                 pendingOAuthAuthorizationData?.close()
                 pendingOAuthAuthorizationData = null
 
-                newMatrixClientObserver?.invoke(rustMatrixClientFactory.create(client))
+                val matrixClient = rustMatrixClientFactory.create(client)
+                newMatrixClientObservers.forEach { it.invoke(matrixClient) }
                 sessionStore.storeData(sessionData)
 
                 // Clean up the strong reference held here since it's no longer necessary
@@ -274,9 +279,13 @@ class RustMatrixAuthenticationService @Inject constructor(
                     sessionPaths = emptySessionPaths,
                     passphrase = pendingPassphrase,
                     qrCodeData = sdkQrCodeLoginData,
+                )
+                client.loginWithQrCode(
+                    qrCodeData = qrCodeData.rustQrCodeData,
                     oidcConfiguration = oidcConfiguration,
                     progressListener = progressListener,
                 )
+
                 val sessionData = client.session()
                     .toSessionData(
                         isTokenValid = true,
@@ -284,7 +293,8 @@ class RustMatrixAuthenticationService @Inject constructor(
                         passphrase = pendingPassphrase,
                         sessionPaths = emptySessionPaths,
                     )
-                newMatrixClientObserver?.invoke(rustMatrixClientFactory.create(client))
+                val matrixClient = rustMatrixClientFactory.create(client)
+                newMatrixClientObservers.forEach { it.invoke(matrixClient) }
                 sessionStore.storeData(sessionData)
 
                 // Clean up the strong reference held here since it's no longer necessary
@@ -324,8 +334,6 @@ class RustMatrixAuthenticationService @Inject constructor(
         sessionPaths: SessionPaths,
         passphrase: String?,
         qrCodeData: QrCodeData,
-        oidcConfiguration: OidcConfiguration,
-        progressListener: QrLoginProgressListener,
     ): Client {
         Timber.d("Creating client for QR Code login with simplified sliding sync")
         return rustMatrixClientFactory
@@ -335,7 +343,8 @@ class RustMatrixAuthenticationService @Inject constructor(
                 slidingSyncType = ClientBuilderSlidingSync.Discovered,
             )
             .sessionPassphrase(passphrase)
-            .buildWithQrCode(qrCodeData, oidcConfiguration, progressListener)
+            .serverNameOrHomeserverUrl(qrCodeData.serverName()!!)
+            .build()
     }
 
     private fun clear() {

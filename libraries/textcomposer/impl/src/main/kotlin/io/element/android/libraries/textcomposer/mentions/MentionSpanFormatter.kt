@@ -7,14 +7,14 @@
 
 package io.element.android.libraries.textcomposer.mentions
 
-import com.squareup.anvil.annotations.ContributesBinding
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.toUserDisplayName
 import io.element.android.libraries.di.RoomScope
 import io.element.android.libraries.matrix.api.core.RoomIdOrAlias
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.ui.messages.RoomMemberProfilesCache
 import io.element.android.libraries.matrix.ui.messages.RoomNamesCache
-import javax.inject.Inject
 
 private const val EVERYONE_DISPLAY_TEXT = "@room"
 private const val BUBBLE_ICON = "\uD83D\uDCAC" // 💬
@@ -29,7 +29,8 @@ interface MentionSpanFormatter {
  * based on its MentionType and context.
  */
 @ContributesBinding(RoomScope::class)
-class DefaultMentionSpanFormatter @Inject constructor(
+@Inject
+class DefaultMentionSpanFormatter(
     private val roomMemberProfilesCache: RoomMemberProfilesCache,
     private val roomNamesCache: RoomNamesCache,
 ) : MentionSpanFormatter {

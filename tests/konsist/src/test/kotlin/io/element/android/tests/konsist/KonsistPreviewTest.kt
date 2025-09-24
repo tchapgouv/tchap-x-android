@@ -8,8 +8,11 @@
 package io.element.android.tests.konsist
 
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import com.google.common.truth.Truth.assertThat
 import com.lemonappdev.konsist.api.Konsist
 import com.lemonappdev.konsist.api.ext.list.withAllAnnotationsOf
+import com.lemonappdev.konsist.api.ext.list.withName
+import com.lemonappdev.konsist.api.ext.list.withNameEndingWith
 import com.lemonappdev.konsist.api.ext.list.withoutName
 import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.verify.assertEmpty
@@ -28,6 +31,26 @@ class KonsistPreviewTest {
                 it.hasNameEndingWith("Preview") &&
                     it.hasNameEndingWith("LightPreview").not() &&
                     it.hasNameEndingWith("DarkPreview").not()
+            }
+    }
+
+    @Test
+    fun `Check functions with 'A11yPreview'`() {
+        Konsist
+            .scopeFromProject()
+            .functions()
+            .withNameEndingWith("A11yPreview")
+            .assertTrue(
+                additionalMessage = "Functions with 'A11yPreview' suffix should have '@Preview' annotation and not '@PreviewsDayNight'," +
+                    " should contain 'ElementPreview' composable," +
+                    " should contain the tested view" +
+                    " and should be internal."
+            ) {
+                val testedView = it.name.removeSuffix("A11yPreview")
+                it.text.contains("$testedView(") &&
+                    it.hasAllAnnotationsOf(PreviewsDayNight::class).not() &&
+                    it.text.contains("ElementPreview") &&
+                    it.hasInternalModifier
             }
     }
 
@@ -53,12 +76,116 @@ class KonsistPreviewTest {
             }
     }
 
+    private val previewNameExceptions = listOf(
+        "AsyncIndicatorFailurePreview",
+        "AsyncIndicatorLoadingPreview",
+        "BackgroundVerticalGradientDisabledPreview",
+        "BackgroundVerticalGradientEnterprisePreview",
+        "BackgroundVerticalGradientPreview",
+        "ColorAliasesPreview",
+        "DefaultRoomListTopBarWithIndicatorPreview",
+        "FocusedEventEnterprisePreview",
+        "FocusedEventPreview",
+        "GradientFloatingActionButtonCircleShapePreview",
+        "HeaderFooterPageScrollablePreview",
+        "IconsCompoundPreview",
+        "IconsOtherPreview",
+        "MarkdownTextComposerEditPreview",
+        "MatrixBadgeAtomInfoPreview",
+        "MatrixBadgeAtomNegativePreview",
+        "MatrixBadgeAtomNeutralPreview",
+        "MatrixBadgeAtomPositivePreview",
+        "MentionSpanThemeInTimelinePreview",
+        "MessageComposerViewVoicePreview",
+        "MessagesReactionButtonAddPreview",
+        "MessagesReactionButtonExtraPreview",
+        "MessagesViewWithIdentityChangePreview",
+        "PendingMemberRowWithLongNamePreview",
+        "PinUnlockViewInAppPreview",
+        "PollAnswerViewDisclosedNotSelectedPreview",
+        "PollAnswerViewDisclosedSelectedPreview",
+        "PollAnswerViewEndedSelectedPreview",
+        "PollAnswerViewEndedWinnerNotSelectedPreview",
+        "PollAnswerViewEndedWinnerSelectedPreview",
+        "PollAnswerViewUndisclosedNotSelectedPreview",
+        "PollAnswerViewUndisclosedSelectedPreview",
+        "PollContentViewCreatorEditablePreview",
+        "PollContentViewCreatorEndedPreview",
+        "PollContentViewCreatorPreview",
+        "PollContentViewDisclosedPreview",
+        "PollContentViewEndedPreview",
+        "PollContentViewUndisclosedPreview",
+        "ReadReceiptBottomSheetPreview",
+        "RoomMemberListViewBannedPreview",
+        "SasEmojisPreview",
+        "SecureBackupSetupViewChangePreview",
+        "SelectedUserCannotRemovePreview",
+        "SpaceMembersViewNoHeroesPreview",
+        "TextComposerAddCaptionPreview",
+        "TextComposerCaptionPreview",
+        "TextComposerEditCaptionPreview",
+        "TextComposerEditNotEncryptedPreview",
+        "TextComposerEditPreview",
+        "TextComposerFormattingNotEncryptedPreview",
+        "TextComposerFormattingPreview",
+        "TextComposerLinkDialogCreateLinkPreview",
+        "TextComposerLinkDialogCreateLinkWithoutTextPreview",
+        "TextComposerLinkDialogEditLinkPreview",
+        "TextComposerReplyPreview",
+        "TextComposerSimpleNotEncryptedPreview",
+        "TextComposerSimplePreview",
+        "TextComposerVoiceNotEncryptedPreview",
+        "TextComposerVoicePreview",
+        "TextFieldDialogWithErrorPreview",
+        "TimelineImageWithCaptionRowPreview",
+        "TimelineItemEventRowForDirectRoomPreview",
+        "TimelineItemEventRowShieldPreview",
+        "TimelineItemEventRowTimestampPreview",
+        "TimelineItemEventRowUtdPreview",
+        "TimelineItemEventRowWithManyReactionsPreview",
+        "TimelineItemEventRowWithRRPreview",
+        "TimelineItemEventRowWithReplyPreview",
+        "TimelineItemEventRowWithThreadSummaryPreview",
+        "TimelineItemGroupedEventsRowContentCollapsePreview",
+        "TimelineItemGroupedEventsRowContentExpandedPreview",
+        "TimelineItemImageViewHideMediaContentPreview",
+        "TimelineItemVideoViewHideMediaContentPreview",
+        "TimelineItemVoiceViewUnifiedPreview",
+        "TimelineVideoWithCaptionRowPreview",
+        "TimelineViewMessageShieldPreview",
+        "UserAvatarColorsPreview",
+        "UserProfileHeaderSectionWithVerificationViolationPreview",
+        "VoiceItemViewPlayPreview",
+    )
+
+    @Test
+    fun `previewNameExceptions is sorted alphabetically`() {
+        assertThat(previewNameExceptions.sorted()).isEqualTo(previewNameExceptions)
+    }
+
+    @Test
+    fun `previewNameExceptions only contains existing functions`() {
+        val names = previewNameExceptions.toMutableSet()
+        Konsist
+            .scopeFromProject()
+            .functions()
+            .withAllAnnotationsOf(PreviewsDayNight::class)
+            .withName(previewNameExceptions)
+            .let {
+                it.forEach { function ->
+                    names.remove(function.name)
+                }
+            }
+        assertThat(names).isEmpty()
+    }
+
     @Test
     fun `Functions with '@PreviewsDayNight' have correct name`() {
         Konsist
             .scopeFromProject()
             .functions()
             .withAllAnnotationsOf(PreviewsDayNight::class)
+<<<<<<< HEAD
             .withoutName(
                 "AsyncIndicatorFailurePreview",
                 "AsyncIndicatorLoadingPreview",
@@ -147,14 +274,22 @@ class KonsistPreviewTest {
             .withoutPackage(
                 "de.bwi.messenger.features.messages.impl.timeline.components.event"
             )
+=======
+            .withoutName(previewNameExceptions)
+>>>>>>> main
             .assertTrue(
                 additionalMessage = "Functions for Preview should be named like this: <ViewUnderPreview>Preview. " +
                     "Exception can be added to the test, for multiple Previews of the same view",
             ) {
-                val testedView = it.name.removeSuffix("Preview")
-                it.text.contains("$testedView(") ||
-                    it.text.contains("$testedView {") ||
-                    it.text.contains("ContentToPreview(")
+                val testedView = if (it.name.endsWith("RtlPreview")) {
+                    it.name.removeSuffix("RtlPreview")
+                } else {
+                    it.name.removeSuffix("Preview")
+                }
+                it.name.endsWith("Preview") &&
+                    (it.text.contains("$testedView(") ||
+                        it.text.contains("$testedView {") ||
+                        it.text.contains("ContentToPreview("))
             }
     }
 

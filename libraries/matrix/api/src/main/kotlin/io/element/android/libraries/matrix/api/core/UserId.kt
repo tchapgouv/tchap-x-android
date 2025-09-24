@@ -28,4 +28,7 @@ value class UserId(val value: String) : Serializable {
 
     val extractedDisplayName: String
         get() = value.toUserDisplayName() // TCHAP hide the Matrix Id
+
+    val domainName: String?
+        get() = value.substringAfter(":").takeIf { it.isNotEmpty() }
 }

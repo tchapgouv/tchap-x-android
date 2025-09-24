@@ -14,16 +14,13 @@ import com.google.common.truth.Truth.assertThat
 import io.element.android.appnav.root.RootPresenter
 import io.element.android.features.rageshake.api.crash.aCrashDetectionState
 import io.element.android.features.rageshake.api.detection.aRageshakeDetectionState
-import io.element.android.features.share.api.ShareService
-import io.element.android.features.share.test.FakeShareService
 import io.element.android.libraries.matrix.test.FakeSdkMetadata
 import io.element.android.services.analytics.test.FakeAnalyticsService
 import io.element.android.services.apperror.api.AppErrorState
 import io.element.android.services.apperror.api.AppErrorStateService
 import io.element.android.services.apperror.impl.DefaultAppErrorStateService
+import io.element.android.services.toolbox.test.strings.FakeStringProvider
 import io.element.android.tests.testutils.WarmUpRule
-import io.element.android.tests.testutils.lambda.lambdaRecorder
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -44,25 +41,11 @@ class RootPresenterTest {
     }
 
     @Test
-    fun `present - check that share service is invoked`() = runTest {
-        val lambda = lambdaRecorder<CoroutineScope, Unit> { _ -> }
-        val presenter = createRootPresenter(
-            shareService = FakeShareService {
-                lambda(it)
-            }
-        )
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
-            skipItems(1)
-            lambda.assertions().isCalledOnce()
-        }
-    }
-
-    @Test
     fun `present - passes app error state`() = runTest {
         val presenter = createRootPresenter(
-            appErrorService = DefaultAppErrorStateService().apply {
+            appErrorService = DefaultAppErrorStateService(
+                stringProvider = FakeStringProvider(),
+            ).apply {
                 showError("Bad news", "Something bad happened")
             }
         )
@@ -81,15 +64,15 @@ class RootPresenterTest {
     }
 
     private fun createRootPresenter(
-        appErrorService: AppErrorStateService = DefaultAppErrorStateService(),
-        shareService: ShareService = FakeShareService {},
+        appErrorService: AppErrorStateService = DefaultAppErrorStateService(
+            stringProvider = FakeStringProvider(),
+        ),
     ): RootPresenter {
         return RootPresenter(
             crashDetectionPresenter = { aCrashDetectionState() },
             rageshakeDetectionPresenter = { aRageshakeDetectionState() },
             appErrorStateService = appErrorService,
             analyticsService = FakeAnalyticsService(),
-            shareService = shareService,
             sdkMetadata = FakeSdkMetadata("sha")
         )
     }

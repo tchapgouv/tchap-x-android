@@ -8,7 +8,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import extension.allFeaturesApi
-import extension.setupAnvil
+import extension.setupDependencyInjection
 
 plugins {
     id("io.element.android-compose-library")
@@ -19,7 +19,7 @@ android {
     namespace = "io.element.android.appnav"
 }
 
-setupAnvil()
+setupDependencyInjection()
 
 dependencies {
     allFeaturesApi(project)
@@ -27,7 +27,7 @@ dependencies {
     implementation(projects.libraries.core)
     implementation(projects.libraries.androidutils)
     implementation(projects.libraries.architecture)
-    implementation(projects.libraries.deeplink)
+    implementation(projects.libraries.deeplink.api)
     implementation(projects.libraries.matrix.api)
     implementation(projects.libraries.oidc.api)
     implementation(projects.libraries.preferences.api)
@@ -36,6 +36,7 @@ dependencies {
     implementation(projects.libraries.designsystem)
     implementation(projects.libraries.matrixui)
     implementation(projects.libraries.uiStrings)
+    implementation(projects.features.login.api)
 
     implementation(libs.coil)
 
@@ -62,9 +63,9 @@ dependencies {
     testImplementation(projects.features.networkmonitor.test)
     testImplementation(projects.tests.testutils)
     testImplementation(projects.features.rageshake.test)
-    testImplementation(projects.features.share.test)
     testImplementation(projects.services.appnavstate.test)
     testImplementation(projects.services.analytics.test)
+    testImplementation(projects.services.toolbox.test)
     testImplementation(libs.test.appyx.junit)
     testImplementation(libs.test.arch.core)
 }

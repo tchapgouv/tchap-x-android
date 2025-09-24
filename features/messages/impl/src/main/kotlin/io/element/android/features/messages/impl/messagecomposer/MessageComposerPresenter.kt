@@ -24,10 +24,9 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.media3.common.util.UnstableApi
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.Inject
 import im.vector.app.features.analytics.plan.Composer
 import im.vector.app.features.analytics.plan.Interaction
 import io.element.android.features.location.api.LocationService
@@ -45,8 +44,7 @@ import io.element.android.libraries.core.mimetype.MimeTypes
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
+import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.permalink.PermalinkBuilder
 import io.element.android.libraries.matrix.api.permalink.PermalinkParser
@@ -54,18 +52,20 @@ import io.element.android.libraries.matrix.api.room.IntentionalMention
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.draft.ComposerDraft
 import io.element.android.libraries.matrix.api.room.draft.ComposerDraftType
+import io.element.android.libraries.matrix.api.room.getDirectRoomMember
 import io.element.android.libraries.matrix.api.room.isDm
-import io.element.android.libraries.matrix.api.room.message.ReplyParameters
 import io.element.android.libraries.matrix.api.timeline.TimelineException
 import io.element.android.libraries.matrix.api.timeline.item.event.toEventOrTransactionId
 import io.element.android.libraries.matrix.ui.messages.reply.InReplyToDetails
 import io.element.android.libraries.matrix.ui.messages.reply.map
 import io.element.android.libraries.mediapickers.api.PickerProvider
+import io.element.android.libraries.mediaupload.api.MediaOptimizationConfigProvider
 import io.element.android.libraries.mediaupload.api.MediaSender
 import io.element.android.libraries.mediaviewer.api.local.LocalMediaFactory
 import io.element.android.libraries.permissions.api.PermissionsEvents
 import io.element.android.libraries.permissions.api.PermissionsPresenter
 import io.element.android.libraries.preferences.api.store.SessionPreferencesStore
+import io.element.android.libraries.push.api.notifications.conversations.NotificationConversationService
 import io.element.android.libraries.textcomposer.mentions.MentionSpanProvider
 import io.element.android.libraries.textcomposer.mentions.ResolvedSuggestion
 import io.element.android.libraries.textcomposer.model.MarkdownTextEditorState
@@ -97,16 +97,16 @@ import timber.log.Timber
 import kotlin.time.Duration.Companion.seconds
 import io.element.android.libraries.core.mimetype.MimeTypes.Any as AnyMimeTypes
 
-class MessageComposerPresenter @AssistedInject constructor(
+@Inject
+class MessageComposerPresenter(
     @Assisted private val navigator: MessagesNavigator,
-    @SessionCoroutineScope
-    private val sessionCoroutineScope: CoroutineScope,
+    @Assisted private val timelineController: TimelineController,
+    @SessionCoroutineScope private val sessionCoroutineScope: CoroutineScope,
     private val room: JoinedRoom,
     private val mediaPickerProvider: PickerProvider,
-    private val featureFlagService: FeatureFlagService,
     private val sessionPreferencesStore: SessionPreferencesStore,
     private val localMediaFactory: LocalMediaFactory,
-    private val mediaSender: MediaSender,
+    private val mediaSenderFactory: MediaSender.Factory,
     private val snackbarDispatcher: SnackbarDispatcher,
     private val analyticsService: AnalyticsService,
     private val locationService: LocationService,
@@ -116,16 +116,19 @@ class MessageComposerPresenter @AssistedInject constructor(
     private val permalinkParser: PermalinkParser,
     private val permalinkBuilder: PermalinkBuilder,
     permissionsPresenterFactory: PermissionsPresenter.Factory,
-    private val timelineController: TimelineController,
     private val draftService: ComposerDraftService,
     private val mentionSpanProvider: MentionSpanProvider,
     private val pillificationHelper: TextPillificationHelper,
     private val suggestionsProcessor: SuggestionsProcessor,
+    private val mediaOptimizationConfigProvider: MediaOptimizationConfigProvider,
+    private val notificationConversationService: NotificationConversationService,
 ) : Presenter<MessageComposerState> {
     @AssistedFactory
     interface Factory {
-        fun create(navigator: MessagesNavigator): MessageComposerPresenter
+        fun create(timelineController: TimelineController, navigator: MessagesNavigator): MessageComposerPresenter
     }
+
+    private val mediaSender = mediaSenderFactory.create(timelineMode = timelineController.mainTimelineMode())
 
     private val cameraPermissionPresenter = permissionsPresenterFactory.create(Manifest.permission.CAMERA)
     private var pendingEvent: MessageComposerEvents? = null
@@ -155,20 +158,14 @@ class MessageComposerPresenter @AssistedInject constructor(
 
         val canShareLocation = remember { mutableStateOf(false) }
         LaunchedEffect(Unit) {
-            canShareLocation.value = featureFlagService.isFeatureEnabled(FeatureFlags.LocationSharing) &&
-                locationService.isServiceAvailable()
-        }
-
-        val canCreatePoll = remember { mutableStateOf(false) }
-        LaunchedEffect(Unit) {
-            canCreatePoll.value = featureFlagService.isFeatureEnabled(FeatureFlags.Polls)
+            canShareLocation.value = locationService.isServiceAvailable()
         }
 
         val galleryMediaPicker = mediaPickerProvider.registerGalleryPicker { uri, mimeType ->
             handlePickedMedia(uri, mimeType)
         }
-        val filesPicker = mediaPickerProvider.registerFilePicker(AnyMimeTypes) { uri ->
-            handlePickedMedia(uri, MimeTypes.OctetStream)
+        val filesPicker = mediaPickerProvider.registerFilePicker(AnyMimeTypes) { uri, mimeType ->
+            handlePickedMedia(uri, mimeType ?: MimeTypes.OctetStream)
         }
         val cameraPhotoPicker = mediaPickerProvider.registerCameraPhotoPicker { uri ->
             handlePickedMedia(uri, MimeTypes.Jpeg)
@@ -248,16 +245,23 @@ class MessageComposerPresenter @AssistedInject constructor(
                         richTextEditorState = richTextEditorState,
                     )
                 }
-                is MessageComposerEvents.SendUri -> sessionCoroutineScope.sendAttachment(
-                    attachment = Attachment.Media(
-                        localMedia = localMediaFactory.createFromUri(
-                            uri = event.uri,
-                            mimeType = null,
-                            name = null,
-                            formattedFileSize = null
+                is MessageComposerEvents.SendUri -> {
+                    val inReplyToEventId = (messageComposerContext.composerMode as? MessageComposerMode.Reply)?.eventId
+                    sessionCoroutineScope.sendAttachment(
+                        attachment = Attachment.Media(
+                            localMedia = localMediaFactory.createFromUri(
+                                uri = event.uri,
+                                mimeType = null,
+                                name = null,
+                                formattedFileSize = null
+                            ),
                         ),
-                    ),
-                )
+                        inReplyToEventId = inReplyToEventId,
+                    )
+
+                    // Reset composer since the attachment has been sent
+                    messageComposerContext.composerMode = MessageComposerMode.Normal
+                }
                 is MessageComposerEvents.SetMode -> {
                     localCoroutineScope.setMode(event.composerMode, markdownTextEditorState, richTextEditorState)
                 }
@@ -375,7 +379,6 @@ class MessageComposerPresenter @AssistedInject constructor(
             showAttachmentSourcePicker = showAttachmentSourcePicker,
             showTextFormatting = showTextFormatting,
             canShareLocation = canShareLocation.value,
-            canCreatePoll = canCreatePoll.value,
             suggestions = suggestions.toPersistentList(),
             resolveMentionDisplay = resolveMentionDisplay,
             resolveAtRoomMentionDisplay = resolveAtRoomMentionDisplay,
@@ -432,11 +435,13 @@ class MessageComposerPresenter @AssistedInject constructor(
         resetComposer(markdownTextEditorState, richTextEditorState, fromEdit = capturedMode is MessageComposerMode.Edit)
         when (capturedMode) {
             is MessageComposerMode.Attachment,
-            is MessageComposerMode.Normal -> room.liveTimeline.sendMessage(
-                body = message.markdown,
-                htmlBody = message.html,
-                intentionalMentions = message.intentionalMentions
-            )
+            is MessageComposerMode.Normal -> timelineController.invokeOnCurrentTimeline {
+                sendMessage(
+                    body = message.markdown,
+                    htmlBody = message.html,
+                    intentionalMentions = message.intentionalMentions
+                )
+            }
             is MessageComposerMode.Edit -> {
                 timelineController.invokeOnCurrentTimeline {
                     // First try to edit the message in the current timeline
@@ -466,17 +471,24 @@ class MessageComposerPresenter @AssistedInject constructor(
                             body = message.markdown,
                             htmlBody = message.html,
                             intentionalMentions = message.intentionalMentions,
-                            replyParameters = ReplyParameters(
-                                inReplyToEventId = eventId,
-                                enforceThreadReply = inThread,
-                                // This should be false until we add a way to make a reply in a thread an explicit reply to the provided eventId
-                                replyWithinThread = false,
-                            ),
+                            repliedToEventId = eventId,
                         )
                     }
                 }
             }
         }
+
+        val roomInfo = room.info()
+        val roomMembers = room.membersStateFlow.value
+
+        notificationConversationService.onSendMessage(
+            sessionId = room.sessionId,
+            roomId = roomInfo.id,
+            roomName = roomInfo.name ?: roomInfo.id.value,
+            roomIsDirect = roomInfo.isDm,
+            roomAvatarUrl = roomInfo.avatarUrl ?: roomMembers.getDirectRoomMember(roomInfo = roomInfo, sessionId = room.sessionId)?.avatarUrl,
+        )
+
         analyticsService.capture(
             Composer(
                 inThread = capturedMode.inThread,
@@ -490,18 +502,19 @@ class MessageComposerPresenter @AssistedInject constructor(
 
     private fun CoroutineScope.sendAttachment(
         attachment: Attachment,
+        inReplyToEventId: EventId?,
     ) = when (attachment) {
         is Attachment.Media -> {
             launch {
                 sendMedia(
                     uri = attachment.localMedia.uri,
                     mimeType = attachment.localMedia.info.mimeType,
+                    inReplyToEventId = inReplyToEventId,
                 )
             }
         }
     }
 
-    @UnstableApi
     private fun handlePickedMedia(
         uri: Uri?,
         mimeType: String? = null,
@@ -514,17 +527,23 @@ class MessageComposerPresenter @AssistedInject constructor(
             formattedFileSize = null
         )
         val mediaAttachment = Attachment.Media(localMedia)
-        navigator.onPreviewAttachment(persistentListOf(mediaAttachment))
+        val inReplyToEventId = (messageComposerContext.composerMode as? MessageComposerMode.Reply)?.eventId
+        navigator.onPreviewAttachment(persistentListOf(mediaAttachment), inReplyToEventId)
+
+        // Reset composer since the attachment will be sent in a separate flow
+        messageComposerContext.composerMode = MessageComposerMode.Normal
     }
 
     private suspend fun sendMedia(
         uri: Uri,
         mimeType: String,
+        inReplyToEventId: EventId?,
     ) = runCatchingExceptions {
         mediaSender.sendMedia(
             uri = uri,
             mimeType = mimeType,
-            progressCallback = null,
+            mediaOptimizationConfig = mediaOptimizationConfigProvider.get(),
+            inReplyToEventId = inReplyToEventId,
         ).getOrThrow()
     }
         .onFailure { cause ->

@@ -17,7 +17,6 @@ import io.element.android.features.rageshake.api.RageshakeFeatureAvailability
 import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.core.meta.BuildType
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarDispatcher
-import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.indicator.api.IndicatorService
 import io.element.android.libraries.indicator.test.FakeIndicatorService
 import io.element.android.libraries.matrix.api.oidc.AccountManagementAction
@@ -33,6 +32,7 @@ import io.element.android.tests.testutils.lambda.lambdaRecorder
 import io.element.android.tests.testutils.lambda.value
 import io.element.android.tests.testutils.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -77,8 +77,6 @@ class PreferencesRootPresenterTest {
             assertThat(loadedState.devicesManagementUrl).isNull()
             assertThat(loadedState.showAnalyticsSettings).isFalse()
             assertThat(loadedState.showDeveloperSettings).isTrue()
-            assertThat(loadedState.showLockScreenSettings).isTrue()
-            assertThat(loadedState.showNotificationSettings).isTrue()
             assertThat(loadedState.canDeactivateAccount).isTrue()
             assertThat(loadedState.canReportBug).isTrue()
             assertThat(loadedState.directLogoutState).isEqualTo(aDirectLogoutState())
@@ -103,7 +101,7 @@ class PreferencesRootPresenterTest {
         )
         createPresenter(
             matrixClient = matrixClient,
-            rageshakeFeatureAvailability = { false },
+            rageshakeFeatureAvailability = { flowOf(false) },
         ).test {
             val initialState = awaitItem()
             assertThat(initialState.canReportBug).isFalse()
@@ -120,7 +118,7 @@ class PreferencesRootPresenterTest {
         val indicatorService = FakeIndicatorService()
         createPresenter(
             matrixClient = matrixClient,
-            rageshakeFeatureAvailability = { false },
+            rageshakeFeatureAvailability = { flowOf(false) },
             indicatorService = indicatorService,
         ).test {
             skipItems(1)
@@ -187,7 +185,7 @@ class PreferencesRootPresenterTest {
         matrixClient: FakeMatrixClient = FakeMatrixClient(),
         sessionVerificationService: FakeSessionVerificationService = FakeSessionVerificationService(),
         showDeveloperSettingsProvider: ShowDeveloperSettingsProvider = ShowDeveloperSettingsProvider(aBuildMeta(BuildType.DEBUG)),
-        rageshakeFeatureAvailability: RageshakeFeatureAvailability = RageshakeFeatureAvailability { true },
+        rageshakeFeatureAvailability: RageshakeFeatureAvailability = RageshakeFeatureAvailability { flowOf(true) },
         indicatorService: IndicatorService = FakeIndicatorService(),
     ) = PreferencesRootPresenter(
         buildMeta = buildMeta,
@@ -196,7 +194,6 @@ class PreferencesRootPresenterTest {
         analyticsService = FakeAnalyticsService(),
         versionFormatter = FakeVersionFormatter(),
         snackbarDispatcher = SnackbarDispatcher(),
-        featureFlagService = FakeFeatureFlagService(),
         indicatorService = indicatorService,
         directLogoutPresenter = { aDirectLogoutState() },
         showDeveloperSettingsProvider = showDeveloperSettingsProvider,

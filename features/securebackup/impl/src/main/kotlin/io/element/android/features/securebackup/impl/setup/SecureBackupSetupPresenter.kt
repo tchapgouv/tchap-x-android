@@ -18,9 +18,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.freeletics.flowredux.compose.StateAndDispatch
 import com.freeletics.flowredux.compose.rememberStateAndDispatch
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.Inject
 import io.element.android.features.securebackup.impl.loggerTagSetup
 import io.element.android.features.securebackup.impl.setup.views.RecoveryKeyUserStory
 import io.element.android.features.securebackup.impl.setup.views.RecoveryKeyViewState
@@ -32,7 +32,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class SecureBackupSetupPresenter @AssistedInject constructor(
+@Inject
+class SecureBackupSetupPresenter(
     @Assisted private val isChangeRecoveryKeyUserStory: Boolean,
     private val stateMachine: SecureBackupSetupStateMachine,
     private val encryptionService: EncryptionService,
@@ -60,6 +61,7 @@ class SecureBackupSetupPresenter @AssistedInject constructor(
                     stateAndDispatch.dispatchAction(SecureBackupSetupStateMachine.Event.UserSavedKey)
                 SecureBackupSetupEvents.DismissDialog -> {
                     showSaveConfirmationDialog = false
+                    stateAndDispatch.dispatchAction(SecureBackupSetupStateMachine.Event.ClearError)
                 }
                 SecureBackupSetupEvents.Done -> {
                     showSaveConfirmationDialog = true
@@ -70,6 +72,7 @@ class SecureBackupSetupPresenter @AssistedInject constructor(
         val recoveryKeyViewState = RecoveryKeyViewState(
             recoveryKeyUserStory = if (isChangeRecoveryKeyUserStory) RecoveryKeyUserStory.Change else RecoveryKeyUserStory.Setup,
             formattedRecoveryKey = setupState.recoveryKey(),
+            displayTextFieldContents = true,
             inProgress = setupState is SetupState.Creating,
         )
 
@@ -89,6 +92,7 @@ class SecureBackupSetupPresenter @AssistedInject constructor(
             SecureBackupSetupStateMachine.State.CreatingKey -> SetupState.Creating
             is SecureBackupSetupStateMachine.State.KeyCreated -> SetupState.Created(formattedRecoveryKey = key)
             is SecureBackupSetupStateMachine.State.KeyCreatedAndSaved -> SetupState.CreatedAndSaved(formattedRecoveryKey = key)
+            is SecureBackupSetupStateMachine.State.Error -> SetupState.Error(exception)
         }
     }
 
@@ -103,13 +107,20 @@ class SecureBackupSetupPresenter @AssistedInject constructor(
                     stateAndDispatch.dispatchAction(SecureBackupSetupStateMachine.Event.SdkHasCreatedKey(it))
                 },
                 onFailure = {
-                    stateAndDispatch.dispatchAction(SecureBackupSetupStateMachine.Event.SdkError(it))
+                    if (it is Exception) {
+                        stateAndDispatch.dispatchAction(SecureBackupSetupStateMachine.Event.SdkError(it))
+                    }
                 }
             )
         } else {
             observeEncryptionService(stateAndDispatch)
             Timber.tag(loggerTagSetup.value).d("Calling encryptionService.enableRecovery()")
-            encryptionService.enableRecovery(waitForBackupsToUpload = false)
+            encryptionService.enableRecovery(waitForBackupsToUpload = false).onFailure {
+                Timber.tag(loggerTagSetup.value).e(it, "Failed to enable recovery")
+                if (it is Exception) {
+                    stateAndDispatch.dispatchAction(SecureBackupSetupStateMachine.Event.SdkError(it))
+                }
+            }
         }
     }
 

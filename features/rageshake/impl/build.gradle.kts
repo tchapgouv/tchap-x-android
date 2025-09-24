@@ -1,4 +1,4 @@
-import extension.setupAnvil
+import extension.setupDependencyInjection
 
 /*
  * Copyright 2022-2024 New Vector Ltd.
@@ -22,16 +22,18 @@ android {
     }
 }
 
-setupAnvil()
+setupDependencyInjection()
 
 dependencies {
     implementation(projects.appconfig)
+    implementation(projects.features.enterprise.api)
     implementation(projects.services.toolbox.api)
     implementation(projects.libraries.androidutils)
     implementation(projects.libraries.core)
     implementation(projects.libraries.network)
     implementation(projects.libraries.architecture)
     implementation(projects.libraries.designsystem)
+    implementation(projects.libraries.preferences.api)
     implementation(projects.libraries.uiStrings)
     implementation(projects.libraries.sessionStorage.api)
     implementation(projects.libraries.matrix.api)
@@ -50,10 +52,11 @@ dependencies {
     testImplementation(libs.test.truth)
     testImplementation(libs.test.turbine)
     testImplementation(libs.test.mockk)
+    testImplementation(projects.features.enterprise.test)
     testImplementation(projects.libraries.matrix.test)
-    testImplementation(projects.libraries.sessionStorage.implMemory)
     testImplementation(projects.libraries.sessionStorage.test)
     testImplementation(projects.features.rageshake.test)
+    testImplementation(projects.libraries.preferences.test)
     testImplementation(projects.tests.testutils)
     testImplementation(projects.services.toolbox.test)
     testImplementation(libs.network.mockwebserver)

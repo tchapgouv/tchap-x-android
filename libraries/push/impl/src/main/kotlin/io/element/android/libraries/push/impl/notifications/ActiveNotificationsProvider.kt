@@ -9,12 +9,14 @@ package io.element.android.libraries.push.impl.notifications
 
 import android.service.notification.StatusBarNotification
 import androidx.core.app.NotificationManagerCompat
-import com.squareup.anvil.annotations.ContributesBinding
-import io.element.android.libraries.di.AppScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import io.element.android.libraries.core.extensions.runCatchingExceptions
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.SessionId
 import io.element.android.libraries.push.api.notifications.NotificationIdProvider
-import javax.inject.Inject
+import timber.log.Timber
 
 interface ActiveNotificationsProvider {
     fun getMessageNotificationsForRoom(sessionId: SessionId, roomId: RoomId): List<StatusBarNotification>
@@ -26,11 +28,17 @@ interface ActiveNotificationsProvider {
 }
 
 @ContributesBinding(AppScope::class)
-class DefaultActiveNotificationsProvider @Inject constructor(
+@Inject
+class DefaultActiveNotificationsProvider(
     private val notificationManager: NotificationManagerCompat,
 ) : ActiveNotificationsProvider {
     override fun getNotificationsForSession(sessionId: SessionId): List<StatusBarNotification> {
-        return notificationManager.activeNotifications.filter { it.notification.group == sessionId.value }
+        return runCatchingExceptions { notificationManager.activeNotifications }
+            .onFailure {
+                Timber.e(it, "Failed to get active notifications")
+            }
+            .getOrElse { emptyList() }
+            .filter { it.notification.group == sessionId.value }
     }
 
     override fun getMembershipNotificationForSession(sessionId: SessionId): List<StatusBarNotification> {

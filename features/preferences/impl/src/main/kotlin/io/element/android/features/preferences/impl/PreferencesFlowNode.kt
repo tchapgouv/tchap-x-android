@@ -17,9 +17,9 @@ import com.bumble.appyx.core.plugin.plugins
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.pop
 import com.bumble.appyx.navmodel.backstack.operation.push
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
-import io.element.android.anvilannotations.ContributesNode
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.Inject
+import io.element.android.annotations.ContributesNode
 import io.element.android.features.deactivation.api.AccountDeactivationEntryPoint
 import io.element.android.features.licenses.api.OpenSourceLicensesEntryPoint
 import io.element.android.features.lockscreen.api.LockScreenEntryPoint
@@ -48,7 +48,8 @@ import io.element.android.libraries.troubleshoot.api.PushHistoryEntryPoint
 import kotlinx.parcelize.Parcelize
 
 @ContributesNode(SessionScope::class)
-class PreferencesFlowNode @AssistedInject constructor(
+@Inject
+class PreferencesFlowNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
     private val lockScreenEntryPoint: LockScreenEntryPoint,
@@ -167,7 +168,12 @@ class PreferencesFlowNode @AssistedInject constructor(
                 createNode<PreferencesRootNode>(buildContext, plugins = listOf(callback))
             }
             NavTarget.DeveloperSettings -> {
-                createNode<DeveloperSettingsNode>(buildContext)
+                val developerSettingsCallback = object : DeveloperSettingsNode.Callback {
+                    override fun onPushHistoryClick() {
+                        backstack.push(NavTarget.PushHistory)
+                    }
+                }
+                createNode<DeveloperSettingsNode>(buildContext, listOf(developerSettingsCallback))
             }
             NavTarget.About -> {
                 val callback = object : AboutNode.Callback {
@@ -188,10 +194,6 @@ class PreferencesFlowNode @AssistedInject constructor(
 
                     override fun onTroubleshootNotificationsClick() {
                         backstack.push(NavTarget.TroubleshootNotifications)
-                    }
-
-                    override fun onPushHistoryClick() {
-                        backstack.push(NavTarget.PushHistory)
                     }
                 }
                 createNode<NotificationSettingsNode>(buildContext, listOf(notificationSettingsCallback))
