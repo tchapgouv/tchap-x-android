@@ -197,7 +197,7 @@ android {
         create("devTchap") {
             dimension = "target"
 
-            resValue("string", "app_name", "DevTchap")
+            resValue("string", "app_name", "DevTchap X beta")
 
             applicationIdSuffix = ".dev"
             versionNameSuffix = "_dev"
@@ -205,7 +205,7 @@ android {
         create("btchap") {
             dimension = "target"
 
-            resValue("string", "app_name", "Btchap")
+            resValue("string", "app_name", "Btchap X beta")
 
             applicationIdSuffix = ".staging"
             versionNameSuffix = "_b"
@@ -213,7 +213,7 @@ android {
         create("tchap") {
             dimension = "target"
 
-            resValue("string", "app_name", "Tchap")
+            resValue("string", "app_name", "Tchap X beta")
         }
     }
 }
