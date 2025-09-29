@@ -26,6 +26,7 @@ object NotificationConfig {
      */
     const val SHOW_QUICK_REPLY_ACTION = true
 
+    // val NOTIFICATION_ACCENT_COLOR: Int = Color.parseColor("#FF0DBD8B")
     @ColorInt
-    val NOTIFICATION_ACCENT_COLOR: Int = Color.parseColor("#FF0DBD8B")
+    val NOTIFICATION_ACCENT_COLOR: Int = Color.parseColor("#a1003cbd") // TCHAP specific notification color
 }

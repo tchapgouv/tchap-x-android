@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2024. DINUM
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  ~ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+  ~ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+  ~ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+  ~ OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="432"
+    android:viewportHeight="432">
+    <group android:scaleX="0.6328767"
+        android:scaleY="0.6328767"
+        android:translateX="80.564384"
+        android:translateY="81.564384">
+        <path
+        android:pathData="M335.87,147.27C335.87,144.45 334.36,141.84 331.92,140.43L219.64,75.46C217.19,74.04 214.17,74.04 211.72,75.46L99.44,140.43C97,141.84 95.49,144.45 95.49,147.27V277.25C95.49,280.07 97,282.68 99.44,284.09L184.43,333.24C186.88,334.66 188.38,337.27 188.38,340.09V361.81C188.38,364.25 191.03,365.77 193.13,364.54L230,343.07L331.92,284.09C334.37,282.68 335.87,280.07 335.87,277.25V147.27Z"
+        android:fillColor="#ffffff"/>
+    <path
+        android:pathData="M205.85,167.92H226.56V288.46H205.85V167.92Z"
+        android:fillColor="#C83F49"/>
+    <path
+        android:pathData="M168.12,207.91H147.41V157.54H289.96V178.29H168.12V207.91Z"
+        android:fillColor="#C83F49"/>
+  </group>
+</vector>
