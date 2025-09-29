@@ -121,16 +121,21 @@ class RustMatrixClientFactory @Inject constructor(
         // TCHAP : Disable Root Certificates & add in-app Certificates when ENABLE_CERTIFICATE_PINNING (withpinning) is enabled
         if (BuildConfig.ENABLE_CERTIFICATE_PINNING) {
             try {
-                val certificateByteArray = context.resources.openRawResource(R.raw.certignaservicesrootca).use { inputStream ->
-                    inputStream.readBytes()
-                }
-                val certificateEUByteArray = context.resources.openRawResource(R.raw.certignaserviceseurootca).use { inputStream ->
-                    inputStream.readBytes()
+                val certificatesRessources = listOf(
+                    R.raw.certignaservicesrootca,
+                    R.raw.certignaserviceseurootca,
+                )
+                val certificatesList = mutableListOf<ByteArray>()
+
+                certificatesRessources.listIterator().forEach {
+                    certificatesList.add(context.resources.openRawResource(it).use { inputStream ->
+                        inputStream.readBytes()
+                    })
                 }
 
-                if (certificateByteArray.isNotEmpty() && certificateEUByteArray.isNotEmpty()) {
+                if (certificatesList.isNotEmpty()) {
                     builder = builder.disableBuiltInRootCertificates()
-                        .addRootCertificates(listOf(certificateByteArray, certificateEUByteArray))
+                        .addRootCertificates(certificatesList)
                 }
             } catch (e: Exception) {
                 Timber.e(e, "An unexpected error occurred while processing certificate from R.raw.certignaservicesrootca or R.raw.certignaserviceseurootca.")
