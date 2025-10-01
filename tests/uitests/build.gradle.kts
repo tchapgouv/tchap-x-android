@@ -17,6 +17,16 @@ plugins {
 android {
     // Keep it as short as possible
     namespace = "ui"
+
+    flavorDimensions += listOf("pinning")
+    productFlavors {
+        create("withpinning") {
+            dimension = "pinning"
+        }
+        create("withoutpinning") {
+            dimension = "pinning"
+        }
+    }
 }
 
 dependencies {

@@ -7,7 +7,11 @@
 
 package io.element.android.libraries.matrix.impl
 
+import android.content.Context
+import fr.gouv.tchap.android.appcertificates.BuildConfig
+import fr.gouv.tchap.android.appcertificates.R
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
+import io.element.android.libraries.di.ApplicationContext
 import io.element.android.libraries.di.CacheDirectory
 import io.element.android.libraries.di.annotations.AppCoroutineScope
 import io.element.android.libraries.featureflag.api.FeatureFlagService
@@ -40,6 +44,7 @@ import java.io.File
 import javax.inject.Inject
 
 class RustMatrixClientFactory @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val baseDirectory: File,
     @CacheDirectory private val cacheDirectory: File,
     @AppCoroutineScope
@@ -103,7 +108,7 @@ class RustMatrixClientFactory @Inject constructor(
         passphrase: String?,
         slidingSyncType: ClientBuilderSlidingSync,
     ): ClientBuilder {
-        return clientBuilderProvider.provide()
+        var builder = clientBuilderProvider.provide()
             .sessionPaths(
                 dataPath = sessionPaths.fileDirectory.absolutePath,
                 cachePath = sessionPaths.cacheDirectory.absolutePath,
@@ -112,7 +117,32 @@ class RustMatrixClientFactory @Inject constructor(
             .sessionPassphrase(passphrase)
             .userAgent(userAgentProvider.provide())
             .addRootCertificates(userCertificatesProvider.provides())
-            .autoEnableBackups(true)
+
+        // TCHAP : Disable Root Certificates & add in-app Certificates when ENABLE_CERTIFICATE_PINNING (withpinning) is enabled
+        if (BuildConfig.ENABLE_CERTIFICATE_PINNING) {
+            try {
+                val certificatesRessources = listOf(
+                    R.raw.certignaservicesrootca,
+                    R.raw.certignaserviceseurootca,
+                )
+                val certificatesList = mutableListOf<ByteArray>()
+
+                certificatesRessources.listIterator().forEach {
+                    certificatesList.add(context.resources.openRawResource(it).use { inputStream ->
+                        inputStream.readBytes()
+                    })
+                }
+
+                if (certificatesList.isNotEmpty()) {
+                    builder = builder.disableBuiltInRootCertificates()
+                        .addRootCertificates(certificatesList)
+                }
+            } catch (e: Exception) {
+                Timber.e(e, "An unexpected error occurred while processing certificate from R.raw.certignaservicesrootca or R.raw.certignaserviceseurootca.")
+            }
+        }
+
+        return builder.autoEnableBackups(true)
             .autoEnableCrossSigning(true)
             .roomKeyRecipientStrategy(
                 strategy = if (featureFlagService.isFeatureEnabled(FeatureFlags.OnlySignedDeviceIsolationMode)) {

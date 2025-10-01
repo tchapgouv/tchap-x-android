@@ -156,7 +156,7 @@ android {
                 // We upload the universal APK to fix this error:
                 // "App Distribution found more than 1 output file for this variant.
                 // Please contact firebase-support@google.com for help using APK splits with App Distribution."
-                artifactPath = "$rootDir/app/build/outputs/apk/gplayTchap/nightly/app-gplay-tchap-universal-nightly.apk"
+                artifactPath = "$rootDir/app/build/outputs/apk/gplayTchapWithpinning/nightly/app-gplay-tchap-withpinning-universal-nightly.apk"
                 // artifactType = "AAB"
                 // artifactPath = "$rootDir/app/build/outputs/bundle/nightly/app-nightly.aab"
                 releaseNotesFile = "tools/release/ReleaseNotesNightly.md"
@@ -179,7 +179,7 @@ android {
     buildFeatures {
         buildConfig = true
     }
-    flavorDimensions += listOf("store", "target")
+    flavorDimensions += listOf("store", "target", "pinning")
     productFlavors {
         create("gplay") {
             dimension = "store"
@@ -214,6 +214,13 @@ android {
             dimension = "target"
 
             resValue("string", "app_name", "Tchap X beta")
+        }
+
+        create("withpinning") {
+            dimension = "pinning"
+        }
+        create("withoutpinning") {
+            dimension = "pinning"
         }
     }
 }
@@ -285,6 +292,7 @@ dependencies {
     allFeaturesImpl(project)
     implementation(projects.features.migration.api)
     implementation(projects.appnav)
+    implementation(projects.appcertificates)
     implementation(projects.appconfig)
     implementation(projects.libraries.uiStrings)
     implementation(projects.services.analytics.compose)
