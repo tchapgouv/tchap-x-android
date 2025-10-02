@@ -18,8 +18,8 @@ import io.element.android.features.home.impl.search.RoomListSearchState
 import io.element.android.features.home.impl.search.aRoomListSearchState
 import io.element.android.features.invite.api.acceptdecline.AcceptDeclineInviteEvents
 import io.element.android.features.invite.api.acceptdecline.AcceptDeclineInviteState
+import io.element.android.features.leaveroom.api.LeaveRoomEvent
 import io.element.android.features.leaveroom.api.LeaveRoomState
-import io.element.android.features.leaveroom.api.aLeaveRoomState
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
@@ -42,6 +42,7 @@ open class RoomListStateProvider : PreviewParameterProvider<RoomListState> {
             aRoomListState(searchState = aRoomListSearchState(isSearchActive = true, query = "Test")),
             aRoomListState(contentState = aRoomsContentState(securityBannerState = SecurityBannerState.SetUpRecovery)),
             aRoomListState(contentState = aRoomsContentState(batteryOptimizationState = aBatteryOptimizationState(shouldDisplayBanner = true))),
+            aRoomListState(contentState = anEmptyContentState(securityBannerState = SecurityBannerState.RecoveryKeyConfirmation)),
         )
 }
 
@@ -68,6 +69,12 @@ internal fun aRoomListState(
     canReportRoom = canReportRoom,
     eventSink = eventSink,
 )
+
+internal fun aLeaveRoomState(
+    eventSink: (LeaveRoomEvent) -> Unit = {}
+) = object : LeaveRoomState {
+    override val eventSink: (LeaveRoomEvent) -> Unit = eventSink
+}
 
 internal fun anAcceptDeclineInviteState(
     acceptAction: AsyncAction<RoomId> = AsyncAction.Uninitialized,

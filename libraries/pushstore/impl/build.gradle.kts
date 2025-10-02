@@ -1,4 +1,4 @@
-import extension.setupAnvil
+import extension.setupDependencyInjection
 
 /*
  * Copyright 2023, 2024 New Vector Ltd.
@@ -19,14 +19,14 @@ android {
     }
 }
 
-setupAnvil()
+setupDependencyInjection()
 
 dependencies {
-    implementation(libs.dagger)
     implementation(projects.libraries.architecture)
     implementation(projects.libraries.androidutils)
     implementation(projects.libraries.core)
     implementation(projects.libraries.matrix.api)
+    implementation(projects.libraries.preferences.api)
     implementation(projects.libraries.pushstore.api)
     implementation(libs.androidx.corektx)
     implementation(libs.androidx.datastore.preferences)
@@ -38,6 +38,7 @@ dependencies {
     testImplementation(libs.test.turbine)
     testImplementation(libs.coroutines.test)
     testImplementation(projects.libraries.matrix.test)
+    testImplementation(projects.libraries.preferences.test)
     testImplementation(projects.services.appnavstate.test)
     testImplementation(projects.libraries.pushstore.test)
 

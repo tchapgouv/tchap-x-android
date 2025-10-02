@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import dev.zacsweers.metro.Inject
 import io.element.android.features.securebackup.impl.setup.views.RecoveryKeyUserStory
 import io.element.android.features.securebackup.impl.setup.views.RecoveryKeyViewState
 import io.element.android.features.securebackup.impl.tools.RecoveryKeyTools
@@ -24,15 +25,18 @@ import io.element.android.libraries.architecture.runCatchingUpdatingState
 import io.element.android.libraries.matrix.api.encryption.EncryptionService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class SecureBackupEnterRecoveryKeyPresenter @Inject constructor(
+@Inject
+class SecureBackupEnterRecoveryKeyPresenter(
     private val encryptionService: EncryptionService,
     private val recoveryKeyTools: RecoveryKeyTools,
 ) : Presenter<SecureBackupEnterRecoveryKeyState> {
     @Composable
     override fun present(): SecureBackupEnterRecoveryKeyState {
         val coroutineScope = rememberCoroutineScope()
+        var displayRecoveryKeyFieldContents by rememberSaveable {
+            mutableStateOf(false)
+        }
         var recoveryKey by rememberSaveable {
             mutableStateOf("")
         }
@@ -59,6 +63,9 @@ class SecureBackupEnterRecoveryKeyPresenter @Inject constructor(
                     // No need to remove the spaces, the SDK will do it.
                     coroutineScope.submitRecoveryKey(recoveryKey, submitAction)
                 }
+                is SecureBackupEnterRecoveryKeyEvents.ChangeRecoveryKeyFieldContentsVisibility -> {
+                    displayRecoveryKeyFieldContents = event.visible
+                }
             }
         }
 
@@ -66,6 +73,7 @@ class SecureBackupEnterRecoveryKeyPresenter @Inject constructor(
             recoveryKeyViewState = RecoveryKeyViewState(
                 recoveryKeyUserStory = RecoveryKeyUserStory.Enter,
                 formattedRecoveryKey = recoveryKey,
+                displayTextFieldContents = displayRecoveryKeyFieldContents,
                 inProgress = submitAction.value.isLoading(),
             ),
             isSubmitEnabled = recoveryKey.isNotEmpty() && submitAction.value.isUninitialized(),

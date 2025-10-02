@@ -2,7 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="rich_text_editor_a11y_add_attachment">"Přidat přílohu"</string>
   <string name="rich_text_editor_bullet_list">"Přepnout seznam s odrážkami"</string>
-  <string name="rich_text_editor_close_formatting_options">"Zavřít možnosti formátování"</string>
+  <string name="rich_text_editor_close_formatting_options">"Zrušit a zavřít formátování textu"</string>
   <string name="rich_text_editor_code_block">"Přepnout blok kódu"</string>
   <string name="rich_text_editor_composer_caption_placeholder">"Volitelný titulek…"</string>
   <string name="rich_text_editor_composer_encrypted_placeholder">"Šifrovaná zpráva…"</string>
@@ -28,5 +28,6 @@
   <string name="rich_text_editor_remove_link">"Odstranit odkaz"</string>
   <string name="rich_text_editor_unindent">"Zrušit odsazení"</string>
   <string name="rich_text_editor_url_placeholder">"Odkaz"</string>
+  <string name="screen_media_upload_preview_caption_warning">"Titulky nemusí být viditelné pro lidi, kteří používají starší aplikace."</string>
   <string name="screen_room_voice_message_tooltip">"Držte pro nahrávání"</string>
 </resources>

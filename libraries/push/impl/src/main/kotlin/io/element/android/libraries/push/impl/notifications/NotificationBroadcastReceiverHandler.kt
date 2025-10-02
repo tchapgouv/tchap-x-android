@@ -8,6 +8,7 @@
 package io.element.android.libraries.push.impl.notifications
 
 import android.content.Intent
+import dev.zacsweers.metro.Inject
 import io.element.android.libraries.core.log.logger.LoggerTag
 import io.element.android.libraries.di.annotations.AppCoroutineScope
 import io.element.android.libraries.matrix.api.MatrixClientProvider
@@ -17,7 +18,6 @@ import io.element.android.libraries.matrix.api.core.SessionId
 import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.isDm
-import io.element.android.libraries.matrix.api.room.message.replyInThread
 import io.element.android.libraries.matrix.api.timeline.ReceiptType
 import io.element.android.libraries.preferences.api.store.SessionPreferencesStoreFactory
 import io.element.android.libraries.push.api.notifications.NotificationCleaner
@@ -32,11 +32,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.UUID
-import javax.inject.Inject
 
 private val loggerTag = LoggerTag("NotificationBroadcastReceiverHandler", LoggerTag.NotificationLoggerTag)
 
-class NotificationBroadcastReceiverHandler @Inject constructor(
+@Inject
+class NotificationBroadcastReceiverHandler(
     @AppCoroutineScope
     private val appCoroutineScope: CoroutineScope,
     private val matrixClientProvider: MatrixClientProvider,
@@ -173,7 +173,7 @@ class NotificationBroadcastReceiverHandler @Inject constructor(
                 htmlBody = null,
                 intentionalMentions = emptyList(),
                 fromNotification = true,
-                replyParameters = replyInThread(replyToEventId),
+                repliedToEventId = replyToEventId,
             )
         } else {
             room.liveTimeline.sendMessage(

@@ -13,9 +13,9 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.plugin.Plugin
 import com.bumble.appyx.core.plugin.plugins
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
-import io.element.android.anvilannotations.ContributesNode
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.Inject
+import io.element.android.annotations.ContributesNode
 import io.element.android.compound.theme.ForcedDarkElementTheme
 import io.element.android.features.viewfolder.api.TextFileViewer
 import io.element.android.libraries.architecture.inputs
@@ -33,7 +33,8 @@ import io.element.android.libraries.mediaviewer.impl.model.hasEvent
 import io.element.android.services.toolbox.api.systemclock.SystemClock
 
 @ContributesNode(RoomScope::class)
-class MediaViewerNode @AssistedInject constructor(
+@Inject
+class MediaViewerNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
     presenterFactory: MediaViewerPresenter.Factory,
@@ -82,8 +83,9 @@ class MediaViewerNode @AssistedInject constructor(
             }
             when (timelineMode) {
                 null -> timelineMediaGalleryDataSource
-                Timeline.Mode.LIVE,
-                Timeline.Mode.FOCUSED_ON_EVENT -> {
+                Timeline.Mode.Live,
+                is Timeline.Mode.FocusedOnEvent,
+                is Timeline.Mode.Thread -> {
                     // Does timelineMediaGalleryDataSource knows the eventId?
                     val lastData = timelineMediaGalleryDataSource.getLastData().dataOrNull()
                     val isEventKnown = lastData?.hasEvent(eventId) == true
@@ -97,14 +99,14 @@ class MediaViewerNode @AssistedInject constructor(
                         )
                     }
                 }
-                Timeline.Mode.PINNED_EVENTS -> {
+                Timeline.Mode.PinnedEvents -> {
                     focusedTimelineMediaGalleryDataSourceFactory.createFor(
                         eventId = eventId,
                         mediaItem = inputs.toMediaItem(),
                         onlyPinnedEvents = true,
                     )
                 }
-                Timeline.Mode.MEDIA -> timelineMediaGalleryDataSource
+                Timeline.Mode.Media -> timelineMediaGalleryDataSource
             }
         }
     }

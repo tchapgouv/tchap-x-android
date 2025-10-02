@@ -2,16 +2,26 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="a11y_add_reaction">"Reageeri: %1$s"</string>
   <string name="a11y_avatar">"Tunnuspilt"</string>
+  <string name="a11y_collapse_message_text_field">"Vähenda tekstivälja"</string>
   <string name="a11y_delete">"Kustuta"</string>
   <plurals name="a11y_digits_entered">
     <item quantity="one">"%1$d number sisestatud"</item>
     <item quantity="other">"%1$d numbrit sisestatud"</item>
   </plurals>
+  <string name="a11y_edit_avatar">"Muuda tunnuspilti"</string>
+  <string name="a11y_edit_room_address_hint">"Täisaadress saab olema %1$s"</string>
+  <string name="a11y_encryption_details">"Krüptimise üksikasjad"</string>
+  <string name="a11y_expand_message_text_field">"Laienda tekstivälja"</string>
   <string name="a11y_hide_password">"Peida salasõna"</string>
   <string name="a11y_join_call">"Liitu kõnega"</string>
   <string name="a11y_jump_to_bottom">"Mine lõppu"</string>
+  <string name="a11y_move_the_map_to_my_location">"Nihuta kaart minu asukohta"</string>
   <string name="a11y_notifications_mentions_only">"Ainult mainimised"</string>
   <string name="a11y_notifications_muted">"Summutatud"</string>
+  <string name="a11y_notifications_new_mentions">"Uued mainimised"</string>
+  <string name="a11y_notifications_new_messages">"Uued sõnumid"</string>
+  <string name="a11y_notifications_ongoing_call">"Kõne on pooleli"</string>
+  <string name="a11y_other_user_avatar">"Teise kasutaja tunnuspilt"</string>
   <string name="a11y_page_n">"%1$d. lehekülg"</string>
   <string name="a11y_pause">"Peata"</string>
   <string name="a11y_paused_voice_message">"Häälsõnum, kestus:%1$s, praegune asukoht: %2$s"</string>
@@ -30,15 +40,20 @@
   <string name="a11y_read_receipts_tap_to_show_all">"Vaata kõiki"</string>
   <string name="a11y_remove_reaction">"Eemalda reageerimine %1$s emotikoniga"</string>
   <string name="a11y_remove_reaction_with">"Eemalda reageerimine: %1$s"</string>
+  <string name="a11y_room_avatar">"Jututoa tunnuspilt"</string>
   <string name="a11y_send_files">"Saada faile"</string>
+  <string name="a11y_session_verification_time_limited_action_required">"Palun tee see ajapiiranguga toiming, sul on aega üks minut"</string>
   <string name="a11y_show_password">"Näita salasõna"</string>
   <string name="a11y_start_call">"Helista"</string>
+  <string name="a11y_tombstoned_room">"Lõpetatuks märgitud jututuba"</string>
+  <string name="a11y_user_avatar">"Kasutaja tunnuspilt"</string>
   <string name="a11y_user_menu">"Kasutajamenüü"</string>
   <string name="a11y_view_avatar">"Vaata tunnuspilti"</string>
   <string name="a11y_view_details">"Vaata üksikasju"</string>
   <string name="a11y_voice_message">"Häälsõnum, kestus:%1$s"</string>
   <string name="a11y_voice_message_record">"Salvesta häälsõnum."</string>
   <string name="a11y_voice_message_stop_recording">"Lõpeta salvestamine"</string>
+  <string name="a11y_your_avatar">"Sinu tunnuspilt"</string>
   <string name="action_accept">"Nõustu"</string>
   <string name="action_add_caption">"Lisa selgitus"</string>
   <string name="action_add_to_timeline">"Lisa ajajoonele"</string>
@@ -75,6 +90,7 @@
   <string name="action_enable">"Võta kasutusele"</string>
   <string name="action_end_poll">"Lõpeta küsitlus"</string>
   <string name="action_enter_pin">"Sisesta PIN-kood"</string>
+  <string name="action_finish">"Lõpeta"</string>
   <string name="action_forgot_password">"Kas unustasid salasõna?"</string>
   <string name="action_forward">"Edasta"</string>
   <string name="action_go_back">"Tagasi eelmisesse vaatesse"</string>
@@ -97,6 +113,7 @@
   <string name="action_no">"Ei"</string>
   <string name="action_not_now">"Mitte praegu"</string>
   <string name="action_ok">"OK"</string>
+  <string name="action_open_context_menu">"Ava kontekstimenüü"</string>
   <string name="action_open_settings">"Seadistused"</string>
   <string name="action_open_with">"Ava rakendusega"</string>
   <string name="action_pin">"Tõsta esile"</string>
@@ -121,7 +138,9 @@
   <string name="action_save">"Salvesta"</string>
   <string name="action_search">"Otsi"</string>
   <string name="action_send">"Saada"</string>
+  <string name="action_send_edited_message">"Saada muudetud sõnum"</string>
   <string name="action_send_message">"Saada sõnum"</string>
+  <string name="action_send_voice_message">"Saada häälsõnum"</string>
   <string name="action_share">"Jaga"</string>
   <string name="action_share_link">"Jaga linki"</string>
   <string name="action_show">"Näita"</string>
@@ -137,6 +156,7 @@
   <string name="action_tap_for_options">"Valikuteks klõpsa"</string>
   <string name="action_try_again">"Proovi uuesti"</string>
   <string name="action_unpin">"Eemalda esiletõstmine"</string>
+  <string name="action_view">"Vaata"</string>
   <string name="action_view_in_timeline">"Vaata ajajoonel"</string>
   <string name="action_view_source">"Vaata lähtekoodi"</string>
   <string name="action_yes">"Jah"</string>
@@ -145,10 +165,14 @@
   <string name="banner_migrate_to_native_sliding_sync_title">"Saadaval on uuendus"</string>
   <string name="common_about">"Rakenduse teave"</string>
   <string name="common_acceptable_use_policy">"Vastuvõetava kasutamise põhimõtted"</string>
+  <string name="common_add_account">"Lisa kasutajakonto"</string>
+  <string name="common_add_another_account">"Lisa veel üks kasutajakonto"</string>
   <string name="common_adding_caption">"Lisame selgitust"</string>
   <string name="common_advanced_settings">"Täiendavad seadistused"</string>
   <string name="common_an_image">"pilt"</string>
   <string name="common_analytics">"Analüütika"</string>
+  <string name="common_android_shortcuts_remove_reason_left_room">"Sa oled jututoast lahkunud"</string>
+  <string name="common_android_shortcuts_remove_reason_session_logged_out">"Sa olid sessioonist väljaloginud"</string>
   <string name="common_appearance">"Välimus"</string>
   <string name="common_audio">"Heli"</string>
   <string name="common_blocked_users">"Blokeeritud kasutajad"</string>
@@ -238,7 +262,12 @@ Põhjus: %1$s."</string>
     <item quantity="one">"%d hääl"</item>
     <item quantity="other">"%d häält"</item>
   </plurals>
+  <string name="common_preparing">"Ettevalmistamisel…"</string>
   <string name="common_privacy_policy">"Privaatsuspoliitika"</string>
+  <string name="common_private_room">"Privaatne jututuba"</string>
+  <string name="common_private_space">"Privaatne kogukond"</string>
+  <string name="common_public_room">"Avalik jututuba"</string>
+  <string name="common_public_space">"Avalik kogukond"</string>
   <string name="common_reaction">"Reaktsioon"</string>
   <string name="common_reactions">"Reaktsioonid"</string>
   <string name="common_reason">"Põhjus"</string>
@@ -256,6 +285,10 @@ Põhjus: %1$s."</string>
   <string name="common_room">"Jututuba"</string>
   <string name="common_room_name">"Jututoa nimi"</string>
   <string name="common_room_name_placeholder">"näiteks sinu projekti või seltsingu nimi"</string>
+  <plurals name="common_rooms">
+    <item quantity="one">"%1$d jututuba"</item>
+    <item quantity="other">"%1$d jututuba"</item>
+  </plurals>
   <string name="common_saved_changes">"Muudatused on salvestatud"</string>
   <string name="common_saving">"Salvestame"</string>
   <string name="common_screen_lock">"Ekraanilukk"</string>
@@ -263,6 +296,7 @@ Põhjus: %1$s."</string>
   <string name="common_search_results">"Otsingutulemused"</string>
   <string name="common_security">"Turvalisus"</string>
   <string name="common_seen_by">"Seda nägi(d)"</string>
+  <string name="common_select_account">"Vali kasutajakonto"</string>
   <string name="common_send_to">"Saada kasutajale"</string>
   <string name="common_sending">"Saadame…"</string>
   <string name="common_sending_failed">"Saatmine ei õnnestunud"</string>
@@ -275,6 +309,11 @@ Põhjus: %1$s."</string>
   <string name="common_signing_out">"Logime välja"</string>
   <string name="common_something_went_wrong">"Midagi läks valesti"</string>
   <string name="common_something_went_wrong_message">"Tekkis viga. Palun proovi uuesti."</string>
+  <string name="common_space">"Kogukond"</string>
+  <plurals name="common_spaces">
+    <item quantity="one">"%1$d kogukond"</item>
+    <item quantity="other">"%1$d kogukonda"</item>
+  </plurals>
   <string name="common_starting_chat">"Alustame vestlust…"</string>
   <string name="common_sticker">"Kleeps"</string>
   <string name="common_success">"Õnnestus"</string>
@@ -305,6 +344,12 @@ Põhjus: %1$s."</string>
   <string name="common_verify_identity">"Verifitseeri võrguidentiteet"</string>
   <string name="common_verify_user">"Verifitseeri kasutaja"</string>
   <string name="common_video">"Video"</string>
+  <string name="common_video_quality_high">"Kõrge kvaliteet"</string>
+  <string name="common_video_quality_high_description">"Parim kvaliteet, aga suuremad failid"</string>
+  <string name="common_video_quality_low">"Madal kvaliteet"</string>
+  <string name="common_video_quality_low_description">"Parim üleslaadimiskiirus ja väikseim failisuurus"</string>
+  <string name="common_video_quality_standard">"Tavakvaliteet"</string>
+  <string name="common_video_quality_standard_description">"Kvaliteedi ja üleslaadimise kiiruse optimaalne proportsioon"</string>
   <string name="common_voice_message">"Häälsõnum"</string>
   <string name="common_waiting">"Ootame…"</string>
   <string name="common_waiting_for_decryption_key">"Ootame selle sõnumi dekrüptimisvõtit"</string>
@@ -319,6 +364,10 @@ Põhjus: %1$s."</string>
 
 Kas sa oled kindel, et soovid jätkata?"</string>
   <string name="dialog_confirm_link_title">"Palun kontrolli seda linki mõttega"</string>
+  <string name="dialog_default_video_quality_selector_subtitle">"Vali üleslaaditavate videote kvaliteeditase"</string>
+  <string name="dialog_default_video_quality_selector_title">"Videote kvaliteeditase"</string>
+  <string name="dialog_file_too_large_to_upload_subtitle">"Suurim lubatud failisuurus on: %1$s"</string>
+  <string name="dialog_file_too_large_to_upload_title">"See fail on üleslaadimiseks liiga suur"</string>
   <string name="dialog_room_reported">"Teatasid jututoast"</string>
   <string name="dialog_room_reported_and_left">"Teatasid jututoast ja lahkusid sealt"</string>
   <string name="dialog_title_confirmation">"Kinnitus"</string>
@@ -327,6 +376,11 @@ Kas sa oled kindel, et soovid jätkata?"</string>
   <string name="dialog_title_warning">"Hoiatus"</string>
   <string name="dialog_unsaved_changes_description_android">"Sinu tehtud muudatused pole veel salvestatud. Kas sa oled kindel, et soovid minna tagasi?"</string>
   <string name="dialog_unsaved_changes_title">"Kas salvestame muudatused?"</string>
+  <string name="dialog_video_quality_selector_subtitle_file_size">"Suurim lubatud failisuurus on: %1$s"</string>
+  <string name="dialog_video_quality_selector_subtitle_no_file_size">"Vali üleslaaditava video kvaliteet."</string>
+  <string name="dialog_video_quality_selector_title">"Vali video kvaliteet."</string>
+  <string name="emoji_picker_search_placeholder">"Otsi emojisid"</string>
+  <string name="error_account_already_logged_in">"Sa juba oled sellesse seadmesse sisseloginud kasutajana %1$s."</string>
   <string name="error_account_creation_not_possible">"Selleks et koos kasutajakonto loomisega toimiks Matrix Authentication Service\'i tugi, vajab sinu koduserver uuendamist."</string>
   <string name="error_failed_creating_the_permalink">"Püsilingi loomine ei õnnestumud"</string>
   <string name="error_failed_loading_map">"%1$s kaardi laadimine ei õnnestunud. Palun proovi hiljem uuesti."</string>
@@ -354,14 +408,12 @@ Kas sa oled kindel, et soovid jätkata?"</string>
   <string name="invite_friends_text">"Hei, suhtle minuga %1$s võrgus: %2$s"</string>
   <string name="login_initial_device_name_android">"%1$s Android"</string>
   <string name="preference_rageshake">"Veast teatamiseks raputa nutiseadet ägedalt"</string>
+  <string name="screen_bug_report_a11y_screenshot">"Ekraanitõmmis"</string>
   <string name="screen_create_poll_option_accessibility_label">"%1$s: %2$s"</string>
   <string name="screen_create_poll_options_section_title">"Valikud"</string>
   <string name="screen_create_poll_remove_accessibility_label">"Kustuta: %1$s"</string>
   <string name="screen_create_poll_settings_section_title">"Seadistused"</string>
   <string name="screen_media_picker_error_failed_selection">"Meediafaili valimine ei õnnestunud. Palun proovi uuesti."</string>
-  <string name="screen_media_upload_preview_caption_warning">"Selgitused ja alapealkirjad ei pruugi olla nähtavad vanemate rakenduste kasutajatele."</string>
-  <string name="screen_media_upload_preview_error_failed_processing">"Meediafaili töötlemine enne üleslaadimist ei õnnestunud. Palun proovi uuesti."</string>
-  <string name="screen_media_upload_preview_error_failed_sending">"Meediafaili üleslaadimine ei õnnestunud. Palun proovi uuesti."</string>
   <string name="screen_pinned_timeline_empty_state_description">"Siia lisamiseks vajuta sõnumil ja vali „%1$s“."</string>
   <string name="screen_pinned_timeline_empty_state_headline">"Et olulisi sõnumeid oleks lihtsam leida, tõsta nad esile"</string>
   <plurals name="screen_pinned_timeline_screen_title">
@@ -379,6 +431,7 @@ Kas sa oled kindel, et soovid jätkata?"</string>
   <string name="screen_resolve_send_failure_unsigned_device_title">"Sinu sõnum on saatmata, kuna %1$s pole verifitseerinud kõiki oma seadmeid"</string>
   <string name="screen_resolve_send_failure_you_unsigned_device_subtitle">"Üks või enam sinu seadet on verifitseerimata. Sa võid sõnumi ikkagi ära saata või katkestad saatmise ning proovid uuesti, kui oled kõik oma seadmed verifitseerinud."</string>
   <string name="screen_resolve_send_failure_you_unsigned_device_title">"Kuna sul on üks või enam verifitseerimata seadet, siis sinu sõnum jäi saatmata"</string>
+  <string name="screen_room_change_role_administrators_or_owners_title">"Muuda peakasutajaid või omanikke"</string>
   <string name="screen_room_error_failed_processing_media">"Meediafaili töötlemine enne üleslaadimist ei õnnestunud. Palun proovi uuesti."</string>
   <string name="screen_room_error_failed_retrieving_user_details">"Kasutaja andmete laadimine ei õnnestunud"</string>
   <string name="screen_room_event_pill">"Sõnum jututoas %1$s"</string>
@@ -387,7 +440,7 @@ Kas sa oled kindel, et soovid jätkata?"</string>
   <string name="screen_room_permalink_same_room_android">"Sa juba vaatad seda jututuba!"</string>
   <string name="screen_room_pinned_banner_indicator">"%1$s / %2$s"</string>
   <string name="screen_room_pinned_banner_indicator_description">"%1$s esiletõstetud sõnumit"</string>
-  <string name="screen_room_pinned_banner_loading_description">"Laadime sõnumit…"</string>
+  <string name="screen_room_pinned_banner_loading_description">"Laadin sõnumit…"</string>
   <string name="screen_room_pinned_banner_view_all_button_title">"Näita kõiki"</string>
   <string name="screen_room_title">"Vestlus"</string>
   <string name="screen_share_location_title">"Jaga asukohta"</string>
@@ -396,6 +449,9 @@ Kas sa oled kindel, et soovid jätkata?"</string>
   <string name="screen_share_open_google_maps">"Ava Google Mapsis"</string>
   <string name="screen_share_open_osm_maps">"Ava OpenStreetMapis"</string>
   <string name="screen_share_this_location_action">"Jaga seda asukohta"</string>
+  <string name="screen_space_list_description">"Sinu loodud kogukonnad ning need, millega oled liitunud."</string>
+  <string name="screen_space_list_details">"%1$s • %2$s"</string>
+  <string name="screen_space_list_title">"Kogukonnad"</string>
   <string name="screen_timeline_item_menu_send_failure_changed_identity">"Sõnum on saatmata, kuna kasutaja %1$s verifitseeritud identiteet on lähtestatud."</string>
   <string name="screen_timeline_item_menu_send_failure_unsigned_device">"Sõnum on saatmata, kuna %1$s pole verifitseerinud kõiki oma seadmeid."</string>
   <string name="screen_timeline_item_menu_send_failure_you_unsigned_device">"Kuna sa pole üks või enamgi oma seadet verifitseerinud, siis sinu sõnum on saatmata."</string>

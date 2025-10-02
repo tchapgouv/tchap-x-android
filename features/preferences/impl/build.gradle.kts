@@ -1,6 +1,6 @@
 import config.BuildTimeConfig
 import extension.buildConfigFieldStr
-import extension.setupAnvil
+import extension.setupDependencyInjection
 
 /*
  * Copyright 2022-2024 New Vector Ltd.
@@ -42,7 +42,7 @@ android {
     }
 }
 
-setupAnvil()
+setupDependencyInjection()
 
 dependencies {
     implementation(projects.libraries.androidutils)
@@ -86,6 +86,7 @@ dependencies {
     implementation(libs.androidx.browser)
     implementation(libs.androidx.datastore.preferences)
     api(projects.features.preferences.api)
+    implementation(libs.showkase)
 
     implementation(platform(libs.network.okhttp.bom))
     implementation(libs.network.okhttp)

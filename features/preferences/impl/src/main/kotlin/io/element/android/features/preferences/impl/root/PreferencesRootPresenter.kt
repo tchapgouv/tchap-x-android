@@ -17,6 +17,7 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import dev.zacsweers.metro.Inject
 import io.element.android.features.logout.api.direct.DirectLogoutState
 import io.element.android.features.preferences.impl.utils.ShowDeveloperSettingsProvider
 import io.element.android.features.rageshake.api.RageshakeFeatureAvailability
@@ -24,8 +25,6 @@ import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.collectSnackbarMessageAsState
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.indicator.api.IndicatorService
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.oidc.AccountManagementAction
@@ -35,16 +34,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class PreferencesRootPresenter @Inject constructor(
+@Inject
+class PreferencesRootPresenter(
     private val buildMeta: BuildMeta,
     private val matrixClient: MatrixClient,
     private val sessionVerificationService: SessionVerificationService,
     private val analyticsService: AnalyticsService,
     private val versionFormatter: VersionFormatter,
     private val snackbarDispatcher: SnackbarDispatcher,
-    private val featureFlagService: FeatureFlagService,
     private val indicatorService: IndicatorService,
     private val directLogoutPresenter: Presenter<DirectLogoutState>,
     private val showDeveloperSettingsProvider: ShowDeveloperSettingsProvider,
@@ -62,15 +60,6 @@ class PreferencesRootPresenter @Inject constructor(
         val snackbarMessage by snackbarDispatcher.collectSnackbarMessageAsState()
         val hasAnalyticsProviders = remember { analyticsService.getAvailableAnalyticsProviders().isNotEmpty() }
 
-        val showNotificationSettings = remember { mutableStateOf(false) }
-        LaunchedEffect(Unit) {
-            showNotificationSettings.value = featureFlagService.isFeatureEnabled(FeatureFlags.NotificationSettings)
-        }
-        val showLockScreenSettings = remember { mutableStateOf(false) }
-        LaunchedEffect(Unit) {
-            showLockScreenSettings.value = featureFlagService.isFeatureEnabled(FeatureFlags.PinUnlock)
-        }
-
         // We should display the 'complete verification' option if the current session can be verified
         val canVerifyUserSession by sessionVerificationService.needsSessionVerification.collectAsState(false)
 
@@ -85,7 +74,7 @@ class PreferencesRootPresenter @Inject constructor(
         var canDeactivateAccount by remember {
             mutableStateOf(false)
         }
-        val canReportBug = remember { rageshakeFeatureAvailability.isAvailable() }
+        val canReportBug by remember { rageshakeFeatureAvailability.isAvailable() }.collectAsState(false)
         LaunchedEffect(Unit) {
             canDeactivateAccount = matrixClient.canDeactivateAccount()
         }
@@ -125,8 +114,6 @@ class PreferencesRootPresenter @Inject constructor(
             canReportBug = canReportBug,
             showDeveloperSettings = showDeveloperSettings,
             canDeactivateAccount = canDeactivateAccount,
-            showNotificationSettings = showNotificationSettings.value,
-            showLockScreenSettings = showLockScreenSettings.value,
             showBlockedUsersItem = showBlockedUsersItem,
             directLogoutState = directLogoutState,
             snackbarMessage = snackbarMessage,

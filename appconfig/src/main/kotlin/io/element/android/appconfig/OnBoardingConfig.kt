@@ -9,7 +9,7 @@ package io.element.android.appconfig
 
 object OnBoardingConfig {
     /** Whether the user can use QR code login. */
-    const val CAN_LOGIN_WITH_QR_CODE = false
+    const val CAN_LOGIN_WITH_QR_CODE = false // TCHAP specific config for QR code login
 
     /** Whether the user can create an account using the app. */
     const val CAN_CREATE_ACCOUNT = false

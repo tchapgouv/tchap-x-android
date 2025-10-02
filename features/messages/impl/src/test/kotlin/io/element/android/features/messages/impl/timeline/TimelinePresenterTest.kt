@@ -29,6 +29,7 @@ import io.element.android.features.poll.api.actions.SendPollResponseAction
 import io.element.android.features.poll.test.actions.FakeEndPollAction
 import io.element.android.features.poll.test.actions.FakeSendPollResponseAction
 import io.element.android.features.roomcall.api.aStandByCallState
+import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.UniqueId
@@ -738,11 +739,7 @@ class TimelinePresenterTest {
     @Test
     fun `present - timeline room info includes predecessor room when room has predecessor`() = runTest {
         val predecessorRoomId = RoomId("!predecessor:server.org")
-        val predecessorEventId = EventId("\$predecessorEvent:server.org")
-        val predecessorRoom = PredecessorRoom(
-            roomId = predecessorRoomId,
-            lastEventId = predecessorEventId
-        )
+        val predecessorRoom = PredecessorRoom(roomId = predecessorRoomId)
 
         val room = FakeJoinedRoom(
             baseRoom = FakeBaseRoom(
@@ -758,7 +755,6 @@ class TimelinePresenterTest {
             val initialState = awaitFirstItem()
             assertThat(initialState.timelineRoomInfo.predecessorRoom).isNotNull()
             assertThat(initialState.timelineRoomInfo.predecessorRoom?.roomId).isEqualTo(predecessorRoomId)
-            assertThat(initialState.timelineRoomInfo.predecessorRoom?.lastEventId).isEqualTo(predecessorEventId)
         }
     }
 
@@ -786,18 +782,19 @@ class TimelinePresenterTest {
                 canUserSendMessageResult = { _, _ -> Result.success(true) },
             ),
         )
-        val onNavigateToRoomLambda = lambdaRecorder<RoomId, Unit> {}
+        val onNavigateToRoomLambda = lambdaRecorder<RoomId, List<String>, Unit> { _, _ -> }
         val navigator = FakeMessagesNavigator(
             onNavigateToRoomLambda = onNavigateToRoomLambda
         )
         val presenter = createTimelinePresenter(room = room, messagesNavigator = navigator)
         presenter.test {
             val initialState = awaitFirstItem()
-            initialState.eventSink(TimelineEvents.NavigateToRoom(A_ROOM_ID))
+            initialState.eventSink(TimelineEvents.NavigateToPredecessorOrSuccessorRoom(A_ROOM_ID))
             assert(onNavigateToRoomLambda)
                 .isCalledOnce()
                 .with(
-                    value(A_ROOM_ID)
+                    value(A_ROOM_ID),
+                    value(emptyList<String>())
                 )
         }
     }
@@ -819,6 +816,7 @@ class TimelinePresenterTest {
         sessionPreferencesStore: InMemorySessionPreferencesStore = InMemorySessionPreferencesStore(),
         timelineItemIndexer: TimelineItemIndexer = TimelineItemIndexer(),
         markAsFullyRead: MarkAsFullyRead = FakeMarkAsFullyRead(),
+        featureFlagService: FakeFeatureFlagService = FakeFeatureFlagService(),
     ): TimelinePresenter {
         return TimelinePresenter(
             timelineItemsFactoryCreator = aTimelineItemsFactoryCreator(),
@@ -831,11 +829,12 @@ class TimelinePresenterTest {
             sendPollResponseAction = sendPollResponseAction,
             sessionPreferencesStore = sessionPreferencesStore,
             timelineItemIndexer = timelineItemIndexer,
-            timelineController = TimelineController(room),
+            timelineController = TimelineController(room, timeline),
             resolveVerifiedUserSendFailurePresenter = { aResolveVerifiedUserSendFailureState() },
             typingNotificationPresenter = { aTypingNotificationState() },
             roomCallStatePresenter = { aStandByCallState() },
             markAsFullyRead = markAsFullyRead,
+            featureFlagService = featureFlagService,
         )
     }
 }

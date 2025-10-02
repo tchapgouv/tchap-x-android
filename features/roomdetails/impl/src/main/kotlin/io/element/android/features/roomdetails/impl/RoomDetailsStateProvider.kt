@@ -8,8 +8,8 @@
 package io.element.android.features.roomdetails.impl
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import io.element.android.features.leaveroom.api.LeaveRoomEvent
 import io.element.android.features.leaveroom.api.LeaveRoomState
-import io.element.android.features.leaveroom.api.aLeaveRoomState
 import io.element.android.features.roomcall.api.RoomCallState
 import io.element.android.features.roomcall.api.aStandByCallState
 import io.element.android.features.roomdetails.impl.members.aRoomMember
@@ -69,7 +69,7 @@ fun aDmRoomMember(
     powerLevel: Long = 0,
     normalizedPowerLevel: Long = powerLevel,
     isIgnored: Boolean = false,
-    role: RoomMember.Role = RoomMember.Role.USER,
+    role: RoomMember.Role = RoomMember.Role.User,
     membershipChangeReason: String? = null,
 ) = RoomMember(
     userId = userId,
@@ -102,7 +102,6 @@ fun aRoomDetailsState(
     isEncrypted: Boolean = true,
     canInvite: Boolean = false,
     canEdit: Boolean = false,
-    canShowNotificationSettings: Boolean = true,
     roomCallState: RoomCallState = aStandByCallState(),
     roomType: RoomDetailsType = RoomDetailsType.Room,
     roomMemberDetailsState: UserProfileState? = null,
@@ -112,8 +111,6 @@ fun aRoomDetailsState(
     displayAdminSettings: Boolean = false,
     isPublic: Boolean = true,
     heroes: List<MatrixUser> = emptyList(),
-    canShowPinnedMessages: Boolean = true,
-    canShowMediaGallery: Boolean = true,
     pinnedMessagesCount: Int? = null,
     snackbarMessage: SnackbarMessage? = null,
     canShowKnockRequests: Boolean = false,
@@ -136,7 +133,6 @@ fun aRoomDetailsState(
     isEncrypted = isEncrypted,
     canInvite = canInvite,
     canEdit = canEdit,
-    canShowNotificationSettings = canShowNotificationSettings,
     roomCallState = roomCallState,
     roomType = roomType,
     roomMemberDetailsState = roomMemberDetailsState,
@@ -146,8 +142,6 @@ fun aRoomDetailsState(
     displayRolesAndPermissionsSettings = displayAdminSettings,
     isPublic = isPublic,
     heroes = heroes.toPersistentList(),
-    canShowPinnedMessages = canShowPinnedMessages,
-    canShowMediaGallery = canShowMediaGallery,
     pinnedMessagesCount = pinnedMessagesCount,
     snackbarMessage = snackbarMessage,
     canShowKnockRequests = canShowKnockRequests,
@@ -159,6 +153,12 @@ fun aRoomDetailsState(
     showDebugInfo = showDebugInfo,
     eventSink = eventSink,
 )
+
+internal fun aLeaveRoomState(
+    eventSink: (LeaveRoomEvent) -> Unit = {}
+) = object : LeaveRoomState {
+    override val eventSink: (LeaveRoomEvent) -> Unit = eventSink
+}
 
 fun aRoomNotificationSettings(
     mode: RoomNotificationMode = RoomNotificationMode.MUTE,

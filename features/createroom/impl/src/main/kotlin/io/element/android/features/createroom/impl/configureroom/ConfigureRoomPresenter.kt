@@ -17,10 +17,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import dev.zacsweers.metro.Inject
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import im.vector.app.features.analytics.plan.CreatedRoom
-import io.element.android.features.createroom.impl.CreateRoomConfig
-import io.element.android.features.createroom.impl.CreateRoomDataStore
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runCatchingUpdatingState
@@ -39,6 +38,7 @@ import io.element.android.libraries.matrix.ui.media.AvatarAction
 import io.element.android.libraries.matrix.ui.room.address.RoomAddressValidity
 import io.element.android.libraries.matrix.ui.room.address.RoomAddressValidityEffect
 import io.element.android.libraries.mediapickers.api.PickerProvider
+import io.element.android.libraries.mediaupload.api.MediaOptimizationConfigProvider
 import io.element.android.libraries.mediaupload.api.MediaPreProcessor
 import io.element.android.libraries.permissions.api.PermissionsEvents
 import io.element.android.libraries.permissions.api.PermissionsPresenter
@@ -47,11 +47,11 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 import kotlin.jvm.optionals.getOrDefault
 
-class ConfigureRoomPresenter @Inject constructor(
-    private val dataStore: CreateRoomDataStore,
+@Inject
+class ConfigureRoomPresenter(
+    private val dataStore: CreateRoomConfigStore,
     private val matrixClient: MatrixClient,
     private val mediaPickerProvider: PickerProvider,
     private val mediaPreProcessor: MediaPreProcessor,
@@ -59,6 +59,7 @@ class ConfigureRoomPresenter @Inject constructor(
     permissionsPresenterFactory: PermissionsPresenter.Factory,
     private val featureFlagService: FeatureFlagService,
     private val roomAliasHelper: RoomAliasHelper,
+    private val mediaOptimizationConfigProvider: MediaOptimizationConfigProvider,
 ) : Presenter<ConfigureRoomState> {
     private val cameraPermissionPresenter: PermissionsPresenter = permissionsPresenterFactory.create(android.Manifest.permission.CAMERA)
     private var pendingPermissionRequest = false
@@ -66,7 +67,7 @@ class ConfigureRoomPresenter @Inject constructor(
     @Composable
     override fun present(): ConfigureRoomState {
         val cameraPermissionState = cameraPermissionPresenter.present()
-        val createRoomConfig by dataStore.createRoomConfigWithInvites.collectAsState(CreateRoomConfig())
+        val createRoomConfig by dataStore.getCreateRoomConfigFlow().collectAsState(CreateRoomConfig())
         val homeserverName = remember { matrixClient.userIdServerName() }
         val isKnockFeatureEnabled by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.Knock)
@@ -121,7 +122,6 @@ class ConfigureRoomPresenter @Inject constructor(
                 is ConfigureRoomEvents.RoomNameChanged -> dataStore.setRoomName(event.name)
                 is ConfigureRoomEvents.TopicChanged -> dataStore.setTopic(event.topic)
                 is ConfigureRoomEvents.RoomVisibilityChanged -> dataStore.setRoomVisibility(event.visibilityItem)
-                is ConfigureRoomEvents.RemoveUserFromSelection -> dataStore.selectedUserListDataStore.removeUserFromSelection(event.matrixUser)
                 is ConfigureRoomEvents.RoomAccessChanged -> dataStore.setRoomAccess(event.roomAccess)
                 is ConfigureRoomEvents.RoomAddressChanged -> dataStore.setRoomAddress(event.roomAddress)
                 is ConfigureRoomEvents.CreateRoom -> createRoom(createRoomConfig)
@@ -228,9 +228,9 @@ class ConfigureRoomPresenter @Inject constructor(
             uri = avatarUri,
             mimeType = MimeTypes.Jpeg,
             deleteOriginal = false,
-            compressIfPossible = false,
+            mediaOptimizationConfig = mediaOptimizationConfigProvider.get(),
         ).getOrThrow()
         val byteArray = preprocessed.file.readBytes()
-        return matrixClient.uploadMedia(MimeTypes.Jpeg, byteArray, null).getOrThrow()
+        return matrixClient.uploadMedia(MimeTypes.Jpeg, byteArray).getOrThrow()
     }
 }

@@ -7,6 +7,7 @@
 
 package io.element.android.libraries.eventformatter.impl
 
+import dev.zacsweers.metro.Inject
 import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.eventformatter.impl.mode.RenderingMode
 import io.element.android.libraries.matrix.api.timeline.item.event.OtherState
@@ -14,9 +15,9 @@ import io.element.android.libraries.matrix.api.timeline.item.event.StateContent
 import io.element.android.libraries.ui.strings.CommonStrings
 import io.element.android.services.toolbox.api.strings.StringProvider
 import timber.log.Timber
-import javax.inject.Inject
 
-class StateContentFormatter @Inject constructor(
+@Inject
+class StateContentFormatter(
     private val buildMeta: BuildMeta,
     private val sp: StringProvider,
 ) {

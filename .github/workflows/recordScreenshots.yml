@@ -36,7 +36,7 @@ jobs:
       - name: Clone Tchap Compound submodule
         run: git submodule update --init --recursive checkouts/compound-android # Tchap using compound from tchap repository
       - name: ☕️ Use JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'

@@ -11,15 +11,13 @@ import com.google.common.truth.Truth.assertThat
 import io.element.android.appconfig.OnBoardingConfig
 import io.element.android.features.enterprise.api.EnterpriseService
 import io.element.android.features.enterprise.test.FakeEnterpriseService
-import io.element.android.features.login.impl.DefaultLoginUserStory
+import io.element.android.features.login.impl.accesscontrol.DefaultAccountProviderAccessControl
 import io.element.android.features.login.impl.login.LoginHelper
 import io.element.android.features.login.impl.web.FakeWebClientUrlForAuthenticationRetriever
 import io.element.android.features.login.impl.web.WebClientUrlForAuthenticationRetriever
+import io.element.android.features.wellknown.test.FakeWellknownRetriever
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.core.meta.BuildMeta
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
-import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
 import io.element.android.libraries.matrix.test.AN_ACCOUNT_PROVIDER
 import io.element.android.libraries.matrix.test.AN_ACCOUNT_PROVIDER_2
@@ -31,8 +29,11 @@ import io.element.android.libraries.matrix.test.auth.FakeMatrixAuthenticationSer
 import io.element.android.libraries.matrix.test.core.aBuildMeta
 import io.element.android.libraries.oidc.api.OidcActionFlow
 import io.element.android.libraries.oidc.test.customtab.FakeOidcActionFlow
+import io.element.android.libraries.wellknown.api.WellknownRetriever
 import io.element.android.tests.testutils.WarmUpRule
 import io.element.android.tests.testutils.test
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -65,17 +66,11 @@ class OnBoardingPresenterTest {
             productionApplicationName = "B",
             desktopApplicationName = "C",
         )
-        val featureFlagService = FakeFeatureFlagService(
-            initialState = mapOf(FeatureFlags.QrCodeLogin.key to true),
-            buildMeta = buildMeta,
-        )
         val presenter = createPresenter(
             buildMeta = buildMeta,
-            featureFlagService = featureFlagService,
             enterpriseService = FakeEnterpriseService(
                 defaultHomeserverListResult = { listOf(ACCOUNT_PROVIDER_FROM_CONFIG, EnterpriseService.ANY_ACCOUNT_PROVIDER) },
             ),
-            rageshakeFeatureAvailability = { true },
         )
         presenter.test {
             val initialState = awaitItem()
@@ -89,9 +84,21 @@ class OnBoardingPresenterTest {
     }
 
     @Test
+    fun `present - on boarding logo`() = runTest {
+        val presenter = createPresenter(
+            onBoardingLogoResIdProvider = OnBoardingLogoResIdProvider { 42 },
+        )
+        presenter.test {
+            skipItems(1)
+            val initialState = awaitItem()
+            assertThat(initialState.onBoardingLogoResId).isEqualTo(42)
+        }
+    }
+
+    @Test
     fun `present - clicking on version 7 times has no effect if rageshake not available`() = runTest {
         val presenter = createPresenter(
-            rageshakeFeatureAvailability = { false },
+            rageshakeFeatureAvailability = { flowOf(false) },
         )
         presenter.test {
             skipItems(1)
@@ -127,9 +134,6 @@ class OnBoardingPresenterTest {
                 accountProvider = ACCOUNT_PROVIDER_FROM_LINK,
                 loginHint = null,
             ),
-            featureFlagService = FakeFeatureFlagService(
-                initialState = mapOf(FeatureFlags.QrCodeLogin.key to true),
-            ),
             enterpriseService = FakeEnterpriseService(
                 defaultHomeserverListResult = { listOf(ACCOUNT_PROVIDER_FROM_CONFIG, EnterpriseService.ANY_ACCOUNT_PROVIDER) },
                 isAllowedToConnectToHomeserverResult = { true },
@@ -152,9 +156,6 @@ class OnBoardingPresenterTest {
                 accountProvider = ACCOUNT_PROVIDER_FROM_LINK,
                 loginHint = null,
             ),
-            featureFlagService = FakeFeatureFlagService(
-                initialState = mapOf(FeatureFlags.QrCodeLogin.key to true),
-            ),
             enterpriseService = FakeEnterpriseService(
                 defaultHomeserverListResult = { listOf(ACCOUNT_PROVIDER_FROM_CONFIG, ACCOUNT_PROVIDER_FROM_CONFIG_2) },
                 isAllowedToConnectToHomeserverResult = { false },
@@ -176,9 +177,6 @@ class OnBoardingPresenterTest {
             params = OnBoardingNode.Params(
                 accountProvider = ACCOUNT_PROVIDER_FROM_LINK,
                 loginHint = null,
-            ),
-            featureFlagService = FakeFeatureFlagService(
-                initialState = mapOf(FeatureFlags.QrCodeLogin.key to true),
             ),
             enterpriseService = FakeEnterpriseService(
                 defaultHomeserverListResult = { listOf(ACCOUNT_PROVIDER_FROM_CONFIG) },
@@ -233,27 +231,30 @@ class OnBoardingPresenterTest {
 private fun createPresenter(
     params: OnBoardingNode.Params = OnBoardingNode.Params(null, null),
     buildMeta: BuildMeta = aBuildMeta(),
-    featureFlagService: FeatureFlagService = FakeFeatureFlagService(),
     enterpriseService: EnterpriseService = FakeEnterpriseService(),
-    rageshakeFeatureAvailability: () -> Boolean = { true },
+    wellknownRetriever: WellknownRetriever = FakeWellknownRetriever(),
+    rageshakeFeatureAvailability: () -> Flow<Boolean> = { flowOf(true) },
     loginHelper: LoginHelper = createLoginHelper(),
+    onBoardingLogoResIdProvider: OnBoardingLogoResIdProvider = OnBoardingLogoResIdProvider { null },
 ) = OnBoardingPresenter(
     params = params,
     buildMeta = buildMeta,
-    featureFlagService = featureFlagService,
     enterpriseService = enterpriseService,
+    defaultAccountProviderAccessControl = DefaultAccountProviderAccessControl(
+        enterpriseService = enterpriseService,
+        wellknownRetriever = wellknownRetriever,
+    ),
     rageshakeFeatureAvailability = rageshakeFeatureAvailability,
     loginHelper = loginHelper,
+    onBoardingLogoResIdProvider = onBoardingLogoResIdProvider,
 )
 
 fun createLoginHelper(
     oidcActionFlow: OidcActionFlow = FakeOidcActionFlow(),
     authenticationService: MatrixAuthenticationService = FakeMatrixAuthenticationService(),
-    defaultLoginUserStory: DefaultLoginUserStory = DefaultLoginUserStory(),
     webClientUrlForAuthenticationRetriever: WebClientUrlForAuthenticationRetriever = FakeWebClientUrlForAuthenticationRetriever(),
 ): LoginHelper = LoginHelper(
     oidcActionFlow = oidcActionFlow,
     authenticationService = authenticationService,
-    defaultLoginUserStory = defaultLoginUserStory,
     webClientUrlForAuthenticationRetriever = webClientUrlForAuthenticationRetriever,
 )

@@ -27,7 +27,7 @@ jobs:
       group: ${{ github.ref == 'refs/heads/develop' && format('build-develop-enterprise-{0}-{1}', matrix.variant, github.sha) || format('build-enterprise-{0}-{1}', matrix.variant, github.ref)  }}
       cancel-in-progress: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           # Ensure we are building the branch and not the branch after being merged on develop
           # https://github.com/actions/checkout/issues/881
@@ -39,7 +39,7 @@ jobs:
       - name: Clone submodules
         run: git submodule update --init --recursive
       - name: Use JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'

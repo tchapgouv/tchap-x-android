@@ -2,7 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="rich_text_editor_a11y_add_attachment">"Legg til vedlegg"</string>
   <string name="rich_text_editor_bullet_list">"Aktiver/deaktiver punktliste"</string>
-  <string name="rich_text_editor_close_formatting_options">"Lukk formateringsvalg"</string>
+  <string name="rich_text_editor_close_formatting_options">"Avbryt og lukk formateringsvalg"</string>
   <string name="rich_text_editor_code_block">"Aktiver kodeblokk"</string>
   <string name="rich_text_editor_composer_caption_placeholder">"Legg til en tekstbeskrivelse"</string>
   <string name="rich_text_editor_composer_encrypted_placeholder">"Kryptert melding…"</string>
@@ -28,5 +28,6 @@
   <string name="rich_text_editor_remove_link">"Fjern lenke"</string>
   <string name="rich_text_editor_unindent">"Fjern innrykk"</string>
   <string name="rich_text_editor_url_placeholder">"Lenke"</string>
+  <string name="screen_media_upload_preview_caption_warning">"Teksting er kanskje ikke synlig for personer som bruker eldre apper."</string>
   <string name="screen_room_voice_message_tooltip">"Hold for å ta opp"</string>
 </resources>

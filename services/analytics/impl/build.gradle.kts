@@ -1,4 +1,4 @@
-import extension.setupAnvil
+import extension.setupDependencyInjection
 
 /*
  * Copyright 2023, 2024 New Vector Ltd.
@@ -16,13 +16,14 @@ android {
     namespace = "io.element.android.services.analytics.impl"
 }
 
-setupAnvil()
+setupDependencyInjection()
 
 dependencies {
     implementation(projects.libraries.androidutils)
     implementation(projects.libraries.core)
     implementation(projects.libraries.architecture)
     implementation(projects.libraries.designsystem)
+    implementation(projects.libraries.preferences.api)
     implementation(projects.libraries.sessionStorage.api)
 
     api(projects.services.analyticsproviders.api)

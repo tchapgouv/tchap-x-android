@@ -13,7 +13,7 @@
     <item quantity="one">"%dاعلان"</item>
     <item quantity="other">"%dاعلان‌"</item>
   </plurals>
-  <string name="notification_fallback_content">"آگاهی"</string>
+  <string name="notification_fallback_content">"پیام‌های جدیدی دارید."</string>
   <string name="notification_incoming_call">"📹 تماس ورودی"</string>
   <string name="notification_inline_reply_failed">"**‌شکست در فرستادن - لطفاً اتاق را بگشایید"</string>
   <string name="notification_invitation_action_join">"پیوستن"</string>

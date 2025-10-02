@@ -19,10 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.element.android.libraries.designsystem.atomic.atoms.SelectedIndicatorAtom
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.preview.ElementThemedPreview
-import io.element.android.libraries.designsystem.theme.components.Checkbox
 import io.element.android.libraries.designsystem.theme.components.HorizontalDivider
 import io.element.android.libraries.matrix.ui.model.getAvatarData
 
@@ -52,6 +52,7 @@ fun CheckableUserRow(
                     avatarData = data.avatarData,
                     name = data.name,
                     subtext = data.subtext,
+                    enabled = enabled,
                 )
             }
             is CheckableUserRowData.Unresolved -> {
@@ -59,14 +60,13 @@ fun CheckableUserRow(
                     modifier = rowModifier,
                     avatarData = data.avatarData,
                     id = data.id,
+                    enabled = enabled,
                 )
             }
         }
-
-        Checkbox(
-            modifier = Modifier.padding(end = 4.dp),
+        SelectedIndicatorAtom(
+            modifier = Modifier.padding(end = 24.dp),
             checked = checked,
-            onCheckedChange = null,
             enabled = enabled,
         )
     }

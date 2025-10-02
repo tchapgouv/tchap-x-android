@@ -11,6 +11,8 @@ import android.os.Parcelable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.coroutineScope
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.plugin.Plugin
@@ -18,13 +20,15 @@ import com.bumble.appyx.core.plugin.plugins
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.pop
 import com.bumble.appyx.navmodel.backstack.operation.push
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.Inject
 import im.vector.app.features.analytics.plan.Interaction
-import io.element.android.anvilannotations.ContributesNode
+import io.element.android.annotations.ContributesNode
 import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.features.call.api.CallType
 import io.element.android.features.call.api.ElementCallEntryPoint
+import io.element.android.features.changeroommemberroes.api.ChangeRoomMemberRolesEntryPoint
+import io.element.android.features.changeroommemberroes.api.ChangeRoomMemberRolesListType
 import io.element.android.features.knockrequests.api.list.KnockRequestsListEntryPoint
 import io.element.android.features.messages.api.MessagesEntryPoint
 import io.element.android.features.poll.api.history.PollHistoryEntryPoint
@@ -51,21 +55,25 @@ import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.core.toRoomIdOrAlias
 import io.element.android.libraries.matrix.api.permalink.PermalinkData
-import io.element.android.libraries.matrix.api.room.BaseRoom
+import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.verification.VerificationRequest
 import io.element.android.libraries.mediaviewer.api.MediaGalleryEntryPoint
 import io.element.android.libraries.mediaviewer.api.MediaViewerEntryPoint
 import io.element.android.services.analytics.api.AnalyticsService
 import io.element.android.services.analyticsproviders.api.trackers.captureInteraction
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 
 @ContributesNode(RoomScope::class)
-class RoomDetailsFlowNode @AssistedInject constructor(
+@Inject
+class RoomDetailsFlowNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
     private val pollHistoryEntryPoint: PollHistoryEntryPoint,
     private val elementCallEntryPoint: ElementCallEntryPoint,
-    private val room: BaseRoom,
+    private val room: JoinedRoom,
     private val analyticsService: AnalyticsService,
     private val messagesEntryPoint: MessagesEntryPoint,
     private val knockRequestsListEntryPoint: KnockRequestsListEntryPoint,
@@ -73,6 +81,7 @@ class RoomDetailsFlowNode @AssistedInject constructor(
     private val mediaGalleryEntryPoint: MediaGalleryEntryPoint,
     private val outgoingVerificationEntryPoint: OutgoingVerificationEntryPoint,
     private val reportRoomEntryPoint: ReportRoomEntryPoint,
+    private val changeRoomMemberRolesEntryPoint: ChangeRoomMemberRolesEntryPoint,
 ) : BaseFlowNode<RoomDetailsFlowNode.NavTarget>(
     backstack = BackStack(
         initialElement = plugins.filterIsInstance<RoomDetailsEntryPoint.Params>().first().initialElement.toNavTarget(),
@@ -132,6 +141,24 @@ class RoomDetailsFlowNode @AssistedInject constructor(
 
         @Parcelize
         data object ReportRoom : NavTarget
+
+        @Parcelize
+        data object SelectNewOwnersWhenLeaving : NavTarget
+    }
+
+    override fun onBuilt() {
+        super.onBuilt()
+        whenChildrenAttached { commonLifecycle: Lifecycle,
+                               roomDetailsNode: RoomDetailsNode,
+                               changeRoomMemberRolesNode: ChangeRoomMemberRolesEntryPoint.NodeProxy ->
+            commonLifecycle.coroutineScope.launch {
+                changeRoomMemberRolesNode.waitForRoleChanged()
+                withContext(NonCancellable) {
+                    backstack.pop()
+                    roomDetailsNode.onNewOwnersSelected()
+                }
+            }
+        }
     }
 
     override fun resolve(navTarget: NavTarget, buildContext: BuildContext): Node {
@@ -198,6 +225,10 @@ class RoomDetailsFlowNode @AssistedInject constructor(
                     override fun openReportRoom() {
                         backstack.push(NavTarget.ReportRoom)
                     }
+
+                    override fun onSelectNewOwnersWhenLeaving() {
+                        backstack.push(NavTarget.SelectNewOwnersWhenLeaving)
+                    }
                 }
                 createNode<RoomDetailsNode>(buildContext, listOf(roomDetailsCallback))
             }
@@ -240,7 +271,7 @@ class RoomDetailsFlowNode @AssistedInject constructor(
                     }
 
                     override fun onStartDM(roomId: RoomId) {
-                        plugins<RoomDetailsEntryPoint.Callback>().forEach { it.onOpenRoom(roomId) }
+                        plugins<RoomDetailsEntryPoint.Callback>().forEach { it.onOpenRoom(roomId, emptyList()) }
                     }
 
                     override fun onStartCall(dmRoomId: RoomId) {
@@ -330,7 +361,7 @@ class RoomDetailsFlowNode @AssistedInject constructor(
             is NavTarget.VerifyUser -> {
                 val params = OutgoingVerificationEntryPoint.Params(
                     showDeviceVerifiedScreen = true,
-                    verificationRequest = VerificationRequest.Outgoing.User(userId = navTarget.userId,)
+                    verificationRequest = VerificationRequest.Outgoing.User(userId = navTarget.userId)
                 )
                 outgoingVerificationEntryPoint.nodeBuilder(this, buildContext)
                     .params(params)
@@ -351,6 +382,13 @@ class RoomDetailsFlowNode @AssistedInject constructor(
             }
             is NavTarget.ReportRoom -> {
                 reportRoomEntryPoint.createNode(this, buildContext, room.roomId)
+            }
+
+            is NavTarget.SelectNewOwnersWhenLeaving -> {
+                changeRoomMemberRolesEntryPoint.builder(this, buildContext)
+                    .room(room)
+                    .listType(ChangeRoomMemberRolesListType.SelectNewOwnersWhenLeaving)
+                    .build()
             }
         }
     }

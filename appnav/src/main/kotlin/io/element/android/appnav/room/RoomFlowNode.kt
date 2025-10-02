@@ -21,10 +21,10 @@ import com.bumble.appyx.core.plugin.Plugin
 import com.bumble.appyx.core.plugin.plugins
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.newRoot
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.Inject
 import im.vector.app.features.analytics.plan.JoinedRoom
-import io.element.android.anvilannotations.ContributesNode
+import io.element.android.annotations.ContributesNode
 import io.element.android.appnav.room.joined.JoinedRoomFlowNode
 import io.element.android.appnav.room.joined.JoinedRoomLoadedFlowNode
 import io.element.android.appnav.room.joined.LoadingRoomNodeView
@@ -37,6 +37,7 @@ import io.element.android.libraries.architecture.NodeInputs
 import io.element.android.libraries.architecture.createNode
 import io.element.android.libraries.architecture.inputs
 import io.element.android.libraries.core.bool.orFalse
+import io.element.android.libraries.core.coroutine.withPreviousValue
 import io.element.android.libraries.di.SessionScope
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomAlias
@@ -47,11 +48,14 @@ import io.element.android.libraries.matrix.api.room.RoomMembershipObserver
 import io.element.android.libraries.matrix.api.room.alias.ResolvedRoomAlias
 import io.element.android.libraries.matrix.api.sync.SyncService
 import io.element.android.libraries.matrix.ui.room.LoadingRoomState
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import timber.log.Timber
@@ -59,7 +63,8 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 @ContributesNode(SessionScope::class)
-class RoomFlowNode @AssistedInject constructor(
+@Inject
+class RoomFlowNode(
     @Assisted val buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
     private val client: MatrixClient,
@@ -124,8 +129,19 @@ class RoomFlowNode @AssistedInject constructor(
     private fun subscribeToRoomInfoFlow(roomId: RoomId, serverNames: List<String>) {
         val roomInfoFlow = client.getRoomInfoFlow(roomId)
         val isSpaceFlow = roomInfoFlow.map { it.getOrNull()?.isSpace.orFalse() }.distinctUntilChanged()
-        val currentMembershipFlow = roomInfoFlow.map { it.getOrNull()?.currentUserMembership }.distinctUntilChanged()
-        combine(currentMembershipFlow, isSpaceFlow) { membership, isSpace ->
+
+        // This observes the local membership changes for the room
+        val membershipUpdateFlow = membershipObserver.updates
+            .filter { it.roomId == roomId }
+            .distinctUntilChanged()
+            // We add a replay so we can check the last local membership update
+            .shareIn(lifecycleScope, started = SharingStarted.Eagerly, replay = 1)
+
+        val currentMembershipFlow = roomInfoFlow
+            .map { it.getOrNull()?.currentUserMembership }
+            .distinctUntilChanged()
+            .withPreviousValue()
+        combine(currentMembershipFlow, isSpaceFlow) { (previousMembership, membership), isSpace ->
             Timber.d("Room membership: $membership")
             when (membership) {
                 CurrentUserMembership.JOINED -> {
@@ -146,26 +162,24 @@ class RoomFlowNode @AssistedInject constructor(
                     }
                 }
                 else -> {
-                    // Was invited or the room is not known, display the join room screen
-                    backstack.newRoot(
-                        NavTarget.JoinRoom(
-                            roomId = roomId,
-                            serverNames = serverNames,
-                            trigger = inputs.trigger.getOrNull() ?: JoinedRoom.Trigger.Invite,
+                    if (membership == CurrentUserMembership.LEFT && previousMembership == CurrentUserMembership.JOINED) {
+                        // The user left the room in this device, remove the room from the backstack
+                        if (!membershipUpdateFlow.first().isUserInRoom) {
+                            navigateUp()
+                        }
+                    } else {
+                        // Was invited or the room is not known, display the join room screen
+                        backstack.newRoot(
+                            NavTarget.JoinRoom(
+                                roomId = roomId,
+                                serverNames = serverNames,
+                                trigger = inputs.trigger.getOrNull() ?: JoinedRoom.Trigger.Invite,
+                            )
                         )
-                    )
+                    }
                 }
             }
         }.launchIn(lifecycleScope)
-
-        // If the user leaves the room from this client, close the room flow.
-        lifecycleScope.launch {
-            membershipObserver.updates
-                .first { it.roomId == roomId && !it.isUserInRoom }
-                .run {
-                    navigateUp()
-                }
-        }
     }
 
     override fun resolve(navTarget: NavTarget, buildContext: BuildContext): Node {

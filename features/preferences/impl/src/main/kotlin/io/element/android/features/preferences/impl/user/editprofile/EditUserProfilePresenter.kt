@@ -19,9 +19,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.Inject
 import io.element.android.libraries.androidutils.file.TemporaryUriDeleter
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
@@ -33,6 +33,7 @@ import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.matrix.ui.media.AvatarAction
 import io.element.android.libraries.mediapickers.api.PickerProvider
+import io.element.android.libraries.mediaupload.api.MediaOptimizationConfigProvider
 import io.element.android.libraries.mediaupload.api.MediaPreProcessor
 import io.element.android.libraries.permissions.api.PermissionsEvents
 import io.element.android.libraries.permissions.api.PermissionsPresenter
@@ -41,13 +42,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class EditUserProfilePresenter @AssistedInject constructor(
+@Inject
+class EditUserProfilePresenter(
     @Assisted private val matrixUser: MatrixUser,
     private val matrixClient: MatrixClient,
     private val buildMeta: BuildMeta,
     private val mediaPickerProvider: PickerProvider,
     private val mediaPreProcessor: MediaPreProcessor,
     private val temporaryUriDeleter: TemporaryUriDeleter,
+    private val mediaOptimizationConfigProvider: MediaOptimizationConfigProvider,
     permissionsPresenterFactory: PermissionsPresenter.Factory,
 ) : Presenter<EditUserProfileState> {
     private val cameraPermissionPresenter: PermissionsPresenter = permissionsPresenterFactory.create(android.Manifest.permission.CAMERA)
@@ -178,7 +181,7 @@ class EditUserProfilePresenter @AssistedInject constructor(
                     uri = avatarUri,
                     mimeType = MimeTypes.Jpeg,
                     deleteOriginal = false,
-                    compressIfPossible = false,
+                    mediaOptimizationConfig = mediaOptimizationConfigProvider.get(),
                 ).getOrThrow()
                 matrixClient.uploadAvatar(MimeTypes.Jpeg, preprocessed.file.readBytes()).getOrThrow()
             } else {

@@ -13,6 +13,7 @@ import io.element.android.libraries.matrix.api.media.MediaSource
 data class TimelineItemStickerContent(
     override val scanState: BwiContentScannerScanState = BwiContentScannerScanState.UNKNOWN,
     override val filename: String,
+    override val fileSize: Long?,
     override val caption: String?,
     override val formattedCaption: CharSequence?,
     override val isEdited: Boolean,

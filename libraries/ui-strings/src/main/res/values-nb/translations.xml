@@ -7,11 +7,19 @@
     <item quantity="one">"%1$d siffer angitt"</item>
     <item quantity="other">"%1$d sifre angitt"</item>
   </plurals>
+  <string name="a11y_edit_avatar">"Rediger avatar"</string>
+  <string name="a11y_edit_room_address_hint">"Den fullstendige adressen vil være %1$s"</string>
+  <string name="a11y_encryption_details">"Krypteringsdetaljer"</string>
   <string name="a11y_hide_password">"Skjul passord"</string>
   <string name="a11y_join_call">"Bli med i samtale"</string>
   <string name="a11y_jump_to_bottom">"Hopp til bunnen"</string>
+  <string name="a11y_move_the_map_to_my_location">"Flytt kartet til min lokasjon"</string>
   <string name="a11y_notifications_mentions_only">"Bare omtaler"</string>
   <string name="a11y_notifications_muted">"Dempet"</string>
+  <string name="a11y_notifications_new_mentions">"Nye omtaler"</string>
+  <string name="a11y_notifications_new_messages">"Nye meldinger"</string>
+  <string name="a11y_notifications_ongoing_call">"Pågående samtale"</string>
+  <string name="a11y_other_user_avatar">"En annen brukers avatar"</string>
   <string name="a11y_page_n">"Side %1$d"</string>
   <string name="a11y_pause">"Setter på pause"</string>
   <string name="a11y_paused_voice_message">"Talemelding, lengde: %1$s, nåværende posisjon: %2$s"</string>
@@ -30,14 +38,19 @@
   <string name="a11y_read_receipts_tap_to_show_all">"Trykk for å vise alle"</string>
   <string name="a11y_remove_reaction">"Fjern reaksjonen med %1$s"</string>
   <string name="a11y_remove_reaction_with">"Fjern reaksjonen med %1$s"</string>
+  <string name="a11y_room_avatar">"Romavatar"</string>
   <string name="a11y_send_files">"Sende filer"</string>
+  <string name="a11y_session_verification_time_limited_action_required">"Tidsbegrenset handling kreves, du har ett minutt på deg til å verifisere"</string>
   <string name="a11y_show_password">"Vis passord"</string>
   <string name="a11y_start_call">"Start en samtale"</string>
+  <string name="a11y_user_avatar">"Brukeravatar"</string>
   <string name="a11y_user_menu">"Brukermeny"</string>
+  <string name="a11y_view_avatar">"Vis avatar"</string>
   <string name="a11y_view_details">"Vis detaljer"</string>
   <string name="a11y_voice_message">"Talemelding, lengde: %1$s"</string>
   <string name="a11y_voice_message_record">"Ta opp talemelding."</string>
   <string name="a11y_voice_message_stop_recording">"Stopp opptaket"</string>
+  <string name="a11y_your_avatar">"Din avatar"</string>
   <string name="action_accept">"Godta"</string>
   <string name="action_add_caption">"Legg til bildetekst"</string>
   <string name="action_add_to_timeline">"Legg til i tidslinjen"</string>
@@ -96,6 +109,7 @@
   <string name="action_no">"Nei"</string>
   <string name="action_not_now">"Ikke nå"</string>
   <string name="action_ok">"OK"</string>
+  <string name="action_open_context_menu">"Åpne kontekstmenyen"</string>
   <string name="action_open_settings">"Innstillinger"</string>
   <string name="action_open_with">"Åpne med"</string>
   <string name="action_pin">"Fest"</string>
@@ -120,7 +134,9 @@
   <string name="action_save">"Lagre"</string>
   <string name="action_search">"Søke"</string>
   <string name="action_send">"Sende"</string>
+  <string name="action_send_edited_message">"Send redigert melding"</string>
   <string name="action_send_message">"Send melding"</string>
+  <string name="action_send_voice_message">"Send talemelding"</string>
   <string name="action_share">"Dele"</string>
   <string name="action_share_link">"Dele lenke"</string>
   <string name="action_show">"Vis"</string>
@@ -136,6 +152,7 @@
   <string name="action_tap_for_options">"Trykk for alternativer"</string>
   <string name="action_try_again">"Prøv igjen"</string>
   <string name="action_unpin">"Løsne"</string>
+  <string name="action_view">"Vis"</string>
   <string name="action_view_in_timeline">"Vis i tidslinjen"</string>
   <string name="action_view_source">"Vis kilde"</string>
   <string name="action_yes">"Ja"</string>
@@ -237,7 +254,10 @@
     <item quantity="one">"%d stemme"</item>
     <item quantity="other">"%d stemmer"</item>
   </plurals>
+  <string name="common_preparing">"Forbereder…"</string>
   <string name="common_privacy_policy">"Retningslinjer for personvern"</string>
+  <string name="common_private_room">"Privat rom"</string>
+  <string name="common_public_room">"Offentlig rom"</string>
   <string name="common_reaction">"Reaksjon"</string>
   <string name="common_reactions">"Reaksjoner"</string>
   <string name="common_reason">"Årsak"</string>
@@ -351,14 +371,12 @@ Er du sikker på at du vil fortsette?"</string>
   <string name="invite_friends_text">"Hei, snakk med meg på %1$s: %2$s"</string>
   <string name="login_initial_device_name_android">"%1$s Android"</string>
   <string name="preference_rageshake">"Rageshake for å rapportere feil"</string>
+  <string name="screen_bug_report_a11y_screenshot">"Skjermbilde"</string>
   <string name="screen_create_poll_option_accessibility_label">"%1$s: %2$s"</string>
   <string name="screen_create_poll_options_section_title">"Alternativer"</string>
   <string name="screen_create_poll_remove_accessibility_label">"Fjern %1$s"</string>
   <string name="screen_create_poll_settings_section_title">"Innstillinger"</string>
   <string name="screen_media_picker_error_failed_selection">"Kunne ikke velge medium, prøv igjen."</string>
-  <string name="screen_media_upload_preview_caption_warning">"Teksting er kanskje ikke synlig for personer som bruker eldre apper."</string>
-  <string name="screen_media_upload_preview_error_failed_processing">"Kunne ikke behandle medier for opplasting, vennligst prøv igjen."</string>
-  <string name="screen_media_upload_preview_error_failed_sending">"Opplasting av medier mislyktes, vennligst prøv igjen."</string>
   <string name="screen_pinned_timeline_empty_state_description">"Trykk på en melding og velg “%1$s” for å inkludere her."</string>
   <string name="screen_pinned_timeline_empty_state_headline">"Fest viktige meldinger slik at de lett kan ses"</string>
   <plurals name="screen_pinned_timeline_screen_title">

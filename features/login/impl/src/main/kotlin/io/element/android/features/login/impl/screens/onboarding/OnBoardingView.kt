@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
@@ -67,8 +68,15 @@ fun OnBoardingView(
 ) {
     OnBoardingPage(
         modifier = modifier,
+        renderBackground = state.onBoardingLogoResId == null,
         content = {
-            OnBoardingContent(state = state)
+            if (state.onBoardingLogoResId != null) {
+                OnBoardingLogo(
+                    onBoardingLogoResId = state.onBoardingLogoResId,
+                )
+            } else {
+                OnBoardingContent(state = state)
+            }
             LoginModeView(
                 loginMode = state.loginMode,
                 onClearError = {
@@ -136,6 +144,24 @@ private fun OnBoardingContent(state: OnBoardingState) {
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun OnBoardingLogo(
+    onBoardingLogoResId: Int,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Image(
+            painter = painterResource(id = onBoardingLogoResId),
+            contentDescription = null
+        )
     }
 }
 

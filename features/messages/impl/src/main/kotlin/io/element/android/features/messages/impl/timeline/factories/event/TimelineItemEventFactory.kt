@@ -7,9 +7,9 @@
 
 package io.element.android.features.messages.impl.timeline.factories.event
 
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.Inject
 import io.element.android.features.messages.impl.timeline.factories.TimelineItemsFactoryConfig
 import io.element.android.features.messages.impl.timeline.groups.canBeDisplayedInBubbleBlock
 import io.element.android.features.messages.impl.timeline.model.AggregatedReaction
@@ -28,6 +28,7 @@ import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.permalink.PermalinkParser
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.timeline.MatrixTimelineItem
+import io.element.android.libraries.matrix.api.timeline.item.EventThreadInfo
 import io.element.android.libraries.matrix.api.timeline.item.event.getAvatarUrl
 import io.element.android.libraries.matrix.api.timeline.item.event.getDisambiguatedDisplayName
 import io.element.android.libraries.matrix.ui.messages.reply.map
@@ -35,7 +36,8 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import java.util.Date
 
-class TimelineItemEventFactory @AssistedInject constructor(
+@Inject
+class TimelineItemEventFactory(
     @Assisted private val config: TimelineItemsFactoryConfig,
     private val contentFactory: TimelineItemContentFactory,
     private val matrixClient: MatrixClient,
@@ -67,7 +69,6 @@ class TimelineItemEventFactory @AssistedInject constructor(
             url = senderProfile.getAvatarUrl(),
             size = AvatarSize.TimelineSender
         )
-        currentTimelineItem.event
         return TimelineItem.Event(
             id = currentTimelineItem.uniqueId,
             eventId = currentTimelineItem.eventId,
@@ -86,7 +87,7 @@ class TimelineItemEventFactory @AssistedInject constructor(
             readReceiptState = currentTimelineItem.computeReadReceiptState(roomMembers),
             localSendState = currentTimelineItem.event.localSendState,
             inReplyTo = currentTimelineItem.event.inReplyTo()?.map(permalinkParser = permalinkParser),
-            isThreaded = currentTimelineItem.event.isThreaded(),
+            threadInfo = currentTimelineItem.event.threadInfo() ?: EventThreadInfo(threadRootId = null, threadSummary = null),
             origin = currentTimelineItem.event.origin,
             timelineItemDebugInfoProvider = currentTimelineItem.event.timelineItemDebugInfoProvider,
             messageShieldProvider = currentTimelineItem.event.messageShieldProvider,
