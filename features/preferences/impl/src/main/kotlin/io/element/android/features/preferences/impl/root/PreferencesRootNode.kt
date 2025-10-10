@@ -23,6 +23,7 @@ import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.logout.api.direct.DirectLogoutEvents
 import io.element.android.features.logout.api.direct.DirectLogoutView
 import io.element.android.libraries.androidutils.browser.openUrlInChromeCustomTab
+import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.di.SessionScope
 import io.element.android.libraries.matrix.api.user.MatrixUser
 
@@ -31,6 +32,7 @@ import io.element.android.libraries.matrix.api.user.MatrixUser
 class PreferencesRootNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
+    private val buildMeta: BuildMeta,
     private val presenter: PreferencesRootPresenter,
     private val directLogoutView: DirectLogoutView,
 ) : Node(buildContext, plugins = plugins) {
@@ -162,7 +164,8 @@ class PreferencesRootNode(
                     onSignOutClick()
                 }
             },
-            onDeactivateClick = this::onOpenAccountDeactivation
+            onDeactivateClick = this::onOpenAccountDeactivation,
+            isDebugBuild = buildMeta.isDebuggable,
         )
 
         directLogoutView.Render(state = state.directLogoutState)

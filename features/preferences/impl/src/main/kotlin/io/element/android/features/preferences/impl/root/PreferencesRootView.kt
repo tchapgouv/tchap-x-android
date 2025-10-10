@@ -66,6 +66,7 @@ fun PreferencesRootView(
     onOpenBlockedUsers: () -> Unit,
     onSignOutClick: () -> Unit,
     onDeactivateClick: () -> Unit,
+    isDebugBuild: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = rememberSnackbarHostState(snackbarMessage = state.snackbarMessage)
@@ -88,6 +89,7 @@ fun PreferencesRootView(
             MultiAccountSection(
                 state = state,
                 onAddAccountClick = onAddAccountClick,
+                isDebugBuild = isDebugBuild,
             )
         }
         // 'Manage my app' section
@@ -133,6 +135,7 @@ fun PreferencesRootView(
 
 @Composable
 private fun ColumnScope.MultiAccountSection(
+    isDebugBuild: Boolean,
     state: PreferencesRootState,
     onAddAccountClick: () -> Unit,
 ) {
@@ -147,7 +150,8 @@ private fun ColumnScope.MultiAccountSection(
             },
             matrixUser = matrixUser,
             avatarSize = AvatarSize.AccountItem,
-        )
+            isDebugBuild = isDebugBuild,
+            )
         HorizontalDivider()
     }
     ListItem(
@@ -368,6 +372,7 @@ private fun ContentToPreview(matrixUser: MatrixUser) {
         onOpenBlockedUsers = {},
         onSignOutClick = {},
         onDeactivateClick = {},
+        isDebugBuild = false,
     )
 }
 
@@ -380,6 +385,7 @@ internal fun MultiAccountSectionPreview() = ElementPreview {
                 otherSessions = aMatrixUserList(),
             ),
             onAddAccountClick = {},
+            isDebugBuild = false,
         )
     }
 }
