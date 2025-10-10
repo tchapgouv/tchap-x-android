@@ -357,11 +357,8 @@ private fun ContentToPreview(matrixUser: MatrixUser) {
         onOpenRageShake = {},
         onOpenDeveloperSettings = {},
         onOpenAdvancedSettings = {},
-<<<<<<< HEAD
         onOpenFAQ = {},
-=======
         onOpenLabs = {},
->>>>>>> main-element
         onOpenAbout = {},
         onSecureBackupClick = {},
         onManageAccountClick = {},

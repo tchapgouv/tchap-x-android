@@ -61,14 +61,10 @@ data class RoomDetailsState(
         if (isPublic) {
             add(RoomBadge.PUBLIC)
         }
-<<<<<<< HEAD
         if (isExternal) {
             add(RoomBadge.EXTERNAL)
         }
-    }.toPersistentList()
-=======
     }.toImmutableList()
->>>>>>> main-element
 }
 
 @Immutable

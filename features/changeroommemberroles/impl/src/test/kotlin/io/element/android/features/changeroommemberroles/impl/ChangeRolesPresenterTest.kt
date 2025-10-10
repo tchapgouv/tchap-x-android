@@ -554,8 +554,7 @@ class ChangeRolesPresenterTest {
     private fun roomPowerLevelsWithRoles(vararg pairs: Pair<UserId, RoomMember.Role>): RoomPowerLevels {
         return RoomPowerLevels(
             values = defaultRoomPowerLevelValues(),
-<<<<<<< HEAD
-            users = pairs.associate { (userId, role) -> userId to role.powerLevel }.toPersistentMap()
+            users = pairs.associate { (userId, role) -> userId to role.powerLevel }.toImmutableMap()
         )
     }
 
@@ -572,9 +571,6 @@ class ChangeRolesPresenterTest {
             room = room,
             dispatchers = dispatchers,
             analyticsService = analyticsService,
-=======
-            users = pairs.associate { (userId, role) -> userId to role.powerLevel }.toImmutableMap()
->>>>>>> main-element
         )
     }
 }

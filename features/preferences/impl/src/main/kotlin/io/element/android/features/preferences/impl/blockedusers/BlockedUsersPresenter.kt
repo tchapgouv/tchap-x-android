@@ -85,12 +85,8 @@ class BlockedUsersPresenter(
             }
         }
         return BlockedUsersState(
-<<<<<<< HEAD
             isDebugBuild = buildMeta.isDebuggable,
-            blockedUsers = ignoredMatrixUser.toPersistentList(),
-=======
             blockedUsers = ignoredMatrixUser.toImmutableList(),
->>>>>>> main-element
             unblockUserAction = unblockUserAction.value,
             eventSink = ::handleEvents
         )
