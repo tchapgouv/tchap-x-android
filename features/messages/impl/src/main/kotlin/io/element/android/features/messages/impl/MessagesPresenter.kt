@@ -24,12 +24,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
-<<<<<<< HEAD
-import dev.zacsweers.metro.Inject
-import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
-=======
 import dev.zacsweers.metro.AssistedInject
->>>>>>> main-element
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import im.vector.app.features.analytics.plan.PinUnpinAction
 import io.element.android.appconfig.MessageComposerConfig
 import io.element.android.features.messages.api.timeline.HtmlConverterProvider

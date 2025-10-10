@@ -232,15 +232,10 @@ private fun RoomMemberActionsBottomSheet(
                         .align(Alignment.CenterHorizontally)
             )
             Text(
-<<<<<<< HEAD
                 // TCHAP display a value generated from userId if displayname does not exist
                 text = user.getBestName(),
-                style = ElementTheme.typography.fontHeadingLgBold,
-=======
-                text = user.userId.value,
                 style = ElementTheme.typography.fontBodyLgRegular,
                 color = ElementTheme.colors.textSecondary,
->>>>>>> main-element
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center,

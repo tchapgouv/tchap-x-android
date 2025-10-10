@@ -46,11 +46,7 @@ import java.io.File
 
 @Inject
 class RustMatrixClientFactory(
-<<<<<<< HEAD
-    @BaseDirectory private val baseDirectory: File,
     @ApplicationContext private val context: Context,
-=======
->>>>>>> main-element
     @CacheDirectory private val cacheDirectory: File,
     @AppCoroutineScope
     private val appCoroutineScope: CoroutineScope,

@@ -33,6 +33,8 @@ import io.element.android.features.messages.impl.timeline.components.CallMenuIte
 import io.element.android.features.roomcall.api.RoomCallState
 import io.element.android.features.roomcall.api.aStandByCallState
 import io.element.android.features.roomcall.api.anOngoingCallState
+import io.element.android.features.roomdetails.impl.BadgeList
+import io.element.android.features.roomdetails.impl.RoomBadge
 import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
@@ -56,6 +58,7 @@ import kotlinx.collections.immutable.toImmutableList
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MessagesViewTopBar(
+    roomBadges: ImmutableList<RoomBadge>,
     roomName: String?,
     roomAvatar: AvatarData,
     isTombstoned: Boolean,
@@ -82,13 +85,19 @@ internal fun MessagesViewTopBar(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 val titleModifier = Modifier.weight(1f, fill = false)
-                RoomAvatarAndNameRow(
-                    roomName = roomName,
-                    roomAvatar = roomAvatar,
-                    isTombstoned = isTombstoned,
-                    heroes = heroes,
-                    modifier = titleModifier
-                )
+                Column {
+                    RoomAvatarAndNameRow(
+                        roomName = roomName,
+                        roomAvatar = roomAvatar,
+                        isTombstoned = isTombstoned,
+                        heroes = heroes,
+                        modifier = titleModifier
+                    )
+                    BadgeList(
+                        roomBadge = roomBadges,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    )
+                }
 
                 when (dmUserIdentityState) {
                     IdentityState.Verified -> {

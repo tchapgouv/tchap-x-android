@@ -134,12 +134,8 @@ class DefaultInvitePeoplePresenter(
 
         return DefaultInvitePeopleState(
             room = room.map { },
-<<<<<<< HEAD
             isDebugBuild = buildMeta.isDebuggable,
-            canInvite = selectedUsers.value.isNotEmpty(),
-=======
             canInvite = selectedUsers.value.isNotEmpty() && !sendInvitesAction.value.isLoading(),
->>>>>>> main-element
             selectedUsers = selectedUsers.value,
             searchQuery = searchQuery,
             isSearchActive = searchActive,

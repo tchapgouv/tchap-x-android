@@ -32,12 +32,8 @@ internal fun aBlockedUsersState(
     eventSink: (BlockedUsersEvents) -> Unit = {},
 ): BlockedUsersState {
     return BlockedUsersState(
-<<<<<<< HEAD
         isDebugBuild = false,
-        blockedUsers = blockedUsers.toPersistentList(),
-=======
         blockedUsers = blockedUsers.toImmutableList(),
->>>>>>> main-element
         unblockUserAction = unblockUserAction,
         eventSink = eventSink,
     )

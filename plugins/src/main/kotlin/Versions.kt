@@ -28,34 +28,24 @@ import org.gradle.jvm.toolchain.JavaLanguageVersion
  * - the version code: 20250100a (202_501_00a) where `a` stands for the architecture code
  */
 
-<<<<<<< HEAD
-private const val versionYear = 0
-private const val versionMonth = 1
 
-// Note: must be in [0,99]
-private const val versionReleaseNumber = 2
-
-object Versions {
-    const val VERSION_CODE = versionYear * 10_000 + versionMonth * 100 + versionReleaseNumber
-    val VERSION_NAME = "$versionYear.$versionMonth.$versionReleaseNumber"
-=======
 /**
  * Year of the version on 2 digits.
  * Do not update this value. it is updated by the release script.
  */
-private const val versionYear = 25
+private const val versionYear = 0
 
 /**
  * Month of the version on 2 digits. Value must be in [1,12].
  * Do not update this value. it is updated by the release script.
  */
-private const val versionMonth = 10
+private const val versionMonth = 1
 
 /**
  * Release number in the month. Value must be in [0,99].
  * Do not update this value. it is updated by the release script.
  */
-private const val versionReleaseNumber = 0
+private const val versionReleaseNumber = 2
 
 object Versions {
     /**
@@ -64,9 +54,8 @@ object Versions {
      * AAB will have a ABI code of 0.
      * See comment above for the calculation method.
      */
-    const val VERSION_CODE = (2000 + versionYear) * 10_000 + versionMonth * 100 + versionReleaseNumber
-    val VERSION_NAME = "$versionYear.${versionMonth.toString().padStart(2, '0')}.$versionReleaseNumber"
->>>>>>> main-element
+    const val VERSION_CODE = versionYear * 10_000 + versionMonth * 100 + versionReleaseNumber
+    val VERSION_NAME = "$versionYear.$versionMonth.$versionReleaseNumber"
 
     /**
      * Compile SDK version. Must be updated when a new Android version is released.
