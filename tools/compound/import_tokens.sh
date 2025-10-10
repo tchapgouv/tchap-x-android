@@ -22,7 +22,8 @@ if [ -d tmpCompound ]; then
 fi
 mkdir tmpCompound
 pushd tmpCompound
-git clone --branch "${BRANCH}" https://github.com/vector-im/compound-design-tokens
+#git clone --branch "${BRANCH}" https://github.com/vector-im/compound-design-tokens
+git clone --branch "${BRANCH}" https://github.com/tchapgouv/compound-design-tokens
 
 echo "Copying files from tokens repository..."
 rm -R ../libraries/compound/src/main/res/drawable
