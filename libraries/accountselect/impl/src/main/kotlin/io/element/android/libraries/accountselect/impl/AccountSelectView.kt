@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.designsystem.components.button.BackButton
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
@@ -35,6 +36,7 @@ import io.element.android.libraries.ui.strings.CommonStrings
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountSelectView(
+    isDebugBuild: Boolean,
     state: AccountSelectState,
     onSelectAccount: (SessionId) -> Unit,
     onDismiss: () -> Unit,
@@ -68,6 +70,7 @@ fun AccountSelectView(
                                 }
                                 .padding(vertical = 8.dp),
                             matrixUser = matrixUser,
+                            isDebugBuild = isDebugBuild,
                         )
                         HorizontalDivider()
                     }
@@ -84,5 +87,6 @@ internal fun AccountSelectViewPreview(@PreviewParameter(AccountSelectStateProvid
         state = state,
         onSelectAccount = {},
         onDismiss = {},
+        isDebugBuild = false,
     )
 }
