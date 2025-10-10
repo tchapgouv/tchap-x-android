@@ -107,7 +107,7 @@ internal fun SpaceInfoRowPreview() = ElementPreview {
         SpaceInfoRow(
             leftText = "Element space",
             rightText = numberOfRooms(16),
-            iconVector = CompoundIcons.Workspace(),
+            iconVector = CompoundIcons.Space(),
         )
         SpaceInfoRow(
             visibility = SpaceRoomVisibility.Private,

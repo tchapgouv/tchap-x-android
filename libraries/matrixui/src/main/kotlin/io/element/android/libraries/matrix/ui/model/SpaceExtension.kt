@@ -31,7 +31,7 @@ val SpaceRoomVisibility.icon: ImageVector
         return when (this) {
             SpaceRoomVisibility.Private -> CompoundIcons.LockSolid()
             SpaceRoomVisibility.Public -> CompoundIcons.Public()
-            SpaceRoomVisibility.Restricted -> CompoundIcons.Workspace()
+            SpaceRoomVisibility.Restricted -> CompoundIcons.Space()
         }
     }
 
