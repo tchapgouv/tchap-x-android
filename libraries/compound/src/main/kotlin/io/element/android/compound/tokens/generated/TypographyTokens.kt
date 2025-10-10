@@ -24,9 +24,20 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.style.LineHeightStyle
+import io.element.android.compound.R
 
 object TypographyTokens {
+    private val marianne = FontFamily(
+        Font(R.font.mariannethin, FontWeight.Thin),
+        Font(R.font.mariannelight, FontWeight.Light),
+        Font(R.font.marianneregular, FontWeight.Normal),
+        Font(R.font.mariannemedium, FontWeight.Medium),
+        Font(R.font.mariannebold, FontWeight.Bold),
+        Font(R.font.marianneextrabold, FontWeight.ExtraBold),
+    )
+
     val fontBodyLgMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.W500,
@@ -39,6 +50,15 @@ object TypographyTokens {
     val fontBodyLgRegular = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.W400,
+        lineHeight = 22.sp,
+        fontSize = 16.sp,
+        letterSpacing = 0.015625.em,
+        platformStyle = PlatformTextStyle(includeFontPadding = false),
+        lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
+    )
+    val fontBodyLgSemibold = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.W600,
         lineHeight = 22.sp,
         fontSize = 16.sp,
         letterSpacing = 0.015625.em,
@@ -63,6 +83,15 @@ object TypographyTokens {
         platformStyle = PlatformTextStyle(includeFontPadding = false),
         lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
     )
+    val fontBodyMdSemibold = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.W600,
+        lineHeight = 20.sp,
+        fontSize = 14.sp,
+        letterSpacing = 0.017857.em,
+        platformStyle = PlatformTextStyle(includeFontPadding = false),
+        lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
+    )
     val fontBodySmMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.W500,
@@ -75,6 +104,15 @@ object TypographyTokens {
     val fontBodySmRegular = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.W400,
+        lineHeight = 17.sp,
+        fontSize = 12.sp,
+        letterSpacing = 0.033333.em,
+        platformStyle = PlatformTextStyle(includeFontPadding = false),
+        lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
+    )
+    val fontBodySmSemibold = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.W600,
         lineHeight = 17.sp,
         fontSize = 12.sp,
         letterSpacing = 0.033333.em,
@@ -99,8 +137,17 @@ object TypographyTokens {
         platformStyle = PlatformTextStyle(includeFontPadding = false),
         lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
     )
-    val fontHeadingLgBold = TextStyle(
+    val fontBodyXsSemibold = TextStyle(
         fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.W600,
+        lineHeight = 15.sp,
+        fontSize = 11.sp,
+        letterSpacing = 0.045454.em,
+        platformStyle = PlatformTextStyle(includeFontPadding = false),
+        lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
+    )
+    val fontHeadingLgBold = TextStyle(
+        fontFamily = marianne,
         fontWeight = FontWeight.W700,
         lineHeight = 34.sp,
         fontSize = 28.sp,
@@ -109,7 +156,7 @@ object TypographyTokens {
         lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
     )
     val fontHeadingLgRegular = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = marianne,
         fontWeight = FontWeight.W400,
         lineHeight = 34.sp,
         fontSize = 28.sp,
@@ -117,8 +164,17 @@ object TypographyTokens {
         platformStyle = PlatformTextStyle(includeFontPadding = false),
         lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
     )
+    val fontHeadingLgSemibold = TextStyle(
+        fontFamily = marianne,
+        fontWeight = FontWeight.W600,
+        lineHeight = 34.sp,
+        fontSize = 28.sp,
+        letterSpacing = 0.em,
+        platformStyle = PlatformTextStyle(includeFontPadding = false),
+        lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
+    )
     val fontHeadingMdBold = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = marianne,
         fontWeight = FontWeight.W700,
         lineHeight = 27.sp,
         fontSize = 22.sp,
@@ -127,7 +183,7 @@ object TypographyTokens {
         lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
     )
     val fontHeadingMdRegular = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = marianne,
         fontWeight = FontWeight.W400,
         lineHeight = 27.sp,
         fontSize = 22.sp,
@@ -135,8 +191,26 @@ object TypographyTokens {
         platformStyle = PlatformTextStyle(includeFontPadding = false),
         lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
     )
+    val fontHeadingMdSemibold = TextStyle(
+        fontFamily = marianne,
+        fontWeight = FontWeight.W700,
+        lineHeight = 27.sp,
+        fontSize = 22.sp,
+        letterSpacing = 0.em,
+        platformStyle = PlatformTextStyle(includeFontPadding = false),
+        lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
+    )
+    val fontHeadingSmBold = TextStyle(
+        fontFamily = marianne,
+        fontWeight = FontWeight.W700,
+        lineHeight = 25.sp,
+        fontSize = 20.sp,
+        letterSpacing = 0.em,
+        platformStyle = PlatformTextStyle(includeFontPadding = false),
+        lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
+    )
     val fontHeadingSmMedium = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = marianne,
         fontWeight = FontWeight.W500,
         lineHeight = 25.sp,
         fontSize = 20.sp,
@@ -145,7 +219,7 @@ object TypographyTokens {
         lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
     )
     val fontHeadingSmRegular = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = marianne,
         fontWeight = FontWeight.W400,
         lineHeight = 25.sp,
         fontSize = 20.sp,
@@ -153,8 +227,17 @@ object TypographyTokens {
         platformStyle = PlatformTextStyle(includeFontPadding = false),
         lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
     )
+    val fontHeadingSmSemibold = TextStyle(
+        fontFamily = marianne,
+        fontWeight = FontWeight.W600,
+        lineHeight = 25.sp,
+        fontSize = 20.sp,
+        letterSpacing = 0.em,
+        platformStyle = PlatformTextStyle(includeFontPadding = false),
+        lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
+    )
     val fontHeadingXlBold = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = marianne,
         fontWeight = FontWeight.W700,
         lineHeight = 41.sp,
         fontSize = 34.sp,
@@ -163,8 +246,17 @@ object TypographyTokens {
         lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
     )
     val fontHeadingXlRegular = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = marianne,
         fontWeight = FontWeight.W400,
+        lineHeight = 41.sp,
+        fontSize = 34.sp,
+        letterSpacing = 0.em,
+        platformStyle = PlatformTextStyle(includeFontPadding = false),
+        lineHeightStyle = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
+    )
+    val fontHeadingXlSemibold = TextStyle(
+        fontFamily = marianne,
+        fontWeight = FontWeight.W600,
         lineHeight = 41.sp,
         fontSize = 34.sp,
         letterSpacing = 0.em,
