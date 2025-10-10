@@ -70,14 +70,6 @@ object MatrixPatterns {
     }
 
     /**
-     * Tells if a string is a valid space id. This is an alias for [isRoomId]
-     *
-     * @param str the string to test
-     * @return true if the string is a valid space Id
-     */
-    fun isSpaceId(str: String?) = isRoomId(str)
-
-    /**
      * Tells if a string is a valid room id.
      *
      * @param str the string to test
@@ -151,7 +143,7 @@ object MatrixPatterns {
                 val urlMatch = match.groupValues[1]
                 when (val permalink = permalinkParser.parse(urlMatch)) {
                     is PermalinkData.UserLink -> {
-                        add(MatrixPatternResult(MatrixPatternType.USER_ID, permalink.userId.toString(), match.range.first, match.range.last + 1))
+                        add(MatrixPatternResult(MatrixPatternType.USER_ID, permalink.userId.value, match.range.first, match.range.last + 1))
                     }
                     is PermalinkData.RoomLink -> {
                         when (permalink.roomIdOrAlias) {

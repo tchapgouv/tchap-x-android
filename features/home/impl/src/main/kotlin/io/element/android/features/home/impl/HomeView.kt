@@ -171,12 +171,15 @@ private fun HomeScaffold(
         topBar = {
             RoomListTopBar(
                 title = stringResource(state.currentHomeNavigationBarItem.labelRes),
-                matrixUser = state.matrixUser,
+                currentUserAndNeighbors = state.currentUserAndNeighbors,
                 showAvatarIndicator = state.showAvatarIndicator,
                 areSearchResultsDisplayed = roomListState.searchState.isSearchActive,
                 onToggleSearch = { roomListState.eventSink(RoomListEvents.ToggleSearchResults) },
                 onMenuActionClick = onMenuActionClick,
                 onOpenSettings = onOpenSettings,
+                onAccountSwitch = {
+                    state.eventSink(HomeEvents.SwitchToAccount(it))
+                },
                 scrollBehavior = scrollBehavior,
                 displayMenuItems = state.displayActions,
                 displayFilters = roomListState.displayFilters && state.currentHomeNavigationBarItem == HomeNavigationBarItem.Chats,
@@ -269,7 +272,7 @@ private fun HomeScaffold(
                             .hazeSource(state = hazeState),
                         state = state.homeSpacesState,
                         onSpaceClick = { spaceId ->
-                            // TODO
+                            onRoomClick(spaceId)
                         }
                     )
                 }

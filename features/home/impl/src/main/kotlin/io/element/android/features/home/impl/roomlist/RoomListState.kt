@@ -70,6 +70,7 @@ sealed interface RoomListContentState {
         val securityBannerState: SecurityBannerState,
         val fullScreenIntentPermissionsState: FullScreenIntentPermissionsState,
         val batteryOptimizationState: BatteryOptimizationState,
+        val showNewNotificationSoundBanner: Boolean,
         val summaries: ImmutableList<RoomListRoomSummary>,
         val seenRoomInvites: ImmutableSet<RoomId>,
     ) : RoomListContentState

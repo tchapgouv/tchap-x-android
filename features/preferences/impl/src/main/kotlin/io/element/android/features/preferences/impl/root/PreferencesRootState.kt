@@ -11,12 +11,15 @@ import io.element.android.features.logout.api.direct.DirectLogoutState
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.matrix.api.core.DeviceId
 import io.element.android.libraries.matrix.api.user.MatrixUser
+import kotlinx.collections.immutable.ImmutableList
 
 data class PreferencesRootState(
     val isDebugBuild: Boolean,
     val myUser: MatrixUser,
     val version: String,
     val deviceId: DeviceId?,
+    val isMultiAccountEnabled: Boolean,
+    val otherSessions: ImmutableList<MatrixUser>,
     val showSecureBackup: Boolean,
     val showSecureBackupBadge: Boolean,
     val accountManagementUrl: String?,
@@ -26,6 +29,7 @@ data class PreferencesRootState(
     val showDeveloperSettings: Boolean,
     val canDeactivateAccount: Boolean,
     val showBlockedUsersItem: Boolean,
+    val showLabsItem: Boolean,
     val directLogoutState: DirectLogoutState,
     val snackbarMessage: SnackbarMessage?,
     val eventSink: (PreferencesRootEvents) -> Unit,

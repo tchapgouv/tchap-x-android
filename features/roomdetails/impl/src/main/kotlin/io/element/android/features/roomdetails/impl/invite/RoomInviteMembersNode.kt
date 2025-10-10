@@ -8,13 +8,14 @@
 package io.element.android.features.roomdetails.impl.invite
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.bumble.appyx.core.lifecycle.subscribe
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.plugin.Plugin
 import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AssistedInject
 import im.vector.app.features.analytics.plan.MobileScreen
 import io.element.android.annotations.ContributesNode
 import io.element.android.features.invitepeople.api.InvitePeoplePresenter
@@ -24,7 +25,7 @@ import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.services.analytics.api.AnalyticsService
 
 @ContributesNode(RoomScope::class)
-@Inject
+@AssistedInject
 class RoomInviteMembersNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
@@ -49,11 +50,18 @@ class RoomInviteMembersNode(
     @Composable
     override fun View(modifier: Modifier) {
         val state = invitePeoplePresenter.present()
+
+        // Once invites have been sent successfully, close the Invite view.
+        LaunchedEffect(state.sendInvitesAction) {
+            if (state.sendInvitesAction.isReady()) {
+                navigateUp()
+            }
+        }
+
         RoomInviteMembersView(
             state = state,
             modifier = modifier,
-            onBackClick = { navigateUp() },
-            onDone = { navigateUp() }
+            onBackClick = { navigateUp() }
         ) {
             invitePeopleRenderer.Render(state, Modifier)
         }

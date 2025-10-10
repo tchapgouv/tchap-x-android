@@ -1,3 +1,5 @@
+import extension.testCommonDependencies
+
 /*
  * Copyright 2022-2024 New Vector Ltd.
  *
@@ -25,7 +27,7 @@ android {
     }
 
     dependencies {
-        api(libs.compound)
+        api(projects.libraries.compound)
 
         implementation(libs.androidx.compose.material3.windowsizeclass)
         implementation(libs.androidx.compose.material3.adaptive)
@@ -43,10 +45,6 @@ android {
         ksp(libs.showkase.processor)
         implementation(libs.showkase)
 
-        testImplementation(libs.test.junit)
-        testImplementation(libs.coroutines.test)
-        testImplementation(libs.molecule.runtime)
-        testImplementation(libs.test.truth)
-        testImplementation(libs.test.turbine)
+        testCommonDependencies(libs)
     }
 }

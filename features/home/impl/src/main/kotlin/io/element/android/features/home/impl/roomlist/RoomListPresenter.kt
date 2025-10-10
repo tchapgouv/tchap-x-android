@@ -24,6 +24,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import dev.zacsweers.metro.Inject
 import im.vector.app.features.analytics.plan.Interaction
+import io.element.android.features.announcement.api.Announcement
+import io.element.android.features.announcement.api.AnnouncementService
 import io.element.android.features.home.impl.datasource.RoomListDataSource
 import io.element.android.features.home.impl.filters.RoomListFiltersState
 import io.element.android.features.home.impl.search.RoomListSearchEvents
@@ -36,23 +38,26 @@ import io.element.android.features.leaveroom.api.LeaveRoomEvent
 import io.element.android.features.leaveroom.api.LeaveRoomState
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
+<<<<<<< HEAD
 import io.element.android.libraries.core.coroutine.mapState
 import io.element.android.libraries.core.meta.BuildMeta
+=======
+>>>>>>> main-element
 import io.element.android.libraries.fullscreenintent.api.FullScreenIntentPermissionsState
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
-import io.element.android.libraries.matrix.api.encryption.EncryptionService
 import io.element.android.libraries.matrix.api.encryption.RecoveryState
 import io.element.android.libraries.matrix.api.roomlist.RoomList
 import io.element.android.libraries.matrix.api.timeline.ReceiptType
+import io.element.android.libraries.matrix.ui.safety.rememberHideInvitesAvatar
 import io.element.android.libraries.preferences.api.store.AppPreferencesStore
 import io.element.android.libraries.preferences.api.store.SessionPreferencesStore
 import io.element.android.libraries.push.api.battery.BatteryOptimizationState
 import io.element.android.libraries.push.api.notifications.NotificationCleaner
 import io.element.android.services.analytics.api.AnalyticsService
 import io.element.android.services.analyticsproviders.api.trackers.captureInteraction
-import kotlinx.collections.immutable.toPersistentList
-import kotlinx.collections.immutable.toPersistentSet
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -85,8 +90,9 @@ class RoomListPresenter(
     private val notificationCleaner: NotificationCleaner,
     private val appPreferencesStore: AppPreferencesStore,
     private val seenInvitesStore: SeenInvitesStore,
+    private val announcementService: AnnouncementService,
 ) : Presenter<RoomListState> {
-    private val encryptionService: EncryptionService = client.encryptionService()
+    private val encryptionService = client.encryptionService
 
     @Composable
     override fun present(): RoomListState {
@@ -101,14 +107,14 @@ class RoomListPresenter(
         }
 
         var securityBannerDismissed by rememberSaveable { mutableStateOf(false) }
+        val showNewNotificationSoundBanner by remember {
+            announcementService.announcementsToShowFlow().map { announcements ->
+                announcements.contains(Announcement.NewNotificationSound)
+            }
+        }.collectAsState(false)
 
         // Avatar indicator
-        val hideInvitesAvatar by remember {
-            client
-                .mediaPreviewService()
-                .mediaPreviewConfigFlow
-                .mapState { config -> config.hideInviteAvatar }
-        }.collectAsState()
+        val hideInvitesAvatar by client.rememberHideInvitesAvatar()
 
         val contextMenu = remember { mutableStateOf<RoomListState.ContextMenu>(RoomListState.ContextMenu.Hidden) }
         val declineInviteMenu = remember { mutableStateOf<RoomListState.DeclineInviteMenu>(RoomListState.DeclineInviteMenu.Hidden) }
@@ -120,6 +126,9 @@ class RoomListPresenter(
                 }
                 RoomListEvents.DismissRequestVerificationPrompt -> securityBannerDismissed = true
                 RoomListEvents.DismissBanner -> securityBannerDismissed = true
+                RoomListEvents.DismissNewNotificationSoundBanner -> coroutineScope.launch {
+                    announcementService.onAnnouncementDismissed(Announcement.NewNotificationSound)
+                }
                 RoomListEvents.ToggleSearchResults -> searchState.eventSink(RoomListSearchEvents.ToggleSearchVisibility)
                 is RoomListEvents.ShowContextMenu -> {
                     coroutineScope.showContextMenu(event, contextMenu)
@@ -149,7 +158,10 @@ class RoomListPresenter(
             }
         }
 
-        val contentState = roomListContentState(securityBannerDismissed)
+        val contentState = roomListContentState(
+            securityBannerDismissed,
+            showNewNotificationSoundBanner,
+        )
 
         val canReportRoom by produceState(false) { value = client.canReportRoom() }
 
@@ -205,6 +217,7 @@ class RoomListPresenter(
     @Composable
     private fun roomListContentState(
         securityBannerDismissed: Boolean,
+        showNewNotificationSoundBanner: Boolean,
     ): RoomListContentState {
         val roomSummaries by produceState(initialValue = AsyncData.Loading()) {
             roomListDataSource.allRooms.collect { value = AsyncData.Success(it) }
@@ -223,16 +236,19 @@ class RoomListPresenter(
         val seenRoomInvites by remember { seenInvitesStore.seenRoomIds() }.collectAsState(emptySet())
         val securityBannerState by rememberSecurityBannerState(securityBannerDismissed)
         return when {
-            showEmpty -> RoomListContentState.Empty(securityBannerState = securityBannerState)
+            showEmpty -> RoomListContentState.Empty(
+                securityBannerState = securityBannerState,
+            )
             showSkeleton -> RoomListContentState.Skeleton(count = 16)
             else -> {
                 RoomListContentState.Rooms(
                     isDebugBuild = buildMeta.isDebuggable,
                     securityBannerState = securityBannerState,
+                    showNewNotificationSoundBanner = showNewNotificationSoundBanner,
                     fullScreenIntentPermissionsState = fullScreenIntentPermissionsPresenter.present(),
                     batteryOptimizationState = batteryOptimizationPresenter.present(),
-                    summaries = roomSummaries.dataOrNull().orEmpty().toPersistentList(),
-                    seenRoomInvites = seenRoomInvites.toPersistentSet(),
+                    summaries = roomSummaries.dataOrNull().orEmpty().toImmutableList(),
+                    seenRoomInvites = seenRoomInvites.toImmutableSet(),
                 )
             }
         }

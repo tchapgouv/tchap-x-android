@@ -16,7 +16,7 @@ import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.plugin.Plugin
 import com.bumble.appyx.core.plugin.plugins
 import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
 import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.compound.theme.ElementTheme
@@ -27,7 +27,7 @@ import io.element.android.libraries.di.SessionScope
 import io.element.android.libraries.matrix.api.user.MatrixUser
 
 @ContributesNode(SessionScope::class)
-@Inject
+@AssistedInject
 class PreferencesRootNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
@@ -35,6 +35,7 @@ class PreferencesRootNode(
     private val directLogoutView: DirectLogoutView,
 ) : Node(buildContext, plugins = plugins) {
     interface Callback : Plugin {
+        fun onAddAccount()
         fun onOpenBugReport()
         fun onSecureBackupClick()
         fun onOpenAnalytics()
@@ -43,10 +44,15 @@ class PreferencesRootNode(
         fun onOpenNotificationSettings()
         fun onOpenLockScreenSettings()
         fun onOpenAdvancedSettings()
+        fun onOpenLabs()
         fun onOpenUserProfile(matrixUser: MatrixUser)
         fun onOpenBlockedUsers()
         fun onSignOutClick()
         fun onOpenAccountDeactivation()
+    }
+
+    private fun onAddAccount() {
+        plugins<Callback>().forEach { it.onAddAccount() }
     }
 
     private fun onOpenBugReport() {
@@ -63,6 +69,10 @@ class PreferencesRootNode(
 
     private fun onOpenAdvancedSettings() {
         plugins<Callback>().forEach { it.onOpenAdvancedSettings() }
+    }
+
+    private fun onOpenLabs() {
+        plugins<Callback>().forEach { it.onOpenLabs() }
     }
 
     private fun onOpenAnalytics() {
@@ -131,6 +141,7 @@ class PreferencesRootNode(
             state = state,
             modifier = modifier,
             onBackClick = this::navigateUp,
+            onAddAccountClick = this::onAddAccount,
             onOpenRageShake = this::onOpenBugReport,
             onOpenAnalytics = this::onOpenAnalytics,
             onOpenFAQ = { onOpenFAQ(activity, isDark) },
@@ -138,6 +149,7 @@ class PreferencesRootNode(
             onSecureBackupClick = this::onSecureBackupClick,
             onOpenDeveloperSettings = this::onOpenDeveloperSettings,
             onOpenAdvancedSettings = this::onOpenAdvancedSettings,
+            onOpenLabs = this::onOpenLabs,
             onManageAccountClick = { onManageAccountClick(activity, it, isDark) },
             onOpenNotificationSettings = this::onOpenNotificationSettings,
             onOpenLockScreenSettings = this::onOpenLockScreenSettings,

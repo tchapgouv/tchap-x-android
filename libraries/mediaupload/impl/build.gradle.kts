@@ -1,4 +1,5 @@
 import extension.setupDependencyInjection
+import extension.testCommonDependencies
 
 /*
  * Copyright 2023, 2024 New Vector Ltd.
@@ -31,7 +32,6 @@ dependencies {
     implementation(projects.libraries.di)
     implementation(projects.libraries.matrix.api)
     implementation(projects.services.toolbox.api)
-    implementation(libs.inject)
     implementation(libs.androidx.exifinterface)
     implementation(libs.androidx.media3.transformer)
     implementation(libs.androidx.media3.effect)
@@ -39,10 +39,6 @@ dependencies {
     implementation(libs.coroutines.core)
     implementation(libs.vanniktech.blurhash)
 
-    testImplementation(libs.test.junit)
-    testImplementation(libs.test.robolectric)
-    testImplementation(libs.coroutines.test)
-    testImplementation(libs.test.truth)
-    testImplementation(projects.tests.testutils)
+    testCommonDependencies(libs)
     testImplementation(projects.services.toolbox.test)
 }

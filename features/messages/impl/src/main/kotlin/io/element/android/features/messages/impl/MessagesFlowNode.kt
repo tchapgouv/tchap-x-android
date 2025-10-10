@@ -15,14 +15,13 @@ import androidx.lifecycle.lifecycleScope
 import com.bumble.appyx.core.lifecycle.subscribe
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
-import com.bumble.appyx.core.node.node
 import com.bumble.appyx.core.plugin.Plugin
 import com.bumble.appyx.core.plugin.plugins
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.push
 import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
 import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AssistedInject
 import im.vector.app.features.analytics.plan.Interaction
 import io.element.android.annotations.ContributesNode
 import io.element.android.features.call.api.CallType
@@ -64,9 +63,9 @@ import io.element.android.libraries.dateformatter.api.DateFormatter
 import io.element.android.libraries.dateformatter.api.DateFormatterMode
 import io.element.android.libraries.dateformatter.api.toHumanReadableDuration
 import io.element.android.libraries.di.RoomScope
-import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.RoomId
+import io.element.android.libraries.matrix.api.core.SessionId
 import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.core.toRoomIdOrAlias
@@ -75,6 +74,7 @@ import io.element.android.libraries.matrix.api.permalink.PermalinkData
 import io.element.android.libraries.matrix.api.room.BaseRoom
 import io.element.android.libraries.matrix.api.room.alias.matches
 import io.element.android.libraries.matrix.api.room.joinedRoomMembers
+import io.element.android.libraries.matrix.api.roomlist.RoomListService
 import io.element.android.libraries.matrix.api.timeline.Timeline
 import io.element.android.libraries.matrix.api.timeline.item.TimelineItemDebugInfo
 import io.element.android.libraries.matrix.ui.messages.RoomMemberProfilesCache
@@ -93,11 +93,12 @@ import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 
 @ContributesNode(RoomScope::class)
-@Inject
+@AssistedInject
 class MessagesFlowNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
-    private val matrixClient: MatrixClient,
+    private val roomListService: RoomListService,
+    private val sessionId: SessionId,
     private val sendLocationEntryPoint: SendLocationEntryPoint,
     private val showLocationEntryPoint: ShowLocationEntryPoint,
     private val createPollEntryPoint: CreatePollEntryPoint,
@@ -127,9 +128,6 @@ class MessagesFlowNode(
     plugins = plugins
 ) {
     sealed interface NavTarget : Parcelable {
-        @Parcelize
-        data object Empty : NavTarget
-
         @Parcelize
         data class Messages(val focusedEventId: EventId?) : NavTarget
 
@@ -199,7 +197,7 @@ class MessagesFlowNode(
             }
             .launchIn(lifecycleScope)
 
-        matrixClient.roomListService
+        roomListService
             .allRooms
             .summaries
             .onEach {
@@ -231,11 +229,13 @@ class MessagesFlowNode(
                     }
 
                     override fun onPreviewAttachments(attachments: ImmutableList<Attachment>, inReplyToEventId: EventId?) {
-                        backstack.push(NavTarget.AttachmentPreview(
-                            attachment = attachments.first(),
-                            timelineMode = Timeline.Mode.Live,
-                            inReplyToEventId = inReplyToEventId,
-                        ))
+                        backstack.push(
+                            NavTarget.AttachmentPreview(
+                                attachment = attachments.first(),
+                                timelineMode = Timeline.Mode.Live,
+                                inReplyToEventId = inReplyToEventId,
+                            )
+                        )
                     }
 
                     override fun onUserDataClick(userId: UserId) {
@@ -272,7 +272,7 @@ class MessagesFlowNode(
 
                     override fun onJoinCallClick(roomId: RoomId) {
                         val callType = CallType.RoomCall(
-                            sessionId = matrixClient.sessionId,
+                            sessionId = sessionId,
                             roomId = roomId,
                         )
                         analyticsService.captureInteraction(Interaction.Name.MobileRoomCallButton)
@@ -358,18 +358,20 @@ class MessagesFlowNode(
             }
             is NavTarget.CreatePoll -> {
                 createPollEntryPoint.nodeBuilder(this, buildContext)
-                    .params(CreatePollEntryPoint.Params(
-                        timelineMode = navTarget.timelineMode,
-                        mode = CreatePollMode.NewPoll
-                    ))
+                    .params(
+                        CreatePollEntryPoint.Params(
+                            timelineMode = navTarget.timelineMode,
+                            mode = CreatePollMode.NewPoll
+                        )
+                    )
                     .build()
             }
             is NavTarget.EditPoll -> {
                 createPollEntryPoint.nodeBuilder(this, buildContext)
                     .params(
                         CreatePollEntryPoint.Params(
-                        timelineMode = navTarget.timelineMode,
-                        mode = CreatePollMode.EditPoll(eventId = navTarget.eventId)
+                            timelineMode = navTarget.timelineMode,
+                            mode = CreatePollMode.EditPoll(eventId = navTarget.eventId)
                         )
                     )
                     .build()
@@ -405,9 +407,6 @@ class MessagesFlowNode(
                 }
                 createNode<PinnedMessagesListNode>(buildContext, plugins = listOf(callback))
             }
-            NavTarget.Empty -> {
-                node(buildContext) {}
-            }
             NavTarget.KnockRequestsList -> {
                 knockRequestsListEntryPoint.createNode(this, buildContext)
             }
@@ -425,11 +424,13 @@ class MessagesFlowNode(
                     }
 
                     override fun onPreviewAttachments(attachments: ImmutableList<Attachment>, inReplyToEventId: EventId?) {
-                        backstack.push(NavTarget.AttachmentPreview(
-                            attachment = attachments.first(),
-                            timelineMode = Timeline.Mode.Thread(navTarget.threadRootId),
-                            inReplyToEventId = inReplyToEventId,
-                        ))
+                        backstack.push(
+                            NavTarget.AttachmentPreview(
+                                attachment = attachments.first(),
+                                timelineMode = Timeline.Mode.Thread(navTarget.threadRootId),
+                                inReplyToEventId = inReplyToEventId,
+                            )
+                        )
                     }
 
                     override fun onUserDataClick(userId: UserId) {
@@ -466,11 +467,15 @@ class MessagesFlowNode(
 
                     override fun onJoinCallClick(roomId: RoomId) {
                         val callType = CallType.RoomCall(
-                            sessionId = matrixClient.sessionId,
+                            sessionId = sessionId,
                             roomId = roomId,
                         )
                         analyticsService.captureInteraction(Interaction.Name.MobileRoomCallButton)
                         elementCallEntryPoint.startCall(callType)
+                    }
+
+                    override fun onOpenThread(threadRootId: ThreadId, focusedEventId: EventId?) {
+                        backstack.push(NavTarget.OpenThread(threadRootId, focusedEventId))
                     }
                 }
                 createNode<ThreadedMessagesNode>(buildContext, listOf(inputs, callback))

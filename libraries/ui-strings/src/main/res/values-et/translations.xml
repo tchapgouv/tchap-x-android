@@ -80,6 +80,7 @@
   <string name="action_decline">"Keeldu"</string>
   <string name="action_decline_and_block">"Keeldu ja blokeeri"</string>
   <string name="action_delete_poll">"Kustuta küsitlus"</string>
+  <string name="action_deselect_all">"Eemalda kõik valikud"</string>
   <string name="action_disable">"Lülita välja"</string>
   <string name="action_discard">"Loobu"</string>
   <string name="action_dismiss">"Lõpeta"</string>
@@ -105,10 +106,12 @@
   <string name="action_leave">"Lahku"</string>
   <string name="action_leave_conversation">"Lahku vestlusest"</string>
   <string name="action_leave_room">"Lahku jututoast"</string>
+  <string name="action_leave_space">"Lahku kogukonnast"</string>
   <string name="action_load_more">"Näita veel"</string>
   <string name="action_manage_account">"Halda kasutajakontot"</string>
   <string name="action_manage_devices">"Halda seadmeid"</string>
   <string name="action_message">"Saada sõnum"</string>
+  <string name="action_minimize">"Minimeeri"</string>
   <string name="action_next">"Edasi"</string>
   <string name="action_no">"Ei"</string>
   <string name="action_not_now">"Mitte praegu"</string>
@@ -137,6 +140,7 @@
   <string name="action_retry_decryption">"Proovi dekrüptimist uuesti"</string>
   <string name="action_save">"Salvesta"</string>
   <string name="action_search">"Otsi"</string>
+  <string name="action_select_all">"Vali kõik"</string>
   <string name="action_send">"Saada"</string>
   <string name="action_send_edited_message">"Saada muudetud sõnum"</string>
   <string name="action_send_message">"Saada sõnum"</string>
@@ -184,9 +188,11 @@
   <string name="common_creating_room">"Loome jututoa…"</string>
   <string name="common_current_user_canceled_knock">"Päring on tühistatud"</string>
   <string name="common_current_user_left_room">"Lahkus jututoast"</string>
+  <string name="common_current_user_left_space">"Lahkus kogukonnast"</string>
   <string name="common_current_user_rejected_invite">"Keeldusid kutsest"</string>
   <string name="common_dark">"Tume"</string>
   <string name="common_decryption_error">"Dekrüptimisviga"</string>
+  <string name="common_description">"Kirjeldus"</string>
   <string name="common_developer_options">"Arendaja valikud"</string>
   <string name="common_device_id">"Seadme tunnus"</string>
   <string name="common_direct_chat">"Otsevestlus"</string>
@@ -243,6 +249,7 @@ Põhjus: %1$s."</string>
   <string name="common_name_and_id">"%1$s (%2$s)"</string>
   <string name="common_no_results">"Otsingul pole tulemusi"</string>
   <string name="common_no_room_name">"Jututoal puudub nimi"</string>
+  <string name="common_no_space_name">"Kogukonnal pole nime"</string>
   <string name="common_not_encrypted">"Krüptimata"</string>
   <string name="common_offline">"Võrgust väljas"</string>
   <string name="common_open_source_licenses">"Avatud lähtekoodiga litsentsid"</string>
@@ -303,8 +310,10 @@ Põhjus: %1$s."</string>
   <string name="common_sent">"Saadetud"</string>
   <string name="common_sentence_delimiter">". "</string>
   <string name="common_server_not_supported">"Server pole toetatud"</string>
+  <string name="common_server_unreachable">"Server pole leitav"</string>
   <string name="common_server_url">"Serveri URL"</string>
   <string name="common_settings">"Seadistused"</string>
+  <string name="common_share_space">"Jaga kogukonda"</string>
   <string name="common_shared_location">"Jagatud asukoht"</string>
   <string name="common_signing_out">"Logime välja"</string>
   <string name="common_something_went_wrong">"Midagi läks valesti"</string>
@@ -365,7 +374,7 @@ Põhjus: %1$s."</string>
 Kas sa oled kindel, et soovid jätkata?"</string>
   <string name="dialog_confirm_link_title">"Palun kontrolli seda linki mõttega"</string>
   <string name="dialog_default_video_quality_selector_subtitle">"Vali üleslaaditavate videote kvaliteeditase"</string>
-  <string name="dialog_default_video_quality_selector_title">"Videote kvaliteeditase"</string>
+  <string name="dialog_default_video_quality_selector_title">"Üleslaaditavate videote kvaliteet"</string>
   <string name="dialog_file_too_large_to_upload_subtitle">"Suurim lubatud failisuurus on: %1$s"</string>
   <string name="dialog_file_too_large_to_upload_title">"See fail on üleslaadimiseks liiga suur"</string>
   <string name="dialog_room_reported">"Teatasid jututoast"</string>
@@ -451,6 +460,7 @@ Kas sa oled kindel, et soovid jätkata?"</string>
   <string name="screen_share_this_location_action">"Jaga seda asukohta"</string>
   <string name="screen_space_list_description">"Sinu loodud kogukonnad ning need, millega oled liitunud."</string>
   <string name="screen_space_list_details">"%1$s • %2$s"</string>
+  <string name="screen_space_list_parent_space">"Kogukond: %1$s"</string>
   <string name="screen_space_list_title">"Kogukonnad"</string>
   <string name="screen_timeline_item_menu_send_failure_changed_identity">"Sõnum on saatmata, kuna kasutaja %1$s verifitseeritud identiteet on lähtestatud."</string>
   <string name="screen_timeline_item_menu_send_failure_unsigned_device">"Sõnum on saatmata, kuna %1$s pole verifitseerinud kõiki oma seadmeid."</string>
@@ -460,7 +470,7 @@ Kas sa oled kindel, et soovid jätkata?"</string>
   <string name="test_language_identifier">"et"</string>
   <string name="timeline_decryption_failure_historical_event_no_key_backup">"Vanu sõnumeid ei saa selles seadmes näha"</string>
   <string name="timeline_decryption_failure_historical_event_unverified_device">"Ligipääsuks vanadele sõnumitele pead selle seadme verifitseerima"</string>
-  <string name="timeline_decryption_failure_historical_event_user_not_joined">"Sul puudub ligipääs sellele sõnumile"</string>
+  <string name="timeline_decryption_failure_historical_event_user_not_joined">"Sul pole ligipääsu antud sõnumile"</string>
   <string name="timeline_decryption_failure_unable_to_decrypt">"Sõnumi dekrüptimine ei õnnestu"</string>
   <string name="timeline_decryption_failure_withheld_unverified">"Kuna seade on verifitseerimata või saatja pole sind verifitseerinud, siis sõnumi näitamine on blokeeritud."</string>
 </resources>

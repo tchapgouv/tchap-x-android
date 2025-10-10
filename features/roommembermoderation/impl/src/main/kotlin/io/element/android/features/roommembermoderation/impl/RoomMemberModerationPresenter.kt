@@ -36,9 +36,9 @@ import io.element.android.libraries.matrix.ui.room.canBanAsState
 import io.element.android.libraries.matrix.ui.room.canKickAsState
 import io.element.android.libraries.matrix.ui.room.userPowerLevelAsState
 import io.element.android.services.analytics.api.AnalyticsService
-import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
@@ -70,7 +70,7 @@ class RoomMemberModerationPresenter(
         var selectedUser by remember {
             mutableStateOf<MatrixUser?>(null)
         }
-        val moderationActions = remember { mutableStateOf(persistentListOf<ModerationActionState>()) }
+        val moderationActions = remember { mutableStateOf<ImmutableList<ModerationActionState>>(persistentListOf()) }
 
         fun handleEvent(event: RoomMemberModerationEvents) {
             when (event) {
@@ -152,7 +152,7 @@ class RoomMemberModerationPresenter(
         canKick: Boolean,
         canBan: Boolean,
         currentUserMemberPowerLevel: Long,
-    ): PersistentList<ModerationActionState> {
+    ): ImmutableList<ModerationActionState> {
         return buildList {
             add(ModerationActionState(action = ModerationAction.DisplayProfile, isEnabled = true))
             // Assume the member is a regular user when it's unknown
@@ -171,7 +171,7 @@ class RoomMemberModerationPresenter(
                     add(ModerationActionState(action = ModerationAction.BanUser, isEnabled = canModerateThisUser))
                 }
             }
-        }.toPersistentList()
+        }.toImmutableList()
     }
 
     private fun CoroutineScope.kickUser(

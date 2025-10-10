@@ -15,6 +15,7 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.dependencycheck) apply false
+    alias(libs.plugins.roborazzi) apply false
     alias(libs.plugins.dependencyanalysis)
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
@@ -94,6 +95,8 @@ allprojects {
             // Fix compilation warning for annotations
             // See https://youtrack.jetbrains.com/issue/KT-73255/Change-defaulting-rule-for-annotations for more details
             freeCompilerArgs.add("-Xannotation-default-target=first-only")
+            // Opt-in to context receivers
+            freeCompilerArgs.add("-Xcontext-parameters")
         }
     }
 }
@@ -189,6 +192,21 @@ subprojects {
     tasks.findByName("recordPaparazzi")?.dependsOn(removeOldScreenshotsTask)
     tasks.findByName("recordPaparazziDebug")?.dependsOn(removeOldScreenshotsTask)
     tasks.findByName("recordPaparazziRelease")?.dependsOn(removeOldScreenshotsTask)
+}
+
+// Make sure to delete old snapshot before recording new ones
+subprojects {
+    val screenshotsDir = File("${project.projectDir}/screenshots")
+    val removeOldScreenshotsTask = tasks.register("removeOldScreenshots") {
+        onlyIf { screenshotsDir.exists() }
+        doFirst {
+            println("Delete previous screenshots located at $screenshotsDir\n")
+            screenshotsDir.deleteRecursively()
+        }
+    }
+    tasks.findByName("recordRoborazzi")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordRoborazziDebug")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordRoborazziRelease")?.dependsOn(removeOldScreenshotsTask)
 }
 
 subprojects {

@@ -1,4 +1,5 @@
 import extension.setupDependencyInjection
+import extension.testCommonDependencies
 
 /*
  * Copyright 2023, 2024 New Vector Ltd.
@@ -28,18 +29,14 @@ dependencies {
     implementation(projects.libraries.di)
     implementation(libs.sqldelight.coroutines)
 
-    testImplementation(libs.test.junit)
-    testImplementation(libs.test.truth)
-    testImplementation(libs.test.turbine)
-    testImplementation(libs.coroutines.test)
+    testCommonDependencies(libs)
     testImplementation(libs.sqldelight.driver.jvm)
-    testImplementation(projects.tests.testutils)
 }
 
 sqldelight {
     databases {
         create("SessionDatabase") {
-            // https://cashapp.github.io/sqldelight/2.0.0/android_sqlite/migrations/
+            // https://sqldelight.github.io/sqldelight/2.1.0/android_sqlite/migrations/
             // To generate a .db file from your latest schema, run this task
             // ./gradlew generateDebugSessionDatabaseSchema
             // Test migration by running

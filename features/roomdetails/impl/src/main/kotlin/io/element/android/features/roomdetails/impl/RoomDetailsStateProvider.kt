@@ -27,7 +27,7 @@ import io.element.android.libraries.matrix.api.room.RoomNotificationMode
 import io.element.android.libraries.matrix.api.room.RoomNotificationSettings
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.matrix.ui.components.aMatrixUserList
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toImmutableList
 
 open class RoomDetailsStateProvider : PreviewParameterProvider<RoomDetailsState> {
     override val values: Sequence<RoomDetailsState>
@@ -67,7 +67,6 @@ fun aDmRoomMember(
     membership: RoomMembershipState = RoomMembershipState.JOIN,
     isNameAmbiguous: Boolean = false,
     powerLevel: Long = 0,
-    normalizedPowerLevel: Long = powerLevel,
     isIgnored: Boolean = false,
     role: RoomMember.Role = RoomMember.Role.User,
     membershipChangeReason: String? = null,
@@ -78,7 +77,6 @@ fun aDmRoomMember(
     membership = membership,
     isNameAmbiguous = isNameAmbiguous,
     powerLevel = powerLevel,
-    normalizedPowerLevel = normalizedPowerLevel,
     isIgnored = isIgnored,
     role = role,
     membershipChangeReason = membershipChangeReason
@@ -141,7 +139,7 @@ fun aRoomDetailsState(
     isFavorite = isFavorite,
     displayRolesAndPermissionsSettings = displayAdminSettings,
     isPublic = isPublic,
-    heroes = heroes.toPersistentList(),
+    heroes = heroes.toImmutableList(),
     pinnedMessagesCount = pinnedMessagesCount,
     snackbarMessage = snackbarMessage,
     canShowKnockRequests = canShowKnockRequests,

@@ -13,7 +13,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
-import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AssistedInject
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runCatchingUpdatingState
@@ -31,7 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
-@Inject
+@AssistedInject
 class SharePresenter(
     @Assisted private val intent: Intent,
     @SessionCoroutineScope
@@ -43,7 +43,7 @@ class SharePresenter(
     private val mediaOptimizationConfigProvider: MediaOptimizationConfigProvider,
 ) : Presenter<ShareState> {
     @AssistedFactory
-    interface Factory {
+    fun interface Factory {
         fun create(intent: Intent): SharePresenter
     }
 

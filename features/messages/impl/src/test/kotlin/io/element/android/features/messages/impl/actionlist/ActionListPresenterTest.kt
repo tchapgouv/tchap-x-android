@@ -18,8 +18,9 @@ import io.element.android.features.messages.impl.crypto.sendfailure.VerifiedUser
 import io.element.android.features.messages.impl.crypto.sendfailure.VerifiedUserSendFailureFactory
 import io.element.android.features.messages.impl.fixtures.aMessageEvent
 import io.element.android.features.messages.impl.timeline.aTimelineItemEvent
-import io.element.android.features.messages.impl.timeline.model.event.TimelineItemCallNotifyContent
+import io.element.android.features.messages.impl.timeline.model.TimelineItemThreadInfo
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemRedactedContent
+import io.element.android.features.messages.impl.timeline.model.event.TimelineItemRtcNotificationContent
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemTextContent
 import io.element.android.features.messages.impl.timeline.model.event.aTimelineItemImageContent
 import io.element.android.features.messages.impl.timeline.model.event.aTimelineItemPollContent
@@ -31,7 +32,6 @@ import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.room.BaseRoom
 import io.element.android.libraries.matrix.api.timeline.Timeline
-import io.element.android.libraries.matrix.api.timeline.item.EventThreadInfo
 import io.element.android.libraries.matrix.api.timeline.item.event.LocalEventSendState
 import io.element.android.libraries.matrix.test.AN_EVENT_ID
 import io.element.android.libraries.matrix.test.A_CAPTION
@@ -94,7 +94,8 @@ class ActionListPresenterTest {
                     verifiedUserSendFailure = VerifiedUserSendFailure.None,
                     actions = persistentListOf(
                         TimelineItemAction.ViewSource,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -135,7 +136,8 @@ class ActionListPresenterTest {
                     verifiedUserSendFailure = VerifiedUserSendFailure.None,
                     actions = persistentListOf(
                         TimelineItemAction.ViewSource,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -182,7 +184,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyText,
                         TimelineItemAction.ViewSource,
                         TimelineItemAction.ReportContent,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -198,7 +201,7 @@ class ActionListPresenterTest {
             val messageEvent = aMessageEvent(
                 isMine = false,
                 isEditable = false,
-                threadInfo = EventThreadInfo(threadRootId = A_THREAD_ID, threadSummary = null),
+                threadInfo = TimelineItemThreadInfo.ThreadResponse(threadRootId = A_THREAD_ID),
                 content = TimelineItemTextContent(body = A_MESSAGE, htmlDocument = null, isEdited = false, formattedBody = A_MESSAGE)
             )
             initialState.eventSink.invoke(
@@ -228,7 +231,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyText,
                         TimelineItemAction.ViewSource,
                         TimelineItemAction.ReportContent,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -274,7 +278,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyText,
                         TimelineItemAction.ViewSource,
                         TimelineItemAction.ReportContent,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -322,7 +327,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.ViewSource,
                         TimelineItemAction.ReportContent,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -370,7 +376,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.ViewSource,
                         TimelineItemAction.ReportContent,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -417,7 +424,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyText,
                         TimelineItemAction.ViewSource,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -432,7 +440,7 @@ class ActionListPresenterTest {
             val initialState = awaitItem()
             val messageEvent = aMessageEvent(
                 isMine = true,
-                threadInfo = EventThreadInfo(threadRootId = A_THREAD_ID, threadSummary = null),
+                threadInfo = TimelineItemThreadInfo.ThreadResponse(threadRootId = A_THREAD_ID),
                 content = TimelineItemTextContent(body = A_MESSAGE, htmlDocument = null, isEdited = false, formattedBody = A_MESSAGE)
             )
             initialState.eventSink.invoke(
@@ -463,7 +471,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyText,
                         TimelineItemAction.ViewSource,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -509,7 +518,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.Pin,
                         TimelineItemAction.CopyText,
                         TimelineItemAction.ViewSource,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -552,7 +562,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyLink,
                         TimelineItemAction.CopyText,
                         TimelineItemAction.ViewSource,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -599,7 +610,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.Pin,
                         TimelineItemAction.ViewSource,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -650,7 +662,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.RemoveCaption,
                         TimelineItemAction.ViewSource,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -699,7 +712,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyCaption,
                         TimelineItemAction.ViewSource,
                         TimelineItemAction.ReportContent,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -739,7 +753,8 @@ class ActionListPresenterTest {
                     verifiedUserSendFailure = VerifiedUserSendFailure.None,
                     actions = persistentListOf(
                         TimelineItemAction.ViewSource,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -812,7 +827,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.Pin,
                         TimelineItemAction.CopyText,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -858,7 +874,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyText,
                         TimelineItemAction.ViewSource,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -911,7 +928,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyText,
                         TimelineItemAction.ViewSource,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
             initialState.eventSink.invoke(ActionListEvents.Clear)
@@ -1004,7 +1022,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.Edit,
                         TimelineItemAction.CopyText,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
         }
@@ -1048,7 +1067,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyLink,
                         TimelineItemAction.Pin,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
         }
@@ -1091,7 +1111,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyLink,
                         TimelineItemAction.Pin,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
         }
@@ -1133,7 +1154,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyLink,
                         TimelineItemAction.Pin,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
         }
@@ -1178,7 +1200,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyLink,
                         TimelineItemAction.Pin,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
         }
@@ -1193,7 +1216,7 @@ class ActionListPresenterTest {
             val initialState = awaitItem()
             val messageEvent = aMessageEvent(
                 isMine = true,
-                content = TimelineItemCallNotifyContent(),
+                content = TimelineItemRtcNotificationContent(),
             )
             initialState.eventSink.invoke(
                 ActionListEvents.ComputeForMessage(
@@ -1215,7 +1238,8 @@ class ActionListPresenterTest {
                     verifiedUserSendFailure = VerifiedUserSendFailure.None,
                     actions = persistentListOf(
                         TimelineItemAction.ViewSource
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
         }
@@ -1264,7 +1288,7 @@ class ActionListPresenterTest {
                 content = aTimelineItemVoiceContent(
                     caption = null,
                 ),
-                threadInfo = EventThreadInfo(A_THREAD_ID, null)
+                threadInfo = TimelineItemThreadInfo.ThreadResponse(threadRootId = A_THREAD_ID)
             )
             initialState.eventSink.invoke(
                 ActionListEvents.ComputeForMessage(
@@ -1292,7 +1316,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyLink,
                         TimelineItemAction.Pin,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
         }
@@ -1345,7 +1370,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyLink,
                         TimelineItemAction.Pin,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
         }
@@ -1368,7 +1394,7 @@ class ActionListPresenterTest {
                 content = aTimelineItemVoiceContent(
                     caption = null,
                 ),
-                threadInfo = EventThreadInfo(A_THREAD_ID, null),
+                threadInfo = TimelineItemThreadInfo.ThreadResponse(threadRootId = A_THREAD_ID),
             )
 
             assertThat(messageEvent.isRemote).isTrue()
@@ -1399,7 +1425,8 @@ class ActionListPresenterTest {
                         TimelineItemAction.CopyLink,
                         TimelineItemAction.Pin,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
         }
@@ -1450,7 +1477,8 @@ class ActionListPresenterTest {
                         // Can't reply in thread for local events
                         TimelineItemAction.Reply,
                         TimelineItemAction.Redact,
-                    )
+                    ),
+                    recentEmojis = persistentListOf(),
                 )
             )
         }
@@ -1472,5 +1500,6 @@ private fun createActionListPresenter(
         dateFormatter = FakeDateFormatter(),
         timelineMode = timelineMode,
         featureFlagService = featureFlagService,
+        getRecentEmojis = { Result.success(persistentListOf()) },
     )
 }

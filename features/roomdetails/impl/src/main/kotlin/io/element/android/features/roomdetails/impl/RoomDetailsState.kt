@@ -18,7 +18,7 @@ import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.RoomNotificationSettings
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toImmutableList
 
 data class RoomDetailsState(
     val isDebugBuild: Boolean,
@@ -61,10 +61,14 @@ data class RoomDetailsState(
         if (isPublic) {
             add(RoomBadge.PUBLIC)
         }
+<<<<<<< HEAD
         if (isExternal) {
             add(RoomBadge.EXTERNAL)
         }
     }.toPersistentList()
+=======
+    }.toImmutableList()
+>>>>>>> main-element
 }
 
 @Immutable

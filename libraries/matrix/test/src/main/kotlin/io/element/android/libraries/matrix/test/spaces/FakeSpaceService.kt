@@ -7,7 +7,10 @@
 
 package io.element.android.libraries.matrix.test.spaces
 
+import io.element.android.libraries.matrix.api.core.RoomId
+import io.element.android.libraries.matrix.api.spaces.LeaveSpaceHandle
 import io.element.android.libraries.matrix.api.spaces.SpaceRoom
+import io.element.android.libraries.matrix.api.spaces.SpaceRoomList
 import io.element.android.libraries.matrix.api.spaces.SpaceService
 import io.element.android.tests.testutils.lambda.lambdaError
 import io.element.android.tests.testutils.simulateLongTask
@@ -16,17 +19,27 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
 class FakeSpaceService(
-    private val joinedSpacesResult: () -> Result<List<SpaceRoom>> = { lambdaError() }
+    private val joinedSpacesResult: () -> Result<List<SpaceRoom>> = { lambdaError() },
+    private val spaceRoomListResult: (RoomId) -> SpaceRoomList = { lambdaError() },
+    private val leaveSpaceHandleResult: (RoomId) -> LeaveSpaceHandle = { lambdaError() },
 ) : SpaceService {
-    private val _spaceRooms = MutableSharedFlow<List<SpaceRoom>>()
-    override val spaceRooms: SharedFlow<List<SpaceRoom>>
-        get() = _spaceRooms.asSharedFlow()
+    private val _spaceRoomsFlow = MutableSharedFlow<List<SpaceRoom>>()
+    override val spaceRoomsFlow: SharedFlow<List<SpaceRoom>>
+        get() = _spaceRoomsFlow.asSharedFlow()
 
     suspend fun emitSpaceRoomList(value: List<SpaceRoom>) {
-        _spaceRooms.emit(value)
+        _spaceRoomsFlow.emit(value)
     }
 
     override suspend fun joinedSpaces(): Result<List<SpaceRoom>> = simulateLongTask {
         return joinedSpacesResult()
+    }
+
+    override fun spaceRoomList(id: RoomId): SpaceRoomList {
+        return spaceRoomListResult(id)
+    }
+
+    override fun getLeaveSpaceHandle(spaceId: RoomId): LeaveSpaceHandle {
+        return leaveSpaceHandleResult(spaceId)
     }
 }

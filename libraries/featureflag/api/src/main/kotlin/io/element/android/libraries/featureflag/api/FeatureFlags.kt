@@ -19,6 +19,7 @@ enum class FeatureFlags(
     override val description: String? = null,
     override val defaultValue: (BuildMeta) -> Boolean,
     override val isFinished: Boolean,
+    override val isInLabs: Boolean = false,
 ) : Feature {
     RoomDirectorySearch(
         key = "feature.roomdirectorysearch",
@@ -71,8 +72,7 @@ enum class FeatureFlags(
     Space(
         key = "feature.space",
         title = "Spaces",
-        description = "Spaces are under active development, only developers should enable this flag for now.",
-        defaultValue = { false },
+        defaultValue = { true },
         isFinished = false,
     ),
     PrintLogsToLogcat(
@@ -100,5 +100,14 @@ enum class FeatureFlags(
         // TCHAP enable Threads display by default
         defaultValue = { true },
         isFinished = false,
-    )
+        isInLabs = true,
+    ),
+    MultiAccount(
+        key = "feature.multi_account",
+        title = "Multi accounts",
+        description = "Allow the application to connect to multiple accounts at the same time." +
+            "\n\nWARNING: this feature is EXPERIMENTAL and UNSTABLE.",
+        defaultValue = { false },
+        isFinished = false,
+    ),
 }

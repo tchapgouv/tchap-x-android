@@ -34,12 +34,11 @@ import io.element.android.libraries.previewutils.room.aRoomMemberList
 import io.element.android.services.analytics.test.FakeAnalyticsService
 import io.element.android.tests.testutils.testCoroutineDispatchers
 import kotlinx.collections.immutable.persistentMapOf
-import kotlinx.collections.immutable.toPersistentList
-import kotlinx.collections.immutable.toPersistentMap
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import kotlin.collections.plus
 
 class ChangeRolesPresenterTest {
     @Test
@@ -106,7 +105,7 @@ class ChangeRolesPresenterTest {
                 // Owner - creator
                 aRoomMember(userId = creatorUserId, role = RoomMember.Role.Owner(isCreator = true))
             )
-            givenRoomMembersState(RoomMembersState.Ready(roomMemberList.toPersistentList()))
+            givenRoomMembersState(RoomMembersState.Ready(roomMemberList.toImmutableList()))
         }
         val presenter = createChangeRolesPresenter(room = room)
         moleculeFlow(RecompositionMode.Immediate) {
@@ -127,7 +126,7 @@ class ChangeRolesPresenterTest {
             val creatorUserId = UserId("@creator:matrix.org")
             val memberList = aRoomMemberList()
                 .plus(aRoomMember(displayName = "CREATOR", role = RoomMember.Role.Owner(isCreator = true), userId = creatorUserId))
-                .toPersistentList()
+                .toImmutableList()
             givenRoomInfo(aRoomInfo(roomCreators = listOf(creatorUserId)))
             givenRoomMembersState(RoomMembersState.Ready(memberList))
         }
@@ -206,7 +205,7 @@ class ChangeRolesPresenterTest {
             assertThat(initialResults?.moderators).hasSize(1)
             assertThat(initialResults?.admins).hasSize(1)
 
-            room.givenRoomMembersState(RoomMembersState.Ready(aRoomMemberList().take(1).toPersistentList()))
+            room.givenRoomMembersState(RoomMembersState.Ready(aRoomMemberList().take(1).toImmutableList()))
             skipItems(1)
 
             val searchResults = (awaitItem().searchResults as? SearchBarResultState.Results)?.results
@@ -555,6 +554,7 @@ class ChangeRolesPresenterTest {
     private fun roomPowerLevelsWithRoles(vararg pairs: Pair<UserId, RoomMember.Role>): RoomPowerLevels {
         return RoomPowerLevels(
             values = defaultRoomPowerLevelValues(),
+<<<<<<< HEAD
             users = pairs.associate { (userId, role) -> userId to role.powerLevel }.toPersistentMap()
         )
     }
@@ -572,6 +572,23 @@ class ChangeRolesPresenterTest {
             room = room,
             dispatchers = dispatchers,
             analyticsService = analyticsService,
+=======
+            users = pairs.associate { (userId, role) -> userId to role.powerLevel }.toImmutableMap()
+>>>>>>> main-element
         )
     }
+}
+
+internal fun TestScope.createChangeRolesPresenter(
+    role: RoomMember.Role = RoomMember.Role.Admin,
+    room: FakeJoinedRoom = FakeJoinedRoom(baseRoom = FakeBaseRoom(updateMembersResult = {})),
+    dispatchers: CoroutineDispatchers = testCoroutineDispatchers(),
+    analyticsService: FakeAnalyticsService = FakeAnalyticsService(),
+): ChangeRolesPresenter {
+    return ChangeRolesPresenter(
+        role = role,
+        room = room,
+        dispatchers = dispatchers,
+        analyticsService = analyticsService,
+    )
 }

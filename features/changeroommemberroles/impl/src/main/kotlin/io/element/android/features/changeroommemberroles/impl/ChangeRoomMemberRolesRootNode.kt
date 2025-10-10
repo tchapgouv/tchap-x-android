@@ -17,9 +17,9 @@ import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.node.ParentNode
 import com.bumble.appyx.core.plugin.Plugin
 import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
-import io.element.android.appnav.di.RoomComponentFactory
+import io.element.android.appnav.di.RoomGraphFactory
 import io.element.android.features.changeroommemberroes.api.ChangeRoomMemberRolesEntryPoint
 import io.element.android.features.changeroommemberroes.api.ChangeRoomMemberRolesListType
 import io.element.android.libraries.architecture.NodeInputs
@@ -32,23 +32,20 @@ import io.element.android.libraries.matrix.api.room.JoinedRoom
 import kotlinx.parcelize.Parcelize
 
 @ContributesNode(SessionScope::class)
-@Inject
+@AssistedInject
 class ChangeRoomMemberRolesRootNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
-    roomComponentFactory: RoomComponentFactory,
+    roomGraphFactory: RoomGraphFactory,
 ) : ParentNode<ChangeRoomMemberRolesRootNode.NavTarget>(
     navModel = PermanentNavModel(
-        navTargets = setOf(NavTarget.Root),
+        navTargets = setOf(NavTarget),
         savedStateMap = buildContext.savedStateMap,
     ),
     buildContext = buildContext,
     plugins = plugins,
 ), DependencyInjectionGraphOwner, ChangeRoomMemberRolesEntryPoint.NodeProxy {
-    sealed interface NavTarget : Parcelable {
-        @Parcelize
-        object Root : NavTarget
-    }
+    @Parcelize object NavTarget : Parcelable
 
     data class Inputs(
         val joinedRoom: JoinedRoom,
@@ -57,17 +54,13 @@ class ChangeRoomMemberRolesRootNode(
 
     private val inputs = inputs<Inputs>()
 
-    override val graph = roomComponentFactory.create(inputs.joinedRoom)
+    override val graph = roomGraphFactory.create(inputs.joinedRoom)
 
     override fun resolve(navTarget: NavTarget, buildContext: BuildContext): Node {
-        return when (navTarget) {
-            NavTarget.Root -> {
-                createNode<ChangeRolesNode>(
-                    buildContext = buildContext,
-                    plugins = listOf(ChangeRolesNode.Inputs(listType = inputs.listType)),
-                )
-            }
-        }
+        return createNode<ChangeRolesNode>(
+            buildContext = buildContext,
+            plugins = listOf(ChangeRolesNode.Inputs(listType = inputs.listType)),
+        )
     }
 
     @Composable
