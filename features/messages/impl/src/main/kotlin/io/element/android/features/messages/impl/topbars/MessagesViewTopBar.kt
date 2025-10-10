@@ -187,6 +187,7 @@ internal fun MessagesViewTopBarPreview() = ElementPreview {
         onRoomDetailsClick = {},
         onJoinCallClick = {},
         onBackClick = {},
+        roomBadges = persistentListOf(RoomBadge.EXTERNAL),
     )
     Column {
         AMessagesViewTopBar()

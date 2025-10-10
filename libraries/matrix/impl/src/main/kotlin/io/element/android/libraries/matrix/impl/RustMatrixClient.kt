@@ -350,7 +350,7 @@ class RustMatrixClient(
     override suspend fun createRoom(createRoomParams: CreateRoomParameters): Result<RoomId> = withContext(sessionDispatcher) {
         runCatchingExceptions {
             val rustParams = RustCreateRoomParameters(
-                accessRulesOverride = when (createRoomParams.accessRules) {
+                accessRuleOverride = when (createRoomParams.accessRules) {
                     RoomAccessRules.DIRECT -> AccessRule.DIRECT
                     RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
                     RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
