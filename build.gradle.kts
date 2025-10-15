@@ -189,9 +189,9 @@ subprojects {
             snapshotsDir.deleteRecursively()
         }
     }
-    tasks.findByName("recordPaparazzi")?.dependsOn(removeOldScreenshotsTask)
-    tasks.findByName("recordPaparazziDebug")?.dependsOn(removeOldScreenshotsTask)
-    tasks.findByName("recordPaparazziRelease")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordPaparazziWithpinning")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordPaparazziWithpinningDebug")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordPaparazziWithpinningRelease")?.dependsOn(removeOldScreenshotsTask)
 }
 
 // Make sure to delete old snapshot before recording new ones
