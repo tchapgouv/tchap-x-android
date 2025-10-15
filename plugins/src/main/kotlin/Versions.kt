@@ -54,8 +54,13 @@ object Versions {
      * AAB will have a ABI code of 0.
      * See comment above for the calculation method.
      */
+
+    // Tchap-specific
+    // const val VERSION_CODE = (2000 + versionYear) * 10_000 + versionMonth * 100 + versionReleaseNumber
+    // val VERSION_NAME = "$versionYear.${versionMonth.toString().padStart(2, '0')}.$versionReleaseNumber"
     const val VERSION_CODE = versionYear * 10_000 + versionMonth * 100 + versionReleaseNumber
     val VERSION_NAME = "$versionYear.$versionMonth.$versionReleaseNumber"
+    // end Tchap-specific
 
     /**
      * Compile SDK version. Must be updated when a new Android version is released.
