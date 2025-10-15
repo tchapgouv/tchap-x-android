@@ -8,17 +8,18 @@
 package io.element.android.features.migration.impl.migrations
 
 import android.content.Context
-import com.squareup.anvil.annotations.ContributesMultibinding
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.Inject
 import io.element.android.libraries.core.extensions.runCatchingExceptions
-import io.element.android.libraries.di.AppScope
-import io.element.android.libraries.di.ApplicationContext
-import javax.inject.Inject
+import io.element.android.libraries.di.annotations.ApplicationContext
 
 /**
  * Remove notifications.bin file, used to store notification data locally.
  */
-@ContributesMultibinding(AppScope::class)
-class AppMigration04 @Inject constructor(
+@ContributesIntoSet(AppScope::class)
+@Inject
+class AppMigration04(
     @ApplicationContext private val context: Context,
 ) : AppMigration {
     companion object {
@@ -26,7 +27,7 @@ class AppMigration04 @Inject constructor(
     }
     override val order: Int = 4
 
-    override suspend fun migrate() {
+    override suspend fun migrate(isFreshInstall: Boolean) {
         runCatchingExceptions { context.getDatabasePath(NOTIFICATION_FILE_NAME).delete() }
     }
 }

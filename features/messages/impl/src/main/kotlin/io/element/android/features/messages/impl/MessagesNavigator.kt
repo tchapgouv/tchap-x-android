@@ -10,6 +10,7 @@ package io.element.android.features.messages.impl
 import io.element.android.features.messages.impl.attachments.Attachment
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.RoomId
+import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.timeline.item.TimelineItemDebugInfo
 import kotlinx.collections.immutable.ImmutableList
@@ -19,6 +20,7 @@ interface MessagesNavigator {
     fun onForwardEventClick(eventId: EventId)
     fun onReportContentClick(eventId: EventId, senderId: UserId)
     fun onEditPollClick(eventId: EventId)
-    fun onPreviewAttachment(attachments: ImmutableList<Attachment>)
-    fun onNavigateToRoom(roomId: RoomId)
+    fun onPreviewAttachment(attachments: ImmutableList<Attachment>, inReplyToEventId: EventId?)
+    fun onNavigateToRoom(roomId: RoomId, eventId: EventId?, serverNames: List<String>)
+    fun onOpenThread(threadRootId: ThreadId, focusedEventId: EventId?)
 }

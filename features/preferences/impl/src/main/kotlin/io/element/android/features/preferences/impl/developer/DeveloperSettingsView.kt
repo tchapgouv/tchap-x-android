@@ -36,12 +36,13 @@ import io.element.android.libraries.featureflag.ui.FeatureListView
 import io.element.android.libraries.featureflag.ui.model.FeatureUiModel
 import io.element.android.libraries.matrix.api.tracing.TraceLogPack
 import io.element.android.libraries.ui.strings.CommonStrings
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun DeveloperSettingsView(
     state: DeveloperSettingsState,
     onOpenShowkase: () -> Unit,
+    onPushHistoryClick: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -57,6 +58,7 @@ fun DeveloperSettingsView(
         ) {
             FeatureListContent(state)
         }
+        NotificationCategory(onPushHistoryClick)
         ElementCallCategory(state = state)
 
         PreferenceCategory(title = "Rust SDK") {
@@ -64,7 +66,7 @@ fun DeveloperSettingsView(
                 title = "Tracing log level",
                 supportingText = "Requires app reboot",
                 selectedOption = state.tracingLogLevel.dataOrNull(),
-                options = LogLevelItem.entries.toPersistentList(),
+                options = LogLevelItem.entries.toImmutableList(),
                 onSelectOption = { logLevel ->
                     state.eventSink(DeveloperSettingsEvents.SetTracingLogLevel(logLevel))
                 }
@@ -160,6 +162,18 @@ private fun ElementCallCategory(
 }
 
 @Composable
+private fun NotificationCategory(onPushHistoryClick: () -> Unit) {
+    PreferenceCategory(title = stringResource(id = R.string.screen_notification_settings_title)) {
+        ListItem(
+            headlineContent = {
+                Text(stringResource(R.string.troubleshoot_notifications_entry_point_push_history_title))
+            },
+            onClick = onPushHistoryClick,
+        )
+    }
+}
+
+@Composable
 private fun FeatureListContent(
     state: DeveloperSettingsState,
 ) {
@@ -179,6 +193,7 @@ internal fun DeveloperSettingsViewPreview(@PreviewParameter(DeveloperSettingsSta
     DeveloperSettingsView(
         state = state,
         onOpenShowkase = {},
+        onPushHistoryClick = {},
         onBackClick = {}
     )
 }

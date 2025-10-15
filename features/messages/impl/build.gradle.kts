@@ -1,4 +1,5 @@
-import extension.setupAnvil
+import extension.setupDependencyInjection
+import extension.testCommonDependencies
 
 /*
  * Copyright 2022-2024 New Vector Ltd.
@@ -21,7 +22,7 @@ android {
     }
 }
 
-setupAnvil()
+setupDependencyInjection()
 
 dependencies {
     api(projects.features.messages.api)
@@ -53,6 +54,7 @@ dependencies {
     implementation(projects.libraries.voiceplayer.api)
     implementation(projects.libraries.voicerecorder.api)
     implementation(projects.libraries.mediaplayer.api)
+    implementation(projects.libraries.push.api)
     implementation(projects.libraries.uiUtils)
     implementation(projects.libraries.testtags)
     implementation(projects.features.networkmonitor.api)
@@ -72,19 +74,15 @@ dependencies {
     implementation(projects.features.knockrequests.api)
     implementation(projects.features.roommembermoderation.api)
 
-    testImplementation(libs.test.junit)
-    testImplementation(libs.coroutines.test)
-    testImplementation(libs.molecule.runtime)
-    testImplementation(libs.test.truth)
-    testImplementation(libs.test.turbine)
+    testCommonDependencies(libs, true)
     testImplementation(projects.libraries.matrix.test)
     testImplementation(projects.libraries.dateformatter.test)
+    testImplementation(projects.libraries.push.test)
     testImplementation(projects.features.location.test)
     testImplementation(projects.features.networkmonitor.test)
     testImplementation(projects.features.messages.test)
     testImplementation(projects.services.analytics.test)
     testImplementation(projects.services.toolbox.test)
-    testImplementation(projects.tests.testutils)
     testImplementation(projects.libraries.featureflag.test)
     testImplementation(projects.libraries.mediaupload.test)
     testImplementation(projects.libraries.mediapickers.test)
@@ -94,10 +92,6 @@ dependencies {
     testImplementation(projects.libraries.mediaplayer.test)
     testImplementation(projects.libraries.mediaviewer.test)
     testImplementation(projects.libraries.testtags)
-    testImplementation(libs.test.mockk)
-    testImplementation(libs.test.robolectric)
     testImplementation(projects.features.poll.test)
-    testImplementation(libs.androidx.compose.ui.test.junit)
     testImplementation(projects.libraries.eventformatter.test)
-    testReleaseImplementation(libs.androidx.compose.ui.test.manifest)
 }

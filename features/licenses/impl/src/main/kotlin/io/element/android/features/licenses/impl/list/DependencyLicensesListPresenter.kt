@@ -13,16 +13,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import dev.zacsweers.metro.Inject
 import io.element.android.features.licenses.impl.LicensesProvider
 import io.element.android.features.licenses.impl.model.DependencyLicenseItem
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.extensions.runCatchingExceptions
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toPersistentList
-import javax.inject.Inject
+import kotlinx.collections.immutable.toImmutableList
 
-class DependencyLicensesListPresenter @Inject constructor(
+@Inject
+class DependencyLicensesListPresenter(
     private val licensesProvider: LicensesProvider,
 ) : Presenter<DependencyLicensesListState> {
     @Composable
@@ -36,7 +37,7 @@ class DependencyLicensesListPresenter @Inject constructor(
         var filter by remember { mutableStateOf("") }
         LaunchedEffect(Unit) {
             runCatchingExceptions {
-                licenses = AsyncData.Success(licensesProvider.provides().toPersistentList())
+                licenses = AsyncData.Success(licensesProvider.provides().toImmutableList())
             }.onFailure {
                 licenses = AsyncData.Failure(it)
             }
@@ -49,7 +50,7 @@ class DependencyLicensesListPresenter @Inject constructor(
                     it.safeName.contains(safeFilter, ignoreCase = true) ||
                         it.groupId.contains(safeFilter, ignoreCase = true) ||
                         it.artifactId.contains(safeFilter, ignoreCase = true)
-                }.toPersistentList())
+                }.toImmutableList())
             } else {
                 filteredLicenses = licenses
             }

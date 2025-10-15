@@ -7,9 +7,10 @@
 
 package io.element.android.libraries.matrix.api.timeline
 
+import android.os.Parcelable
 import io.element.android.libraries.matrix.api.core.EventId
-import io.element.android.libraries.matrix.api.core.ProgressCallback
 import io.element.android.libraries.matrix.api.core.RoomId
+import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.matrix.api.core.TransactionId
 import io.element.android.libraries.matrix.api.media.AudioInfo
 import io.element.android.libraries.matrix.api.media.FileInfo
@@ -19,12 +20,12 @@ import io.element.android.libraries.matrix.api.media.VideoInfo
 import io.element.android.libraries.matrix.api.poll.PollKind
 import io.element.android.libraries.matrix.api.room.IntentionalMention
 import io.element.android.libraries.matrix.api.room.location.AssetType
-import io.element.android.libraries.matrix.api.room.message.ReplyParameters
 import io.element.android.libraries.matrix.api.timeline.item.event.EventOrTransactionId
 import io.element.android.libraries.matrix.api.timeline.item.event.InReplyTo
 import io.element.android.libraries.matrix.api.timeline.item.event.toEventOrTransactionId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.parcelize.Parcelize
 import java.io.File
 
 interface Timeline : AutoCloseable {
@@ -40,13 +41,16 @@ interface Timeline : AutoCloseable {
         FORWARDS
     }
 
-    enum class Mode {
-        LIVE,
-        FOCUSED_ON_EVENT,
-        PINNED_EVENTS,
-        MEDIA,
+    @Parcelize
+    sealed interface Mode : Parcelable {
+        data object Live : Mode
+        data class FocusedOnEvent(val eventId: EventId) : Mode
+        data object PinnedEvents : Mode
+        data object Media : Mode
+        data class Thread(val threadRootId: ThreadId) : Mode
     }
 
+    val mode: Mode
     val membershipChangeEventReceived: Flow<Unit>
     suspend fun sendReadReceipt(eventId: EventId, receiptType: ReceiptType): Result<Unit>
     suspend fun paginate(direction: PaginationDirection): Result<Boolean>
@@ -76,7 +80,7 @@ interface Timeline : AutoCloseable {
     ): Result<Unit>
 
     suspend fun replyMessage(
-        replyParameters: ReplyParameters,
+        repliedToEventId: EventId,
         body: String,
         htmlBody: String?,
         intentionalMentions: List<IntentionalMention>,
@@ -89,8 +93,7 @@ interface Timeline : AutoCloseable {
         imageInfo: ImageInfo,
         caption: String?,
         formattedCaption: String?,
-        progressCallback: ProgressCallback?,
-        replyParameters: ReplyParameters?,
+        inReplyToEventId: EventId?,
     ): Result<MediaUploadHandler>
 
     suspend fun sendVideo(
@@ -99,8 +102,7 @@ interface Timeline : AutoCloseable {
         videoInfo: VideoInfo,
         caption: String?,
         formattedCaption: String?,
-        progressCallback: ProgressCallback?,
-        replyParameters: ReplyParameters?,
+        inReplyToEventId: EventId?,
     ): Result<MediaUploadHandler>
 
     suspend fun sendAudio(
@@ -108,8 +110,7 @@ interface Timeline : AutoCloseable {
         audioInfo: AudioInfo,
         caption: String?,
         formattedCaption: String?,
-        progressCallback: ProgressCallback?,
-        replyParameters: ReplyParameters?,
+        inReplyToEventId: EventId?,
     ): Result<MediaUploadHandler>
 
     suspend fun sendFile(
@@ -117,8 +118,7 @@ interface Timeline : AutoCloseable {
         fileInfo: FileInfo,
         caption: String?,
         formattedCaption: String?,
-        progressCallback: ProgressCallback?,
-        replyParameters: ReplyParameters?,
+        inReplyToEventId: EventId?,
     ): Result<MediaUploadHandler>
 
     /**
@@ -131,7 +131,7 @@ interface Timeline : AutoCloseable {
      * @param zoomLevel Optional zoom level to display the map at.
      * @param assetType Optional type of the location asset.
      *  Set to SENDER if sharing own location. Set to PIN if sharing any location.
-     * @param replyParameters Optional reply parameters to use when sending the location.
+     * @param inReplyToEventId Optional [EventId] for the event this message should reply to.
      */
     suspend fun sendLocation(
         body: String,
@@ -139,20 +139,19 @@ interface Timeline : AutoCloseable {
         description: String? = null,
         zoomLevel: Int? = null,
         assetType: AssetType? = null,
-        replyParameters: ReplyParameters?,
+        inReplyToEventId: EventId?,
     ): Result<Unit>
 
     suspend fun sendVoiceMessage(
         file: File,
         audioInfo: AudioInfo,
         waveform: List<Float>,
-        progressCallback: ProgressCallback?,
-        replyParameters: ReplyParameters?,
+        inReplyToEventId: EventId?,
     ): Result<MediaUploadHandler>
 
     suspend fun redactEvent(eventOrTransactionId: EventOrTransactionId, reason: String?): Result<Unit>
 
-    suspend fun toggleReaction(emoji: String, eventOrTransactionId: EventOrTransactionId): Result<Unit>
+    suspend fun toggleReaction(emoji: String, eventOrTransactionId: EventOrTransactionId): Result<Boolean>
 
     suspend fun forwardEvent(eventId: EventId, roomIds: List<RoomId>): Result<Unit>
 

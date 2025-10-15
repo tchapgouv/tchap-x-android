@@ -19,6 +19,8 @@ import org.gradle.kotlin.dsl.closureOf
 import org.gradle.kotlin.dsl.project
 
 private fun DependencyHandlerScope.implementation(dependency: Any) = dependencies.add("implementation", dependency)
+private fun DependencyHandlerScope.testImplementation(dependency: Any) = dependencies.add("testImplementation", dependency)
+private fun DependencyHandlerScope.testReleaseImplementation(dependency: Any) = dependencies.add("testReleaseImplementation", dependency)
 internal fun DependencyHandler.implementation(dependency: Any) = add("implementation", dependency)
 
 // Implementation + config block
@@ -30,6 +32,31 @@ private fun DependencyHandlerScope.implementation(
 private fun DependencyHandlerScope.androidTestImplementation(dependency: Any) = dependencies.add("androidTestImplementation", dependency)
 
 private fun DependencyHandlerScope.debugImplementation(dependency: Any) = dependencies.add("debugImplementation", dependency)
+private fun DependencyHandlerScope.releaseImplementation(dependency: Any) = dependencies.add("releaseImplementation", dependency)
+
+/**
+ * Dependencies used for unit tests.
+ */
+fun DependencyHandlerScope.testCommonDependencies(
+    libs: LibrariesForLibs,
+    includeTestComposeView: Boolean = false,
+) {
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.molecule.runtime)
+    testImplementation(libs.test.appyx.junit)
+    testImplementation(libs.test.arch.core)
+    testImplementation(libs.test.junit)
+    testImplementation(libs.test.mockk)
+    testImplementation(libs.test.robolectric)
+    testImplementation(libs.test.truth)
+    testImplementation(libs.test.turbine)
+    testImplementation(project(":tests:testutils"))
+    if (includeTestComposeView) {
+        testImplementation(libs.androidx.compose.ui.test.junit)
+        testReleaseImplementation(libs.androidx.compose.ui.test.manifest)
+    }
+}
 
 /**
  * Dependencies used by all the modules
@@ -53,13 +80,12 @@ fun DependencyHandlerScope.composeDependencies(libs: LibrariesForLibs) {
     implementation(libs.androidx.activity.compose)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-    implementation(libs.showkase)
     implementation(libs.kotlinx.collections.immutable)
 }
 
 fun DependencyHandlerScope.allLibrariesImpl() {
     implementation(project(":libraries:androidutils"))
-    implementation(project(":libraries:deeplink"))
+    implementation(project(":libraries:deeplink:impl"))
     implementation(project(":libraries:designsystem"))
     implementation(project(":libraries:matrix:impl"))
     implementation(project(":libraries:matrixui"))
@@ -81,6 +107,7 @@ fun DependencyHandlerScope.allLibrariesImpl() {
     implementation(project(":libraries:mediaupload:impl"))
     implementation(project(":libraries:usersearch:impl"))
     implementation(project(":libraries:textcomposer:impl"))
+    implementation(project(":libraries:accountselect:impl"))
     implementation(project(":libraries:roomselect:impl"))
     implementation(project(":libraries:cryptography:impl"))
     implementation(project(":libraries:voiceplayer:impl"))
@@ -89,6 +116,7 @@ fun DependencyHandlerScope.allLibrariesImpl() {
     implementation(project(":libraries:mediaviewer:impl"))
     implementation(project(":libraries:troubleshoot:impl"))
     implementation(project(":libraries:fullscreenintent:impl"))
+    implementation(project(":libraries:wellknown:impl"))
     implementation(project(":libraries:oidc:impl"))
 }
 

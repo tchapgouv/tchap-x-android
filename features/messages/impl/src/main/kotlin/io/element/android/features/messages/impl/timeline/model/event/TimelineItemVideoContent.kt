@@ -14,6 +14,7 @@ import kotlin.time.Duration
 data class TimelineItemVideoContent(
     override val scanState: BwiContentScannerScanState = BwiContentScannerScanState.UNKNOWN,
     override val filename: String,
+    override val fileSize: Long?,
     override val caption: String?,
     override val formattedCaption: CharSequence?,
     override val isEdited: Boolean,

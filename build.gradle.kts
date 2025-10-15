@@ -5,25 +5,17 @@
  * Please see LICENSE files in the repository root for full details.
  */
 
-buildscript {
-    dependencies {
-        classpath(libs.kotlin.gradle.plugin)
-        classpath(libs.gms.google.services)
-    }
-}
-
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     id("io.element.android-root")
+    alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.ksp) apply false
-    alias(libs.plugins.anvil) apply false
-    alias(libs.plugins.kotlin.jvm) apply false
-    alias(libs.plugins.kapt) apply false
     alias(libs.plugins.dependencycheck) apply false
+    alias(libs.plugins.roborazzi) apply false
     alias(libs.plugins.dependencyanalysis)
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
@@ -49,7 +41,7 @@ allprojects {
         config.from(files("$rootDir/tools/detekt/detekt.yml"))
     }
     dependencies {
-        detektPlugins("io.nlopez.compose.rules:detekt:0.4.22")
+        detektPlugins("io.nlopez.compose.rules:detekt:0.4.27")
         detektPlugins(project(":tests:detekt-rules"))
     }
 
@@ -103,6 +95,8 @@ allprojects {
             // Fix compilation warning for annotations
             // See https://youtrack.jetbrains.com/issue/KT-73255/Change-defaulting-rule-for-annotations for more details
             freeCompilerArgs.add("-Xannotation-default-target=first-only")
+            // Opt-in to context receivers
+            freeCompilerArgs.add("-Xcontext-parameters")
         }
     }
 }
@@ -195,9 +189,24 @@ subprojects {
             snapshotsDir.deleteRecursively()
         }
     }
-    tasks.findByName("recordPaparazzi")?.dependsOn(removeOldScreenshotsTask)
-    tasks.findByName("recordPaparazziDebug")?.dependsOn(removeOldScreenshotsTask)
-    tasks.findByName("recordPaparazziRelease")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordPaparazziWithpinning")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordPaparazziWithpinningDebug")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordPaparazziWithpinningRelease")?.dependsOn(removeOldScreenshotsTask)
+}
+
+// Make sure to delete old snapshot before recording new ones
+subprojects {
+    val screenshotsDir = File("${project.projectDir}/screenshots")
+    val removeOldScreenshotsTask = tasks.register("removeOldScreenshots") {
+        onlyIf { screenshotsDir.exists() }
+        doFirst {
+            println("Delete previous screenshots located at $screenshotsDir\n")
+            screenshotsDir.deleteRecursively()
+        }
+    }
+    tasks.findByName("recordRoborazzi")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordRoborazziDebug")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordRoborazziRelease")?.dependsOn(removeOldScreenshotsTask)
 }
 
 subprojects {

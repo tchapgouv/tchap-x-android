@@ -2,16 +2,26 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="a11y_add_reaction">"Adicionar reação: %1$s"</string>
   <string name="a11y_avatar">"Avatar"</string>
+  <string name="a11y_collapse_message_text_field">"Minimizar campo de texto da mensagem"</string>
   <string name="a11y_delete">"Eliminar"</string>
   <plurals name="a11y_digits_entered">
     <item quantity="one">"%1$d dígito inserido"</item>
     <item quantity="other">"%1$d dígitos inseridos"</item>
   </plurals>
+  <string name="a11y_edit_avatar">"Editar avatar"</string>
+  <string name="a11y_edit_room_address_hint">"O endereço completo será %1$s"</string>
+  <string name="a11y_encryption_details">"Detalhes de cifragem"</string>
+  <string name="a11y_expand_message_text_field">"Expandir campo de texto da mensagem"</string>
   <string name="a11y_hide_password">"Ocultar palavra-passe"</string>
   <string name="a11y_join_call">"Juntar-se à chamada"</string>
   <string name="a11y_jump_to_bottom">"Saltar para o fundo"</string>
+  <string name="a11y_move_the_map_to_my_location">"Mover o mapa para a minha localização"</string>
   <string name="a11y_notifications_mentions_only">"Apenas menções"</string>
   <string name="a11y_notifications_muted">"Silenciado"</string>
+  <string name="a11y_notifications_new_mentions">"Novas menções"</string>
+  <string name="a11y_notifications_new_messages">"Novas mensagens"</string>
+  <string name="a11y_notifications_ongoing_call">"Chamada em curso"</string>
+  <string name="a11y_other_user_avatar">"O avatar do outro utilizador"</string>
   <string name="a11y_page_n">"Página %1$d"</string>
   <string name="a11y_pause">"Pausar"</string>
   <string name="a11y_paused_voice_message">"Mensagem de voz, duração: %1$s, posição atual: %2$s"</string>
@@ -30,15 +40,20 @@
   <string name="a11y_read_receipts_tap_to_show_all">"Toca para mostrar tudo"</string>
   <string name="a11y_remove_reaction">"Remover reação com %1$s"</string>
   <string name="a11y_remove_reaction_with">"Remover reação com %1$s"</string>
+  <string name="a11y_room_avatar">"Ícone da sala"</string>
   <string name="a11y_send_files">"Enviar ficheiros"</string>
+  <string name="a11y_session_verification_time_limited_action_required">"Necessária ação em tempo limitado, tens um minuto para verificares"</string>
   <string name="a11y_show_password">"Mostrar palavra-passe"</string>
   <string name="a11y_start_call">"Iniciar chamada"</string>
+  <string name="a11y_tombstoned_room">"Sala antiga"</string>
+  <string name="a11y_user_avatar">"Avatar do utilizador"</string>
   <string name="a11y_user_menu">"Menu de utilizador"</string>
   <string name="a11y_view_avatar">"Ver avatar"</string>
   <string name="a11y_view_details">"Ver detalhes"</string>
   <string name="a11y_voice_message">"Mensagem de voz, duração: %1$s"</string>
   <string name="a11y_voice_message_record">"Gravar mensagem de voz."</string>
   <string name="a11y_voice_message_stop_recording">"Parar gravação"</string>
+  <string name="a11y_your_avatar">"O teu avatar"</string>
   <string name="action_accept">"Aceitar"</string>
   <string name="action_add_caption">"Adicionar legenda"</string>
   <string name="action_add_to_timeline">"Adicionar à cronologia"</string>
@@ -65,6 +80,7 @@
   <string name="action_decline">"Recusar"</string>
   <string name="action_decline_and_block">"Recusar e bloquear"</string>
   <string name="action_delete_poll">"Eliminar sondagem"</string>
+  <string name="action_deselect_all">"Desselecionar tudo"</string>
   <string name="action_disable">"Desativar"</string>
   <string name="action_discard">"Descartar"</string>
   <string name="action_dismiss">"Dispensar"</string>
@@ -75,6 +91,7 @@
   <string name="action_enable">"Ativar"</string>
   <string name="action_end_poll">"Fim da sondagem"</string>
   <string name="action_enter_pin">"Inserir PIN"</string>
+  <string name="action_finish">"Concluir"</string>
   <string name="action_forgot_password">"Esqueceu-se da palavra-passe?"</string>
   <string name="action_forward">"Reencaminhar"</string>
   <string name="action_go_back">"Voltar"</string>
@@ -89,6 +106,7 @@
   <string name="action_leave">"Sair"</string>
   <string name="action_leave_conversation">"Sair da conversa"</string>
   <string name="action_leave_room">"Sair da sala"</string>
+  <string name="action_leave_space">"Sair do espaço"</string>
   <string name="action_load_more">"Carregar mais"</string>
   <string name="action_manage_account">"Gerir conta"</string>
   <string name="action_manage_devices">"Gerir dispositivos"</string>
@@ -97,7 +115,8 @@
   <string name="action_no">"Não"</string>
   <string name="action_not_now">"Agora não"</string>
   <string name="action_ok">"OK"</string>
-  <string name="action_open_settings">"Definições"</string>
+  <string name="action_open_context_menu">"Abrir menu de contexto"</string>
+  <string name="action_open_settings">"Configurações"</string>
   <string name="action_open_with">"Abrir com"</string>
   <string name="action_pin">"Afixar"</string>
   <string name="action_quick_reply">"Resposta rápida"</string>
@@ -120,8 +139,11 @@
   <string name="action_retry_decryption">"Tentar decifragem novamente"</string>
   <string name="action_save">"Guardar"</string>
   <string name="action_search">"Pesquisar"</string>
+  <string name="action_select_all">"Selecionar tudo"</string>
   <string name="action_send">"Enviar"</string>
+  <string name="action_send_edited_message">"Enviar mensagem editada"</string>
   <string name="action_send_message">"Enviar mensagem"</string>
+  <string name="action_send_voice_message">"Enviar mensagem de voz"</string>
   <string name="action_share">"Partilhar"</string>
   <string name="action_share_link">"Partilhar ligação"</string>
   <string name="action_show">"Mostrar"</string>
@@ -137,6 +159,7 @@
   <string name="action_tap_for_options">"Toca para ver as opções"</string>
   <string name="action_try_again">"Tentar novamente"</string>
   <string name="action_unpin">"Desafixar"</string>
+  <string name="action_view">"Ver"</string>
   <string name="action_view_in_timeline">"Ver na cronologia"</string>
   <string name="action_view_source">"Ver fonte"</string>
   <string name="action_yes">"Sim"</string>
@@ -145,10 +168,14 @@
   <string name="banner_migrate_to_native_sliding_sync_title">"Atualização disponível"</string>
   <string name="common_about">"Sobre"</string>
   <string name="common_acceptable_use_policy">"Política de utilização aceitável"</string>
+  <string name="common_add_account">"Adicionar conta"</string>
+  <string name="common_add_another_account">"Adicionar outra conta"</string>
   <string name="common_adding_caption">"A adicionar legenda"</string>
   <string name="common_advanced_settings">"Configurações avançadas"</string>
   <string name="common_an_image">"uma imagem"</string>
   <string name="common_analytics">"Recolha e análise de dados"</string>
+  <string name="common_android_shortcuts_remove_reason_left_room">"Saíste da sala"</string>
+  <string name="common_android_shortcuts_remove_reason_session_logged_out">"A tua sessão foi terminada"</string>
   <string name="common_appearance">"Aparência"</string>
   <string name="common_audio">"Áudio"</string>
   <string name="common_blocked_users">"Utilizadores bloqueados"</string>
@@ -160,9 +187,11 @@
   <string name="common_creating_room">"A criar sala…"</string>
   <string name="common_current_user_canceled_knock">"Pedido cancelado"</string>
   <string name="common_current_user_left_room">"Saíste da sala"</string>
+  <string name="common_current_user_left_space">"Saíste do espaço"</string>
   <string name="common_current_user_rejected_invite">"Convite rejeitado"</string>
   <string name="common_dark">"Escuro"</string>
   <string name="common_decryption_error">"Erro de decifragem"</string>
+  <string name="common_description">"Descrição"</string>
   <string name="common_developer_options">"Opções de programador"</string>
   <string name="common_device_id">"ID do dispositivo"</string>
   <string name="common_direct_chat">"Conversa direta"</string>
@@ -219,6 +248,7 @@ Razão: %1$s."</string>
   <string name="common_name_and_id">"%1$s (%2$s)"</string>
   <string name="common_no_results">"Sem resultados"</string>
   <string name="common_no_room_name">"Sala sem nome"</string>
+  <string name="common_no_space_name">"Espaço sem nome"</string>
   <string name="common_not_encrypted">"Não encriptado"</string>
   <string name="common_offline">"Desligado"</string>
   <string name="common_open_source_licenses">"Licenças de código aberto"</string>
@@ -228,8 +258,8 @@ Razão: %1$s."</string>
   <string name="common_permalink">"Ligação permanente"</string>
   <string name="common_permission">"Permissão"</string>
   <string name="common_pinned">"Afixado"</string>
-  <string name="common_please_check_internet_connection">"Por favor, verifica a tua ligação à Internet"</string>
-  <string name="common_please_wait">"Por favor, aguarde…"</string>
+  <string name="common_please_check_internet_connection">"Por favor, verifica a tua ligação à internet"</string>
+  <string name="common_please_wait">"Por favor, aguarda…"</string>
   <string name="common_poll_end_confirmation">"Tens a certeza que queres concluir esta sondagem?"</string>
   <string name="common_poll_summary">"Sondagem: %1$s"</string>
   <string name="common_poll_total_votes">"Total de votos: %1$s"</string>
@@ -238,7 +268,12 @@ Razão: %1$s."</string>
     <item quantity="one">"%d voto"</item>
     <item quantity="other">"%d votos"</item>
   </plurals>
+  <string name="common_preparing">"A preparar…"</string>
   <string name="common_privacy_policy">"Política de privacidade"</string>
+  <string name="common_private_room">"Sala privada"</string>
+  <string name="common_private_space">"Espaço privado"</string>
+  <string name="common_public_room">"Sala pública"</string>
+  <string name="common_public_space">"Espaço público"</string>
   <string name="common_reaction">"Reação"</string>
   <string name="common_reactions">"Reações"</string>
   <string name="common_reason">"Motivo"</string>
@@ -256,6 +291,10 @@ Razão: %1$s."</string>
   <string name="common_room">"Sala"</string>
   <string name="common_room_name">"Nome da sala"</string>
   <string name="common_room_name_placeholder">"p.ex. o nome do teu projeto"</string>
+  <plurals name="common_rooms">
+    <item quantity="one">"%1$d sala"</item>
+    <item quantity="other">"%1$d salas"</item>
+  </plurals>
   <string name="common_saved_changes">"Alterações guardadas"</string>
   <string name="common_saving">"A guardar"</string>
   <string name="common_screen_lock">"Bloqueio do ecrã"</string>
@@ -263,18 +302,26 @@ Razão: %1$s."</string>
   <string name="common_search_results">"Resultados da pesquisa"</string>
   <string name="common_security">"Segurança"</string>
   <string name="common_seen_by">"Vista por"</string>
+  <string name="common_select_account">"Selecionar conta"</string>
   <string name="common_send_to">"Enviar para"</string>
   <string name="common_sending">"A enviar…"</string>
   <string name="common_sending_failed">"Falha no envio"</string>
   <string name="common_sent">"Enviada"</string>
   <string name="common_sentence_delimiter">". "</string>
   <string name="common_server_not_supported">"Servidor não suportado"</string>
+  <string name="common_server_unreachable">"Servidor indisponível"</string>
   <string name="common_server_url">"URL do servidor"</string>
   <string name="common_settings">"Configurações"</string>
+  <string name="common_share_space">"Partilhar espaço"</string>
   <string name="common_shared_location">"Localização partilhada"</string>
   <string name="common_signing_out">"A terminar sessão"</string>
   <string name="common_something_went_wrong">"Algo correu mal"</string>
-  <string name="common_something_went_wrong_message">"Encontrámos um erro. Por favor, tenta novamente."</string>
+  <string name="common_something_went_wrong_message">"Encontramos um erro. Por favor, tenta novamente."</string>
+  <string name="common_space">"Espaço"</string>
+  <plurals name="common_spaces">
+    <item quantity="one">"%1$d espaço"</item>
+    <item quantity="other">"%1$d espaços"</item>
+  </plurals>
   <string name="common_starting_chat">"A iniciar conversa…"</string>
   <string name="common_sticker">"Autocolante"</string>
   <string name="common_success">"Sucesso"</string>
@@ -305,6 +352,12 @@ Razão: %1$s."</string>
   <string name="common_verify_identity">"Verifica a identidade"</string>
   <string name="common_verify_user">"Verificar utilizador"</string>
   <string name="common_video">"Vídeo"</string>
+  <string name="common_video_quality_high">"Alta qualidade"</string>
+  <string name="common_video_quality_high_description">"Melhor qualidade, mas maior tamanho de ficheiro"</string>
+  <string name="common_video_quality_low">"Baixa qualidade"</string>
+  <string name="common_video_quality_low_description">"A velocidade de carregamento mais rápida e o tamanho de ficheiro mais pequeno"</string>
+  <string name="common_video_quality_standard">"Qualidade padrão"</string>
+  <string name="common_video_quality_standard_description">"Equilíbrio entre qualidade e velocidade de carregamento"</string>
   <string name="common_voice_message">"Mensagem de voz"</string>
   <string name="common_waiting">"A aguardar…"</string>
   <string name="common_waiting_for_decryption_key">"À espera desta mensagem"</string>
@@ -319,14 +372,23 @@ Razão: %1$s."</string>
 
 Tens a certeza de que queres continuar?"</string>
   <string name="dialog_confirm_link_title">"Verifica novamente esta ligação"</string>
+  <string name="dialog_default_video_quality_selector_subtitle">"Seleciona a qualidade predefinida dos vídeos que carregas."</string>
+  <string name="dialog_default_video_quality_selector_title">"Qualidade de carregamento do vídeo"</string>
+  <string name="dialog_file_too_large_to_upload_subtitle">"O tamanho máximo de ficheiro permitido é: %1$s"</string>
+  <string name="dialog_file_too_large_to_upload_title">"O tamanho do ficheiro é demasiado grande para ser carregado"</string>
   <string name="dialog_room_reported">"Sala denunciada"</string>
-  <string name="dialog_room_reported_and_left">"Sala denunciada e abandonada"</string>
+  <string name="dialog_room_reported_and_left">"Reportaste e saíste da sala"</string>
   <string name="dialog_title_confirmation">"Confirmação"</string>
   <string name="dialog_title_error">"Erro"</string>
   <string name="dialog_title_success">"Sucesso"</string>
   <string name="dialog_title_warning">"Aviso"</string>
   <string name="dialog_unsaved_changes_description_android">"As tuas alterações não foram guardadas. Tens a certeza que queres voltar atrás?"</string>
   <string name="dialog_unsaved_changes_title">"Guardar alterações?"</string>
+  <string name="dialog_video_quality_selector_subtitle_file_size">"O tamanho máximo de ficheiro permitido é: %1$s"</string>
+  <string name="dialog_video_quality_selector_subtitle_no_file_size">"Seleciona a qualidade do vídeo que pretendes carregar."</string>
+  <string name="dialog_video_quality_selector_title">"Seleciona a qualidade de carregamento do vídeo"</string>
+  <string name="emoji_picker_search_placeholder">"Pesquisar emojis"</string>
+  <string name="error_account_already_logged_in">"Já tens sessão iniciada como %1$s neste dispositivo."</string>
   <string name="error_account_creation_not_possible">"Seu homeserver precisa ser atualizado para suportar o Matrix Authentication Service e a criação de conta."</string>
   <string name="error_failed_creating_the_permalink">"Falha ao criar ligação permanente"</string>
   <string name="error_failed_loading_map">"%1$s não foi possível carregar o mapa. Por favor, tente novamente mais tarde."</string>
@@ -342,7 +404,7 @@ Tens a certeza de que queres continuar?"</string>
   <string name="error_room_address_already_exists">"Este endereço de sala já existe, tente editar o campo de endereço da sala ou altere o nome da sala"</string>
   <string name="error_room_address_invalid_symbols">"Alguns caracteres não são permitidos. Apenas letras, dígitos e os seguintes símbolos são suportados! $ &amp; ‘ ( ) * + / ; = ? @ [ ] - . _"</string>
   <string name="error_some_messages_have_not_been_sent">"Algumas mensagens não foram enviadas"</string>
-  <string name="error_unknown">"Desculpe, ocorreu um erro"</string>
+  <string name="error_unknown">"Pedimos desculpa, ocorreu um erro desconhecido"</string>
   <string name="event_shield_mismatched_sender">"O remetente deste evento não é o dono do dispositivo que o enviou."</string>
   <string name="event_shield_reason_authenticity_not_guaranteed">"A autenticidade desta mensagem cifrada não pode ser garantida neste dispositivo."</string>
   <string name="event_shield_reason_previously_verified">"Criptografado por um usuário verificado anteriormente."</string>
@@ -354,14 +416,12 @@ Tens a certeza de que queres continuar?"</string>
   <string name="invite_friends_text">"Alô! Fala comigo na %1$s: %2$s"</string>
   <string name="login_initial_device_name_android">"%1$s Android"</string>
   <string name="preference_rageshake">"Agita o dispositivo em fúria para comunicar um problema"</string>
+  <string name="screen_bug_report_a11y_screenshot">"Captura de ecrã"</string>
   <string name="screen_create_poll_option_accessibility_label">"%1$s: %2$s"</string>
   <string name="screen_create_poll_options_section_title">"Opções"</string>
   <string name="screen_create_poll_remove_accessibility_label">"Remover %1$s"</string>
   <string name="screen_create_poll_settings_section_title">"Configurações"</string>
   <string name="screen_media_picker_error_failed_selection">"Falha ao selecionar multimédia, por favor tente novamente."</string>
-  <string name="screen_media_upload_preview_caption_warning">"As legendas poderão não ser visíveis em versões mais antigas da aplicação."</string>
-  <string name="screen_media_upload_preview_error_failed_processing">"Falha ao processar multimédia para carregamento, por favor tente novamente."</string>
-  <string name="screen_media_upload_preview_error_failed_sending">"Falhar ao carregar multimédia, por favor tente novamente."</string>
   <string name="screen_pinned_timeline_empty_state_description">"Pressione uma mensagem e escolha \"%1$s\" para incluir aqui."</string>
   <string name="screen_pinned_timeline_empty_state_headline">"Fixa mensagens importantes para que possam ser facilmente descobertas"</string>
   <plurals name="screen_pinned_timeline_screen_title">
@@ -379,6 +439,7 @@ Tens a certeza de que queres continuar?"</string>
   <string name="screen_resolve_send_failure_unsigned_device_title">"A sua mensagem não foi enviada porque %1$s não verificou todos os dispositivos"</string>
   <string name="screen_resolve_send_failure_you_unsigned_device_subtitle">"Um ou mais dos teus dispositivos não foram verificados. Podes enviar a mensagem na mesma, ou podes cancelar por agora e tentar novamente mais tarde, depois de teres verificado todos os teus dispositivos."</string>
   <string name="screen_resolve_send_failure_you_unsigned_device_title">"A sua mensagem não foi enviada porque não verificou um ou mais dos seus dispositivos"</string>
+  <string name="screen_room_change_role_administrators_or_owners_title">"Editar administradores ou proprietários"</string>
   <string name="screen_room_error_failed_processing_media">"Falha ao processar multimédia para carregamento, por favor tente novamente."</string>
   <string name="screen_room_error_failed_retrieving_user_details">"Não foi possível obter os detalhes de utilizador."</string>
   <string name="screen_room_event_pill">"Mensagem em %1$s"</string>
@@ -396,6 +457,10 @@ Tens a certeza de que queres continuar?"</string>
   <string name="screen_share_open_google_maps">"Abrir no Google Maps"</string>
   <string name="screen_share_open_osm_maps">"Abrir no OpenStreetMap"</string>
   <string name="screen_share_this_location_action">"Partilhar este local"</string>
+  <string name="screen_space_list_description">"Espaços que criaste ou nos quais entraste."</string>
+  <string name="screen_space_list_details">"%1$s • %2$s"</string>
+  <string name="screen_space_list_parent_space">"Espaço %1$s"</string>
+  <string name="screen_space_list_title">"Espaços"</string>
   <string name="screen_timeline_item_menu_send_failure_changed_identity">"Mensagem não enviada porque a identidade verificada de %1$s foi reposta."</string>
   <string name="screen_timeline_item_menu_send_failure_unsigned_device">"Mensagem não enviada porque %1$s não verificou todos os dispositivos."</string>
   <string name="screen_timeline_item_menu_send_failure_you_unsigned_device">"Mensagem não enviada porque não verificou um ou mais dos seus dispositivos."</string>

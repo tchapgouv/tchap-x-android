@@ -7,24 +7,25 @@
 
 package io.element.android.features.migration.impl.migrations
 
-import com.squareup.anvil.annotations.ContributesMultibinding
-import io.element.android.libraries.di.AppScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.Inject
 import io.element.android.libraries.di.CacheDirectory
 import io.element.android.libraries.sessionstorage.api.SessionStore
 import java.io.File
-import javax.inject.Inject
 
 /**
  * Create the cache directory for the existing sessions.
  */
-@ContributesMultibinding(AppScope::class)
-class AppMigration06 @Inject constructor(
+@ContributesIntoSet(AppScope::class)
+@Inject
+class AppMigration06(
     private val sessionStore: SessionStore,
     @CacheDirectory private val cacheDirectory: File,
 ) : AppMigration {
     override val order: Int = 6
 
-    override suspend fun migrate() {
+    override suspend fun migrate(isFreshInstall: Boolean) {
         val allSessions = sessionStore.getAllSessions()
         for (session in allSessions) {
             if (session.cachePath.isEmpty()) {

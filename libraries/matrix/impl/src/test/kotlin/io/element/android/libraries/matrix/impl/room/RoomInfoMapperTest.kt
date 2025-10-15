@@ -8,9 +8,6 @@
 package io.element.android.libraries.matrix.impl.room
 
 import com.google.common.truth.Truth.assertThat
-import io.element.android.libraries.matrix.api.core.EventId
-import io.element.android.libraries.matrix.api.core.RoomAlias
-import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.room.CurrentUserMembership
 import io.element.android.libraries.matrix.api.room.RoomInfo
 import io.element.android.libraries.matrix.api.room.RoomNotificationMode
@@ -31,9 +28,9 @@ import io.element.android.libraries.matrix.test.A_USER_ID_3
 import io.element.android.libraries.matrix.test.A_USER_ID_6
 import io.element.android.libraries.matrix.test.room.aRoomMember
 import io.element.android.libraries.matrix.test.room.defaultRoomPowerLevelValues
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toPersistentList
 import org.junit.Test
 import org.matrix.rustcomponents.sdk.Membership
 import uniffi.matrix_sdk_base.EncryptionState
@@ -78,8 +75,10 @@ class RoomInfoMapperTest {
                     numUnreadNotifications = 13uL,
                     numUnreadMentions = 14uL,
                     pinnedEventIds = listOf(AN_EVENT_ID.value),
-                    roomCreator = A_USER_ID,
+                    roomCreators = listOf(A_USER_ID.value),
                     historyVisibility = RustRoomHistoryVisibility.Joined,
+                    roomVersion = "12",
+                    privilegedCreatorsRole = true,
                 )
             )
         ).isEqualTo(
@@ -110,22 +109,24 @@ class RoomInfoMapperTest {
                 notificationCount = 11L,
                 userDefinedNotificationMode = RoomNotificationMode.MUTE,
                 hasRoomCall = true,
-                activeRoomCallParticipants = listOf(A_USER_ID_3).toImmutableList(),
-                heroes = listOf(
+                activeRoomCallParticipants = persistentListOf(A_USER_ID_3),
+                heroes = persistentListOf(
                     MatrixUser(
                         userId = A_USER_ID,
                         displayName = "displayName",
                         avatarUrl = "avatarUrl",
                     )
-                ).toImmutableList(),
-                pinnedEventIds = listOf(AN_EVENT_ID).toPersistentList(),
-                creator = A_USER_ID,
+                ),
+                pinnedEventIds = persistentListOf(AN_EVENT_ID),
+                creators = persistentListOf(A_USER_ID),
                 isMarkedUnread = false,
                 numUnreadMessages = 12L,
                 numUnreadNotifications = 13L,
                 numUnreadMentions = 14L,
                 historyVisibility = RoomHistoryVisibility.Joined,
-                successorRoom = null
+                successorRoom = null,
+                roomVersion = "12",
+                privilegedCreatorRole = true,
             )
         )
     }
@@ -166,7 +167,9 @@ class RoomInfoMapperTest {
                     numUnreadNotifications = 13uL,
                     numUnreadMentions = 14uL,
                     pinnedEventIds = emptyList(),
-                    roomCreator = null,
+                    roomCreators = null,
+                    roomVersion = "12",
+                    privilegedCreatorsRole = true,
                 )
             )
         ).isEqualTo(
@@ -184,7 +187,7 @@ class RoomInfoMapperTest {
                 successorRoom = null,
                 isFavorite = true,
                 canonicalAlias = null,
-                alternativeAliases = emptyList<RoomAlias>().toPersistentList(),
+                alternativeAliases = persistentListOf(),
                 currentUserMembership = CurrentUserMembership.INVITED,
                 inviter = null,
                 activeMembersCount = 2L,
@@ -198,15 +201,17 @@ class RoomInfoMapperTest {
                 notificationCount = 11L,
                 userDefinedNotificationMode = null,
                 hasRoomCall = false,
-                activeRoomCallParticipants = emptyList<UserId>().toImmutableList(),
-                heroes = emptyList<MatrixUser>().toImmutableList(),
-                pinnedEventIds = emptyList<EventId>().toPersistentList(),
-                creator = null,
+                activeRoomCallParticipants = persistentListOf(),
+                heroes = persistentListOf(),
+                pinnedEventIds = persistentListOf(),
+                creators = persistentListOf(),
                 isMarkedUnread = true,
                 numUnreadMessages = 12L,
                 numUnreadNotifications = 13L,
                 numUnreadMentions = 14L,
                 historyVisibility = RoomHistoryVisibility.Joined,
+                roomVersion = "12",
+                privilegedCreatorRole = true,
             )
         )
     }

@@ -28,10 +28,14 @@ object MatrixPatterns {
     private const val MATRIX_USER_IDENTIFIER_REGEX = "^@\\S*?$DOMAIN_REGEX$"
     private val PATTERN_CONTAIN_MATRIX_USER_IDENTIFIER = MATRIX_USER_IDENTIFIER_REGEX.toRegex()
 
-    // regex pattern to match room ids.
+    // !localpart:domain" used in most room versions prior to MSC4291
     // Note: roomId can be arbitrary strings, including space and new line char
     private const val MATRIX_ROOM_IDENTIFIER_REGEX = "^!.+$DOMAIN_REGEX$"
     private val PATTERN_CONTAIN_MATRIX_ROOM_IDENTIFIER = MATRIX_ROOM_IDENTIFIER_REGEX.toRegex(RegexOption.DOT_MATCHES_ALL)
+
+    // "!event_id_base_64" used in room versions post MSC4291
+    private const val MATRIX_ROOM_IDENTIFIER_DOMAINLESS_REGEX = "!$BASE_64_URL_SAFE_ALPHABET"
+    private val PATTERN_CONTAIN_MATRIX_ROOM_IDENTIFIER_DOMAINLESS = MATRIX_ROOM_IDENTIFIER_DOMAINLESS_REGEX.toRegex()
 
     // regex pattern to match room aliases.
     private const val MATRIX_ROOM_ALIAS_REGEX = "^#\\S+$DOMAIN_REGEX$"
@@ -66,14 +70,6 @@ object MatrixPatterns {
     }
 
     /**
-     * Tells if a string is a valid space id. This is an alias for [isRoomId]
-     *
-     * @param str the string to test
-     * @return true if the string is a valid space Id
-     */
-    fun isSpaceId(str: String?) = isRoomId(str)
-
-    /**
      * Tells if a string is a valid room id.
      *
      * @param str the string to test
@@ -82,7 +78,8 @@ object MatrixPatterns {
     fun isRoomId(str: String?): Boolean {
         return str != null &&
             str.length <= MAX_IDENTIFIER_LENGTH &&
-            str matches PATTERN_CONTAIN_MATRIX_ROOM_IDENTIFIER
+            (str matches PATTERN_CONTAIN_MATRIX_ROOM_IDENTIFIER_DOMAINLESS ||
+                str matches PATTERN_CONTAIN_MATRIX_ROOM_IDENTIFIER)
     }
 
     /**
@@ -146,7 +143,7 @@ object MatrixPatterns {
                 val urlMatch = match.groupValues[1]
                 when (val permalink = permalinkParser.parse(urlMatch)) {
                     is PermalinkData.UserLink -> {
-                        add(MatrixPatternResult(MatrixPatternType.USER_ID, permalink.userId.toString(), match.range.first, match.range.last + 1))
+                        add(MatrixPatternResult(MatrixPatternType.USER_ID, permalink.userId.value, match.range.first, match.range.last + 1))
                     }
                     is PermalinkData.RoomLink -> {
                         when (permalink.roomIdOrAlias) {

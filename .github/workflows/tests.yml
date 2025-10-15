@@ -38,8 +38,6 @@ jobs:
           # Ensure we are building the branch and not the branch after being merged on develop
           # https://github.com/actions/checkout/issues/881
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.ref }}
-      - name: Clone Tchap Compound submodule
-        run: git submodule update --init --recursive checkouts/compound-android # Tchap using compound from tchap repository
       - name: Add SSH private keys for submodule repositories
         uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
         # Skip in forks
@@ -51,17 +49,17 @@ jobs:
         if: ${{ github.repository == 'element-hq/element-x-android' && ('pull_request' != github.event_name || github.event.pull_request.head.repo.full_name == github.repository) }}
         run: git submodule update --init --recursive
       - name: ☕️ Use JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
       - name: Configure gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/develop' }}
 
       - name: ⚙️ Check coverage for debug variant (includes unit & screenshot tests)
-        run: ./gradlew testDebugUnitTest :tests:uitests:verifyPaparazziDebug :app:koverXmlReportGplayTchapWithpinningDebug :app:koverHtmlReportGplayTchapWithpinningDebug :app:koverVerifyAll $CI_GRADLE_ARG_PROPERTIES
+        run: ./gradlew testDebugUnitTest :tests:uitests:verifyPaparazziWithpinningDebug :app:koverXmlReportGplayTchapWithpinningDebug :app:koverHtmlReportGplayTchapWithpinningDebug :app:koverVerifyAll $CI_GRADLE_ARG_PROPERTIES
 
       - name: 🚫 Upload kover failed coverage reports
         if: failure()
@@ -82,11 +80,12 @@ jobs:
           name: tests-and-screenshot-tests-results
           path: |
             **/build/paparazzi/failures/
+            **/build/roborazzi/failures/
             **/build/reports/tests/*UnitTest/
 
       # https://github.com/codecov/codecov-action
       - name: ☂️ Upload coverage reports to codecov
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
         # Skip in forks
         if: ${{ github.repository == 'element-hq/element-x-android' && ('pull_request' != github.event_name || github.event.pull_request.head.repo.full_name == github.repository) }}
         with:

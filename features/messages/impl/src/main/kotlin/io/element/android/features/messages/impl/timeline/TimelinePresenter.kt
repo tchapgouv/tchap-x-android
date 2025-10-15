@@ -15,14 +15,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import io.element.android.features.messages.impl.MessagesNavigator
 import io.element.android.features.messages.impl.crypto.sendfailure.resolve.ResolveVerifiedUserSendFailureEvents
 import io.element.android.features.messages.impl.crypto.sendfailure.resolve.ResolveVerifiedUserSendFailureState
@@ -48,13 +49,17 @@ import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.bool.orFalse
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.UniqueId
+import io.element.android.libraries.matrix.api.core.asEventId
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.MessageEventType
 import io.element.android.libraries.matrix.api.room.isDm
 import io.element.android.libraries.matrix.api.room.roomMembers
 import io.element.android.libraries.matrix.api.timeline.ReceiptType
+import io.element.android.libraries.matrix.api.timeline.Timeline
 import io.element.android.libraries.matrix.api.timeline.item.event.MessageShield
 import io.element.android.libraries.matrix.api.timeline.item.event.TimelineItemEventOrigin
 import io.element.android.libraries.matrix.ui.room.canSendMessageAsState
@@ -73,7 +78,8 @@ import timber.log.Timber
 
 const val FOCUS_ON_PINNED_EVENT_DEBOUNCE_DURATION_IN_MILLIS = 200L
 
-class TimelinePresenter @AssistedInject constructor(
+@AssistedInject
+class TimelinePresenter(
     timelineItemsFactoryCreator: TimelineItemsFactory.Creator,
     private val room: JoinedRoom,
     private val dispatchers: CoroutineDispatchers,
@@ -84,16 +90,20 @@ class TimelinePresenter @AssistedInject constructor(
     private val sendPollResponseAction: SendPollResponseAction,
     private val endPollAction: EndPollAction,
     private val sessionPreferencesStore: SessionPreferencesStore,
-    private val timelineController: TimelineController,
+    @Assisted private val timelineController: TimelineController,
     private val timelineItemIndexer: TimelineItemIndexer = TimelineItemIndexer(),
     private val resolveVerifiedUserSendFailurePresenter: Presenter<ResolveVerifiedUserSendFailureState>,
     private val typingNotificationPresenter: Presenter<TypingNotificationState>,
     private val roomCallStatePresenter: Presenter<RoomCallState>,
     private val markAsFullyRead: MarkAsFullyRead,
+    private val featureFlagService: FeatureFlagService,
 ) : Presenter<TimelineState> {
     @AssistedFactory
     interface Factory {
-        fun create(navigator: MessagesNavigator): TimelinePresenter
+        fun create(
+            timelineController: TimelineController,
+            navigator: MessagesNavigator
+        ): TimelinePresenter
     }
 
     private val timelineItemsFactory: TimelineItemsFactory = timelineItemsFactoryCreator.create(
@@ -107,6 +117,9 @@ class TimelinePresenter @AssistedInject constructor(
     @Composable
     override fun present(): TimelineState {
         val localScope = rememberCoroutineScope()
+
+        val timelineMode = remember { timelineController.mainTimelineMode() }
+
         var focusRequestState: FocusRequestState by remember { mutableStateOf(FocusRequestState.None) }
 
         val lastReadReceiptId = rememberSaveable { mutableStateOf<EventId?>(null) }
@@ -115,8 +128,8 @@ class TimelinePresenter @AssistedInject constructor(
 
         val syncUpdateFlow = room.syncUpdateFlow.collectAsState()
 
-        val userHasPermissionToSendMessage by room.canSendMessageAsState(type = MessageEventType.ROOM_MESSAGE, updateKey = syncUpdateFlow.value)
-        val userHasPermissionToSendReaction by room.canSendMessageAsState(type = MessageEventType.REACTION, updateKey = syncUpdateFlow.value)
+        val userHasPermissionToSendMessage by room.canSendMessageAsState(type = MessageEventType.RoomMessage, updateKey = syncUpdateFlow.value)
+        val userHasPermissionToSendReaction by room.canSendMessageAsState(type = MessageEventType.Reaction, updateKey = syncUpdateFlow.value)
 
         val prevMostRecentItemId = rememberSaveable { mutableStateOf<UniqueId?>(null) }
 
@@ -134,9 +147,17 @@ class TimelinePresenter @AssistedInject constructor(
             timelineController.isLive()
         }.collectAsState(initial = true)
 
+        val displayThreadSummaries by produceState(false) {
+            value = featureFlagService.isFeatureEnabled(FeatureFlags.Threads)
+        }
+
         fun handleEvents(event: TimelineEvents) {
             when (event) {
                 is TimelineEvents.LoadMore -> {
+                    if (event.direction == Timeline.PaginationDirection.FORWARDS && timelineMode is Timeline.Mode.Thread) {
+                        // Do not paginate forwards in thread mode, as it's not supported
+                        return
+                    }
                     localScope.launch {
                         timelineController.paginate(direction = event.direction)
                     }
@@ -158,15 +179,21 @@ class TimelinePresenter @AssistedInject constructor(
                     }
                 }
                 is TimelineEvents.SelectPollAnswer -> sessionCoroutineScope.launch {
-                    sendPollResponseAction.execute(
-                        pollStartId = event.pollStartId,
-                        answerId = event.answerId
-                    )
+                    timelineController.invokeOnCurrentTimeline {
+                        sendPollResponseAction.execute(
+                            timeline = this,
+                            pollStartId = event.pollStartId,
+                            answerId = event.answerId
+                        )
+                    }
                 }
                 is TimelineEvents.EndPoll -> sessionCoroutineScope.launch {
-                    endPollAction.execute(
-                        pollStartId = event.pollStartId,
-                    )
+                    timelineController.invokeOnCurrentTimeline {
+                        endPollAction.execute(
+                            timeline = this,
+                            pollStartId = event.pollStartId,
+                        )
+                    }
                 }
                 is TimelineEvents.EditPoll -> {
                     navigator.onEditPollClick(event.pollStartId)
@@ -188,8 +215,16 @@ class TimelinePresenter @AssistedInject constructor(
                 is TimelineEvents.ComputeVerifiedUserSendFailure -> {
                     resolveVerifiedUserSendFailureState.eventSink(ResolveVerifiedUserSendFailureEvents.ComputeForMessage(event.event))
                 }
-                is TimelineEvents.NavigateToRoom -> {
-                    navigator.onNavigateToRoom(event.roomId)
+                is TimelineEvents.NavigateToPredecessorOrSuccessorRoom -> {
+                    // Navigate to the predecessor or successor room
+                    val serverNames = calculateServerNamesForRoom(room)
+                    navigator.onNavigateToRoom(event.roomId, null, serverNames)
+                }
+                is TimelineEvents.OpenThread -> {
+                    navigator.onOpenThread(
+                        threadRootId = event.threadRootEventId,
+                        focusedEventId = event.focusedEvent,
+                    )
                 }
             }
         }
@@ -233,13 +268,39 @@ class TimelinePresenter @AssistedInject constructor(
                 }
                 is FocusRequestState.Loading -> {
                     val eventId = currentFocusRequestState.eventId
-                    timelineController.focusOnEvent(eventId)
-                        .onSuccess {
-                            focusRequestState = FocusRequestState.Success(eventId = eventId)
-                        }
-                        .onFailure {
-                            focusRequestState = FocusRequestState.Failure(it)
-                        }
+                    val threadId = room.threadRootIdForEvent(eventId).getOrElse {
+                        focusRequestState = FocusRequestState.Failure(it)
+                        return@LaunchedEffect
+                    }
+
+                    if (timelineController.mainTimelineMode() is Timeline.Mode.Thread && threadId == null) {
+                        // We are in a thread timeline, and the event isn't part of a thread, we need to navigate back to the room
+                        focusRequestState = FocusRequestState.None
+                        navigator.onNavigateToRoom(room.roomId, eventId, calculateServerNamesForRoom(room))
+                    } else {
+                        timelineController.focusOnEvent(eventId, threadId)
+                            .onSuccess { result ->
+                                when (result) {
+                                    is EventFocusResult.FocusedOnLive -> {
+                                        focusRequestState = FocusRequestState.Success(eventId = eventId)
+                                    }
+                                    is EventFocusResult.IsInThread -> {
+                                        val currentThreadId = (timelineController.mainTimelineMode() as? Timeline.Mode.Thread)?.threadRootId
+                                        if (currentThreadId == result.threadId) {
+                                            // It's the same thread, we just focus on the event
+                                            focusRequestState = FocusRequestState.Success(eventId = eventId)
+                                        } else {
+                                            focusRequestState = FocusRequestState.Success(eventId = result.threadId.asEventId())
+                                            // It's part of a thread we're not in, let's open it in another timeline
+                                            navigator.onOpenThread(result.threadId, eventId)
+                                        }
+                                    }
+                                }
+                            }
+                            .onFailure {
+                                focusRequestState = FocusRequestState.Failure(it)
+                            }
+                    }
                 }
                 else -> Unit
             }
@@ -278,6 +339,7 @@ class TimelinePresenter @AssistedInject constructor(
         }
         return TimelineState(
             timelineItems = applyBwiScanStateChangedEvents(timelineItems),
+            timelineMode = timelineMode,
             timelineRoomInfo = timelineRoomInfo,
             renderReadReceipts = renderReadReceipts,
             newEventState = newEventState.value,
@@ -285,6 +347,7 @@ class TimelinePresenter @AssistedInject constructor(
             focusRequestState = focusRequestState,
             messageShield = messageShield.value,
             resolveVerifiedUserSendFailureState = resolveVerifiedUserSendFailureState,
+            displayThreadSummaries = displayThreadSummaries,
             eventSink = { handleEvents(it) }
         )
     }
@@ -415,7 +478,7 @@ class TimelinePresenter @AssistedInject constructor(
             newMostRecentItemId != prevMostRecentItemIdValue
 
         if (hasNewEvent) {
-            val newMostRecentEvent = newMostRecentItem as? TimelineItem.Event
+            val newMostRecentEvent = newMostRecentItem
             // Scroll to bottom if the new event is from me, even if sent from another device
             val fromMe = newMostRecentEvent?.isMine == true
             newEventState.value = if (fromMe) {
@@ -462,4 +525,20 @@ private fun FocusRequestState.onFocusEventRender(): FocusRequestState {
         is FocusRequestState.Success -> copy(rendered = true)
         else -> this
     }
+}
+
+// Workaround for not having the server names available, get possible server names from the user ids of the room members
+private fun calculateServerNamesForRoom(room: JoinedRoom): List<String> {
+    // If we have no room members, return right ahead
+    val serverNames = room.membersStateFlow.value.roomMembers() ?: return emptyList()
+
+    // Otherwise get the three most common server names from the user ids of the room members
+    return serverNames
+        .mapNotNull { it.userId.domainName }
+        .groupingBy { it }
+        .eachCount()
+        .let { map ->
+            map.keys.sortedByDescending { map[it] }
+        }
+        .take(3)
 }

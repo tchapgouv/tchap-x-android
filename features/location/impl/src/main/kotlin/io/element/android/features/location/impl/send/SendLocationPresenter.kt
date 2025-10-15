@@ -15,6 +15,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import im.vector.app.features.analytics.plan.Composer
 import io.element.android.features.location.impl.common.MapDefaults
 import io.element.android.features.location.impl.common.actions.LocationActions
@@ -23,25 +26,31 @@ import io.element.android.features.location.impl.common.permissions.PermissionsP
 import io.element.android.features.location.impl.common.permissions.PermissionsState
 import io.element.android.features.messages.api.MessageComposerContext
 import io.element.android.libraries.architecture.Presenter
+import io.element.android.libraries.core.extensions.flatMap
 import io.element.android.libraries.core.meta.BuildMeta
+import io.element.android.libraries.matrix.api.room.CreateTimelineParams
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.location.AssetType
-import io.element.android.libraries.matrix.api.room.message.ReplyParameters
-import io.element.android.libraries.matrix.api.room.message.replyInThread
-import io.element.android.libraries.matrix.ui.messages.reply.eventId
+import io.element.android.libraries.matrix.api.timeline.Timeline
 import io.element.android.libraries.textcomposer.model.MessageComposerMode
 import io.element.android.services.analytics.api.AnalyticsService
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class SendLocationPresenter @Inject constructor(
+@AssistedInject
+class SendLocationPresenter(
     permissionsPresenterFactory: PermissionsPresenter.Factory,
     private val room: JoinedRoom,
+    @Assisted private val timelineMode: Timeline.Mode,
     private val analyticsService: AnalyticsService,
     private val messageComposerContext: MessageComposerContext,
     private val locationActions: LocationActions,
     private val buildMeta: BuildMeta,
 ) : Presenter<SendLocationState> {
+    @AssistedFactory
+    fun interface Factory {
+        fun create(timelineMode: Timeline.Mode): SendLocationPresenter
+    }
+
     private val permissionsPresenter = permissionsPresenterFactory.create(MapDefaults.permissions)
 
     @Composable
@@ -103,28 +112,20 @@ class SendLocationPresenter @Inject constructor(
         mode: SendLocationState.Mode,
     ) {
         val replyMode = messageComposerContext.composerMode as? MessageComposerMode.Reply
-        val replyParams = replyMode?.replyToDetails?.let { details ->
-            if (replyMode.inThread) {
-                replyInThread(details.eventId())
-            } else {
-                ReplyParameters(
-                    inReplyToEventId = details.eventId(),
-                    enforceThreadReply = false,
-                    replyWithinThread = false
-                )
-            }
-        }
+        val inReplyToEventId = replyMode?.eventId
         when (mode) {
             SendLocationState.Mode.PinLocation -> {
                 val geoUri = event.cameraPosition.toGeoUri()
-                room.liveTimeline.sendLocation(
-                    body = generateBody(geoUri),
-                    geoUri = geoUri,
-                    description = null,
-                    zoomLevel = MapDefaults.DEFAULT_ZOOM.toInt(),
-                    assetType = AssetType.PIN,
-                    replyParameters = replyParams,
-                )
+                getTimeline().flatMap {
+                    it.sendLocation(
+                        body = generateBody(geoUri),
+                        geoUri = geoUri,
+                        description = null,
+                        zoomLevel = MapDefaults.DEFAULT_ZOOM.toInt(),
+                        assetType = AssetType.PIN,
+                        inReplyToEventId = inReplyToEventId,
+                    )
+                }
                 analyticsService.capture(
                     Composer(
                         inThread = messageComposerContext.composerMode.inThread,
@@ -136,14 +137,16 @@ class SendLocationPresenter @Inject constructor(
             }
             SendLocationState.Mode.SenderLocation -> {
                 val geoUri = event.toGeoUri()
-                room.liveTimeline.sendLocation(
-                    body = generateBody(geoUri),
-                    geoUri = geoUri,
-                    description = null,
-                    zoomLevel = MapDefaults.DEFAULT_ZOOM.toInt(),
-                    assetType = AssetType.SENDER,
-                    replyParameters = replyParams,
-                )
+                getTimeline().flatMap {
+                    it.sendLocation(
+                        body = generateBody(geoUri),
+                        geoUri = geoUri,
+                        description = null,
+                        zoomLevel = MapDefaults.DEFAULT_ZOOM.toInt(),
+                        assetType = AssetType.SENDER,
+                        inReplyToEventId = inReplyToEventId,
+                    )
+                }
                 analyticsService.capture(
                     Composer(
                         inThread = messageComposerContext.composerMode.inThread,
@@ -153,6 +156,13 @@ class SendLocationPresenter @Inject constructor(
                     )
                 )
             }
+        }
+    }
+
+    private suspend fun getTimeline(): Result<Timeline> {
+        return when (timelineMode) {
+            is Timeline.Mode.Thread -> room.createTimeline(CreateTimelineParams.Threaded(timelineMode.threadRootId))
+            else -> Result.success(room.liveTimeline)
         }
     }
 }

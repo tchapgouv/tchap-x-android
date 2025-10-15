@@ -18,7 +18,7 @@ import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.RoomNotificationSettings
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toImmutableList
 
 data class RoomDetailsState(
     val isDebugBuild: Boolean,
@@ -34,7 +34,6 @@ data class RoomDetailsState(
     val roomMemberDetailsState: UserProfileState?,
     val canEdit: Boolean,
     val canInvite: Boolean,
-    val canShowNotificationSettings: Boolean,
     val roomCallState: RoomCallState,
     val leaveRoomState: LeaveRoomState,
     val roomNotificationSettings: RoomNotificationSettings?,
@@ -42,8 +41,6 @@ data class RoomDetailsState(
     val displayRolesAndPermissionsSettings: Boolean,
     val isPublic: Boolean,
     val heroes: ImmutableList<MatrixUser>,
-    val canShowPinnedMessages: Boolean,
-    val canShowMediaGallery: Boolean,
     val pinnedMessagesCount: Int?,
     val snackbarMessage: SnackbarMessage?,
     val canShowKnockRequests: Boolean,
@@ -67,7 +64,7 @@ data class RoomDetailsState(
         if (isExternal) {
             add(RoomBadge.EXTERNAL)
         }
-    }.toPersistentList()
+    }.toImmutableList()
 }
 
 @Immutable

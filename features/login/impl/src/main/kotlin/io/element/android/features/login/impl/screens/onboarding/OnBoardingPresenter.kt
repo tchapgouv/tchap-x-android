@@ -8,6 +8,7 @@
 package io.element.android.features.login.impl.screens.onboarding
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -15,27 +16,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import io.element.android.appconfig.OnBoardingConfig
 import io.element.android.features.enterprise.api.EnterpriseService
 import io.element.android.features.enterprise.api.canConnectToAnyHomeserver
+import io.element.android.features.login.impl.accesscontrol.DefaultAccountProviderAccessControl
 import io.element.android.features.login.impl.login.LoginHelper
 import io.element.android.features.rageshake.api.RageshakeFeatureAvailability
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.meta.BuildMeta
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
+import io.element.android.libraries.sessionstorage.api.SessionStore
 import io.element.android.libraries.ui.utils.MultipleTapToUnlock
 
-class OnBoardingPresenter @AssistedInject constructor(
+@AssistedInject
+class OnBoardingPresenter(
     @Assisted private val params: OnBoardingNode.Params,
     private val buildMeta: BuildMeta,
-    private val featureFlagService: FeatureFlagService,
     private val enterpriseService: EnterpriseService,
+    private val defaultAccountProviderAccessControl: DefaultAccountProviderAccessControl,
     private val rageshakeFeatureAvailability: RageshakeFeatureAvailability,
     private val loginHelper: LoginHelper,
+    private val onBoardingLogoResIdProvider: OnBoardingLogoResIdProvider,
+    private val sessionStore: SessionStore,
 ) : Presenter<OnBoardingState> {
     @AssistedFactory
     interface Factory {
@@ -63,7 +67,12 @@ class OnBoardingPresenter @AssistedInject constructor(
         val linkAccountProvider by produceState<String?>(initialValue = null) {
             // Account provider from the link, if allowed by the enterprise service
             value = params.accountProvider?.takeIf {
-                enterpriseService.isAllowedToConnectToHomeserver(it)
+                try {
+                    defaultAccountProviderAccessControl.assertIsAllowedToConnectToAccountProvider(it, it)
+                    true
+                } catch (_: Exception) {
+                    false
+                }
             }
         }
         val defaultAccountProvider = remember(linkAccountProvider) {
@@ -73,10 +82,17 @@ class OnBoardingPresenter @AssistedInject constructor(
         }
         val canLoginWithQrCode by produceState(initialValue = false, linkAccountProvider) {
             value = linkAccountProvider == null &&
-                featureFlagService.isFeatureEnabled(FeatureFlags.QrCodeLogin)
+                OnBoardingConfig.CAN_LOGIN_WITH_QR_CODE // TCHAP specific config for QR code login
         }
-        val canReportBug = remember { rageshakeFeatureAvailability.isAvailable() }
+        val canReportBug by remember { rageshakeFeatureAvailability.isAvailable() }.collectAsState(false)
         var showReportBug by rememberSaveable { mutableStateOf(false) }
+        val onBoardingLogoResId = remember {
+            onBoardingLogoResIdProvider.get()
+        }
+        val isAddingAccount by produceState(initialValue = false) {
+            // We are adding an account if there is at least one session already stored
+            value = sessionStore.getAllSessions().isNotEmpty()
+        }
 
         val loginMode by loginHelper.collectLoginMode()
 
@@ -100,6 +116,7 @@ class OnBoardingPresenter @AssistedInject constructor(
         }
 
         return OnBoardingState(
+            isAddingAccount = isAddingAccount,
             productionApplicationName = buildMeta.applicationName,
             defaultAccountProvider = defaultAccountProvider,
             mustChooseAccountProvider = mustChooseAccountProvider,
@@ -108,6 +125,7 @@ class OnBoardingPresenter @AssistedInject constructor(
             canReportBug = canReportBug && showReportBug,
             loginMode = loginMode,
             version = buildMeta.versionName,
+            onBoardingLogoResId = onBoardingLogoResId,
             eventSink = ::handleEvent,
         )
     }

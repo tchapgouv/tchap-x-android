@@ -7,26 +7,31 @@
 
 package io.element.android.libraries.push.impl.notifications.channels
 
+import android.content.ContentResolver
+import android.content.Context
 import android.media.AudioAttributes
+import android.media.AudioAttributes.USAGE_NOTIFICATION
 import android.media.AudioManager
+import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
-import com.squareup.anvil.annotations.ContributesBinding
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import io.element.android.appconfig.NotificationConfig
-import io.element.android.libraries.di.AppScope
-import io.element.android.libraries.di.SingleIn
+import io.element.android.libraries.di.annotations.ApplicationContext
 import io.element.android.libraries.push.impl.R
 import io.element.android.services.toolbox.api.strings.StringProvider
-import javax.inject.Inject
 
 /* ==========================================================================================
  * IDs for channels
  * ========================================================================================== */
 internal const val SILENT_NOTIFICATION_CHANNEL_ID = "DEFAULT_SILENT_NOTIFICATION_CHANNEL_ID_V2"
-internal const val NOISY_NOTIFICATION_CHANNEL_ID = "DEFAULT_NOISY_NOTIFICATION_CHANNEL_ID"
+internal const val NOISY_NOTIFICATION_CHANNEL_ID = "DEFAULT_NOISY_NOTIFICATION_CHANNEL_ID_V2"
 internal const val CALL_NOTIFICATION_CHANNEL_ID = "CALL_NOTIFICATION_CHANNEL_ID_V3"
 internal const val RINGING_CALL_NOTIFICATION_CHANNEL_ID = "RINGING_CALL_NOTIFICATION_CHANNEL_ID"
 
@@ -57,9 +62,12 @@ private fun supportNotificationChannels() = Build.VERSION.SDK_INT >= Build.VERSI
 
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class DefaultNotificationChannels @Inject constructor(
+@Inject
+class DefaultNotificationChannels(
     private val notificationManager: NotificationManagerCompat,
     private val stringProvider: StringProvider,
+    @ApplicationContext
+    private val context: Context,
 ) : NotificationChannels {
     init {
         createNotificationChannels()
@@ -93,6 +101,7 @@ class DefaultNotificationChannels @Inject constructor(
         // Migration - Remove deprecated channels
         for (channelId in listOf(
             "DEFAULT_SILENT_NOTIFICATION_CHANNEL_ID",
+            "DEFAULT_NOISY_NOTIFICATION_CHANNEL_ID",
             "CALL_NOTIFICATION_CHANNEL_ID",
             "CALL_NOTIFICATION_CHANNEL_ID_V2",
             "LISTEN_FOR_EVENTS_NOTIFICATION_CHANNEL_ID",
@@ -111,6 +120,17 @@ class DefaultNotificationChannels @Inject constructor(
                 NOISY_NOTIFICATION_CHANNEL_ID,
                 NotificationManagerCompat.IMPORTANCE_DEFAULT
             )
+                .setSound(
+                    Uri.Builder()
+                        .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+                        // Strangely wwe have to provide a "//" before the package name
+                        .path("//" + context.packageName + "/" + R.raw.message)
+                        .build(),
+                    AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(USAGE_NOTIFICATION)
+                        .build(),
+                )
                 .setName(stringProvider.getString(R.string.notification_channel_noisy).ifEmpty { "Noisy notifications" })
                 .setDescription(stringProvider.getString(R.string.notification_channel_noisy))
                 .setVibrationEnabled(true)

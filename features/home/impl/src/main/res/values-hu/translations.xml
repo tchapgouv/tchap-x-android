@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="banner_battery_optimization_content_android">"Kapcsolja ki az alkalmazás akkumulátor-optimalizálását, hogy biztosan megkapja az összes értesítést."</string>
+  <string name="banner_battery_optimization_content_android">"Kapcsolja ki az alkalmazás akkumulátoroptimalizálását, hogy biztosan megkapja az összes értesítést."</string>
   <string name="banner_battery_optimization_submit_android">"Optimalizálás letiltása"</string>
   <string name="banner_battery_optimization_title_android">"Nem érkeznek meg az értesítések?"</string>
   <string name="banner_set_up_recovery_content">"Hozzon létre egy új helyreállítási kulcsot, amellyel visszaállíthatja a titkosított üzenetek előzményeit, ha elveszíti az eszközökhöz való hozzáférést."</string>
@@ -12,6 +12,8 @@
   <string name="confirm_recovery_key_banner_title">"A kulcstároló nincs szinkronizálva"</string>
   <string name="full_screen_intent_banner_message">"Hogy sose maradjon le egyetlen fontos hívásról sem, a beállításokban engedélyezze a teljes képernyős értesítéseket, amikor a telefon zárolva van."</string>
   <string name="full_screen_intent_banner_title">"Fokozza a hívásélményét"</string>
+  <string name="screen_home_tab_chats">"Összes csevegés"</string>
+  <string name="screen_home_tab_spaces">"Terek"</string>
   <string name="screen_invites_decline_chat_message">"Biztos, hogy elutasítja a meghívást, hogy csatlakozzon ehhez: %1$s?"</string>
   <string name="screen_invites_decline_chat_title">"Meghívás elutasítása"</string>
   <string name="screen_invites_decline_direct_chat_message">"Biztos, hogy elutasítja ezt a privát csevegést vele: %1$s?"</string>
@@ -31,6 +33,7 @@ Egyelőre törölheti a szűrőket a többi csevegés megtekintéséhez."</strin
   <string name="screen_roomlist_filter_invites">"Meghívások"</string>
   <string name="screen_roomlist_filter_invites_empty_state_title">"Nincsenek függőben lévő meghívásai."</string>
   <string name="screen_roomlist_filter_low_priority">"Alacsony prioritás"</string>
+  <string name="screen_roomlist_filter_low_priority_empty_state_title">"Még nincsenek alacsony prioritású csevegései"</string>
   <string name="screen_roomlist_filter_mixed_empty_state_subtitle">"Kikapcsolhatja a szűrőket a többi csevegés megtekintéséhez"</string>
   <string name="screen_roomlist_filter_mixed_empty_state_title">"Ehhez a kiválasztáshoz nem tartoznak csevegések"</string>
   <string name="screen_roomlist_filter_people">"Emberek"</string>

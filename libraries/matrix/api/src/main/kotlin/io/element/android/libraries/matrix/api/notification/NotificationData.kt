@@ -49,9 +49,10 @@ sealed interface NotificationContent {
             val senderId: UserId,
         ) : MessageLike
 
-        data class CallNotify(
+        data class RtcNotification(
             val senderId: UserId,
-            val type: CallNotifyType,
+            val type: RtcNotificationType,
+            val expirationTimestampMillis: Long
         ) : MessageLike
 
         data object CallHangup : MessageLike
@@ -68,7 +69,6 @@ sealed interface NotificationContent {
         ) : MessageLike
 
         data object RoomEncrypted : MessageLike
-        data object UnableToResolve : MessageLike
         data class RoomMessage(
             val senderId: UserId,
             val messageType: MessageType
@@ -120,7 +120,7 @@ sealed interface NotificationContent {
     ) : NotificationContent
 }
 
-enum class CallNotifyType {
+enum class RtcNotificationType {
     RING,
     NOTIFY
 }

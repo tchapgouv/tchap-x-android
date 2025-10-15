@@ -16,6 +16,9 @@ android {
 
 dependencies {
     implementation(projects.libraries.architecture)
+    implementation(projects.libraries.designsystem)
     implementation(projects.libraries.matrix.api)
+    implementation(projects.libraries.mediaviewer.api)
+    implementation(projects.libraries.preferences.api)
     api(projects.libraries.textcomposer.impl)
 }

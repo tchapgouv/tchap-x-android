@@ -12,15 +12,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import dev.zacsweers.metro.Inject
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import im.vector.app.features.analytics.plan.Interaction
 import io.element.android.features.leaveroom.api.LeaveRoomEvent
 import io.element.android.features.leaveroom.api.LeaveRoomState
-import io.element.android.features.messages.api.pinned.IsPinnedMessagesFeatureEnabled
 import io.element.android.features.roomcall.api.RoomCallState
 import io.element.android.features.roomdetails.impl.members.details.RoomMemberDetailsPresenter
 import io.element.android.features.roomdetails.impl.securityandprivacy.permissions.securityAndPrivacyPermissionsAsState
@@ -55,14 +54,14 @@ import io.element.android.libraries.preferences.api.store.AppPreferencesStore
 import io.element.android.libraries.ui.strings.CommonStrings
 import io.element.android.services.analytics.api.AnalyticsService
 import io.element.android.services.analyticsproviders.api.trackers.captureInteraction
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class RoomDetailsPresenter @Inject constructor(
+@Inject
+class RoomDetailsPresenter(
     private val buildMeta: BuildMeta,
     private val client: MatrixClient,
     private val room: JoinedRoom,
@@ -73,7 +72,6 @@ class RoomDetailsPresenter @Inject constructor(
     private val roomCallStatePresenter: Presenter<RoomCallState>,
     private val dispatchers: CoroutineDispatchers,
     private val analyticsService: AnalyticsService,
-    private val isPinnedMessagesFeatureEnabled: IsPinnedMessagesFeatureEnabled,
     private val clipboardHelper: ClipboardHelper,
     private val appPreferencesStore: AppPreferencesStore,
 ) : Presenter<RoomDetailsState> {
@@ -81,7 +79,6 @@ class RoomDetailsPresenter @Inject constructor(
     override fun present(): RoomDetailsState {
         val scope = rememberCoroutineScope()
         val leaveRoomState = leaveRoomPresenter.present()
-        val canShowNotificationSettings = remember { mutableStateOf(false) }
         val roomInfo by room.roomInfoFlow.collectAsState()
         val isUserAdmin = room.isOwnUserAdmin()
         val syncUpdateFlow = room.syncUpdateFlow.collectAsState()
@@ -92,19 +89,11 @@ class RoomDetailsPresenter @Inject constructor(
         val isFavorite by remember { derivedStateOf { roomInfo.isFavorite } }
         val joinRule by remember { derivedStateOf { roomInfo.joinRule } }
 
-        val canShowPinnedMessages = isPinnedMessagesFeatureEnabled()
         val pinnedMessagesCount by remember { derivedStateOf { roomInfo.pinnedEventIds.size } }
 
-        val canShowMediaGallery by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.MediaGallery)
-        }.collectAsState(false)
-
         LaunchedEffect(Unit) {
-            canShowNotificationSettings.value = featureFlagService.isFeatureEnabled(FeatureFlags.NotificationSettings)
-            if (canShowNotificationSettings.value) {
-                room.updateRoomNotificationSettings()
-                observeNotificationSettings()
-            }
+            room.updateRoomNotificationSettings()
+            observeNotificationSettings()
         }
 
         val membersState by room.membersStateFlow.collectAsState()
@@ -156,16 +145,17 @@ class RoomDetailsPresenter @Inject constructor(
 
         fun handleEvents(event: RoomDetailsEvent) {
             when (event) {
-                RoomDetailsEvent.LeaveRoom ->
-                    leaveRoomState.eventSink(LeaveRoomEvent.ShowConfirmation(room.roomId))
+                is RoomDetailsEvent.LeaveRoom -> {
+                    leaveRoomState.eventSink(LeaveRoomEvent.LeaveRoom(room.roomId, needsConfirmation = event.needsConfirmation))
+                }
                 RoomDetailsEvent.MuteNotification -> {
                     scope.launch(dispatchers.io) {
-                        client.notificationSettingsService().muteRoom(room.roomId)
+                        notificationSettingsService.muteRoom(room.roomId)
                     }
                 }
                 RoomDetailsEvent.UnmuteNotification -> {
                     scope.launch(dispatchers.io) {
-                        client.notificationSettingsService().unmuteRoom(room.roomId, isEncrypted, room.isOneToOne)
+                        notificationSettingsService.unmuteRoom(room.roomId, isEncrypted, room.isOneToOne)
                     }
                 }
                 is RoomDetailsEvent.SetFavorite -> scope.setFavorite(event.isFavorite)
@@ -205,7 +195,6 @@ class RoomDetailsPresenter @Inject constructor(
             isEncrypted = isEncrypted,
             canInvite = canInvite,
             canEdit = (canEditAvatar || canEditName || canEditTopic) && roomType == RoomDetailsType.Room,
-            canShowNotificationSettings = canShowNotificationSettings.value,
             roomCallState = roomCallState,
             roomType = roomType,
             roomMemberDetailsState = roomMemberDetailsState,
@@ -214,9 +203,7 @@ class RoomDetailsPresenter @Inject constructor(
             isFavorite = isFavorite,
             displayRolesAndPermissionsSettings = !isDm && isUserAdmin,
             isPublic = joinRule == JoinRule.Public,
-            heroes = roomInfo.heroes.toPersistentList(),
-            canShowPinnedMessages = canShowPinnedMessages,
-            canShowMediaGallery = canShowMediaGallery,
+            heroes = roomInfo.heroes.toImmutableList(),
             pinnedMessagesCount = pinnedMessagesCount,
             snackbarMessage = snackbarMessage,
             canShowKnockRequests = canShowKnockRequests,

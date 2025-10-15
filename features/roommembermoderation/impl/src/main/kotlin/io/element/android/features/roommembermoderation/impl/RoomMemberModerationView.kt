@@ -234,7 +234,8 @@ private fun RoomMemberActionsBottomSheet(
             Text(
                 // TCHAP display a value generated from userId if displayname does not exist
                 text = user.getBestName(),
-                style = ElementTheme.typography.fontHeadingLgBold,
+                style = ElementTheme.typography.fontBodyLgRegular,
+                color = ElementTheme.colors.textSecondary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center,

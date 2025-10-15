@@ -1,4 +1,5 @@
-import extension.setupAnvil
+import extension.setupDependencyInjection
+import extension.testCommonDependencies
 
 /*
  * Copyright 2023, 2024 New Vector Ltd.
@@ -21,7 +22,7 @@ android {
     }
 }
 
-setupAnvil()
+setupDependencyInjection()
 
 dependencies {
     implementation(projects.appconfig)
@@ -45,7 +46,7 @@ dependencies {
     api(projects.services.apperror.api)
     implementation(libs.coil.compose)
     implementation(projects.features.call.api)
-    implementation(projects.features.createroom.api)
+    implementation(projects.features.startchat.api)
     implementation(projects.features.leaveroom.api)
     implementation(projects.features.userprofile.shared)
     implementation(projects.services.analytics.compose)
@@ -56,14 +57,10 @@ dependencies {
     implementation(projects.features.verifysession.api)
     implementation(projects.features.reportroom.api)
     implementation(projects.features.roommembermoderation.api)
+    implementation(projects.features.changeroommemberroles.api)
+    implementation(projects.features.invitepeople.api)
 
-    testImplementation(libs.test.junit)
-    testImplementation(libs.coroutines.test)
-    testImplementation(libs.molecule.runtime)
-    testImplementation(libs.test.truth)
-    testImplementation(libs.test.turbine)
-    testImplementation(libs.test.mockk)
-    testImplementation(libs.test.robolectric)
+    testCommonDependencies(libs, true)
     testImplementation(projects.libraries.matrix.test)
     testImplementation(projects.libraries.mediaupload.test)
     testImplementation(projects.libraries.mediapickers.test)
@@ -71,9 +68,6 @@ dependencies {
     testImplementation(projects.libraries.preferences.test)
     testImplementation(projects.libraries.usersearch.test)
     testImplementation(projects.libraries.featureflag.test)
-    testImplementation(projects.tests.testutils)
-    testImplementation(projects.features.createroom.test)
+    testImplementation(projects.features.startchat.test)
     testImplementation(projects.services.analytics.test)
-    testImplementation(libs.androidx.compose.ui.test.junit)
-    testReleaseImplementation(libs.androidx.compose.ui.test.manifest)
 }

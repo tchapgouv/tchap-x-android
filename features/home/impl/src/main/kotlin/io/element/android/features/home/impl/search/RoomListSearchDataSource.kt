@@ -7,6 +7,7 @@
 
 package io.element.android.features.home.impl.search
 
+import dev.zacsweers.metro.Inject
 import io.element.android.features.home.impl.datasource.RoomListRoomSummaryFactory
 import io.element.android.features.home.impl.model.RoomListRoomSummary
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
@@ -14,17 +15,17 @@ import io.element.android.libraries.matrix.api.roomlist.RoomList
 import io.element.android.libraries.matrix.api.roomlist.RoomListFilter
 import io.element.android.libraries.matrix.api.roomlist.RoomListService
 import io.element.android.libraries.matrix.api.roomlist.loadAllIncrementally
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 private const val PAGE_SIZE = 30
 
-class RoomListSearchDataSource @Inject constructor(
+@Inject
+class RoomListSearchDataSource(
     roomListService: RoomListService,
     coroutineDispatchers: CoroutineDispatchers,
     private val roomSummaryFactory: RoomListRoomSummaryFactory,
@@ -35,11 +36,11 @@ class RoomListSearchDataSource @Inject constructor(
         source = RoomList.Source.All,
     )
 
-    val roomSummaries: Flow<PersistentList<RoomListRoomSummary>> = roomList.filteredSummaries
+    val roomSummaries: Flow<ImmutableList<RoomListRoomSummary>> = roomList.filteredSummaries
         .map { roomSummaries ->
             roomSummaries
                 .map(roomSummaryFactory::create)
-                .toPersistentList()
+                .toImmutableList()
         }
         .flowOn(coroutineDispatchers.computation)
 

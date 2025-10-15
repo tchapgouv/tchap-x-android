@@ -26,13 +26,15 @@ class FakeEncryptionService(
     private val pinUserIdentityResult: (UserId) -> Result<Unit> = { lambdaError() },
     private val isUserVerifiedResult: (UserId) -> Result<Boolean> = { lambdaError() },
     private val withdrawVerificationResult: (UserId) -> Result<Unit> = { lambdaError() },
-    private val getUserIdentityResult: (UserId) -> Result<IdentityState?> = { lambdaError() }
+    private val getUserIdentityResult: (UserId) -> Result<IdentityState?> = { lambdaError() },
+    private val enableRecoveryLambda: (Boolean) -> Result<Unit> = { lambdaError() },
 ) : EncryptionService {
     private var disableRecoveryFailure: Exception? = null
     override val backupStateStateFlow: MutableStateFlow<BackupState> = MutableStateFlow(BackupState.UNKNOWN)
     override val recoveryStateStateFlow: MutableStateFlow<RecoveryState> = MutableStateFlow(RecoveryState.UNKNOWN)
     override val enableRecoveryProgressStateFlow: MutableStateFlow<EnableRecoveryProgress> = MutableStateFlow(EnableRecoveryProgress.Starting)
     override val isLastDevice: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    override val hasDevicesToVerifyAgainst: MutableStateFlow<Boolean> = MutableStateFlow(true)
     private var waitForBackupUploadSteadyStateFlow: Flow<BackupUploadState> = flowOf()
 
     private var recoverFailure: Exception? = null
@@ -82,12 +84,16 @@ class FakeEncryptionService(
         this.isLastDevice.value = isLastDevice
     }
 
+    fun emitHasDevicesToVerifyAgainst(hasDevicesToVerifyAgainst: Boolean) {
+        this.hasDevicesToVerifyAgainst.value = hasDevicesToVerifyAgainst
+    }
+
     override suspend fun resetRecoveryKey(): Result<String> = simulateLongTask {
         return Result.success(FAKE_RECOVERY_KEY)
     }
 
     override suspend fun enableRecovery(waitForBackupsToUpload: Boolean): Result<Unit> = simulateLongTask {
-        return Result.success(Unit)
+        return enableRecoveryLambda(waitForBackupsToUpload)
     }
 
     fun givenWaitForBackupUploadSteadyStateFlow(flow: Flow<BackupUploadState>) {

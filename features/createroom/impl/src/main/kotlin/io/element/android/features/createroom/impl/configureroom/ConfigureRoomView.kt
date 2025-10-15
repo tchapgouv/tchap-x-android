@@ -12,7 +12,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -31,6 +30,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -69,7 +70,6 @@ import io.element.android.libraries.designsystem.theme.components.TextField
 import io.element.android.libraries.designsystem.theme.components.TopAppBar
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.ui.components.AvatarActionBottomSheet
-import io.element.android.libraries.matrix.ui.components.SelectedUsersRowList
 import io.element.android.libraries.matrix.ui.components.UnsavedAvatar
 import io.element.android.libraries.matrix.ui.room.address.RoomAddressField
 import io.element.android.libraries.permissions.api.PermissionsView
@@ -123,16 +123,6 @@ fun ConfigureRoomView(
                 topic = state.config.topic.orEmpty(),
                 onTopicChange = { state.eventSink(ConfigureRoomEvents.TopicChanged(it)) },
             )
-            if (state.config.invites.isNotEmpty()) {
-                SelectedUsersRowList(
-                    contentPadding = PaddingValues(horizontal = 24.dp),
-                    selectedUsers = state.config.invites,
-                    onUserRemove = {
-                        focusManager.clearFocus()
-                        state.eventSink(ConfigureRoomEvents.RemoveUserFromSelection(it))
-                    },
-                )
-            }
             // TCHAP external user
             val hasExternalUsers = state.config.invites.any { it.userId.toString().isExternalTchapUser() }
             if (hasExternalUsers) {
@@ -237,11 +227,19 @@ private fun RoomNameWithAvatar(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        val a11yAvatar = stringResource(CommonStrings.a11y_room_avatar)
         UnsavedAvatar(
             avatarUri = avatarUri,
             avatarSize = AvatarSize.EditRoomDetails,
             avatarType = AvatarType.Room(),
-            modifier = Modifier.clickable(onClick = onAvatarClick),
+            modifier = Modifier
+                .clickable(
+                    onClick = onAvatarClick,
+                    onClickLabel = stringResource(CommonStrings.action_open_context_menu),
+                )
+                .clearAndSetSemantics {
+                    contentDescription = a11yAvatar
+                },
         )
 
         TextField(

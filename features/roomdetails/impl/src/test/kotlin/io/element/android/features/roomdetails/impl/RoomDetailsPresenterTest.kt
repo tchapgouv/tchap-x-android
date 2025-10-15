@@ -12,7 +12,6 @@ import com.google.common.truth.Truth.assertThat
 import im.vector.app.features.analytics.plan.Interaction
 import io.element.android.features.leaveroom.api.LeaveRoomEvent
 import io.element.android.features.leaveroom.api.LeaveRoomState
-import io.element.android.features.leaveroom.api.aLeaveRoomState
 import io.element.android.features.roomcall.api.aStandByCallState
 import io.element.android.features.roomdetails.impl.members.aRoomMember
 import io.element.android.features.roomdetails.impl.members.details.RoomMemberDetailsPresenter
@@ -81,11 +80,9 @@ class RoomDetailsPresenterTest {
         analyticsService: AnalyticsService = FakeAnalyticsService(),
         featureFlagService: FeatureFlagService = FakeFeatureFlagService(
             mapOf(
-                FeatureFlags.NotificationSettings.key to true,
                 FeatureFlags.Knock.key to false,
             )
         ),
-        isPinnedMessagesFeatureEnabled: Boolean = true,
         encryptionService: FakeEncryptionService = FakeEncryptionService(),
         clipboardHelper: ClipboardHelper = FakeClipboardHelper(),
         appPreferencesStore: AppPreferencesStore = InMemoryAppPreferencesStore()
@@ -111,12 +108,11 @@ class RoomDetailsPresenterTest {
             client = matrixClient,
             room = room,
             featureFlagService = featureFlagService,
-            notificationSettingsService = matrixClient.notificationSettingsService(),
+            notificationSettingsService = matrixClient.notificationSettingsService,
             roomMembersDetailsPresenterFactory = roomMemberDetailsPresenterFactory,
             leaveRoomPresenter = { leaveRoomState },
             roomCallStatePresenter = { aStandByCallState() },
             dispatchers = dispatchers,
-            isPinnedMessagesFeatureEnabled = { isPinnedMessagesFeatureEnabled },
             analyticsService = analyticsService,
             clipboardHelper = clipboardHelper,
             appPreferencesStore = appPreferencesStore,
@@ -138,7 +134,6 @@ class RoomDetailsPresenterTest {
             assertThat(initialState.roomAvatarUrl).isEqualTo(room.info().avatarUrl)
             assertThat(initialState.roomTopic).isEqualTo(RoomTopicState.ExistingTopic(room.info().topic!!))
             assertThat(initialState.memberCount).isEqualTo(room.info().joinedMembersCount)
-            assertThat(initialState.canShowPinnedMessages).isTrue()
             assertThat(initialState.pinnedMessagesCount).isEqualTo(0)
             assertThat(initialState.canShowSecurityAndPrivacy).isFalse()
             assertThat(initialState.showDebugInfo).isFalse()
@@ -552,8 +547,8 @@ class RoomDetailsPresenterTest {
             dispatchers = testCoroutineDispatchers()
         )
         presenter.testWithLifecycleOwner(lifecycleOwner = fakeLifecycleOwner) {
-            awaitItem().eventSink(RoomDetailsEvent.LeaveRoom)
-            leaveRoomEventRecorder.assertSingle(LeaveRoomEvent.ShowConfirmation(room.roomId))
+            awaitItem().eventSink(RoomDetailsEvent.LeaveRoom(needsConfirmation = true))
+            leaveRoomEventRecorder.assertSingle(LeaveRoomEvent.LeaveRoom(room.roomId, needsConfirmation = true))
             cancelAndIgnoreRemainingEvents()
         }
     }

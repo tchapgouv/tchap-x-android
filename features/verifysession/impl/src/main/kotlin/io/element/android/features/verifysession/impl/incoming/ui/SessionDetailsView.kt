@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.verifysession.impl.R
@@ -33,7 +34,7 @@ import io.element.android.libraries.ui.strings.CommonStrings
 
 @Composable
 fun SessionDetailsView(
-    deviceName: String,
+    deviceName: String?,
     deviceId: DeviceId,
     signInFormattedTimestamp: String,
     modifier: Modifier = Modifier,
@@ -46,7 +47,8 @@ fun SessionDetailsView(
                 color = ElementTheme.colors.borderDisabled,
                 shape = RoundedCornerShape(8.dp)
             )
-            .padding(24.dp),
+            .padding(24.dp)
+            .semantics(mergeDescendants = true) {},
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Row(
@@ -59,7 +61,7 @@ fun SessionDetailsView(
                 resourceId = CompoundDrawables.ic_compound_devices
             )
             Text(
-                text = deviceName,
+                text = deviceName ?: deviceId.value,
                 style = ElementTheme.typography.fontBodyMdMedium,
                 color = ElementTheme.colors.textPrimary,
             )
@@ -76,6 +78,7 @@ fun SessionDetailsView(
                 label = stringResource(CommonStrings.common_device_id),
                 text = deviceId.value,
                 modifier = Modifier.weight(5f),
+                spellText = true,
             )
         }
     }
@@ -84,9 +87,16 @@ fun SessionDetailsView(
 @PreviewsDayNight
 @Composable
 internal fun SessionDetailsViewPreview() = ElementPreview {
-    SessionDetailsView(
-        deviceName = "Element X Android",
-        deviceId = DeviceId("ILAKNDNASDLK"),
-        signInFormattedTimestamp = "12:34",
-    )
+    Column {
+        SessionDetailsView(
+            deviceName = "Element X Android",
+            deviceId = DeviceId("ILAKNDNASDLK"),
+            signInFormattedTimestamp = "12:34",
+        )
+        SessionDetailsView(
+            deviceName = null,
+            deviceId = DeviceId("ILAKNDNASDLK"),
+            signInFormattedTimestamp = "12:34",
+        )
+    }
 }
