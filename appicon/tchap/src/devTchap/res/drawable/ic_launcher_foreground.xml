@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2024. DINUM
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  ~ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+  ~ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+  ~ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+  ~ OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="432"
+    android:viewportHeight="432">
+    <group android:scaleX="0.6328767"
+        android:scaleY="0.6328767"
+        android:translateX="80.564384"
+        android:translateY="80.564384">
+        <path
+        android:pathData="M295.39,150.81V177.53H229.76V293.02H203.08V177.53H161.88V210.24H135.2V150.81H295.39ZM140.17,205.27H156.91V172.56H208.05V288.04H224.79V172.56H290.42V155.79H140.17V205.27Z"
+        android:fillColor="#ffffff"/>
+    <path
+        android:pathData="M340.98,274.98V153.08C340.98,145.69 337.04,138.85 330.64,135.15L225.38,74.24C218.96,70.52 211.04,70.52 204.62,74.24L99.36,135.15L98.77,135.5C92.72,139.28 89.02,145.92 89.02,153.08V274.98C89.02,282.38 92.96,289.21 99.36,292.92L178.11,338.46C183.23,341.42 186.38,346.89 186.38,352.81V369.35C186.38,372.45 189.64,374.42 192.35,373.07L192.61,372.93L230.01,351.15L330.64,292.92C336.84,289.33 340.73,282.8 340.97,275.68L340.98,274.98ZM345.95,274.98C345.95,284.15 341.07,292.63 333.13,297.22L232.51,355.45L232.51,355.45L195.12,377.23C189.04,380.77 181.41,376.38 181.41,369.35V352.81C181.41,348.67 179.2,344.84 175.62,342.76L96.88,297.22C88.94,292.63 84.05,284.15 84.05,274.98V153.08C84.05,143.91 88.93,135.44 96.87,130.85L202.13,69.93C210.09,65.33 219.91,65.33 227.87,69.93L333.13,130.85C341.07,135.44 345.95,143.91 345.95,153.08V274.98Z"
+        android:fillColor="#ffffff"/>
+  </group>
+</vector>
