@@ -62,10 +62,8 @@ import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.ui.components.AvatarActionBottomSheet
 import io.element.android.libraries.matrix.ui.components.AvatarPickerState
 import io.element.android.libraries.matrix.ui.components.AvatarPickerView
-import io.element.android.libraries.matrix.ui.room.address.RoomAddressField
 import io.element.android.libraries.permissions.api.PermissionsView
 import io.element.android.libraries.ui.strings.CommonStrings
-import kotlin.jvm.optionals.getOrNull
 
 @Composable
 fun ConfigureRoomView(
@@ -122,8 +120,8 @@ fun ConfigureRoomView(
             RoomVisibilityAndAccessOptions(
                 selected = when (state.config.roomVisibility) {
                     is RoomVisibilityState.Private -> RoomVisibilityItem.Private
-                    // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
-//                    is RoomVisibilityState.PrivateNotEncrypted -> RoomVisibilityItem.PrivateNotEncrypted // TCHAP room type
+                    // TCHAP - Enable PrivateNotEncrypted room
+                    is RoomVisibilityState.PrivateNotEncrypted -> RoomVisibilityItem.PrivateNotEncrypted // TCHAP room type
                     is RoomVisibilityState.Public -> when (state.config.roomVisibility.roomAccess) {
                         RoomAccess.Knocking -> RoomVisibilityItem.AskToJoin
                         RoomAccess.Anyone -> RoomVisibilityItem.Public
@@ -136,20 +134,21 @@ fun ConfigureRoomView(
                 },
             )
 
-            if (state.config.roomVisibility !is RoomVisibilityState.Private) {
-                Column {
-                    ListSectionHeader(title = stringResource(R.string.screen_create_room_room_address_section_title))
-                    RoomAddressField(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        address = state.config.roomVisibility.roomAddress().getOrNull().orEmpty(),
-                        homeserverName = state.homeserverName,
-                        addressValidity = state.roomAddressValidity,
-                        onAddressChange = { state.eventSink(ConfigureRoomEvents.RoomAddressChanged(it)) },
-                        label = null,
-                        supportingText = stringResource(R.string.screen_create_room_room_address_section_footer),
-                    )
-                }
-            }
+            // TCHAP : Disable room address customization
+//            if (state.config.roomVisibility !is RoomVisibilityState.Private) {
+//                Column {
+//                    ListSectionHeader(title = stringResource(R.string.screen_create_room_room_address_section_title))
+//                    RoomAddressField(
+//                        modifier = Modifier.padding(horizontal = 16.dp),
+//                        address = state.config.roomVisibility.roomAddress().getOrNull().orEmpty(),
+//                        homeserverName = state.homeserverName,
+//                        addressValidity = state.roomAddressValidity,
+//                        onAddressChange = { state.eventSink(ConfigureRoomEvents.RoomAddressChanged(it)) },
+//                        label = null,
+//                        supportingText = stringResource(R.string.screen_create_room_room_address_section_footer),
+//                    )
+//                }
+//            }
         }
     }
 
@@ -306,8 +305,8 @@ private fun RoomVisibilityAndAccessOptions(
                             RoomVisibilityItem.Public -> CompoundDrawables.ic_compound_public
                             RoomVisibilityItem.AskToJoin -> CompoundDrawables.ic_compound_user_add
                             RoomVisibilityItem.Private -> CompoundDrawables.ic_compound_lock
-                            // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
-//                            RoomVisibilityItem.PrivateNotEncrypted -> CompoundDrawables.ic_compound_lock_off
+                            // TCHAP - Enable PrivateNotEncrypted room
+                            RoomVisibilityItem.PrivateNotEncrypted -> CompoundDrawables.ic_compound_lock_off
                         },
                         tint = if (isSelected) ElementTheme.colors.iconPrimary else ElementTheme.colors.iconSecondary,
                         backgroundTint = Color.Transparent,
@@ -317,20 +316,20 @@ private fun RoomVisibilityAndAccessOptions(
                     val title = when (item) {
                         RoomVisibilityItem.Public -> stringResource(R.string.screen_create_room_public_option_title)
                         RoomVisibilityItem.AskToJoin -> stringResource(R.string.screen_create_room_room_access_section_knocking_option_title)
-                        RoomVisibilityItem.Private -> stringResource(R.string.screen_create_room_private_option_title)
-                        // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
-//                        RoomVisibilityItem.PrivateNotEncrypted -> stringResource(R.string.screen_create_room_private_option_title)
+                        RoomVisibilityItem.Private -> stringResource(R.string.tchap_screen_create_room_private_encrypted_option_title)
+                        // TCHAP - Enable PrivateNotEncrypted room
+                        RoomVisibilityItem.PrivateNotEncrypted -> stringResource(R.string.tchap_screen_create_room_private_not_encrypted_option_title)
                     }
                     Text(text = title)
                 },
                 supportingContent = {
                     // TODO handle description of items in a certain space/org
                     val description = when (item) {
-                        RoomVisibilityItem.Public -> stringResource(R.string.screen_create_room_public_option_short_description)
+                        RoomVisibilityItem.Public -> stringResource(R.string.tchap_screen_create_room_public_option_description)
                         RoomVisibilityItem.AskToJoin -> stringResource(R.string.screen_create_room_room_access_section_knocking_option_description)
-                        RoomVisibilityItem.Private -> stringResource(R.string.screen_create_room_private_option_description)
-                        // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
-//                        RoomVisibilityItem.PrivateNotEncrypted -> stringResource(R.string.tchap_screen_create_room_private_not_encrypted_option_description)
+                        RoomVisibilityItem.Private -> stringResource(R.string.tchap_screen_create_room_private_encrypted_option_description)
+                        // TCHAP - Enable PrivateNotEncrypted room
+                        RoomVisibilityItem.PrivateNotEncrypted -> stringResource(R.string.tchap_screen_create_room_private_not_encrypted_option_description)
                     }
                     Text(text = description)
                 },

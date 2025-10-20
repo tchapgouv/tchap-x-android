@@ -9,9 +9,11 @@
 package io.element.android.features.createroom.impl.configureroom
 
 enum class RoomVisibilityItem {
+    Private,
+
+    // TCHAP - Enable PrivateNotEncrypted room
+    PrivateNotEncrypted,
+
     Public,
     AskToJoin,
-    Private,
-    // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
-//    PrivateNotEncrypted
 }
