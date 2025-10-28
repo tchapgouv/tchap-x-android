@@ -22,9 +22,11 @@ android {
     productFlavors {
         create("withpinning") {
             dimension = "pinning"
+            missingDimensionStrategy("target", "tchap")
         }
         create("withoutpinning") {
             dimension = "pinning"
+            missingDimensionStrategy("target", "tchap")
         }
     }
 }
