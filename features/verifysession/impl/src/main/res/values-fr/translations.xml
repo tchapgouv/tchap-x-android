@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="screen_identity_confirmation_cannot_confirm">"Confirmation impossible ?"</string>
-  <string name="screen_identity_confirmation_create_new_recovery_key">"Créer une nouvelle clé de récupération"</string>
+  <string name="screen_identity_confirmation_create_new_recovery_key">"Créer un nouveau code de vérification"</string><!-- Tchap: Custom string -->
   <string name="screen_identity_confirmation_subtitle">"Vérifier cette session pour configurer votre messagerie sécurisée."</string>
   <string name="screen_identity_confirmation_title">"Confirmez votre identité"</string>
   <string name="screen_identity_confirmation_use_another_device">"Utiliser une autre session"</string>
-  <string name="screen_identity_confirmation_use_recovery_key">"Utiliser la clé de récupération"</string>
+  <string name="screen_identity_confirmation_use_recovery_key">"Utiliser le code de vérification"</string><!-- Tchap: Custom string -->
   <string name="screen_identity_confirmed_subtitle">"Vous pouvez désormais lire ou envoyer des messages en toute sécurité, et toute personne avec qui vous discutez peut également faire confiance à cette session."</string>
   <string name="screen_identity_confirmed_title">"Session vérifiée"</string>
   <string name="screen_identity_use_another_device">"Utiliser une autre session"</string>
@@ -19,7 +19,7 @@
   <string name="screen_session_verification_complete_subtitle">"Vous pouvez désormais lire ou envoyer des messages en toute sécurité sur votre autre appareil."</string>
   <string name="screen_session_verification_complete_user_subtitle">"Vous pouvez désormais avoir confiance en l’identité de cet utilisateur lorsque vous lui envoyez des messages ou que vous recevez des messages de sa part."</string>
   <string name="screen_session_verification_device_verified">"Session vérifiée"</string>
-  <string name="screen_session_verification_enter_recovery_key">"Utiliser la clé de récupération"</string>
+  <string name="screen_session_verification_enter_recovery_key">"Utiliser le code de vérification"</string><!-- Tchap: Custom string -->
   <string name="screen_session_verification_failed_subtitle">"Soit la demande a expiré, soit elle a été refusée, soit les éléments à comparer ne correspondaient pas."</string>
   <string name="screen_session_verification_open_existing_session_subtitle">"Prouvez qu’il s’agit bien de vous pour accéder à l’historique de vos messages chiffrés."</string>
   <string name="screen_session_verification_open_existing_session_title">"Ouvrir une session existante"</string>
