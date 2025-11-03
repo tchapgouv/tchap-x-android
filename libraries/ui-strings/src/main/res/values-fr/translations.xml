@@ -281,7 +281,7 @@ Raison : %1$s."</string>
   <string name="common_reaction">"Réaction"</string>
   <string name="common_reactions">"Réactions"</string>
   <string name="common_reason">"Raison"</string>
-  <string name="common_recovery_key">"Clé de récupération"</string>
+  <string name="common_recovery_key">"Code de vérification"</string><!-- Tchap: Custom string -->
   <string name="common_refreshing">"Actualisation…"</string>
   <plurals name="common_replies">
     <item quantity="one">"%1$d réponse"</item>
