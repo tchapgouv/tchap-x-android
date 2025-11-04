@@ -83,7 +83,7 @@ class FakeJoinedRoom(
     private val enableEncryptionResult: () -> Result<Unit> = { lambdaError() },
     private val updateJoinRuleResult: (JoinRule) -> Result<Unit> = { lambdaError() },
     private val setSendQueueEnabledResult: (Boolean) -> Unit = { _: Boolean -> },
-    private val setAccessRulesResult: (RoomAccessRules) -> Result<Unit> = { lambdaError() },
+    private val setAccessRuleResult: (RoomAccessRules) -> Result<Unit> = { lambdaError() },
 ) : JoinedRoom, BaseRoom by baseRoom {
     fun givenRoomMembersState(state: RoomMembersState) {
         baseRoom.givenRoomMembersState(state)
@@ -221,8 +221,8 @@ class FakeJoinedRoom(
         withdrawVerificationAndResendResult(userIds, sendHandle)
     }
 
-    override suspend fun setAccessRules(rule: RoomAccessRules): Result<Unit> = simulateLongTask {
-        setAccessRulesResult(rule)
+    override suspend fun setAccessRule(rule: RoomAccessRules): Result<Unit> = simulateLongTask {
+        setAccessRuleResult(rule)
     }
 
     private suspend fun simulateSendMediaProgress(progressCallback: ProgressCallback?) {

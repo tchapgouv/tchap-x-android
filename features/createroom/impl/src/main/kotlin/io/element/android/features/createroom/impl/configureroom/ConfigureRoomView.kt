@@ -40,7 +40,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
@@ -123,14 +122,6 @@ fun ConfigureRoomView(
                 topic = state.config.topic.orEmpty(),
                 onTopicChange = { state.eventSink(ConfigureRoomEvents.TopicChanged(it)) },
             )
-            // TCHAP external user
-            val hasExternalUsers = state.config.invites.any { it.userId.toString().isExternalTchapUser() }
-            if (hasExternalUsers) {
-                RoomExternalGuestsWarning()
-                if (state.config.roomVisibility is RoomVisibilityState.Public) {
-                    state.eventSink(ConfigureRoomEvents.RoomVisibilityChanged(RoomVisibilityItem.Private))
-                }
-            }
             RoomVisibilityOptions(
                 selected = when (state.config.roomVisibility) {
                     is RoomVisibilityState.Private -> RoomVisibilityItem.Private
@@ -142,7 +133,6 @@ fun ConfigureRoomView(
                     focusManager.clearFocus()
                     state.eventSink(ConfigureRoomEvents.RoomVisibilityChanged(it))
                 },
-                hasExternalUsers = hasExternalUsers,
             )
             if (state.config.roomVisibility is RoomVisibilityState.Public && state.isKnockFeatureEnabled) {
                 RoomAccessOptions(
@@ -290,6 +280,7 @@ private fun ConfigureRoomOptions(
     }
 }
 
+// TCHAP TODO - Can reuse this component ? (or remove)
 @Composable
 private fun RoomExternalGuestsWarning() {
     val externalGuestText = buildAnnotatedString {
@@ -349,7 +340,6 @@ private fun RoomExternalGuestsWarning() {
 
 @Composable
 private fun RoomVisibilityOptions(
-    hasExternalUsers: Boolean,
     selected: RoomVisibilityItem,
     onOptionClick: (RoomVisibilityItem) -> Unit,
     modifier: Modifier = Modifier,
@@ -360,7 +350,6 @@ private fun RoomVisibilityOptions(
     ) {
         RoomVisibilityItem.entries.forEach { item ->
             val isSelected = item == selected
-            val enabled = !(hasExternalUsers && item == RoomVisibilityItem.Public)
             ListItem(
                 leadingContent = ListItemContent.Custom {
                     RoundedIconAtom(
@@ -372,24 +361,10 @@ private fun RoomVisibilityOptions(
                 headlineContent = { Text(text = stringResource(item.title)) },
                 supportingContent = {
                     val content = stringResource(id = item.description)
-                    if (enabled) {
-                        Text(text = content)
-                    } else {
-                        val disabledContent = buildAnnotatedString {
-                            append(content)
-                            val externalDescriptionIndex = content.lastIndexOf('•')
-                            addStyle(
-                                style = SpanStyle(color = ElementTheme.colors.badgeExternalContentColor),
-                                start = externalDescriptionIndex,
-                                end = content.length,
-                            )
-                        }
-                        Text(text = disabledContent)
-                    }
+                    Text(text = content)
                 },
                 trailingContent = ListItemContent.RadioButton(selected = isSelected),
                 onClick = { onOptionClick(item) },
-                enabled = enabled
             )
         }
     }

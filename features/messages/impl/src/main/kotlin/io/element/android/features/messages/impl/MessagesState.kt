@@ -36,7 +36,7 @@ data class MessagesState(
     val isDebugBuild: Boolean,
     val isEncrypted: Boolean,
     val isPublic: Boolean,
-    val isExternal: Boolean,
+    val isOpenToExternalUsers: Boolean, // TCHAP external user
     val roomId: RoomId,
     val roomName: String?,
     val roomAvatar: AvatarData,
@@ -76,7 +76,8 @@ data class MessagesState(
         if (isPublic) {
             add(RoomBadge.PUBLIC)
         }
-        if (isExternal) {
+        // TCHAP external user
+        if (isOpenToExternalUsers) {
             add(RoomBadge.EXTERNAL)
         }
     }.toPersistentList()

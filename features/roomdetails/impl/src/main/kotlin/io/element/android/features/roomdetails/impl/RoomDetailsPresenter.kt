@@ -16,7 +16,6 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import dev.zacsweers.metro.Inject
-import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import im.vector.app.features.analytics.plan.Interaction
 import io.element.android.features.leaveroom.api.LeaveRoomEvent
 import io.element.android.features.leaveroom.api.LeaveRoomState
@@ -42,7 +41,6 @@ import io.element.android.libraries.matrix.api.room.StateEventType
 import io.element.android.libraries.matrix.api.room.join.JoinRule
 import io.element.android.libraries.matrix.api.room.powerlevels.canInvite
 import io.element.android.libraries.matrix.api.room.powerlevels.canSendState
-import io.element.android.libraries.matrix.api.room.roomMembers
 import io.element.android.libraries.matrix.api.room.roomNotificationSettings
 import io.element.android.libraries.matrix.ui.room.canHandleKnockRequestsAsState
 import io.element.android.libraries.matrix.ui.room.getCurrentRoomMember
@@ -100,7 +98,7 @@ class RoomDetailsPresenter(
         val canInvite by getCanInvite(membersState)
 
         // TCHAP external user
-        val hasExternalUsers = membersState.roomMembers()?.any { it.userId.toString().isExternalTchapUser() } ?: false
+        val isOpenToExternalUsers by remember { derivedStateOf { roomInfo.isOpenToExternalUsers } }
 
         val canonicalAlias by remember { derivedStateOf { roomInfo.canonicalAlias } }
         val isEncrypted by remember { derivedStateOf { roomInfo.isEncrypted == true } }
@@ -185,7 +183,7 @@ class RoomDetailsPresenter(
 
         return RoomDetailsState(
             isDebugBuild = buildMeta.isDebuggable,
-            isExternal = hasExternalUsers,
+            isOpenToExternalUsers = isOpenToExternalUsers, // TCHAP external user
             roomId = room.roomId,
             roomName = roomName,
             roomAlias = canonicalAlias,
