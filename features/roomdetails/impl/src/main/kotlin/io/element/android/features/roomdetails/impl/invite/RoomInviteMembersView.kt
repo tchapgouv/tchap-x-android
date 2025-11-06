@@ -55,25 +55,7 @@ fun RoomInviteMembersView(
                 },
                 onSubmitClick = {
                     // TCHAP external user
-                    // TCHAP TODO : when invite list contains externals, show notifcation and call "setAccessRule(RoomAccessRules.UNRESTRICTED)" after confirmed
-//                    coroutineScope.launch {
-//                        val hasExternalUsers = users.any { it.userId.toString().isExternalTchapUser() }
-//                        if (hasExternalUsers && room.accessRules == RoomAccessRules.RESTRICTED) {
-//                            room.setAccessRule(RoomAccessRules.UNRESTRICTED)
-//                        }
-//                        val anyInviteFailed = users
-//                            .map { room.inviteUserById(it.userId) }
-//                            .any { it.isFailure }
-//
-//                        if (anyInviteFailed) {
-//                            appErrorStateService.showError(
-//                                title = context.getString(CommonStrings.common_unable_to_invite_title),
-//                                body = context.getString(CommonStrings.common_unable_to_invite_message),
-//                            )
-//                        }
-//                    }
-
-                    state.eventSink(InvitePeopleEvents.SendInvites)
+                    state.eventSink(InvitePeopleEvents.CheckExternalsAndSendInvites)
                 },
                 canSend = state.canInvite,
             )

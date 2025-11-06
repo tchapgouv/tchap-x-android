@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -35,6 +36,13 @@ fun AddPeopleView(
     modifier: Modifier = Modifier,
     invitePeopleView: @Composable () -> Unit,
 ) {
+    // TCHAP external user
+    LaunchedEffect(state.sendInvitesAction.isReady()) {
+        if (state.sendInvitesAction.isReady()) {
+            onFinish()
+        }
+    }
+
     HeaderFooterPage(
         modifier = modifier,
         contentPadding = PaddingValues(0.dp),
@@ -45,8 +53,8 @@ fun AddPeopleView(
             Button(
                 text = stringResource(CommonStrings.action_finish),
                 onClick = {
-                    state.eventSink(InvitePeopleEvents.SendInvites)
-                    onFinish()
+                    // TCHAP external user
+                    state.eventSink(InvitePeopleEvents.CheckExternalsAndSendInvites)
                 },
                 enabled = state.canInvite,
                 modifier = Modifier
