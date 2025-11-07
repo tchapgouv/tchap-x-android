@@ -47,6 +47,7 @@ internal fun UserRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Avatar(
+            modifier = Modifier.padding(top = 4.dp),
             avatarData = avatarData,
             avatarType = AvatarType.User,
         )

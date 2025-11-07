@@ -104,6 +104,7 @@ fun UserProfileHeaderSection(
             UserProfileVerificationState.UNKNOWN, UserProfileVerificationState.UNVERIFIED -> Unit
             UserProfileVerificationState.VERIFIED -> {
                 MatrixBadgeRowMolecule(
+                    modifier = Modifier.padding(top = 8.dp),
                     data = listOf(
                         MatrixBadgeAtom.MatrixBadgeData(
                             text = stringResource(CommonStrings.common_verified),

@@ -164,7 +164,7 @@ fun RoomDetailsView(
             }
             BadgeList(
                 roomBadge = state.roomBadges,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+                modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp),
             )
             Spacer(Modifier.height(32.dp))
             MainActionsSection(
@@ -497,14 +497,14 @@ fun RoomBadge.toMatrixBadgeData(): MatrixBadgeAtom.MatrixBadgeData {
             MatrixBadgeAtom.MatrixBadgeData(
                 text = stringResource(R.string.screen_room_details_badge_not_encrypted),
                 icon = CompoundIcons.LockOff(),
-                type = MatrixBadgeAtom.Type.Info,
+                type = MatrixBadgeAtom.Type.Neutral,
             )
         }
         RoomBadge.PUBLIC -> {
             MatrixBadgeAtom.MatrixBadgeData(
                 text = stringResource(R.string.screen_room_details_badge_public),
                 icon = CompoundIcons.Public(),
-                type = MatrixBadgeAtom.Type.Info,
+                type = MatrixBadgeAtom.Type.Neutral,
             )
         }
     }
