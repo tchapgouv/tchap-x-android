@@ -31,7 +31,8 @@ data class RoomInfo(
     val isPublic: Boolean?,
     val isDirect: Boolean,
     val isEncrypted: Boolean?,
-    val isOpenToExternalUsers: Boolean, // TCHAP external user
+    // TCHAP external user
+    val isOpenToExternalUsers: Boolean,
     val joinRule: JoinRule?,
     val isSpace: Boolean,
     val isFavorite: Boolean,

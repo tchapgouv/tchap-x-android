@@ -183,7 +183,8 @@ class RoomDetailsPresenter(
 
         return RoomDetailsState(
             isDebugBuild = buildMeta.isDebuggable,
-            isOpenToExternalUsers = isOpenToExternalUsers, // TCHAP external user
+            // TCHAP external user
+            isOpenToExternalUsers = isOpenToExternalUsers,
             roomId = room.roomId,
             roomName = roomName,
             roomAlias = canonicalAlias,

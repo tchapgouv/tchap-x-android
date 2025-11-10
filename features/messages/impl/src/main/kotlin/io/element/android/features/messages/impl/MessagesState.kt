@@ -36,7 +36,8 @@ data class MessagesState(
     val isDebugBuild: Boolean,
     val isEncrypted: Boolean,
     val isPublic: Boolean,
-    val isOpenToExternalUsers: Boolean, // TCHAP external user
+    // TCHAP external user
+    val isOpenToExternalUsers: Boolean,
     val roomId: RoomId,
     val roomName: String?,
     val roomAvatar: AvatarData,

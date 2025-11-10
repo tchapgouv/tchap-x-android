@@ -48,7 +48,8 @@ class RoomInfoMapper {
                 EncryptionState.NOT_ENCRYPTED -> false
                 EncryptionState.UNKNOWN -> null
             },
-            isOpenToExternalUsers = it.accessRule === AccessRule.UNRESTRICTED, // TCHAP external user
+            // TCHAP external user
+            isOpenToExternalUsers = it.accessRule === AccessRule.UNRESTRICTED,
             joinRule = it.joinRule?.map(),
             isSpace = it.isSpace,
             isFavorite = it.isFavourite,

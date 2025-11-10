@@ -37,7 +37,7 @@ fun AddPeopleView(
     invitePeopleView: @Composable () -> Unit,
 ) {
     // TCHAP external user
-    LaunchedEffect(state.sendInvitesAction.isReady()) {
+    LaunchedEffect(onFinish, state.sendInvitesAction.isReady()) {
         if (state.sendInvitesAction.isReady()) {
             onFinish()
         }

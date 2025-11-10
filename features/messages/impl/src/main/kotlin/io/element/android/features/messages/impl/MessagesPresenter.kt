@@ -249,7 +249,8 @@ class MessagesPresenter(
             isDebugBuild = buildMeta.isDebuggable,
             isEncrypted = room.roomInfoFlow.value.isEncrypted ?: false,
             isPublic = room.roomInfoFlow.value.isPublic ?: false,
-            isOpenToExternalUsers = roomInfo.isOpenToExternalUsers, // TCHAP external user
+            // TCHAP external user
+            isOpenToExternalUsers = roomInfo.isOpenToExternalUsers,
             roomId = room.roomId,
             roomName = roomInfo.name,
             roomAvatar = roomAvatar,

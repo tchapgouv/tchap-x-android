@@ -53,7 +53,7 @@ class FakeJoinedRoom(
     override val roomNotificationSettingsStateFlow: StateFlow<RoomNotificationSettingsState> =
         MutableStateFlow(RoomNotificationSettingsState.Unknown),
     override val knockRequestsFlow: Flow<List<KnockRequest>> = MutableStateFlow(emptyList()),
-    override val accessRules: RoomAccessRules? = null,
+    val accessRules: RoomAccessRules? = null,
     private val roomNotificationSettingsService: FakeNotificationSettingsService = FakeNotificationSettingsService(),
     private var createTimelineResult: (CreateTimelineParams) -> Result<Timeline> = { lambdaError() },
     private val editMessageLambda: (EventId, String, String?, List<IntentionalMention>) -> Result<Unit> = { _, _, _, _ -> lambdaError() },

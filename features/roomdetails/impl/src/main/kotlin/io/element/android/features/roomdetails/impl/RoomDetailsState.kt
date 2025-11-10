@@ -22,7 +22,8 @@ import kotlinx.collections.immutable.toImmutableList
 
 data class RoomDetailsState(
     val isDebugBuild: Boolean,
-    val isOpenToExternalUsers: Boolean, // TCHAP external user
+    // TCHAP external user
+    val isOpenToExternalUsers: Boolean,
     val roomId: RoomId,
     val roomName: String,
     val roomAlias: RoomAlias?,

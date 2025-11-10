@@ -120,7 +120,8 @@ fun aRoomDetailsState(
     eventSink: (RoomDetailsEvent) -> Unit = {},
 ) = RoomDetailsState(
     isDebugBuild = isDebugBuild,
-    isOpenToExternalUsers = true, // TCHAP external user
+    // TCHAP external user
+    isOpenToExternalUsers = true,
     roomId = roomId,
     roomName = roomName,
     roomAlias = roomAlias,
