@@ -17,7 +17,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 data class ChangeRolesState(
-    val isDebugBuild: Boolean,
+    val showMatrixId: Boolean,
     val role: RoomMember.Role,
     val query: String?,
     val isSearchActive: Boolean,

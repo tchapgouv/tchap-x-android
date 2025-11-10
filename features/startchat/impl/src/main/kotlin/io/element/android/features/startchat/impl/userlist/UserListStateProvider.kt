@@ -68,7 +68,7 @@ fun aUserListState(
     recentDirectRooms: List<RecentDirectRoom> = emptyList(),
     eventSink: (UserListEvents) -> Unit = {},
 ) = UserListState(
-    isDebugBuild = false,
+    showMatrixId = false,
     searchQuery = searchQuery,
     isSearchActive = isSearchActive,
     searchResults = searchResults,

@@ -19,7 +19,6 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.libraries.designsystem.atomic.atoms.MatrixBadgeAtom
@@ -31,10 +30,10 @@ import io.element.android.libraries.matrix.ui.R
 
 @Composable
 internal fun UserRow(
-    isDebugBuild: Boolean,
     avatarData: AvatarData,
     name: String,
     subtext: String?,
+    isExternalTchapUser: Boolean,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     trailingContent: @Composable (() -> Unit)? = null,
@@ -66,19 +65,17 @@ internal fun UserRow(
                 style = ElementTheme.typography.fontBodyLgRegular,
             )
             // Id
-            if (isDebugBuild) { // TCHAP hide the Matrix Id in release mode
-                subtext?.let {
-                    Text(
-                        text = subtext,
-                        color = if (enabled) ElementTheme.colors.textSecondary else ElementTheme.colors.textDisabled,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = ElementTheme.typography.fontBodySmRegular,
-                    )
-                }
+            subtext?.let {
+                Text(
+                    text = subtext,
+                    color = if (enabled) ElementTheme.colors.textSecondary else ElementTheme.colors.textDisabled,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = ElementTheme.typography.fontBodySmRegular,
+                )
             }
             // TCHAP external user
-            if (subtext != null && subtext.startsWith('@') && subtext.isExternalTchapUser()) {
+            if (isExternalTchapUser) {
                 MatrixBadgeAtom.View(MatrixBadgeAtom.MatrixBadgeData(
                     text = stringResource(R.string.tchap_contact_external),
                     icon = CompoundIcons.UserSolid(),

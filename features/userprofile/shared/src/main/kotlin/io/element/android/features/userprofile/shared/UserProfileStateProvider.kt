@@ -49,7 +49,7 @@ fun aUserProfileState(
     snackbarMessage: SnackbarMessage? = null,
     eventSink: (UserProfileEvents) -> Unit = {},
 ) = UserProfileState(
-    isDebugBuild = false,
+    showMatrixId = false,
     userId = userId,
     userName = userName,
     avatarUrl = avatarUrl,

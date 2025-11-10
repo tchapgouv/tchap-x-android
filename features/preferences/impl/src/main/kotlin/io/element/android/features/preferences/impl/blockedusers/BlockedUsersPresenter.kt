@@ -20,7 +20,6 @@ import dev.zacsweers.metro.Inject
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runUpdatingState
-import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
@@ -32,7 +31,6 @@ import kotlinx.coroutines.launch
 
 @Inject
 class BlockedUsersPresenter(
-    private val buildMeta: BuildMeta,
     private val matrixClient: MatrixClient,
     private val featureFlagService: FeatureFlagService,
 ) : Presenter<BlockedUsersState> {
@@ -49,6 +47,9 @@ class BlockedUsersPresenter(
 
         val renderBlockedUsersDetail by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowBlockedUsersDetails)
+        }.collectAsState(initial = false)
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(initial = false)
         val ignoredUserIds by matrixClient.ignoredUsersFlow.collectAsState()
         val ignoredMatrixUser by produceState(
@@ -85,7 +86,7 @@ class BlockedUsersPresenter(
             }
         }
         return BlockedUsersState(
-            isDebugBuild = buildMeta.isDebuggable,
+            showMatrixId = showMatrixId,
             blockedUsers = ignoredMatrixUser.toImmutableList(),
             unblockUserAction = unblockUserAction.value,
             eventSink = ::handleEvents

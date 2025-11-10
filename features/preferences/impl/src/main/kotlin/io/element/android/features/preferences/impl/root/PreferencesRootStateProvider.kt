@@ -20,7 +20,7 @@ fun aPreferencesRootState(
     otherSessions: List<MatrixUser> = emptyList(),
     eventSink: (PreferencesRootEvents) -> Unit = { _ -> },
 ) = PreferencesRootState(
-    isDebugBuild = false,
+    showMatrixId = false,
     myUser = myUser,
     version = "Version 1.1 (1)",
     deviceId = DeviceId("ILAKNDNASDLK"),

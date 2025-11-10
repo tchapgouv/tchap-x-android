@@ -15,7 +15,7 @@ import io.element.android.libraries.matrix.api.user.MatrixUser
 import kotlinx.collections.immutable.ImmutableList
 
 data class InternalRoomMemberModerationState(
-    val isDebugBuild: Boolean,
+    val showMatrixId: Boolean,
     override val canKick: Boolean,
     override val canBan: Boolean,
     val selectedUser: MatrixUser?,

@@ -109,7 +109,7 @@ fun RoomMemberListView(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             RoomMemberSearchBar(
-                isDebugBuild = state.isDebugBuild,
+                showMatrixId = state.showMatrixId,
                 query = state.searchQuery,
                 state = state.searchResults,
                 active = state.isSearchActive,
@@ -123,7 +123,7 @@ fun RoomMemberListView(
 
             if (!state.isSearchActive) {
                 RoomMemberList(
-                    isDebugBuild = state.isDebugBuild,
+                    showMatrixId = state.showMatrixId,
                     roomMembers = state.roomMembers,
                     showMembersCount = true,
                     canDisplayBannedUsersControls = state.moderationState.canBan,
@@ -138,7 +138,7 @@ fun RoomMemberListView(
 
 @Composable
 private fun RoomMemberList(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     roomMembers: AsyncData<RoomMembers>,
     showMembersCount: Boolean,
     selectedSection: SelectedSection,
@@ -184,7 +184,7 @@ private fun RoomMemberList(
             is AsyncData.Failure -> failureItem(roomMembers.error)
             is AsyncData.Loading,
             is AsyncData.Success -> memberItems(
-                isDebugBuild = isDebugBuild,
+                showMatrixId = showMatrixId,
                 roomMembers = roomMembers.dataOrNull() ?: return@LazyColumn,
                 selectedSection = selectedSection,
                 onSelectUser = onSelectUser,
@@ -196,7 +196,7 @@ private fun RoomMemberList(
 }
 
 private fun LazyListScope.memberItems(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     roomMembers: RoomMembers,
     selectedSection: SelectedSection,
     onSelectUser: (RoomMember) -> Unit,
@@ -206,7 +206,7 @@ private fun LazyListScope.memberItems(
         SelectedSection.MEMBERS -> {
             if (roomMembers.invited.isNotEmpty()) {
                 roomMemberListSection(
-                    isDebugBuild = isDebugBuild,
+                    showMatrixId = showMatrixId,
                     headerText = { stringResource(id = R.string.screen_room_member_list_pending_header_title) },
                     members = roomMembers.invited,
                     onMemberSelected = { onSelectUser(it) }
@@ -214,7 +214,7 @@ private fun LazyListScope.memberItems(
             }
             if (roomMembers.joined.isNotEmpty()) {
                 roomMemberListSection(
-                    isDebugBuild = isDebugBuild,
+                    showMatrixId = showMatrixId,
                     headerText = {
                         if (showMembersCount) {
                             val memberCount = roomMembers.joined.count()
@@ -231,7 +231,7 @@ private fun LazyListScope.memberItems(
         SelectedSection.BANNED -> { // Banned users
             if (roomMembers.banned.isNotEmpty()) {
                 roomMemberListSection(
-                    isDebugBuild = isDebugBuild,
+                    showMatrixId = showMatrixId,
                     headerText = null,
                     members = roomMembers.banned,
                     onMemberSelected = { onSelectUser(it) }
@@ -272,7 +272,7 @@ private fun LazyListScope.failureItem(failure: Throwable) {
 }
 
 private fun LazyListScope.roomMemberListSection(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     headerText: @Composable (() -> String)?,
     members: ImmutableList<RoomMemberWithIdentityState>?,
     onMemberSelected: (RoomMember) -> Unit,
@@ -289,7 +289,7 @@ private fun LazyListScope.roomMemberListSection(
     }
     items(members.orEmpty()) { matrixUser ->
         RoomMemberListItem(
-            isDebugBuild = isDebugBuild,
+            showMatrixId = showMatrixId,
             modifier = Modifier.fillMaxWidth(),
             roomMemberWithIdentity = matrixUser,
             onClick = { onMemberSelected(matrixUser.roomMember) }
@@ -299,7 +299,7 @@ private fun LazyListScope.roomMemberListSection(
 
 @Composable
 private fun RoomMemberListItem(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     roomMemberWithIdentity: RoomMemberWithIdentityState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -313,7 +313,7 @@ private fun RoomMemberListItem(
     }
 
     MatrixUserRow(
-        isDebugBuild = isDebugBuild,
+        showMatrixId = showMatrixId,
         modifier = modifier.clickable(onClick = onClick),
         matrixUser = roomMemberWithIdentity.roomMember.toMatrixUser(),
         avatarSize = AvatarSize.UserListItem,
@@ -381,7 +381,7 @@ private fun RoomMemberListTopBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RoomMemberSearchBar(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     query: String,
     state: SearchBarResultState<AsyncData<RoomMembers>>,
     active: Boolean,
@@ -402,7 +402,7 @@ private fun RoomMemberSearchBar(
         resultState = state,
         resultHandler = { results ->
             RoomMemberList(
-                isDebugBuild = isDebugBuild,
+                showMatrixId = showMatrixId,
                 roomMembers = results,
                 showMembersCount = false,
                 onSelectUser = { onSelectUser(it) },

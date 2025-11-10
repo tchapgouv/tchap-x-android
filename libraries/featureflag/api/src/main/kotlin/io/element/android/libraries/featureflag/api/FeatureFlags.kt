@@ -110,4 +110,10 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
+    ShowMatrixId(
+        key = "feature.showMatrixId",
+        title = "Show Matrix ID",
+        defaultValue = { false },
+        isFinished = true,
+    ),
 }

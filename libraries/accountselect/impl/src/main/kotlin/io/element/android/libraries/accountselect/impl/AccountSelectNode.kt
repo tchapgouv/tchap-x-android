@@ -8,6 +8,9 @@
 package io.element.android.libraries.accountselect.impl
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
@@ -17,7 +20,8 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
 import io.element.android.libraries.accountselect.api.AccountSelectEntryPoint
-import io.element.android.libraries.core.meta.BuildMeta
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.SessionId
 
 @ContributesNode(AppScope::class)
@@ -25,7 +29,7 @@ import io.element.android.libraries.matrix.api.core.SessionId
 class AccountSelectNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
-    private val buildMeta: BuildMeta,
+    private val featureFlagService: FeatureFlagService,
     private val presenter: AccountSelectPresenter,
 ) : Node(buildContext, plugins = plugins) {
     private val callbacks = plugins.filterIsInstance<AccountSelectEntryPoint.Callback>()
@@ -41,12 +45,17 @@ class AccountSelectNode(
     @Composable
     override fun View(modifier: Modifier) {
         val state = presenter.present()
+
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(false)
+
         AccountSelectView(
             state = state,
             onDismiss = ::onDismiss,
             onSelectAccount = ::onSelectAccount,
             modifier = modifier,
-            isDebugBuild = buildMeta.isDebuggable,
+            showMatrixId = showMatrixId,
         )
     }
 }

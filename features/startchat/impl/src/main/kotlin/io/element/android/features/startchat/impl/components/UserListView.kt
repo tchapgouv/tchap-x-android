@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.features.startchat.impl.userlist.UserListEvents
 import io.element.android.features.startchat.impl.userlist.UserListState
 import io.element.android.features.startchat.impl.userlist.UserListStateProvider
@@ -44,7 +45,7 @@ fun UserListView(
         modifier = modifier,
     ) {
         SearchUserBar(
-            isDebugBuild = state.isDebugBuild,
+            showMatrixId = state.showMatrixId,
             modifier = Modifier.fillMaxWidth(),
             query = state.searchQuery,
             state = state.searchResults,
@@ -90,7 +91,6 @@ fun UserListView(
                             recentDirectRoom.matrixUser.userId == it.userId
                         }
                         CheckableUserRow(
-                            isDebugBuild = state.isDebugBuild,
                             checked = isSelected,
                             onCheckedChange = {
                                 if (isSelected) {
@@ -104,7 +104,8 @@ fun UserListView(
                             data = CheckableUserRowData.Resolved(
                                 avatarData = recentDirectRoom.matrixUser.getAvatarData(AvatarSize.UserListItem),
                                 name = recentDirectRoom.matrixUser.getBestName(),
-                                subtext = recentDirectRoom.matrixUser.userId.value,
+                                subtext = if (state.showMatrixId) recentDirectRoom.matrixUser.userId.value else null,
+                                isExternalTchapUser = recentDirectRoom.matrixUser.userId.value.isExternalTchapUser(),
                             ),
                         )
                         if (index < state.recentDirectRooms.lastIndex) {
