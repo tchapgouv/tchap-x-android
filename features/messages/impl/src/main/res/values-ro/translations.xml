@@ -42,7 +42,7 @@
   <string name="screen_room_timeline_add_reaction">"Adăugați emoji"</string>
   <string name="screen_room_timeline_beginning_of_room">"Acesta este începutul conversației %1$s."</string>
   <string name="screen_room_timeline_beginning_of_room_no_name">"Acesta este începutul acestei conversații."</string>
-  <string name="screen_room_timeline_legacy_call">"Apel neacceptat. Întrebați apelantul dacă poate utiliza noua aplicație Element X."</string>
+  <string name="screen_room_timeline_legacy_call">"Apel neacceptat. Întrebați apelantul dacă poate utiliza noua aplicație %1$s."</string>
   <string name="screen_room_timeline_less_reactions">"Afișați mai puțin"</string>
   <string name="screen_room_timeline_message_copied">"Mesaj copiat"</string>
   <string name="screen_room_timeline_no_permission_to_post">"Nu aveți permisiunea de a posta în această cameră"</string>

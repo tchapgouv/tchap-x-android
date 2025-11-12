@@ -20,6 +20,7 @@ import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.messages.impl.R
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
+import io.element.android.libraries.designsystem.theme.LocalBuildMeta
 import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.Text
 
@@ -39,7 +40,7 @@ fun TimelineItemLegacyCallInviteView(
         Text(
             color = ElementTheme.colors.textSecondary,
             style = ElementTheme.typography.fontBodyMdRegular,
-            text = stringResource(R.string.screen_room_timeline_legacy_call),
+            text = stringResource(R.string.screen_room_timeline_legacy_call, LocalBuildMeta.current.applicationName),
             textAlign = TextAlign.Start,
         )
     }

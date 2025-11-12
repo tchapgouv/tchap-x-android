@@ -30,7 +30,7 @@
   <string name="screen_room_timeline_add_reaction">"Gehitu emojia"</string>
   <string name="screen_room_timeline_beginning_of_room">"Hauxe da %1$s(r)en hasiera"</string>
   <string name="screen_room_timeline_beginning_of_room_no_name">"Hau da elkarrizketaren hasiera."</string>
-  <string name="screen_room_timeline_legacy_call">"Deia ez da bateragarria. Galdetu deika ari denari Element X aplikazio berria erabil dezakeen."</string>
+  <string name="screen_room_timeline_legacy_call">"Deia ez da bateragarria. Galdetu deika ari denari %1$s aplikazio berria erabil dezakeen."</string>
   <string name="screen_room_timeline_less_reactions">"Erakutsi gutxiago"</string>
   <string name="screen_room_timeline_message_copied">"Mezua kopiatu da"</string>
   <string name="screen_room_timeline_no_permission_to_post">"Ez duzu gela honetara mezuak bidaltzeko baimenik"</string>
