@@ -151,14 +151,25 @@
             <!--
               tchap.gouv.fr links
             -->
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="https" />
+                <!-- Matching asset file: https://tchap.gouv.fr/.well-known/assetlinks.json -->
                 <data android:host="tchap.gouv.fr" />
+                <!-- Matching asset file: https://www.tchap.gouv.fr/.well-known/assetlinks.json -->
+                <data android:host="www.tchap.gouv.fr" />
+                <!-- Matching asset file: https://beta.tchap.gouv.fr/.well-known/assetlinks.json -->
+                <data android:host="beta.tchap.gouv.fr" />
+                <!-- Matching asset file: https://www.beta.tchap.gouv.fr/.well-known/assetlinks.json -->
+                <data android:host="www.beta.tchap.gouv.fr" />
+                <!-- Matching asset file: https://tchap.incubateur.net/.well-known/assetlinks.json -->
+                <data android:host="tchap.incubateur.net" />
+                <!-- Matching asset file: https://www.tchap.incubateur.net/.well-known/assetlinks.json -->
+                <data android:host="www.tchap.incubateur.net" />
             </intent-filter>
             <!-- Incoming share simple -->
             <intent-filter>
