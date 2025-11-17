@@ -42,7 +42,7 @@
   <string name="screen_room_timeline_add_reaction">"Emoji hinzufügen"</string>
   <string name="screen_room_timeline_beginning_of_room">"Dies ist der Anfang von %1$s."</string>
   <string name="screen_room_timeline_beginning_of_room_no_name">"Dies ist der Anfang dieses Gesprächs."</string>
-  <string name="screen_room_timeline_legacy_call">"Nicht unterstützter Anruf. Frag den Anrufer, ob er die neue Element X-App nutzen kann."</string>
+  <string name="screen_room_timeline_legacy_call">"Nicht unterstützter Anruf. Frag den Anrufer, ob er die neue %1$s-App nutzen kann."</string>
   <string name="screen_room_timeline_less_reactions">"Weniger anzeigen"</string>
   <string name="screen_room_timeline_message_copied">"Nachricht wurde kopiert"</string>
   <string name="screen_room_timeline_no_permission_to_post">"Du bist nicht berechtigt, in diesem Chat zu schreiben"</string>

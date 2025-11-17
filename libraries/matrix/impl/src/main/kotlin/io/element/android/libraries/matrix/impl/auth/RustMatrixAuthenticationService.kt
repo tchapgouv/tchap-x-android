@@ -14,6 +14,7 @@ import dev.zacsweers.metro.SingleIn
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.extensions.mapFailure
 import io.element.android.libraries.core.extensions.runCatchingExceptions
+import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.auth.AuthenticationException
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
@@ -60,6 +61,7 @@ class RustMatrixAuthenticationService(
     private val rustMatrixClientFactory: RustMatrixClientFactory,
     private val passphraseGenerator: PassphraseGenerator,
     private val oidcConfigurationProvider: OidcConfigurationProvider,
+    private val buildMeta: BuildMeta,
 ) : MatrixAuthenticationService {
     // Passphrase which will be used for new sessions. Existing sessions will use the passphrase
     // stored in the SessionData.
@@ -139,7 +141,8 @@ class RustMatrixAuthenticationService(
             runCatchingExceptions {
                 val client = currentClient ?: error("You need to call `setHomeserver()` first")
                 val currentSessionPaths = sessionPaths ?: error("You need to call `setHomeserver()` first")
-                client.login(username, password, "Element X Android", null)
+                // Tchap specific - Use "Tchap X Android" for initialDeviceName when creating session
+                client.login(username, password, "${buildMeta.applicationName} Android", null)
                 // Ensure that the user is not already logged in with the same account
                 ensureNotAlreadyLoggedIn(client)
                 val sessionData = client.session()
