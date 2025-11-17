@@ -10,4 +10,5 @@ package io.element.android.features.invitepeople.api
 interface InvitePeopleEvents {
     data object SendInvites : InvitePeopleEvents
     data object CloseSearch : InvitePeopleEvents
+    data object CheckExternalsAndSendInvites : InvitePeopleEvents // TCHAP external user
 }

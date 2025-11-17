@@ -16,10 +16,12 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesBinding
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.features.invitepeople.api.InvitePeopleEvents
 import io.element.android.features.invitepeople.api.InvitePeoplePresenter
 import io.element.android.features.invitepeople.api.InvitePeopleState
@@ -30,11 +32,13 @@ import io.element.android.libraries.architecture.runCatchingUpdatingState
 import io.element.android.libraries.architecture.runUpdatingState
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.meta.BuildMeta
+import io.element.android.libraries.designsystem.components.dialogs.ConfirmationDialog
 import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
 import io.element.android.libraries.di.SessionScope
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
+import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.RoomMembershipState
@@ -77,6 +81,7 @@ class DefaultInvitePeoplePresenter(
         var searchQuery by rememberSaveable { mutableStateOf("") }
         var searchActive by rememberSaveable { mutableStateOf(false) }
         val showSearchLoader = rememberSaveable { mutableStateOf(false) }
+        var showOpenRoomToExternalsDialog by rememberSaveable { mutableStateOf(false) } // TCHAP external user
         val sendInvitesAction = remember { mutableStateOf<AsyncAction<Unit>>(AsyncAction.Uninitialized) }
 
         val room by produceState(if (joinedRoom != null) AsyncData.Success(joinedRoom) else AsyncData.Loading()) {
@@ -121,6 +126,7 @@ class DefaultInvitePeoplePresenter(
                     searchResults.toggleUser(event.user)
                 }
                 is InvitePeopleEvents.SendInvites -> {
+                    showOpenRoomToExternalsDialog = false // TCHAP external user
                     room.dataOrNull()?.let {
                         sessionCoroutineScope.sendInvites(it, selectedUsers.value, sendInvitesAction)
                     }
@@ -129,7 +135,44 @@ class DefaultInvitePeoplePresenter(
                     searchActive = false
                     searchQuery = ""
                 }
+                // TCHAP external user
+                is InvitePeopleEvents.CheckExternalsAndSendInvites -> {
+                    val hasSelectedExternalUsers = selectedUsers.value.any { it.userId.toString().isExternalTchapUser() }
+                    if (hasSelectedExternalUsers && !room.dataOrNull()?.info()?.isOpenToExternalUsers!!) {
+                        showOpenRoomToExternalsDialog = true
+                    } else {
+                        handleEvents(InvitePeopleEvents.SendInvites)
+                    }
+                }
             }
+        }
+
+        // TCHAP external user
+        if (showOpenRoomToExternalsDialog) {
+            ConfirmationDialog(
+                title = stringResource(R.string.screen_invite_confirm_open_room_to_externals_title),
+                content = stringResource(R.string.screen_invite_confirm_open_room_to_externals_message),
+                onSubmitClick = {
+                    room.dataOrNull()?.let {
+                        sessionCoroutineScope.launch {
+                            it.setAccessRule(RoomAccessRules.UNRESTRICTED)
+                                .onSuccess {
+                                    handleEvents(InvitePeopleEvents.SendInvites)
+                                }
+                                .onFailure {
+                                    showOpenRoomToExternalsDialog = false
+                                    appErrorStateService.showError(
+                                        titleRes = R.string.screen_invite_unable_to_open_room_to_externals_title,
+                                        bodyRes = R.string.screen_invite_unable_to_open_room_to_externals_message,
+                                    )
+                                }
+                        }
+                    }
+                },
+                onDismiss = {
+                    showOpenRoomToExternalsDialog = false
+                }
+            )
         }
 
         return DefaultInvitePeopleState(

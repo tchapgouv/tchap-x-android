@@ -22,7 +22,8 @@ import kotlinx.collections.immutable.toImmutableList
 
 data class RoomDetailsState(
     val isDebugBuild: Boolean,
-    val isExternal: Boolean,
+    // TCHAP external user
+    val isOpenToExternalUsers: Boolean,
     val roomId: RoomId,
     val roomName: String,
     val roomAlias: RoomAlias?,
@@ -61,7 +62,8 @@ data class RoomDetailsState(
         if (isPublic) {
             add(RoomBadge.PUBLIC)
         }
-        if (isExternal) {
+        // TCHAP external user
+        if (isOpenToExternalUsers) {
             add(RoomBadge.EXTERNAL)
         }
     }.toImmutableList()
