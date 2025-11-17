@@ -42,7 +42,7 @@
   <string name="screen_room_timeline_add_reaction">"Ychwanegu emoji"</string>
   <string name="screen_room_timeline_beginning_of_room">"Dyma ddechrau %1$s."</string>
   <string name="screen_room_timeline_beginning_of_room_no_name">"Dyma ddechrau\'r sgwrs hon."</string>
-  <string name="screen_room_timeline_legacy_call">"Galwad heb ei chefnogi. Gofynnwch a all y galwr ddefnyddio\'r ap Element X newydd."</string>
+  <string name="screen_room_timeline_legacy_call">"Galwad heb ei chefnogi. Gofynnwch a all y galwr ddefnyddio\'r ap %1$s newydd."</string>
   <string name="screen_room_timeline_less_reactions">"Dangos llai"</string>
   <string name="screen_room_timeline_message_copied">"Neges wedi\'i chopïo"</string>
   <string name="screen_room_timeline_no_permission_to_post">"Does gennych chi ddim caniatâd i bostio i\'r ystafell hon"</string>

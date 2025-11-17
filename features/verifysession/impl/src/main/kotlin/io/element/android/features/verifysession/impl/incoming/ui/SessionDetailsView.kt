@@ -28,6 +28,7 @@ import io.element.android.libraries.designsystem.atomic.molecules.TextWithLabelM
 import io.element.android.libraries.designsystem.icons.CompoundDrawables
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
+import io.element.android.libraries.designsystem.theme.LocalBuildMeta
 import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.matrix.api.core.DeviceId
 import io.element.android.libraries.ui.strings.CommonStrings
@@ -89,7 +90,7 @@ fun SessionDetailsView(
 internal fun SessionDetailsViewPreview() = ElementPreview {
     Column {
         SessionDetailsView(
-            deviceName = "Element X Android",
+            deviceName = "${LocalBuildMeta.current.applicationName} Android",
             deviceId = DeviceId("ILAKNDNASDLK"),
             signInFormattedTimestamp = "12:34",
         )
