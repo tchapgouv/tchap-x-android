@@ -146,7 +146,7 @@ private fun ReactionSummaryViewContent(
                 items(summary.reactions[page].senders) { sender ->
                     val user = sender.user ?: MatrixUser(userId = sender.senderId)
                     SenderRow(
-                        isDebugBuild = summary.isDebugBuild,
+                        showMatrixId = summary.showMatrixId,
                         avatarData = user.getAvatarData(AvatarSize.UserListItem),
                         // TCHAP TODO should be applied in Element X
                         name = user.getBestName(),
@@ -236,7 +236,7 @@ private fun AggregatedReactionButton(
 
 @Composable
 private fun SenderRow(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     avatarData: AvatarData,
     name: String,
     userId: String,
@@ -279,7 +279,8 @@ private fun SenderRow(
                     style = ElementTheme.typography.fontBodySmRegular,
                 )
             }
-            if (isDebugBuild) { // TCHAP hide the Matrix Id in release mode
+            // TCHAP show the Matrix Id depending of feature flag showMatrixId
+            if (showMatrixId) {
                 Text(
                     text = userId,
                     color = ElementTheme.colors.textSecondary,

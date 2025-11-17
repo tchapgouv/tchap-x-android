@@ -197,7 +197,7 @@ fun aReadReceiptBottomSheetState(
     selectedEvent: TimelineItem.Event? = null,
     eventSink: (ReadReceiptBottomSheetEvents) -> Unit = {},
 ) = ReadReceiptBottomSheetState(
-    isDebugBuild = false,
+    showMatrixId = false,
     selectedEvent = selectedEvent,
     eventSink = eventSink,
 )

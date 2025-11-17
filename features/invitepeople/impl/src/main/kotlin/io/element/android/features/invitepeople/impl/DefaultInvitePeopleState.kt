@@ -18,7 +18,7 @@ import kotlinx.collections.immutable.ImmutableList
 data class DefaultInvitePeopleState(
     val room: AsyncData<Unit>,
     override val canInvite: Boolean,
-    val isDebugBuild: Boolean,
+    val showMatrixId: Boolean,
     val searchQuery: String,
     val showSearchLoader: Boolean,
     val searchResults: SearchBarResultState<ImmutableList<InvitableUser>>,

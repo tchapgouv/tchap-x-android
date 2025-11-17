@@ -13,8 +13,8 @@ import dev.zacsweers.metro.Provides
 import io.element.android.features.roomdetails.impl.members.details.RoomMemberDetailsPresenter
 import io.element.android.features.userprofile.api.UserProfilePresenterFactory
 import io.element.android.libraries.androidutils.clipboard.ClipboardHelper
-import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.di.RoomScope
+import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.encryption.EncryptionService
 import io.element.android.libraries.matrix.api.room.JoinedRoom
@@ -24,7 +24,7 @@ import io.element.android.libraries.matrix.api.room.JoinedRoom
 object RoomMemberModule {
     @Provides
     fun provideRoomMemberDetailsPresenterFactory(
-        buildMeta: BuildMeta,
+        featureFlagService: FeatureFlagService,
         room: JoinedRoom,
         userProfilePresenterFactory: UserProfilePresenterFactory,
         encryptionService: EncryptionService,
@@ -34,7 +34,7 @@ object RoomMemberModule {
             override fun create(roomMemberId: UserId): RoomMemberDetailsPresenter {
                 return RoomMemberDetailsPresenter(
                     roomMemberId = roomMemberId,
-                    buildMeta = buildMeta,
+                    featureFlagService = featureFlagService,
                     room = room,
                     userProfilePresenterFactory = userProfilePresenterFactory,
                     encryptionService = encryptionService,

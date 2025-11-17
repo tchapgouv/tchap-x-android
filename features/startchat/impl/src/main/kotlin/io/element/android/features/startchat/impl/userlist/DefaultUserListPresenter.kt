@@ -19,9 +19,10 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesBinding
-import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
 import io.element.android.libraries.di.SessionScope
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.room.recent.RecentDirectRoom
 import io.element.android.libraries.matrix.api.room.recent.getRecentDirectRooms
@@ -37,7 +38,7 @@ class DefaultUserListPresenter(
     @Assisted val args: UserListPresenterArgs,
     @Assisted val userRepository: UserRepository,
     @Assisted val userListDataStore: UserListDataStore,
-    private val buildMeta: BuildMeta,
+    private val featureFlagService: FeatureFlagService,
     private val matrixClient: MatrixClient,
 ) : UserListPresenter {
     @AssistedFactory
@@ -64,6 +65,10 @@ class DefaultUserListPresenter(
         }
         var showSearchLoader by remember { mutableStateOf(false) }
 
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(false)
+
         LaunchedEffect(searchQuery) {
             searchResults = SearchBarResultState.Initial()
             showSearchLoader = false
@@ -78,7 +83,7 @@ class DefaultUserListPresenter(
         }
 
         return UserListState(
-            isDebugBuild = buildMeta.isDebuggable,
+            showMatrixId = showMatrixId,
             searchQuery = searchQuery,
             searchResults = searchResults,
             selectedUsers = selectedUsers.toImmutableList(),

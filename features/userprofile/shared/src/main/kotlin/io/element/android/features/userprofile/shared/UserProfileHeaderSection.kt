@@ -47,7 +47,7 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun UserProfileHeaderSection(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     avatarUrl: String?,
     userId: UserId,
     userName: String?,
@@ -91,7 +91,8 @@ fun UserProfileHeaderSection(
             )
             Spacer(modifier = Modifier.height(6.dp))
         }
-        if (isDebugBuild) { // TCHAP hide the Matrix Id in release mode
+        // TCHAP show the Matrix Id depending of feature flag showMatrixId
+        if (showMatrixId) {
             Text(
                 modifier = Modifier.niceClickable { onUserIdClick() },
                 text = userId.value,
@@ -104,6 +105,7 @@ fun UserProfileHeaderSection(
             UserProfileVerificationState.UNKNOWN, UserProfileVerificationState.UNVERIFIED -> Unit
             UserProfileVerificationState.VERIFIED -> {
                 MatrixBadgeRowMolecule(
+                    modifier = Modifier.padding(top = 8.dp),
                     data = listOf(
                         MatrixBadgeAtom.MatrixBadgeData(
                             text = stringResource(CommonStrings.common_verified),
@@ -140,7 +142,7 @@ fun UserProfileHeaderSection(
 @Composable
 internal fun UserProfileHeaderSectionPreview() = ElementPreview {
     UserProfileHeaderSection(
-        isDebugBuild = false,
+        showMatrixId = false,
         avatarUrl = null,
         userId = UserId("@alice:example.com"),
         userName = "Alice",
@@ -155,7 +157,7 @@ internal fun UserProfileHeaderSectionPreview() = ElementPreview {
 @Composable
 internal fun UserProfileHeaderSectionWithVerificationViolationPreview() = ElementPreview {
     UserProfileHeaderSection(
-        isDebugBuild = false,
+        showMatrixId = false,
         avatarUrl = null,
         userId = UserId("@alice:example.com"),
         userName = "Alice",

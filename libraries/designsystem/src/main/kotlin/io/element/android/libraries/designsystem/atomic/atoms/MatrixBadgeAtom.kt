@@ -58,11 +58,12 @@ object MatrixBadgeAtom {
             Type.Info -> ElementTheme.colors.iconInfoPrimary
         }
         Badge(
-            text = data.text,
+            text = data.text.uppercase(),
             icon = data.icon,
             backgroundColor = backgroundColor,
             iconColor = iconColor,
             textColor = textColor,
+            isSmall = true
         )
     }
 }

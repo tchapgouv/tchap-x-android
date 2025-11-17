@@ -10,6 +10,7 @@ package io.element.android.features.invitepeople.impl
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -31,11 +32,12 @@ import io.element.android.libraries.architecture.map
 import io.element.android.libraries.architecture.runCatchingUpdatingState
 import io.element.android.libraries.architecture.runUpdatingState
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
-import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.designsystem.components.dialogs.ConfirmationDialog
 import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
 import io.element.android.libraries.di.SessionScope
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
@@ -60,7 +62,7 @@ import kotlinx.coroutines.withContext
 class DefaultInvitePeoplePresenter(
     @Assisted private val joinedRoom: JoinedRoom?,
     @Assisted private val roomId: RoomId,
-    private val buildMeta: BuildMeta,
+    private val featureFlagService: FeatureFlagService,
     private val userRepository: UserRepository,
     private val coroutineDispatchers: CoroutineDispatchers,
     @SessionCoroutineScope private val sessionCoroutineScope: CoroutineScope,
@@ -83,6 +85,10 @@ class DefaultInvitePeoplePresenter(
         val showSearchLoader = rememberSaveable { mutableStateOf(false) }
         var showOpenRoomToExternalsDialog by rememberSaveable { mutableStateOf(false) } // TCHAP external user
         val sendInvitesAction = remember { mutableStateOf<AsyncAction<Unit>>(AsyncAction.Uninitialized) }
+
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(false)
 
         val room by produceState(if (joinedRoom != null) AsyncData.Success(joinedRoom) else AsyncData.Loading()) {
             if (joinedRoom == null) {
@@ -177,7 +183,7 @@ class DefaultInvitePeoplePresenter(
 
         return DefaultInvitePeopleState(
             room = room.map { },
-            isDebugBuild = buildMeta.isDebuggable,
+            showMatrixId = showMatrixId,
             canInvite = selectedUsers.value.isNotEmpty() && !sendInvitesAction.value.isLoading(),
             selectedUsers = selectedUsers.value,
             searchQuery = searchQuery,

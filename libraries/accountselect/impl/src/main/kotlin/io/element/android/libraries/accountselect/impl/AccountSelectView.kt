@@ -35,7 +35,7 @@ import io.element.android.libraries.ui.strings.CommonStrings
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountSelectView(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     state: AccountSelectState,
     onSelectAccount: (SessionId) -> Unit,
     onDismiss: () -> Unit,
@@ -69,7 +69,7 @@ fun AccountSelectView(
                                 }
                                 .padding(vertical = 8.dp),
                             matrixUser = matrixUser,
-                            isDebugBuild = isDebugBuild,
+                            showMatrixId = showMatrixId,
                         )
                         HorizontalDivider()
                     }
@@ -86,6 +86,6 @@ internal fun AccountSelectViewPreview(@PreviewParameter(AccountSelectStateProvid
         state = state,
         onSelectAccount = {},
         onDismiss = {},
-        isDebugBuild = false,
+        showMatrixId = false,
     )
 }

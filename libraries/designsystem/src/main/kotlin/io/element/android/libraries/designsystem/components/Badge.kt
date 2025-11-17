@@ -40,27 +40,33 @@ fun Badge(
     shape: Shape = RoundedCornerShape(50),
     borderStroke: BorderStroke? = null,
     tintIcon: Boolean = true,
+    isSmall: Boolean = false,
 ) {
     Surface(
         color = backgroundColor,
         contentColor = textColor,
         border = borderStroke,
-        shape = shape,
+        shape = if (isSmall) RoundedCornerShape(20) else shape,
     ) {
+        val modifier = if (isSmall) {
+            Modifier.padding(start = 2.dp, end = 4.dp, top = 1.dp, bottom = 1.dp)
+        } else {
+            Modifier.padding(start = 8.dp, end = 12.dp, top = 4.5.dp, bottom = 4.5.dp)
+        }
         Row(
-            modifier = Modifier.padding(start = 8.dp, end = 12.dp, top = 4.5.dp, bottom = 4.5.dp),
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            modifier = modifier,
+            horizontalArrangement = if (isSmall) Arrangement.spacedBy(2.dp) else Arrangement.spacedBy(5.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                modifier = Modifier.size(16.dp),
+                modifier = if (isSmall) Modifier.size(13.dp) else Modifier.size(16.dp),
                 imageVector = icon,
                 contentDescription = null,
                 tint = if (tintIcon) iconColor else LocalContentColor.current,
             )
             Text(
                 text = text,
-                style = ElementTheme.typography.fontBodySmRegular,
+                style = if (isSmall) ElementTheme.typography.fontBodyXsRegular else ElementTheme.typography.fontBodySmRegular,
                 color = textColor,
             )
         }

@@ -10,6 +10,9 @@ package io.element.android.features.preferences.impl.root
 import android.app.Activity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
@@ -23,8 +26,9 @@ import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.logout.api.direct.DirectLogoutEvents
 import io.element.android.features.logout.api.direct.DirectLogoutView
 import io.element.android.libraries.androidutils.browser.openUrlInChromeCustomTab
-import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.di.SessionScope
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.user.MatrixUser
 
 @ContributesNode(SessionScope::class)
@@ -32,7 +36,7 @@ import io.element.android.libraries.matrix.api.user.MatrixUser
 class PreferencesRootNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
-    private val buildMeta: BuildMeta,
+    private val featureFlagService: FeatureFlagService,
     private val presenter: PreferencesRootPresenter,
     private val directLogoutView: DirectLogoutView,
 ) : Node(buildContext, plugins = plugins) {
@@ -139,6 +143,11 @@ class PreferencesRootNode(
         val state = presenter.present()
         val activity = requireNotNull(LocalActivity.current)
         val isDark = ElementTheme.isLightTheme.not()
+
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(false)
+
         PreferencesRootView(
             state = state,
             modifier = modifier,
@@ -165,7 +174,7 @@ class PreferencesRootNode(
                 }
             },
             onDeactivateClick = this::onOpenAccountDeactivation,
-            isDebugBuild = buildMeta.isDebuggable,
+            showMatrixId = showMatrixId,
         )
 
         directLogoutView.Render(state = state.directLogoutState)

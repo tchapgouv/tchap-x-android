@@ -58,7 +58,7 @@ fun BlockedUsersView(
             ) {
                 items(state.blockedUsers) { matrixUser ->
                     BlockedUserItem(
-                        isDebugBuild = state.isDebugBuild,
+                        showMatrixId = state.showMatrixId,
                         matrixUser = matrixUser,
                         onClick = { state.eventSink(BlockedUsersEvents.Unblock(it)) }
                     )
@@ -105,12 +105,12 @@ fun BlockedUsersView(
 
 @Composable
 private fun BlockedUserItem(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     matrixUser: MatrixUser,
     onClick: (UserId) -> Unit,
 ) {
     MatrixUserRow(
-        isDebugBuild = isDebugBuild,
+        showMatrixId = showMatrixId,
         modifier = Modifier.clickable { onClick(matrixUser.userId) },
         matrixUser = matrixUser,
     )

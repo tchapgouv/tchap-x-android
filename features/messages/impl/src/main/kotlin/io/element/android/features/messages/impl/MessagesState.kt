@@ -67,12 +67,10 @@ data class MessagesState(
     val eventSink: (MessagesEvents) -> Unit
 ) {
     val roomBadges = buildList {
-        if (isEncrypted || isPublic) {
-            if (isEncrypted) {
-                add(RoomBadge.ENCRYPTED)
-            } else {
-                add(RoomBadge.NOT_ENCRYPTED)
-            }
+        if (isEncrypted) {
+            add(RoomBadge.ENCRYPTED)
+        } else {
+            add(RoomBadge.NOT_ENCRYPTED)
         }
         if (isPublic) {
             add(RoomBadge.PUBLIC)
