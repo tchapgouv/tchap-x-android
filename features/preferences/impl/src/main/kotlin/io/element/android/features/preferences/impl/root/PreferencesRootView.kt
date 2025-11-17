@@ -66,7 +66,7 @@ fun PreferencesRootView(
     onOpenBlockedUsers: () -> Unit,
     onSignOutClick: () -> Unit,
     onDeactivateClick: () -> Unit,
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = rememberSnackbarHostState(snackbarMessage = state.snackbarMessage)
@@ -79,7 +79,7 @@ fun PreferencesRootView(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) {
         UserPreferences(
-            isDebugBuild = state.isDebugBuild,
+            showMatrixId = state.showMatrixId,
             modifier = Modifier.clickable {
                 onOpenUserProfile(state.myUser)
             },
@@ -89,7 +89,7 @@ fun PreferencesRootView(
             MultiAccountSection(
                 state = state,
                 onAddAccountClick = onAddAccountClick,
-                isDebugBuild = isDebugBuild,
+                showMatrixId = showMatrixId,
             )
         }
         // 'Manage my app' section
@@ -135,7 +135,7 @@ fun PreferencesRootView(
 
 @Composable
 private fun ColumnScope.MultiAccountSection(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     state: PreferencesRootState,
     onAddAccountClick: () -> Unit,
 ) {
@@ -150,7 +150,7 @@ private fun ColumnScope.MultiAccountSection(
             },
             matrixUser = matrixUser,
             avatarSize = AvatarSize.AccountItem,
-            isDebugBuild = isDebugBuild,
+            showMatrixId = showMatrixId,
             )
         HorizontalDivider()
     }
@@ -372,7 +372,7 @@ private fun ContentToPreview(matrixUser: MatrixUser) {
         onOpenBlockedUsers = {},
         onSignOutClick = {},
         onDeactivateClick = {},
-        isDebugBuild = false,
+        showMatrixId = false,
     )
 }
 
@@ -385,7 +385,7 @@ internal fun MultiAccountSectionPreview() = ElementPreview {
                 otherSessions = aMatrixUserList(),
             ),
             onAddAccountClick = {},
-            isDebugBuild = false,
+            showMatrixId = false,
         )
     }
 }

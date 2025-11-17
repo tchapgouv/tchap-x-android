@@ -13,6 +13,8 @@ import io.element.android.features.invitepeople.api.InvitePeopleEvents
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
+import io.element.android.libraries.featureflag.api.FeatureFlags
+import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.UserId
@@ -569,5 +571,8 @@ fun TestScope.createDefaultInvitePeoplePresenter(
         sessionCoroutineScope = backgroundScope,
         appErrorStateService = appErrorStateService,
         matrixClient = matrixClient,
+        featureFlagService = FakeFeatureFlagService(
+            mapOf(FeatureFlags.ShowMatrixId.key to true)
+        ),
     )
 }

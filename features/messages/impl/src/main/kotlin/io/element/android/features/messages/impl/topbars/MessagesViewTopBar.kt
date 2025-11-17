@@ -85,19 +85,14 @@ internal fun MessagesViewTopBar(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 val titleModifier = Modifier.weight(1f, fill = false)
-                Column {
-                    RoomAvatarAndNameRow(
-                        roomName = roomName,
-                        roomAvatar = roomAvatar,
-                        isTombstoned = isTombstoned,
-                        heroes = heroes,
-                        modifier = titleModifier
-                    )
-                    BadgeList(
-                        roomBadge = roomBadges,
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                    )
-                }
+                RoomAvatarAndNameRow(
+                    roomName = roomName,
+                    roomAvatar = roomAvatar,
+                    isTombstoned = isTombstoned,
+                    heroes = heroes,
+                    modifier = titleModifier,
+                    roomBadges = roomBadges
+                )
 
                 when (dmUserIdentityState) {
                     IdentityState.Verified -> {
@@ -131,6 +126,7 @@ internal fun MessagesViewTopBar(
 
 @Composable
 private fun RoomAvatarAndNameRow(
+    roomBadges: ImmutableList<RoomBadge>,
     roomName: String?,
     roomAvatar: AvatarData,
     heroes: ImmutableList<AvatarData>,
@@ -148,18 +144,25 @@ private fun RoomAvatarAndNameRow(
                 isTombstoned = isTombstoned,
             ),
         )
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .semantics {
-                    heading()
-                },
-            text = roomName ?: stringResource(CommonStrings.common_no_room_name),
-            style = ElementTheme.typography.fontBodyLgMedium,
-            fontStyle = FontStyle.Italic.takeIf { roomName == null },
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
+        Column(
+            modifier = Modifier.padding(horizontal = 8.dp)
+        ) {
+            Text(
+                modifier = Modifier
+                    .semantics {
+                        heading()
+                    },
+                text = roomName ?: stringResource(CommonStrings.common_no_room_name),
+                style = ElementTheme.typography.fontBodyLgMedium,
+                fontStyle = FontStyle.Italic.takeIf { roomName == null },
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            BadgeList(
+                modifier = Modifier.padding(vertical = 2.dp),
+                roomBadge = roomBadges,
+            )
+        }
     }
 }
 

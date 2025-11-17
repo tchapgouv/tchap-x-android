@@ -23,8 +23,9 @@ import io.element.android.features.roommembermoderation.api.RoomMemberModeration
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
-import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.encryption.EncryptionService
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityState
@@ -50,7 +51,7 @@ import kotlinx.coroutines.withContext
 
 @Inject
 class RoomMemberListPresenter(
-    private val buildMeta: BuildMeta,
+    private val featureFlagService: FeatureFlagService,
     private val room: JoinedRoom,
     private val roomMemberListDataSource: RoomMemberListDataSource,
     private val coroutineDispatchers: CoroutineDispatchers,
@@ -70,6 +71,10 @@ class RoomMemberListPresenter(
         val syncUpdateFlow = room.syncUpdateFlow.collectAsState()
         val canInvite by room.canInviteAsState(syncUpdateFlow.value)
         val roomModerationState = roomMembersModerationPresenter.present()
+
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(false)
 
         val roomMemberIdentityStates by produceState(persistentMapOf()) {
             room.roomMemberIdentityStateChange(waitForEncryption = true)
@@ -175,7 +180,7 @@ class RoomMemberListPresenter(
         }
 
         return RoomMemberListState(
-            isDebugBuild = buildMeta.isDebuggable,
+            showMatrixId = showMatrixId,
             roomMembers = roomMembers,
             searchQuery = searchQuery,
             searchResults = searchResults,

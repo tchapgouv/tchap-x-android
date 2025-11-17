@@ -74,7 +74,7 @@ fun anAlice() = MatrixUser(
 )
 
 fun aRoomMembersModerationState(
-    isDebugBuild: Boolean = false,
+    showMatrixId: Boolean = false,
     canKick: Boolean = false,
     canBan: Boolean = false,
     selectedUser: MatrixUser? = null,
@@ -84,7 +84,7 @@ fun aRoomMembersModerationState(
     unbanUserAsyncAction: AsyncAction<Unit> = AsyncAction.Uninitialized,
     eventSink: (RoomMemberModerationEvents) -> Unit = {},
 ) = InternalRoomMemberModerationState(
-    isDebugBuild = isDebugBuild,
+    showMatrixId = showMatrixId,
     canKick = canKick,
     canBan = canBan,
     selectedUser = selectedUser,

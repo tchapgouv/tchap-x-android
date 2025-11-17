@@ -9,7 +9,6 @@ package io.element.android.libraries.designsystem.atomic.molecules
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,8 +21,7 @@ fun MatrixBadgeRowMolecule(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp),
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         for (badge in data) {

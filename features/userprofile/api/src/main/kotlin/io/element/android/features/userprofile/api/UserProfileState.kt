@@ -14,7 +14,7 @@ import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.UserId
 
 data class UserProfileState(
-    val isDebugBuild: Boolean,
+    val showMatrixId: Boolean,
     val userId: UserId,
     val userName: String?,
     val avatarUrl: String?,

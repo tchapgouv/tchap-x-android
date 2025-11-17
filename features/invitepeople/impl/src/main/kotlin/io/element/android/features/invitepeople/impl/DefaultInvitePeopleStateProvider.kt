@@ -103,7 +103,7 @@ private fun aDefaultInvitePeopleState(
 ): DefaultInvitePeopleState {
     return DefaultInvitePeopleState(
         room = room,
-        isDebugBuild = false,
+        showMatrixId = false,
         canInvite = canInvite,
         searchQuery = searchQuery,
         searchResults = searchResults,

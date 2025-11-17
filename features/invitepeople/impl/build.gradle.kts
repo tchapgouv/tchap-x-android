@@ -28,6 +28,7 @@ setupDependencyInjection()
 dependencies {
     implementation(projects.libraries.core)
     implementation(projects.libraries.architecture)
+    implementation(projects.libraries.featureflag.api)
     implementation(projects.libraries.tchaputils)
     implementation(projects.libraries.matrix.api)
     implementation(projects.libraries.matrixui)
@@ -41,6 +42,7 @@ dependencies {
 
     testCommonDependencies(libs, true)
     testImplementation(projects.libraries.matrix.test)
+    testImplementation(projects.libraries.featureflag.test)
     testImplementation(projects.libraries.usersearch.test)
     testImplementation(projects.services.apperror.test)
 }

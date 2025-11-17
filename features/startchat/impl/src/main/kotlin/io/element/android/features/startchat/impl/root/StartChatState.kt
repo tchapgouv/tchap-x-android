@@ -12,7 +12,7 @@ import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.matrix.api.core.RoomId
 
 data class StartChatState(
-    val isDebugBuild: Boolean,
+    val showMatrixId: Boolean,
     val applicationName: String,
     val userListState: UserListState,
     val startDmAction: AsyncAction<RoomId>,

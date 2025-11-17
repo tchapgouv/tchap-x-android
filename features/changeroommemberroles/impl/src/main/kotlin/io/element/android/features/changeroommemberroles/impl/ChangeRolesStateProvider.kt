@@ -60,7 +60,7 @@ internal fun aChangeRolesState(
     canRemoveMember: (UserId) -> Boolean = { true },
     eventSink: (ChangeRolesEvent) -> Unit = {},
 ) = ChangeRolesState(
-    isDebugBuild = false,
+    showMatrixId = false,
     role = role,
     query = query,
     isSearchActive = isSearchActive,

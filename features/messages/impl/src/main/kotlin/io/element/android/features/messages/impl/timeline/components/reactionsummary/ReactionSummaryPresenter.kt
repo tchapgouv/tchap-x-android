@@ -16,7 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import dev.zacsweers.metro.Inject
 import io.element.android.libraries.architecture.Presenter
-import io.element.android.libraries.core.meta.BuildMeta
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.room.BaseRoom
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.roomMembers
@@ -26,7 +27,7 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Inject
 class ReactionSummaryPresenter(
-    private val buildMeta: BuildMeta,
+    private val featureFlagService: FeatureFlagService,
     private val room: BaseRoom,
 ) : Presenter<ReactionSummaryState> {
     @Composable
@@ -38,10 +39,14 @@ class ReactionSummaryPresenter(
         }
         val targetWithAvatars = populateSenderAvatars(members = membersState.roomMembers().orEmpty().toImmutableList(), summary = target.value)
 
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(false)
+
         fun handleEvents(event: ReactionSummaryEvents) {
             when (event) {
                 is ReactionSummaryEvents.ShowReactionSummary -> target.value = ReactionSummaryState.Summary(
-                    isDebugBuild = buildMeta.isDebuggable,
+                    showMatrixId = showMatrixId,
                     reactions = event.reactions.toImmutableList(),
                     selectedKey = event.selectedKey,
                     selectedEventId = event.eventId

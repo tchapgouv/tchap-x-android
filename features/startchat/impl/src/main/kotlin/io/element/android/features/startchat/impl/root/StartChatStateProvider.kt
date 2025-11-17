@@ -66,7 +66,7 @@ fun aCreateRoomRootState(
     isRoomDirectorySearchEnabled: Boolean = false,
     eventSink: (StartChatEvents) -> Unit = {},
 ) = StartChatState(
-    isDebugBuild = false,
+    showMatrixId = false,
     applicationName = applicationName,
     userListState = userListState,
     startDmAction = startDmAction,

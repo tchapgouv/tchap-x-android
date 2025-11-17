@@ -67,7 +67,7 @@ fun RoomMemberModerationView(
         val selectedUser = state.selectedUser
         if (selectedUser != null && state.canDisplayActions) {
             RoomMemberActionsBottomSheet(
-                isDebugBuild = state.isDebugBuild,
+                showMatrixId = state.showMatrixId,
                 user = selectedUser,
                 actions = state.actions,
                 onSelectAction = onSelectAction,
@@ -203,7 +203,7 @@ private fun RoomMemberAsyncActions(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RoomMemberActionsBottomSheet(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     user: MatrixUser,
     actions: ImmutableList<ModerationActionState>,
     onSelectAction: (ModerationAction, MatrixUser) -> Unit,
@@ -243,8 +243,8 @@ private fun RoomMemberActionsBottomSheet(
                         .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
                         .fillMaxWidth()
             )
-            // TCHAP hide the Matrix Id in release mode
-            if (isDebugBuild) {
+            // TCHAP show the Matrix Id depending of feature flag showMatrixId
+            if (showMatrixId) {
                 Text(
                     text = user.userId.toString(),
                     style = ElementTheme.typography.fontBodyLgRegular,

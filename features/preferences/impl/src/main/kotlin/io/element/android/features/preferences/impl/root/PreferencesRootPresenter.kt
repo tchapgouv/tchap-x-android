@@ -22,7 +22,6 @@ import io.element.android.features.logout.api.direct.DirectLogoutState
 import io.element.android.features.preferences.impl.utils.ShowDeveloperSettingsProvider
 import io.element.android.features.rageshake.api.RageshakeFeatureAvailability
 import io.element.android.libraries.architecture.Presenter
-import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.collectSnackbarMessageAsState
 import io.element.android.libraries.featureflag.api.FeatureFlagService
@@ -45,7 +44,6 @@ import kotlinx.coroutines.launch
 
 @Inject
 class PreferencesRootPresenter(
-    private val buildMeta: BuildMeta,
     private val matrixClient: MatrixClient,
     private val sessionVerificationService: SessionVerificationService,
     private val analyticsService: AnalyticsService,
@@ -122,6 +120,10 @@ class PreferencesRootPresenter(
             initAccountManagementUrl(accountManagementUrl, devicesManagementUrl)
         }
 
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(false)
+
         val showDeveloperSettings by showDeveloperSettingsProvider.showDeveloperSettings.collectAsState()
 
         fun handleEvent(event: PreferencesRootEvents) {
@@ -136,7 +138,7 @@ class PreferencesRootPresenter(
         }
 
         return PreferencesRootState(
-            isDebugBuild = buildMeta.isDebuggable,
+            showMatrixId = showMatrixId,
             myUser = matrixUser.value,
             version = versionFormatter.get(),
             deviceId = matrixClient.deviceId,

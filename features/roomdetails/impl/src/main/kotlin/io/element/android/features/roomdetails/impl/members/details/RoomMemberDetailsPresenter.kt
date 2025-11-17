@@ -9,6 +9,7 @@ package io.element.android.features.roomdetails.impl.members.details
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
@@ -22,10 +23,11 @@ import io.element.android.features.userprofile.api.UserProfileState
 import io.element.android.features.userprofile.api.UserProfileVerificationState
 import io.element.android.libraries.androidutils.clipboard.ClipboardHelper
 import io.element.android.libraries.architecture.Presenter
-import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.designsystem.utils.snackbar.LocalSnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.designsystem.utils.snackbar.collectSnackbarMessageAsState
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.encryption.EncryptionService
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityState
@@ -45,7 +47,7 @@ import kotlinx.coroutines.launch
 @AssistedInject
 class RoomMemberDetailsPresenter(
     @Assisted private val roomMemberId: UserId,
-    private val buildMeta: BuildMeta,
+    private val featureFlagService: FeatureFlagService,
     private val room: JoinedRoom,
     private val encryptionService: EncryptionService,
     private val clipboardHelper: ClipboardHelper,
@@ -126,8 +128,12 @@ class RoomMemberDetailsPresenter(
             }
         }
 
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(false)
+
         return userProfileState.copy(
-            isDebugBuild = buildMeta.isDebuggable,
+            showMatrixId = showMatrixId,
             userName = roomUserName ?: userProfileState.userName,
             avatarUrl = roomUserAvatar ?: userProfileState.avatarUrl,
             verificationState = verificationState,

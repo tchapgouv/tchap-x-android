@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.designsystem.components.async.AsyncFailure
@@ -82,7 +83,7 @@ private fun InvitePeopleContentView(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         InvitePeopleSearchBar(
-            isDebugBuild = state.isDebugBuild,
+            showMatrixId = state.showMatrixId,
             modifier = Modifier.fillMaxWidth(),
             query = state.searchQuery,
             showLoader = state.showSearchLoader,
@@ -115,7 +116,7 @@ private fun InvitePeopleContentView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InvitePeopleSearchBar(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     query: String,
     state: SearchBarResultState<ImmutableList<InvitableUser>>,
     showLoader: Boolean,
@@ -180,10 +181,11 @@ private fun InvitePeopleSearchBar(
                                 invitableUser.isAlreadyJoined -> stringResource(R.string.screen_invite_users_already_a_member)
                                 invitableUser.isAlreadyInvited -> stringResource(R.string.screen_invite_users_already_invited)
                                 // Otherwise show the ID, unless that's already used for their name
-                                invitableUser.matrixUser.displayName.isNullOrEmpty()
-                                    .not() -> invitableUser.matrixUser.userId.value
+                                showMatrixId && invitableUser.matrixUser.displayName.isNullOrEmpty()
+                                    .not() -> invitableUser.matrixUser.userId.value // Tchap ShowMatrixId feature flag
                                 else -> null
-                            }
+                            },
+                            isExternalTchapUser = invitableUser.matrixUser.userId.value.isExternalTchapUser(),
                         )
                     }
                     CheckableUserRow(
@@ -192,7 +194,6 @@ private fun InvitePeopleSearchBar(
                         data = data,
                         onCheckedChange = { onToggleUser(invitableUser.matrixUser) },
                         modifier = Modifier.fillMaxWidth(),
-                        isDebugBuild = isDebugBuild,
                     )
                 }
             }

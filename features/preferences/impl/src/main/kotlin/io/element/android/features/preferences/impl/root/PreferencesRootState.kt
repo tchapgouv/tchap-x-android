@@ -14,7 +14,7 @@ import io.element.android.libraries.matrix.api.user.MatrixUser
 import kotlinx.collections.immutable.ImmutableList
 
 data class PreferencesRootState(
-    val isDebugBuild: Boolean,
+    val showMatrixId: Boolean,
     val myUser: MatrixUser,
     val version: String,
     val deviceId: DeviceId?,

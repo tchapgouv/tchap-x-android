@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.preview.ElementThemedPreview
 import io.element.android.libraries.designsystem.theme.components.HorizontalDivider
@@ -23,7 +24,7 @@ import io.element.android.libraries.usersearch.api.UserSearchResult
 
 @Composable
 fun SearchMultipleUsersResultItem(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     searchResult: UserSearchResult,
     isUserSelected: Boolean,
     onCheckedChange: (Boolean) -> Unit,
@@ -37,12 +38,12 @@ fun SearchMultipleUsersResultItem(
     } else {
         CheckableUserRowData.Resolved(
             name = searchResult.matrixUser.getBestName(),
-            subtext = if (searchResult.matrixUser.displayName.isNullOrEmpty()) null else searchResult.matrixUser.userId.value,
+            subtext = if (!showMatrixId || searchResult.matrixUser.displayName.isNullOrEmpty()) null else searchResult.matrixUser.userId.value,
             avatarData = searchResult.matrixUser.getAvatarData(AvatarSize.UserListItem),
+            isExternalTchapUser = searchResult.matrixUser.userId.value.isExternalTchapUser(),
         )
     }
     CheckableUserRow(
-        isDebugBuild = isDebugBuild,
         checked = isUserSelected,
         modifier = modifier,
         data = data,
@@ -55,7 +56,7 @@ fun SearchMultipleUsersResultItem(
 internal fun SearchMultipleUsersResultItemPreview() = ElementThemedPreview {
     Column {
         SearchMultipleUsersResultItem(
-            isDebugBuild = false,
+            showMatrixId = false,
             searchResult = UserSearchResult(
                 aMatrixUser(),
                 isUnresolved = false
@@ -65,7 +66,7 @@ internal fun SearchMultipleUsersResultItemPreview() = ElementThemedPreview {
         )
         HorizontalDivider()
         SearchMultipleUsersResultItem(
-            isDebugBuild = false,
+            showMatrixId = false,
             searchResult = UserSearchResult(
                 aMatrixUser(),
                 isUnresolved = false
@@ -75,7 +76,7 @@ internal fun SearchMultipleUsersResultItemPreview() = ElementThemedPreview {
         )
         HorizontalDivider()
         SearchMultipleUsersResultItem(
-            isDebugBuild = false,
+            showMatrixId = false,
             searchResult = UserSearchResult(
                 aMatrixUser(),
                 isUnresolved = true
@@ -85,7 +86,7 @@ internal fun SearchMultipleUsersResultItemPreview() = ElementThemedPreview {
         )
         HorizontalDivider()
         SearchMultipleUsersResultItem(
-            isDebugBuild = false,
+            showMatrixId = false,
             searchResult = UserSearchResult(
                 aMatrixUser(),
                 isUnresolved = true

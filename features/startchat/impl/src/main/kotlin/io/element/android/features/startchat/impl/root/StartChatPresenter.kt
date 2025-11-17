@@ -56,6 +56,9 @@ class StartChatPresenter(
         val isRoomDirectorySearchEnabled by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.RoomDirectorySearch)
         }.collectAsState(initial = false)
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(initial = false)
 
         fun handleEvents(event: StartChatEvents) {
             when (event) {
@@ -71,7 +74,7 @@ class StartChatPresenter(
         }
 
         return StartChatState(
-            isDebugBuild = buildMeta.isDebuggable,
+            showMatrixId = showMatrixId,
             applicationName = buildMeta.applicationName,
             userListState = userListState,
             startDmAction = startDmActionState.value,

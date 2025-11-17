@@ -25,8 +25,9 @@ import im.vector.app.features.analytics.plan.RoomModeration
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
-import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomMember
@@ -48,7 +49,7 @@ import kotlinx.coroutines.launch
 
 @AssistedInject
 class ChangeRolesPresenter(
-    private val buildMeta: BuildMeta,
+    private val featureFlagService: FeatureFlagService,
     @Assisted private val role: RoomMember.Role,
     private val room: JoinedRoom,
     private val dispatchers: CoroutineDispatchers,
@@ -101,6 +102,10 @@ class ChangeRolesPresenter(
                 SearchBarResultState.Results(results)
             }
         }
+
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(false)
 
         val hasPendingChanges = usersWithRole.value != selectedUsers.value
 
@@ -170,7 +175,7 @@ class ChangeRolesPresenter(
             }
         }
         return ChangeRolesState(
-            isDebugBuild = buildMeta.isDebuggable,
+            showMatrixId = showMatrixId,
             role = role,
             query = query,
             isSearchActive = searchActive,
