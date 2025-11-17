@@ -25,6 +25,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
 import org.matrix.rustcomponents.sdk.Membership
 import org.matrix.rustcomponents.sdk.RoomHero
+import uniffi.matrix_sdk.AccessRule
 import uniffi.matrix_sdk_base.EncryptionState
 import org.matrix.rustcomponents.sdk.Membership as RustMembership
 import org.matrix.rustcomponents.sdk.RoomInfo as RustRoomInfo
@@ -47,6 +48,8 @@ class RoomInfoMapper {
                 EncryptionState.NOT_ENCRYPTED -> false
                 EncryptionState.UNKNOWN -> null
             },
+            // TCHAP external user
+            isOpenToExternalUsers = it.accessRule === AccessRule.UNRESTRICTED,
             joinRule = it.joinRule?.map(),
             isSpace = it.isSpace,
             isFavorite = it.isFavourite,

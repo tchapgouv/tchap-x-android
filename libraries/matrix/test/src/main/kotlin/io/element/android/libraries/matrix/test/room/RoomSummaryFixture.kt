@@ -81,6 +81,7 @@ fun aRoomSummary(
     lastMessage: RoomMessage? = aRoomMessage(),
     roomVersion: String? = "11",
     privilegedCreatorRole: Boolean = false,
+    isOpenToExternalUsers: Boolean = false,
 ) = RoomSummary(
     info = RoomInfo(
         id = roomId,
@@ -118,6 +119,7 @@ fun aRoomSummary(
         historyVisibility = historyVisibility,
         roomVersion = roomVersion,
         privilegedCreatorRole = privilegedCreatorRole,
+        isOpenToExternalUsers = isOpenToExternalUsers,
     ),
     lastMessage = lastMessage,
 )

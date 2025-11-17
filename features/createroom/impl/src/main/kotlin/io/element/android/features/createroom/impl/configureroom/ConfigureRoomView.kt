@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -32,24 +31,14 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
-import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.compound.theme.ElementTheme
-import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.createroom.impl.R
 import io.element.android.libraries.architecture.coverage.ExcludeFromCoverage
 import io.element.android.libraries.designsystem.atomic.atoms.RoundedIconAtom
 import io.element.android.libraries.designsystem.atomic.atoms.RoundedIconAtomSize
-import io.element.android.libraries.designsystem.components.ClickableLinkText
-import io.element.android.libraries.designsystem.components.LINK_TAG
 import io.element.android.libraries.designsystem.components.async.AsyncActionView
 import io.element.android.libraries.designsystem.components.async.AsyncActionViewDefaults
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
@@ -60,8 +49,6 @@ import io.element.android.libraries.designsystem.modifiers.clearFocusOnTap
 import io.element.android.libraries.designsystem.preview.ElementPreviewDark
 import io.element.android.libraries.designsystem.preview.ElementPreviewLight
 import io.element.android.libraries.designsystem.preview.PreviewWithLargeHeight
-import io.element.android.libraries.designsystem.theme.badgeExternalContentColor
-import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.ListItem
 import io.element.android.libraries.designsystem.theme.components.Scaffold
 import io.element.android.libraries.designsystem.theme.components.Text
@@ -123,14 +110,6 @@ fun ConfigureRoomView(
                 topic = state.config.topic.orEmpty(),
                 onTopicChange = { state.eventSink(ConfigureRoomEvents.TopicChanged(it)) },
             )
-            // TCHAP external user
-            val hasExternalUsers = state.config.invites.any { it.userId.toString().isExternalTchapUser() }
-            if (hasExternalUsers) {
-                RoomExternalGuestsWarning()
-                if (state.config.roomVisibility is RoomVisibilityState.Public) {
-                    state.eventSink(ConfigureRoomEvents.RoomVisibilityChanged(RoomVisibilityItem.Private))
-                }
-            }
             RoomVisibilityOptions(
                 selected = when (state.config.roomVisibility) {
                     is RoomVisibilityState.Private -> RoomVisibilityItem.Private
@@ -142,7 +121,6 @@ fun ConfigureRoomView(
                     focusManager.clearFocus()
                     state.eventSink(ConfigureRoomEvents.RoomVisibilityChanged(it))
                 },
-                hasExternalUsers = hasExternalUsers,
             )
             if (state.config.roomVisibility is RoomVisibilityState.Public && state.isKnockFeatureEnabled) {
                 RoomAccessOptions(
@@ -291,65 +269,7 @@ private fun ConfigureRoomOptions(
 }
 
 @Composable
-private fun RoomExternalGuestsWarning() {
-    val externalGuestText = buildAnnotatedString {
-        val learnMoreStr = stringResource(CommonStrings.action_learn_more)
-        val externalUsersStr = stringResource(R.string.tchap_screen_create_room_external_guests_content)
-        val fullText = stringResource(
-            id = R.string.tchap_screen_create_room_external_guests_warning_title,
-            externalUsersStr,
-            learnMoreStr,
-        )
-        append(fullText)
-        val externalUsersStartIndex = fullText.indexOf(externalUsersStr)
-        addStyle(
-            style = SpanStyle(
-                fontWeight = FontWeight.Bold,
-            ),
-            start = externalUsersStartIndex,
-            end = externalUsersStartIndex + externalUsersStr.length,
-        )
-        val learnMoreStartIndex = fullText.lastIndexOf(learnMoreStr)
-        addStyle(
-            style = SpanStyle(
-                textDecoration = TextDecoration.Underline,
-            ),
-            start = learnMoreStartIndex,
-            end = learnMoreStartIndex + learnMoreStr.length,
-        )
-        addStringAnnotation(
-            tag = LINK_TAG,
-            annotation = "${LearnMoreConfig.FAQ_URL}/fr/article/comment-inviter-un-partenaire-externe-sur-tchap-android-j29jmh/",
-            start = learnMoreStartIndex,
-            end = learnMoreStartIndex + learnMoreStr.length
-        )
-    }
-
-    Row(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            imageVector = CompoundIcons.InfoSolid(),
-            contentDescription = null,
-            tint = ElementTheme.colors.badgeExternalContentColor,
-            modifier = Modifier.padding(end = 8.dp)
-        )
-        ClickableLinkText(
-            annotatedString = externalGuestText,
-            style = ElementTheme.typography.fontBodyMdRegular
-                .copy(
-                    textAlign = TextAlign.Center,
-                )
-        )
-    }
-}
-
-@Composable
 private fun RoomVisibilityOptions(
-    hasExternalUsers: Boolean,
     selected: RoomVisibilityItem,
     onOptionClick: (RoomVisibilityItem) -> Unit,
     modifier: Modifier = Modifier,
@@ -360,7 +280,6 @@ private fun RoomVisibilityOptions(
     ) {
         RoomVisibilityItem.entries.forEach { item ->
             val isSelected = item == selected
-            val enabled = !(hasExternalUsers && item == RoomVisibilityItem.Public)
             ListItem(
                 leadingContent = ListItemContent.Custom {
                     RoundedIconAtom(
@@ -372,24 +291,10 @@ private fun RoomVisibilityOptions(
                 headlineContent = { Text(text = stringResource(item.title)) },
                 supportingContent = {
                     val content = stringResource(id = item.description)
-                    if (enabled) {
-                        Text(text = content)
-                    } else {
-                        val disabledContent = buildAnnotatedString {
-                            append(content)
-                            val externalDescriptionIndex = content.lastIndexOf('•')
-                            addStyle(
-                                style = SpanStyle(color = ElementTheme.colors.badgeExternalContentColor),
-                                start = externalDescriptionIndex,
-                                end = content.length,
-                            )
-                        }
-                        Text(text = disabledContent)
-                    }
+                    Text(text = content)
                 },
                 trailingContent = ListItemContent.RadioButton(selected = isSelected),
                 onClick = { onOptionClick(item) },
-                enabled = enabled
             )
         }
     }

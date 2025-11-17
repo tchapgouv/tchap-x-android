@@ -120,7 +120,8 @@ fun aMessagesState(
     isDebugBuild = false,
     isEncrypted = true,
     isPublic = true,
-    isExternal = true,
+    // TCHAP external user
+    isOpenToExternalUsers = true,
     roomId = RoomId("!id:domain"),
     roomName = roomName,
     roomAvatar = roomAvatar,

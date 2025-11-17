@@ -18,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import dev.zacsweers.metro.Inject
-import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import im.vector.app.features.analytics.plan.CreatedRoom
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
@@ -159,12 +158,7 @@ class ConfigureRoomPresenter(
         createRoomAction: MutableState<AsyncAction<RoomId>>
     ) = launch {
         suspend {
-            val accessRules =
-                if (config.roomVisibility is RoomVisibilityState.Public || !config.invites.any { it.userId.toString().isExternalTchapUser() }) {
-                    RoomAccessRules.RESTRICTED
-                } else {
-                    RoomAccessRules.UNRESTRICTED
-                }
+            val accessRules = RoomAccessRules.RESTRICTED
             val avatarUrl = config.avatarUri?.let { uploadAvatar(it) }
             val params = when (config.roomVisibility) {
                 is RoomVisibilityState.Public -> {
