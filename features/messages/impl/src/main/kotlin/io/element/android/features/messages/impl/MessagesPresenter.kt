@@ -203,6 +203,10 @@ class MessagesPresenter(
         val dmRoomMember by room.getDirectRoomMember(membersState)
         val roomMemberIdentityStateChanges = identityChangeState.roomMemberIdentityStateChanges
 
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(false)
+
         LifecycleResumeEffect(dmRoomMember, roomInfo.isEncrypted) {
             if (roomInfo.isEncrypted == true) {
                 val dmRoomMemberId = dmRoomMember?.userId
@@ -246,7 +250,7 @@ class MessagesPresenter(
         }
 
         return MessagesState(
-            isDebugBuild = buildMeta.isDebuggable,
+            showMatrixId = showMatrixId,
             isEncrypted = room.roomInfoFlow.value.isEncrypted ?: false,
             isPublic = room.roomInfoFlow.value.isPublic ?: false,
             // TCHAP external user

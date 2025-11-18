@@ -14,6 +14,6 @@ data class CreateAccountState(
     val url: String,
     val pageProgress: Int,
     val createAction: AsyncAction<SessionId>,
-    val isDebugBuild: Boolean,
+    val showMatrixId: Boolean,
     val eventSink: (CreateAccountEvents) -> Unit
 )

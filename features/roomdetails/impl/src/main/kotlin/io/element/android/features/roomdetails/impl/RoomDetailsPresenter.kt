@@ -25,7 +25,6 @@ import io.element.android.features.roomdetails.impl.securityandprivacy.permissio
 import io.element.android.libraries.androidutils.clipboard.ClipboardHelper
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
-import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.designsystem.utils.snackbar.LocalSnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.designsystem.utils.snackbar.collectSnackbarMessageAsState
@@ -60,7 +59,6 @@ import kotlinx.coroutines.launch
 
 @Inject
 class RoomDetailsPresenter(
-    private val buildMeta: BuildMeta,
     private val client: MatrixClient,
     private val room: JoinedRoom,
     private val featureFlagService: FeatureFlagService,
@@ -99,6 +97,10 @@ class RoomDetailsPresenter(
 
         // TCHAP external user
         val isOpenToExternalUsers by remember { derivedStateOf { roomInfo.isOpenToExternalUsers } }
+
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(false)
 
         val canonicalAlias by remember { derivedStateOf { roomInfo.canonicalAlias } }
         val isEncrypted by remember { derivedStateOf { roomInfo.isEncrypted == true } }
@@ -182,7 +184,7 @@ class RoomDetailsPresenter(
         val canReportRoom by produceState(false) { value = client.canReportRoom() }
 
         return RoomDetailsState(
-            isDebugBuild = buildMeta.isDebuggable,
+            showMatrixId = showMatrixId,
             // TCHAP external user
             isOpenToExternalUsers = isOpenToExternalUsers,
             roomId = room.roomId,

@@ -46,7 +46,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun SuggestionsPickerView(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     roomId: RoomId,
     roomName: String?,
     roomAvatarData: AvatarData,
@@ -69,7 +69,7 @@ fun SuggestionsPickerView(
         ) {
             Column(modifier = Modifier.fillParentMaxWidth()) {
                 SuggestionItemView(
-                    isDebugBuild = isDebugBuild,
+                    showMatrixId = showMatrixId,
                     suggestion = it,
                     roomId = roomId.value,
                     roomName = roomName,
@@ -85,7 +85,7 @@ fun SuggestionsPickerView(
 
 @Composable
 private fun SuggestionItemView(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     suggestion: ResolvedSuggestion,
     roomId: String,
     roomName: String?,
@@ -115,7 +115,7 @@ private fun SuggestionItemView(
         }
         val subtitle = when (suggestion) {
             is ResolvedSuggestion.AtRoom -> "@room"
-            is ResolvedSuggestion.Member -> suggestion.roomMember.userId.value.takeIf { isDebugBuild } // TCHAP hide the Matrix Id in release mode
+            is ResolvedSuggestion.Member -> suggestion.roomMember.userId.value.takeIf { showMatrixId } // TCHAP hide the Matrix Id depending of showMatrixId feature flag
             is ResolvedSuggestion.Alias -> suggestion.roomAlias.value
         }
         Avatar(
@@ -167,7 +167,7 @@ internal fun SuggestionsPickerViewPreview() {
         )
         val anAlias = remember { RoomAlias("#room:domain.org") }
         SuggestionsPickerView(
-            isDebugBuild = false,
+            showMatrixId = false,
             roomId = RoomId("!room:matrix.org"),
             roomName = "Room",
             roomAvatarData = anAvatarData(),

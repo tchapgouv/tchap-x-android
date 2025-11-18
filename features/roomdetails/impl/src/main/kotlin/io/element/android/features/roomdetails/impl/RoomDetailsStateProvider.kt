@@ -83,7 +83,7 @@ fun aDmRoomMember(
 )
 
 fun aRoomDetailsState(
-    isDebugBuild: Boolean = false,
+    showMatrixId: Boolean = false,
     roomId: RoomId = RoomId("!aRoomId:domain.com"),
     roomName: String = "Marketing",
     roomAlias: RoomAlias? = RoomAlias("#marketing:domain.com"),
@@ -119,7 +119,7 @@ fun aRoomDetailsState(
     showDebugInfo: Boolean = false,
     eventSink: (RoomDetailsEvent) -> Unit = {},
 ) = RoomDetailsState(
-    isDebugBuild = isDebugBuild,
+    showMatrixId = showMatrixId,
     // TCHAP external user
     isOpenToExternalUsers = true,
     roomId = roomId,

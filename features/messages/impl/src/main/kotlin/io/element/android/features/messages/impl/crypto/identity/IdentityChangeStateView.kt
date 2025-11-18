@@ -29,7 +29,7 @@ import io.element.android.libraries.ui.strings.CommonStrings
 
 @Composable
 fun IdentityChangeStateView(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     state: IdentityChangeState,
     onLinkClick: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -40,7 +40,7 @@ fun IdentityChangeStateView(
     }
     when (identityChangeViolation?.identityState) {
         IdentityState.PinViolation -> ViolationAlert(
-            isDebugBuild = isDebugBuild,
+            showMatrixId = showMatrixId,
             identityChangeViolation = identityChangeViolation,
             onLinkClick = onLinkClick,
             textId = CommonStrings.crypto_identity_change_pin_violation_new,
@@ -50,7 +50,7 @@ fun IdentityChangeStateView(
             modifier = modifier,
         )
         IdentityState.VerificationViolation -> ViolationAlert(
-            isDebugBuild = isDebugBuild,
+            showMatrixId = showMatrixId,
             identityChangeViolation = identityChangeViolation,
             onLinkClick = onLinkClick,
             textId = CommonStrings.crypto_identity_change_verification_violation_new,
@@ -65,7 +65,7 @@ fun IdentityChangeStateView(
 
 @Composable
 private fun ViolationAlert(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     identityChangeViolation: RoomMemberIdentityStateChange,
     onLinkClick: (String, Boolean) -> Unit,
     @StringRes textId: Int,
@@ -80,7 +80,7 @@ private fun ViolationAlert(
         content = buildAnnotatedString {
             val learnMoreStr = stringResource(CommonStrings.action_learn_more)
             val displayName = identityChangeViolation.identityRoomMember.displayNameOrDefault
-            val userIdStr = if (isDebugBuild) {
+            val userIdStr = if (showMatrixId) {
                 stringResource(
                     CommonStrings.crypto_identity_change_pin_violation_new_user_id,
                     identityChangeViolation.identityRoomMember.userId,
@@ -131,7 +131,7 @@ internal fun IdentityChangeStateViewPreview(
     @PreviewParameter(IdentityChangeStateProvider::class) state: IdentityChangeState,
 ) = ElementPreview {
     IdentityChangeStateView(
-        isDebugBuild = false,
+        showMatrixId = false,
         state = state,
         onLinkClick = { _, _ -> },
     )

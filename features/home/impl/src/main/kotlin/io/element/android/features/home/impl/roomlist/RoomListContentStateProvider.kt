@@ -40,7 +40,7 @@ internal fun aRoomsContentState(
     batteryOptimizationState: BatteryOptimizationState = aBatteryOptimizationState(),
     seenRoomInvites: Set<RoomId> = emptySet(),
 ) = RoomListContentState.Rooms(
-    isDebugBuild = false,
+    showMatrixId = false,
     securityBannerState = securityBannerState,
     showNewNotificationSoundBanner = showNewNotificationSoundBanner,
     fullScreenIntentPermissionsState = fullScreenIntentPermissionsState,

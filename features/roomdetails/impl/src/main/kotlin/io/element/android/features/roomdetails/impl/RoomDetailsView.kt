@@ -149,7 +149,7 @@ fun RoomDetailsView(
                 }
                 is RoomDetailsType.Dm -> {
                     DmHeaderSection(
-                        isDebugBuild = state.isDebugBuild,
+                        showMatrixId = state.showMatrixId,
                         me = state.roomType.me,
                         otherMember = state.roomType.otherMember,
                         roomName = state.roomName,
@@ -421,7 +421,7 @@ private fun RoomHeaderSection(
 
 @Composable
 private fun DmHeaderSection(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     me: RoomMember,
     otherMember: RoomMember,
     roomName: String,
@@ -443,8 +443,8 @@ private fun DmHeaderSection(
         )
         TitleAndSubtitle(
             title = roomName,
-            // TCHAP hide the Matrix Id in release mode
-            subtitle = otherMember.userId.value.takeIf { isDebugBuild },
+            // TCHAP hide the Matrix Id depending of showMatrixId feature flag
+            subtitle = otherMember.userId.value.takeIf { showMatrixId },
             onSubtitleClick = onSubtitleClick,
         )
     }

@@ -11,6 +11,7 @@ import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,8 +28,9 @@ import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runCatchingUpdatingState
 import io.element.android.libraries.core.extensions.runCatchingExceptions
-import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.core.mimetype.MimeTypes
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.matrix.ui.media.AvatarAction
@@ -46,7 +48,7 @@ import timber.log.Timber
 class EditUserProfilePresenter(
     @Assisted private val matrixUser: MatrixUser,
     private val matrixClient: MatrixClient,
-    private val buildMeta: BuildMeta,
+    private val featureFlagService: FeatureFlagService,
     private val mediaPickerProvider: PickerProvider,
     private val mediaPreProcessor: MediaPreProcessor,
     private val temporaryUriDeleter: TemporaryUriDeleter,
@@ -132,8 +134,12 @@ class EditUserProfilePresenter(
             !userDisplayName.isNullOrBlank() && hasProfileChanged
         }
 
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(false)
+
         return EditUserProfileState(
-            isDebugBuild = buildMeta.isDebuggable,
+            showMatrixId = showMatrixId,
             userId = matrixUser.userId,
             displayName = userDisplayName.orEmpty(),
             userAvatarUrl = userAvatarUri,

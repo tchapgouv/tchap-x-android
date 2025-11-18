@@ -38,7 +38,8 @@ import io.element.android.features.leaveroom.api.LeaveRoomEvent
 import io.element.android.features.leaveroom.api.LeaveRoomState
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
-import io.element.android.libraries.core.meta.BuildMeta
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.fullscreenintent.api.FullScreenIntentPermissionsState
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
@@ -72,7 +73,7 @@ private const val SUBSCRIBE_TO_VISIBLE_ROOMS_DEBOUNCE_IN_MILLIS = 300L
 
 @Inject
 class RoomListPresenter(
-    private val buildMeta: BuildMeta,
+    private val featureFlagService: FeatureFlagService,
     private val client: MatrixClient,
     private val leaveRoomPresenter: Presenter<LeaveRoomState>,
     private val roomListDataSource: RoomListDataSource,
@@ -231,6 +232,11 @@ class RoomListPresenter(
         }
         val seenRoomInvites by remember { seenInvitesStore.seenRoomIds() }.collectAsState(emptySet())
         val securityBannerState by rememberSecurityBannerState(securityBannerDismissed)
+
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(false)
+
         return when {
             showEmpty -> RoomListContentState.Empty(
                 securityBannerState = securityBannerState,
@@ -238,7 +244,7 @@ class RoomListPresenter(
             showSkeleton -> RoomListContentState.Skeleton(count = 16)
             else -> {
                 RoomListContentState.Rooms(
-                    isDebugBuild = buildMeta.isDebuggable,
+                    showMatrixId = showMatrixId,
                     securityBannerState = securityBannerState,
                     showNewNotificationSoundBanner = showNewNotificationSoundBanner,
                     fullScreenIntentPermissionsState = fullScreenIntentPermissionsPresenter.present(),
