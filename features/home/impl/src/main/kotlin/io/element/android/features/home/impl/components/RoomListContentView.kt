@@ -267,7 +267,7 @@ private fun RoomsViewList(
             contentType = { _, room -> room.contentType() },
         ) { index, room ->
             RoomSummaryRow(
-                isDebugBuild = state.isDebugBuild,
+                showMatrixId = state.showMatrixId,
                 room = room,
                 hideInviteAvatars = hideInvitesAvatars,
                 isInviteSeen = room.displayType == RoomSummaryDisplayType.INVITE &&

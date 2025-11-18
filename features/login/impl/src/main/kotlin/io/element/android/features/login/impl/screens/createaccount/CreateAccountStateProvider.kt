@@ -26,7 +26,7 @@ private fun aCreateAccountState(
     createAction: AsyncAction<SessionId> = AsyncAction.Uninitialized,
 ) = CreateAccountState(
     url = "https://example.com",
-    isDebugBuild = true,
+    showMatrixId = true,
     pageProgress = pageProgress,
     createAction = createAction,
     eventSink = {}

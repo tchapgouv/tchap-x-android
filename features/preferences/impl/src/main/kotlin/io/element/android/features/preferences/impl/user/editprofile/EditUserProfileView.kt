@@ -100,22 +100,23 @@ fun EditUserProfileView(
                 onAvatarClick = { onAvatarClick() },
                 modifier = Modifier.align(Alignment.CenterHorizontally),
             )
-            // TCHAP hide the Matrix Id in release mode
-            if (state.isDebugBuild) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // TCHAP show displayName as Text instead of TextField
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = state.displayName,
+                style = ElementTheme.typography.fontBodyLgRegular,
+                textAlign = TextAlign.Center,
+            )
+            // TCHAP hide the Matrix Id depending of showMatrixId feature flag
+            if (state.showMatrixId) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = state.userId.value,
                     style = ElementTheme.typography.fontBodyLgRegular,
                     textAlign = TextAlign.Center,
-                )
-                Spacer(modifier = Modifier.height(40.dp))
-                TextField(
-                    label = stringResource(R.string.screen_edit_profile_display_name),
-                    value = state.displayName,
-                    placeholder = stringResource(CommonStrings.common_room_name_placeholder),
-                    singleLine = true,
-                    onValueChange = { state.eventSink(EditUserProfileEvents.UpdateDisplayName(it)) },
                 )
             }
         }

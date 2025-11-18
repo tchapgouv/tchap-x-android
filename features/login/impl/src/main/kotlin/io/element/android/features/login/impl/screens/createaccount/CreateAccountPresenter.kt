@@ -9,6 +9,8 @@ package io.element.android.features.login.impl.screens.createaccount
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,7 +23,8 @@ import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.data.tryOrNull
 import io.element.android.libraries.core.extensions.flatMap
 import io.element.android.libraries.core.extensions.runCatchingExceptions
-import io.element.android.libraries.core.meta.BuildMeta
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClientProvider
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
 import io.element.android.libraries.matrix.api.core.SessionId
@@ -37,7 +40,7 @@ class CreateAccountPresenter(
     private val authenticationService: MatrixAuthenticationService,
     private val clientProvider: MatrixClientProvider,
     private val messageParser: MessageParser,
-    private val buildMeta: BuildMeta,
+    private val featureFlagService: FeatureFlagService,
 ) : Presenter<CreateAccountState> {
     @AssistedFactory
     interface Factory {
@@ -49,6 +52,10 @@ class CreateAccountPresenter(
         val coroutineScope = rememberCoroutineScope()
         val pageProgress: MutableState<Int> = remember { mutableIntStateOf(0) }
         val createAction: MutableState<AsyncAction<SessionId>> = remember { mutableStateOf(AsyncAction.Uninitialized) }
+
+        val showMatrixId by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+        }.collectAsState(false)
 
         fun handleEvents(event: CreateAccountEvents) {
             when (event) {
@@ -66,7 +73,7 @@ class CreateAccountPresenter(
         return CreateAccountState(
             url = url,
             pageProgress = pageProgress.value,
-            isDebugBuild = buildMeta.isDebuggable,
+            showMatrixId = showMatrixId,
             createAction = createAction.value,
             eventSink = ::handleEvents
         )
