@@ -8,6 +8,9 @@
 
 package io.element.android.libraries.matrix.impl.auth
 
+import android.content.Context
+import android.os.Build
+import android.provider.Settings
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
@@ -15,6 +18,7 @@ import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.extensions.mapFailure
 import io.element.android.libraries.core.extensions.runCatchingExceptions
 import io.element.android.libraries.core.meta.BuildMeta
+import io.element.android.libraries.di.annotations.ApplicationContext
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.auth.AuthenticationException
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
@@ -61,6 +65,7 @@ import kotlin.time.Duration.Companion.seconds
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class RustMatrixAuthenticationService(
+    @ApplicationContext private val context: Context,
     private val sessionPathsFactory: SessionPathsFactory,
     private val coroutineDispatchers: CoroutineDispatchers,
     private val sessionStore: SessionStore,
@@ -162,8 +167,13 @@ class RustMatrixAuthenticationService(
             runCatchingExceptions {
                 val client = currentClient ?: error("You need to call `setHomeserver()` first")
                 val currentSessionPaths = sessionPaths ?: error("You need to call `setHomeserver()` first")
-                // Tchap specific - Use "Tchap X Android" for initialDeviceName when creating session
-                client.login(username, password, "${buildMeta.applicationName} Android", null)
+                // Tchap specific - Use "Tchap X Android - DeviceName" for initialDeviceName when creating session
+                val deviceName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+                    Settings.Global.getString(context.contentResolver, Settings.Global.DEVICE_NAME)
+                } else {
+                    Settings.Secure.getString(context.contentResolver, "bluetooth_name") ?: "Unknown Device"
+                }
+                client.login(username, password, "${buildMeta.applicationName} Android - $deviceName", null)
                 // Ensure that the user is not already logged in with the same account
                 ensureNotAlreadyLoggedIn(client)
                 val sessionData = client.session()

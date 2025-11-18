@@ -91,7 +91,7 @@ fun SessionDetailsView(
 internal fun SessionDetailsViewPreview() = ElementPreview {
     Column {
         SessionDetailsView(
-            deviceName = "${LocalBuildMeta.current.applicationName} Android",
+            deviceName = "${LocalBuildMeta.current.applicationName} Android - DeviceName",
             deviceId = DeviceId("ILAKNDNASDLK"),
             signInFormattedTimestamp = "12:34",
         )
