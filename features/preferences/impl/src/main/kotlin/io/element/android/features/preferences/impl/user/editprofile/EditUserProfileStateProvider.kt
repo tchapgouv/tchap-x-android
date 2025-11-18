@@ -27,7 +27,7 @@ open class EditUserProfileStateProvider : PreviewParameterProvider<EditUserProfi
 fun aEditUserProfileState(
     userAvatarUrl: Uri? = null,
 ) = EditUserProfileState(
-    isDebugBuild = false,
+    showMatrixId = false,
     userId = UserId("@john.doe:matrix.org"),
     displayName = "John Doe",
     userAvatarUrl = userAvatarUrl,

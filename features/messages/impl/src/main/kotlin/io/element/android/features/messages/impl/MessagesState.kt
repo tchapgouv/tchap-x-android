@@ -33,7 +33,7 @@ import kotlinx.collections.immutable.toPersistentList
 
 @Immutable
 data class MessagesState(
-    val isDebugBuild: Boolean,
+    val showMatrixId: Boolean,
     val isEncrypted: Boolean,
     val isPublic: Boolean,
     // TCHAP external user

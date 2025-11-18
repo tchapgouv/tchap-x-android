@@ -117,7 +117,7 @@ fun aMessagesState(
     successorRoom: SuccessorRoom? = null,
     eventSink: (MessagesEvents) -> Unit = {},
 ) = MessagesState(
-    isDebugBuild = false,
+    showMatrixId = false,
     isEncrypted = true,
     isPublic = true,
     // TCHAP external user

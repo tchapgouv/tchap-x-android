@@ -250,7 +250,7 @@ fun MessagesView(
                         )
 
                         SuggestionsPickerView(
-                            isDebugBuild = state.isDebugBuild,
+                            showMatrixId = state.showMatrixId,
                             modifier = Modifier
                                 .shadow(10.dp)
                                 .background(ElementTheme.colors.bgCanvasDefault)
@@ -473,7 +473,7 @@ private fun MessagesViewComposerBottomSheetContents(
                 if (state.composerState.suggestions.isEmpty() &&
                     state.composerState.textEditorState is TextEditorState.Markdown) {
                     IdentityChangeStateView(
-                        isDebugBuild = state.isDebugBuild,
+                        showMatrixId = state.showMatrixId,
                         state = state.identityChangeState,
                         onLinkClick = onLinkClick,
                     )

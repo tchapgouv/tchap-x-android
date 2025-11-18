@@ -75,7 +75,7 @@ fun CreateAccountView(
                 onWebViewCreate = { webView ->
                     WebViewMessageInterceptor(
                         webView,
-                        state.isDebugBuild,
+                        state.showMatrixId,
                         onOpenExternalUrl = onOpenExternalUrl,
                         onMessage = {
                             state.eventSink(CreateAccountEvents.OnMessageReceived(it))

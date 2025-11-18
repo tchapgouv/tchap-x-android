@@ -67,7 +67,7 @@ internal val minHeight = 84.dp
 
 @Composable
 internal fun RoomSummaryRow(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     room: RoomListRoomSummary,
     hideInviteAvatars: Boolean,
     isInviteSeen: Boolean,
@@ -90,7 +90,7 @@ internal fun RoomSummaryRow(
                     },
                 ) {
                     InviteNameAndIndicatorRow(name = room.name, isInviteSeen = isInviteSeen)
-                    InviteSubtitle(isDebugBuild = isDebugBuild, isDm = room.isDm, inviteSender = room.inviteSender)
+                    InviteSubtitle(showMatrixId = showMatrixId, isDm = room.isDm, inviteSender = room.inviteSender)
                     if (!room.isDm && room.inviteSender != null) {
                         Spacer(modifier = Modifier.height(4.dp))
                         InviteSenderView(
@@ -244,13 +244,13 @@ private fun NameAndTimestampRow(
 
 @Composable
 private fun InviteSubtitle(
-    isDebugBuild: Boolean,
+    showMatrixId: Boolean,
     isDm: Boolean,
     inviteSender: InviteSender?,
     modifier: Modifier = Modifier
 ) {
     val subtitle = if (isDm) {
-        inviteSender?.userId?.value.takeIf { isDebugBuild } // TCHAP hide the Matrix Id in release mode
+        inviteSender?.userId?.value.takeIf { showMatrixId } // TCHAP hide the Matrix Id depending of showMatrixId feature flag
     } else {
         null
     }
@@ -386,7 +386,7 @@ private fun MentionIndicatorAtom() {
 @Composable
 internal fun RoomSummaryRowPreview(@PreviewParameter(RoomListRoomSummaryProvider::class) data: RoomListRoomSummary) = ElementPreview {
     RoomSummaryRow(
-        isDebugBuild = false,
+        showMatrixId = false,
         room = data,
         hideInviteAvatars = false,
         // Set isInviteSeen to true for the preview when the room has name "Bob"
