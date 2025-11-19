@@ -23,6 +23,7 @@ import io.element.android.libraries.ui.strings.CommonStrings
 fun UserProfileMainActionsSection(
     isCurrentUser: Boolean,
     canCall: Boolean,
+    canDm: Boolean,
     onShareUser: () -> Unit,
     onStartDM: () -> Unit,
     onCall: () -> Unit,
@@ -32,7 +33,7 @@ fun UserProfileMainActionsSection(
         modifier.fillMaxWidth().padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
-        if (!isCurrentUser) {
+        if (!isCurrentUser && canDm) {
             MainActionButton(
                 title = stringResource(CommonStrings.action_message),
                 imageVector = CompoundIcons.Chat(),

@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import im.vector.app.features.analytics.plan.RoomModeration
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
@@ -94,6 +95,7 @@ class ChangeRolesPresenter(
         LaunchedEffect(query, roomMemberState) {
             val results = dataSource
                 .search(query.orEmpty())
+                .filter { it.userId.toString().isExternalTchapUser().not() }
                 .groupedByRole()
 
             searchResults = if (results.isEmpty()) {
