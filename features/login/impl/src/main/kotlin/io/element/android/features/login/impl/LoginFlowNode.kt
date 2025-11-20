@@ -37,6 +37,7 @@ import io.element.android.features.login.impl.screens.createaccount.CreateAccoun
 import io.element.android.features.login.impl.screens.loginpassword.LoginPasswordNode
 import io.element.android.features.login.impl.screens.onboarding.OnBoardingNode
 import io.element.android.features.login.impl.screens.searchaccountprovider.SearchAccountProviderNode
+import io.element.android.features.login.impl.screens.sidentlogin.SidentLoginNode
 import io.element.android.libraries.androidutils.browser.openUrlInChromeCustomTab
 import io.element.android.libraries.architecture.BackstackView
 import io.element.android.libraries.architecture.BaseFlowNode
@@ -125,6 +126,9 @@ class LoginFlowNode(
         data object LoginPassword : NavTarget
 
         @Parcelize
+        data object SidentLogin : NavTarget
+
+        @Parcelize
         data class CreateAccount(val url: String) : NavTarget
     }
 
@@ -154,6 +158,10 @@ class LoginFlowNode(
 
                     override fun navigateToBugReport() {
                         callback.navigateToBugReport()
+                    }
+
+                    override fun onSidentLoginNeeded() {
+                        backstack.push(NavTarget.SidentLogin)
                     }
 
                     override fun navigateToOidc(oidcDetails: OidcDetails) {
@@ -189,6 +197,10 @@ class LoginFlowNode(
                         backstack.push(NavTarget.CreateAccount(url))
                     }
 
+                    override fun onSidentLoginNeeded() {
+                        backstack.push(NavTarget.SidentLogin)
+                    }
+
                     override fun navigateToLoginPassword() {
                         backstack.push(NavTarget.LoginPassword)
                     }
@@ -209,6 +221,10 @@ class LoginFlowNode(
 
                     override fun navigateToCreateAccount(url: String) {
                         backstack.push(NavTarget.CreateAccount(url))
+                    }
+
+                    override fun onSidentLoginNeeded() {
+                        backstack.push(NavTarget.SidentLogin)
                     }
 
                     override fun navigateToLoginPassword() {
@@ -253,6 +269,26 @@ class LoginFlowNode(
             }
             NavTarget.LoginPassword -> {
                 createNode<LoginPasswordNode>(buildContext)
+            }
+            NavTarget.SidentLogin -> {
+                val callback = object : SidentLoginNode.Callback {
+                    override fun onSidentLoginNeeded() {
+                        backstack.push(NavTarget.SidentLogin)
+                    }
+
+                    override fun onOidcDetails(oidcDetails: OidcDetails) {
+                        navigateToMas(oidcDetails)
+                    }
+
+                    override fun onCreateAccountContinue(url: String) {
+                        backstack.push(NavTarget.CreateAccount(url))
+                    }
+
+                    override fun onLoginPasswordNeeded() {
+                        backstack.push(NavTarget.LoginPassword)
+                    }
+                }
+                createNode<SidentLoginNode>(buildContext, listOf(callback))
             }
             is NavTarget.CreateAccount -> {
                 val inputs = CreateAccountNode.Inputs(

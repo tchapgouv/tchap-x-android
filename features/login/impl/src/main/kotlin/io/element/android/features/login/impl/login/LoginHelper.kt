@@ -65,11 +65,16 @@ class LoginHelper(
         suspend {
             authenticationService.setHomeserver(homeserverUrl).map { matrixHomeServerDetails ->
                 if (matrixHomeServerDetails.supportsOidcLogin) {
-                    // Retrieve the details right now
-                    val oidcPrompt = if (isAccountCreation) OidcPrompt.Create else OidcPrompt.Login
-                    LoginMode.Oidc(
-                        authenticationService.getOidcUrl(prompt = oidcPrompt, loginHint = loginHint).getOrThrow()
-                    )
+                    // Tchap - Show SidentLoginView when loginHint is null
+                    if (loginHint == null) {
+                        LoginMode.SidentLogin
+                    } else {
+                        // Retrieve the details right now
+                        val oidcPrompt = if (isAccountCreation) OidcPrompt.Create else OidcPrompt.Login
+                        LoginMode.Oidc(
+                            authenticationService.getOidcUrl(prompt = oidcPrompt, loginHint = loginHint).getOrThrow()
+                        )
+                    }
                 } else if (isAccountCreation) {
                     val url = webClientUrlForAuthenticationRetriever.retrieve(homeserverUrl)
                     LoginMode.AccountCreation(url)

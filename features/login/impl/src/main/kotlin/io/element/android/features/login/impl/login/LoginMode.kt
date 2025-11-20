@@ -11,6 +11,7 @@ package io.element.android.features.login.impl.login
 import io.element.android.libraries.matrix.api.auth.OidcDetails
 
 sealed interface LoginMode {
+    data object SidentLogin : LoginMode
     data object PasswordLogin : LoginMode
     data class Oidc(val oidcDetails: OidcDetails) : LoginMode
     data class AccountCreation(val url: String) : LoginMode

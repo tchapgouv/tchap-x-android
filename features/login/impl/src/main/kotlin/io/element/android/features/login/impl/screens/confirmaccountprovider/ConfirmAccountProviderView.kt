@@ -39,6 +39,7 @@ import io.element.android.libraries.ui.strings.CommonStrings
 fun ConfirmAccountProviderView(
     state: ConfirmAccountProviderState,
     onOidcDetails: (OidcDetails) -> Unit,
+    onNeedSidentLogin: () -> Unit,
     onNeedLoginPassword: () -> Unit,
     onLearnMoreClick: () -> Unit,
     onCreateAccountContinue: (url: String) -> Unit,
@@ -104,6 +105,7 @@ fun ConfirmAccountProviderView(
             },
             onLearnMoreClick = onLearnMoreClick,
             onOidcDetails = onOidcDetails,
+            onNeedSidentLogin = onNeedSidentLogin,
             onNeedLoginPassword = onNeedLoginPassword,
             onCreateAccountContinue = onCreateAccountContinue,
         )
@@ -118,6 +120,7 @@ internal fun ConfirmAccountProviderViewPreview(
     ConfirmAccountProviderView(
         state = state,
         onOidcDetails = {},
+        onNeedSidentLogin = {},
         onNeedLoginPassword = {},
         onCreateAccountContinue = {},
         onLearnMoreClick = {},
