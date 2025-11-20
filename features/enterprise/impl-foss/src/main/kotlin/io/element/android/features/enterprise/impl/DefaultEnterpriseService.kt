@@ -13,18 +13,22 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import io.element.android.compound.colors.SemanticColorsLightDark
 import io.element.android.features.enterprise.api.BugReportUrl
+import io.element.android.features.enterprise.api.EnterpriseConfiguration
 import io.element.android.features.enterprise.api.EnterpriseService
 import io.element.android.libraries.matrix.api.core.SessionId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 @ContributesBinding(AppScope::class)
-class DefaultEnterpriseService : EnterpriseService {
+class DefaultEnterpriseService (
+    private val enterpriseConfiguration: EnterpriseConfiguration
+): EnterpriseService {
     override val isEnterpriseBuild = false
 
     override suspend fun isEnterpriseUser(sessionId: SessionId) = false
 
-    override fun defaultHomeserverList(): List<String> = listOf("matrix.agent.dinum.tchap.gouv.fr")
+    override fun defaultHomeserverList(): List<String> = enterpriseConfiguration.defaultHomeserverList
+
     override suspend fun isAllowedToConnectToHomeserver(homeserverUrl: String) = true
 
     override suspend fun overrideBrandColor(sessionId: SessionId?, brandColor: String?) = Unit
