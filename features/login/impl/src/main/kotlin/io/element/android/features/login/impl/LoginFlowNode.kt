@@ -145,7 +145,7 @@ class LoginFlowNode(
                     override fun navigateToSignInFlow(mustChooseAccountProvider: Boolean) {
                         backstack.push(
                             if (mustChooseAccountProvider) {
-                                NavTarget.ChooseAccountProvider
+                                NavTarget.SidentLogin
                             } else {
                                 NavTarget.ConfirmAccountProvider(isAccountCreation = false)
                             }

@@ -35,6 +35,7 @@ import io.element.android.libraries.matrix.impl.keys.PassphraseGenerator
 import io.element.android.libraries.matrix.impl.mapper.toSessionData
 import io.element.android.libraries.matrix.impl.paths.SessionPaths
 import io.element.android.libraries.matrix.impl.paths.SessionPathsFactory
+import io.element.android.libraries.network.useragent.UserAgentProvider
 import io.element.android.libraries.sessionstorage.api.LoginType
 import io.element.android.libraries.sessionstorage.api.SessionStore
 import kotlinx.coroutines.CancellationException
@@ -46,8 +47,10 @@ import org.matrix.rustcomponents.sdk.QrCodeData
 import org.matrix.rustcomponents.sdk.QrCodeDecodeException
 import org.matrix.rustcomponents.sdk.QrLoginProgress
 import org.matrix.rustcomponents.sdk.QrLoginProgressListener
+import org.matrix.rustcomponents.sdk.tchapGetInstance
 import timber.log.Timber
 import uniffi.matrix_sdk.OAuthAuthorizationData
+import uniffi.matrix_sdk_tchap.TchapGetInstanceConfig
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
@@ -58,6 +61,7 @@ class RustMatrixAuthenticationService(
     private val rustMatrixClientFactory: RustMatrixClientFactory,
     private val passphraseGenerator: PassphraseGenerator,
     private val oidcConfigurationProvider: OidcConfigurationProvider,
+    private val userAgentProvider: UserAgentProvider,
     private val buildMeta: BuildMeta,
 ) : MatrixAuthenticationService {
     // Passphrase which will be used for new sessions. Existing sessions will use the passphrase
@@ -110,6 +114,26 @@ class RustMatrixAuthenticationService(
         }
         return passphrase
     }
+
+    override fun getHomeserverDetails(): StateFlow<MatrixHomeServerDetails?> = currentHomeserver
+
+    override suspend fun getHomeserverFromLoginHint(defaultHomeserver: String, loginHint: String): Result<String> =
+        withContext(coroutineDispatchers.io) {
+            runCatchingExceptions {
+                tchapGetInstance(
+                    TchapGetInstanceConfig(
+                        defaultHomeserver,
+                        userAgentProvider.provide()
+                    ),
+                    loginHint
+                )
+            }.onFailure {
+                clear()
+            }.mapFailure { failure ->
+                Timber.e(failure, "Failed to get homeserver from $defaultHomeserver for login hint $loginHint")
+                failure.mapAuthenticationException()
+            }
+        }
 
     override suspend fun setHomeserver(homeserver: String): Result<MatrixHomeServerDetails> =
         withContext(coroutineDispatchers.io) {

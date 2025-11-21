@@ -59,10 +59,9 @@ class SidentLoginPresenter(
                 is SidentLoginEvents.SetLogin -> updateFormState(formState) {
                     copy(login = event.login)
                 }
-                is SidentLoginEvents.OnContinue -> loginHelper.submit(
+                is SidentLoginEvents.OnContinue -> loginHelper.getHomeserverFromLoginHint(
                     coroutineScope = localCoroutineScope,
-                    isAccountCreation = false,
-                    homeserverUrl = accountProvider.url,
+                    accountProviderDataSource = accountProviderDataSource,
                     loginHint = formState.value.login,
                 )
                 SidentLoginEvents.ClearError -> loginHelper.clearError()

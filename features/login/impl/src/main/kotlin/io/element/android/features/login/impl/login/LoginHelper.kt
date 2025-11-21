@@ -14,6 +14,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import dev.zacsweers.metro.Inject
+import io.element.android.features.enterprise.api.EnterpriseService
+import io.element.android.features.login.impl.accountprovider.AccountProvider
+import io.element.android.features.login.impl.accountprovider.AccountProviderDataSource
 import io.element.android.features.login.impl.error.ChangeServerError
 import io.element.android.features.login.impl.screens.chooseaccountprovider.ChooseAccountProviderPresenter
 import io.element.android.features.login.impl.screens.confirmaccountprovider.ConfirmAccountProviderPresenter
@@ -38,6 +41,7 @@ class LoginHelper(
     private val oidcActionFlow: OidcActionFlow,
     private val authenticationService: MatrixAuthenticationService,
     private val webClientUrlForAuthenticationRetriever: WebClientUrlForAuthenticationRetriever,
+    private val enterpriseService: EnterpriseService,
 ) {
     private val loginModeState: MutableState<AsyncData<LoginMode>> = mutableStateOf(AsyncData.Uninitialized)
 
@@ -57,7 +61,32 @@ class LoginHelper(
         loginModeState.value = AsyncData.Uninitialized
     }
 
-    suspend fun submit(
+    fun getHomeserverFromLoginHint(
+        coroutineScope: CoroutineScope,
+        accountProviderDataSource: AccountProviderDataSource,
+        loginHint: String
+    ) {
+        val homeservers = enterpriseService.defaultHomeserverList()
+
+        val homeServerFromLoginHint = homeservers.indices.firstNotNullOfOrNull {
+            val defaultHomeserver = enterpriseService.getNextRandomHomeserver()
+            authenticationService.getHomeserverFromLoginHint(defaultHomeserver, loginHint).getOrNull()
+        }
+
+        if (homeServerFromLoginHint != null) {
+            accountProviderDataSource.userSelection(AccountProvider(url = homeServerFromLoginHint))
+            submit(
+                isAccountCreation = false,
+                homeserverUrl = homeServerFromLoginHint,
+                loginHint = loginHint,
+            )
+        } else {
+            // Tchap TODO - Afficher une erreur claire à l'utilisateur
+            error("Impossible de trouver un serveur d'accueil pour l'identifiant fourni.")
+        }
+    }
+
+    fun submit(
         isAccountCreation: Boolean,
         homeserverUrl: String,
         loginHint: String?,

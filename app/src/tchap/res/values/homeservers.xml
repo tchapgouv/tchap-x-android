@@ -23,8 +23,8 @@
   -->
 <resources>
     <string-array name="default_homeservers">
-        <item>matrix.dev01.tchap.incubateur.net</item>
-        <item>matrix.dev02.tchap.incubateur.net</item>
+        <item>dev01.tchap.incubateur.net</item>
+        <item>dev02.tchap.incubateur.net</item>
 <!--        <item>matrix.int.private-unencrypted-android.tchap.incubateur.net</item>-->
 <!--        <item>matrix.ext.private-unencrypted-android.tchap.incubateur.net</item>-->
     </string-array>

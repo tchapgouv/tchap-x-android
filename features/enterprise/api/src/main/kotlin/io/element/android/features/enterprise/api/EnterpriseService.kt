@@ -15,8 +15,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface EnterpriseService {
     val isEnterpriseBuild: Boolean
+    var selectedHomeserver: Int
     suspend fun isEnterpriseUser(sessionId: SessionId): Boolean
     fun defaultHomeserverList(): List<String>
+    fun getNextRandomHomeserver(): String
     suspend fun isAllowedToConnectToHomeserver(homeserverUrl: String): Boolean
 
     /**
