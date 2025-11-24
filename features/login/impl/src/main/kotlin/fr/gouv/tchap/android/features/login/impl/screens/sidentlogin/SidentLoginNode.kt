@@ -22,7 +22,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package io.element.android.features.login.impl.screens.sidentlogin
+package fr.gouv.tchap.android.features.login.impl.screens.sidentlogin
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

@@ -11,9 +11,12 @@ package io.element.android.features.enterprise.impl
 import androidx.compose.ui.graphics.Color
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import fr.gouv.tchap.android.features.enterprise.api.HomeserverConfiguration
+import io.element.android.compound.tokens.generated.compoundColorsDark
+import io.element.android.compound.tokens.generated.compoundColorsLight
 import io.element.android.compound.colors.SemanticColorsLightDark
 import io.element.android.features.enterprise.api.BugReportUrl
-import io.element.android.features.enterprise.api.EnterpriseConfiguration
 import io.element.android.features.enterprise.api.EnterpriseService
 import io.element.android.libraries.matrix.api.core.SessionId
 import kotlinx.coroutines.flow.Flow
@@ -23,17 +26,17 @@ import kotlin.random.nextInt
 
 @ContributesBinding(AppScope::class)
 class DefaultEnterpriseService(
-    private val enterpriseConfiguration: EnterpriseConfiguration
+    private val homeserverConfiguration: HomeserverConfiguration
 ) : EnterpriseService {
     override val isEnterpriseBuild = false
     override var selectedHomeserver: Int = -1
 
     override suspend fun isEnterpriseUser(sessionId: SessionId) = false
 
-    override fun defaultHomeserverList(): List<String> = enterpriseConfiguration.defaultHomeserverList
+    override fun defaultHomeserverList(): List<String> = homeserverConfiguration.defaultHomeserverList
 
     override fun getNextRandomHomeserver(): String {
-        val homeservers = enterpriseConfiguration.defaultHomeserverList
+        val homeservers = homeserverConfiguration.defaultHomeserverList
 
         selectedHomeserver = if (selectedHomeserver == -1) {
             Random.nextInt(homeservers.indices)

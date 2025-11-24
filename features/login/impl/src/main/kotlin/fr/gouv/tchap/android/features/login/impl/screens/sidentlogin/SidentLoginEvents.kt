@@ -22,27 +22,10 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package io.element.android.x.di
+package fr.gouv.tchap.android.features.login.impl.screens.sidentlogin
 
-import android.content.Context
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.BindingContainer
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.Provides
-import io.element.android.features.enterprise.api.EnterpriseConfiguration
-import io.element.android.libraries.di.annotations.ApplicationContext
-import io.element.android.x.R
-
-@BindingContainer
-@ContributesTo(AppScope::class)
-object EnterpriseModule {
-    @Provides
-    fun provideEnterpriseConfiguration(
-        @ApplicationContext context: Context,
-    ): EnterpriseConfiguration {
-        val homeserverList = context.resources.getStringArray(R.array.default_homeservers).toList()
-        return EnterpriseConfiguration(
-            defaultHomeserverList = homeserverList
-        )
-    }
+sealed interface SidentLoginEvents {
+    data class SetLogin(val login: String) : SidentLoginEvents
+    data object OnContinue : SidentLoginEvents
+    data object ClearError : SidentLoginEvents
 }

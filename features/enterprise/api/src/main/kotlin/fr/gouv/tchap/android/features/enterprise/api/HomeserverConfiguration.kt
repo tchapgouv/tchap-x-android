@@ -22,10 +22,11 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package io.element.android.features.login.impl.screens.sidentlogin
+package fr.gouv.tchap.android.features.enterprise.api
 
-sealed interface SidentLoginEvents {
-    data class SetLogin(val login: String) : SidentLoginEvents
-    data object OnContinue : SidentLoginEvents
-    data object ClearError : SidentLoginEvents
-}
+/**
+ * Configuration data for the enterprise module, typically provided by the application module.
+ */
+data class HomeserverConfiguration(
+    val defaultHomeserverList: List<String>
+)

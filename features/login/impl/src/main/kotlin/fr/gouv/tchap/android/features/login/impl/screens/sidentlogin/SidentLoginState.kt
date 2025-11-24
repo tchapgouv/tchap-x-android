@@ -22,11 +22,30 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package io.element.android.features.enterprise.api
+package fr.gouv.tchap.android.features.login.impl.screens.sidentlogin
 
-/**
- * Configuration data for the enterprise module, typically provided by the application module.
- */
-data class EnterpriseConfiguration(
-    val defaultHomeserverList: List<String>
-)
+import android.os.Parcelable
+import io.element.android.features.login.impl.accountprovider.AccountProvider
+import io.element.android.features.login.impl.login.LoginMode
+import io.element.android.libraries.architecture.AsyncData
+import kotlinx.parcelize.Parcelize
+
+data class SidentLoginState(
+    val applicationName: String,
+    val accountProvider: AccountProvider,
+    val formState: LoginFormState,
+    val loginMode: AsyncData<LoginMode>,
+    val eventSink: (SidentLoginEvents) -> Unit
+) {
+    val submitEnabled: Boolean
+        get() = accountProvider.url.isNotEmpty() && (loginMode is AsyncData.Uninitialized || loginMode is AsyncData.Loading)
+}
+
+@Parcelize
+data class LoginFormState(
+    val login: String,
+) : Parcelable {
+    companion object {
+        val Default = LoginFormState("")
+    }
+}
