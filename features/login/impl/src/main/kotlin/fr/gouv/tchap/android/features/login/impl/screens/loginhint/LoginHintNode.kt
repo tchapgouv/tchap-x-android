@@ -22,7 +22,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package fr.gouv.tchap.android.features.login.impl.screens.sidentlogin
+package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -42,10 +42,10 @@ import io.element.android.libraries.matrix.api.auth.OidcDetails
 
 @ContributesNode(AppScope::class)
 @AssistedInject
-class SidentLoginNode(
+class LoginHintNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
-    presenterFactory: SidentLoginPresenter.Factory,
+    presenterFactory: LoginHintPresenter.Factory,
 ) : Node(buildContext, plugins = plugins) {
     data class Inputs(
         val isAccountCreation: Boolean,
@@ -53,13 +53,13 @@ class SidentLoginNode(
 
     private val inputs: Inputs = inputs()
     private val presenter = presenterFactory.create(
-        SidentLoginPresenter.Params(
+        LoginHintPresenter.Params(
             isAccountCreation = inputs.isAccountCreation,
         )
     )
 
     interface Callback : Plugin {
-        fun onSidentLoginNeeded()
+        fun onLoginHintNeeded()
         fun onLoginPasswordNeeded()
         fun onOidcDetails(oidcDetails: OidcDetails)
         fun onCreateAccountContinue(url: String)
@@ -69,8 +69,8 @@ class SidentLoginNode(
         plugins<Callback>().forEach { it.onOidcDetails(data) }
     }
 
-    private fun onSidentLoginNeeded() {
-        plugins<Callback>().forEach { it.onSidentLoginNeeded() }
+    private fun onLoginHintNeeded() {
+        plugins<Callback>().forEach { it.onLoginHintNeeded() }
     }
 
     private fun onLoginPasswordNeeded() {
@@ -85,12 +85,12 @@ class SidentLoginNode(
     override fun View(modifier: Modifier) {
         val state = presenter.present()
         val context = LocalContext.current
-        SidentLoginView(
+        LoginHintView(
             state = state,
             modifier = modifier,
             onBackClick = ::navigateUp,
             onOidcDetails = ::onOidcDetails,
-            onNeedSidentLogin = ::onSidentLoginNeeded,
+            onNeedLoginHint = ::onLoginHintNeeded,
             onNeedLoginPassword = ::onLoginPasswordNeeded,
             onLearnMoreClick = { openLearnMorePage(context) },
             onCreateAccountContinue = ::onCreateAccountContinue,

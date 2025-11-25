@@ -22,10 +22,10 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package fr.gouv.tchap.android.features.login.impl.screens.sidentlogin
+package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 
-sealed interface SidentLoginEvents {
-    data class SetLogin(val login: String) : SidentLoginEvents
-    data object OnContinue : SidentLoginEvents
-    data object ClearError : SidentLoginEvents
+sealed interface LoginHintEvents {
+    data class SetLogin(val login: String) : LoginHintEvents
+    data object OnContinue : LoginHintEvents
+    data object ClearError : LoginHintEvents
 }

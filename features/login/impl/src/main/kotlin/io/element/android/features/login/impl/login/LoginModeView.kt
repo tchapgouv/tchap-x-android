@@ -33,7 +33,7 @@ fun LoginModeView(
     onClearError: () -> Unit,
     onLearnMoreClick: () -> Unit,
     onOidcDetails: (OidcDetails) -> Unit,
-    onNeedSidentLogin: () -> Unit,
+    onNeedLoginHint: () -> Unit,
     onNeedLoginPassword: () -> Unit,
     onCreateAccountContinue: (url: String) -> Unit
 ) {
@@ -119,7 +119,7 @@ fun LoginModeView(
         is AsyncData.Loading -> Unit // The Continue button shows the loading state
         is AsyncData.Success -> {
             when (val loginModeData = loginMode.data) {
-                LoginMode.SidentLogin -> onNeedSidentLogin()
+                LoginMode.LoginHint -> onNeedLoginHint()
                 is LoginMode.Oidc -> onOidcDetails(loginModeData.oidcDetails)
                 LoginMode.PasswordLogin -> onNeedLoginPassword()
                 is LoginMode.AccountCreation -> onCreateAccountContinue(loginModeData.url)
@@ -141,7 +141,7 @@ internal fun LoginModeViewPreview(@PreviewParameter(LoginModeViewErrorProvider::
             onLearnMoreClick = {},
             onOidcDetails = {},
             onNeedLoginPassword = {},
-            onNeedSidentLogin = {},
+            onNeedLoginHint = {},
             onCreateAccountContinue = {}
         )
     }

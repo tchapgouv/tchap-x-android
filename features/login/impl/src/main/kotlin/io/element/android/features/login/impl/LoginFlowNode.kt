@@ -25,7 +25,7 @@ import com.bumble.appyx.navmodel.backstack.operation.singleTop
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
-import fr.gouv.tchap.android.features.login.impl.screens.sidentlogin.SidentLoginNode
+import fr.gouv.tchap.android.features.login.impl.screens.loginhint.LoginHintNode
 import io.element.android.annotations.ContributesNode
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.login.api.LoginEntryPoint
@@ -126,7 +126,7 @@ class LoginFlowNode(
         data object LoginPassword : NavTarget
 
         @Parcelize
-        data class SidentLogin(
+        data class LoginHint(
             val isAccountCreation: Boolean,
         ) : NavTarget
 
@@ -140,14 +140,14 @@ class LoginFlowNode(
                 val callback = object : OnBoardingNode.Callback {
                     override fun navigateToSignUpFlow() {
                         backstack.push(
-                            NavTarget.ConfirmAccountProvider(isAccountCreation = true)
+                            NavTarget.LoginHint(isAccountCreation = true)
                         )
                     }
 
                     override fun navigateToSignInFlow(mustChooseAccountProvider: Boolean) {
                         backstack.push(
                             if (mustChooseAccountProvider) {
-                                NavTarget.SidentLogin(isAccountCreation = false)
+                                NavTarget.LoginHint(isAccountCreation = false)
                             } else {
                                 NavTarget.ConfirmAccountProvider(isAccountCreation = false)
                             }
@@ -162,8 +162,8 @@ class LoginFlowNode(
                         callback.navigateToBugReport()
                     }
 
-                    override fun onSidentLoginNeeded() {
-                        backstack.push(NavTarget.SidentLogin(isAccountCreation = false))
+                    override fun onLoginHintNeeded() {
+                        backstack.push(NavTarget.LoginHint(isAccountCreation = false))
                     }
 
                     override fun navigateToOidc(oidcDetails: OidcDetails) {
@@ -199,8 +199,8 @@ class LoginFlowNode(
                         backstack.push(NavTarget.CreateAccount(url))
                     }
 
-                    override fun onSidentLoginNeeded() {
-                        backstack.push(NavTarget.SidentLogin(isAccountCreation = false))
+                    override fun onLoginHintNeeded() {
+                        backstack.push(NavTarget.LoginHint(isAccountCreation = false))
                     }
 
                     override fun navigateToLoginPassword() {
@@ -225,8 +225,8 @@ class LoginFlowNode(
                         backstack.push(NavTarget.CreateAccount(url))
                     }
 
-                    override fun onSidentLoginNeeded() {
-                        backstack.push(NavTarget.SidentLogin(isAccountCreation = navTarget.isAccountCreation))
+                    override fun onLoginHintNeeded() {
+                        backstack.push(NavTarget.LoginHint(isAccountCreation = navTarget.isAccountCreation))
                     }
 
                     override fun navigateToLoginPassword() {
@@ -272,14 +272,14 @@ class LoginFlowNode(
             NavTarget.LoginPassword -> {
                 createNode<LoginPasswordNode>(buildContext)
             }
-            is NavTarget.SidentLogin -> {
-                val inputs = SidentLoginNode.Inputs(
+            is NavTarget.LoginHint -> {
+                val inputs = LoginHintNode.Inputs(
                     isAccountCreation = navTarget.isAccountCreation,
                 )
 
-                val callback = object : SidentLoginNode.Callback {
-                    override fun onSidentLoginNeeded() {
-                        backstack.push(NavTarget.SidentLogin(isAccountCreation = navTarget.isAccountCreation))
+                val callback = object : LoginHintNode.Callback {
+                    override fun onLoginHintNeeded() {
+                        backstack.push(NavTarget.LoginHint(isAccountCreation = navTarget.isAccountCreation))
                     }
 
                     override fun onOidcDetails(oidcDetails: OidcDetails) {
@@ -294,7 +294,7 @@ class LoginFlowNode(
                         backstack.push(NavTarget.LoginPassword)
                     }
                 }
-                createNode<SidentLoginNode>(buildContext, listOf(inputs, callback))
+                createNode<LoginHintNode>(buildContext, listOf(inputs, callback))
             }
             is NavTarget.CreateAccount -> {
                 val inputs = CreateAccountNode.Inputs(

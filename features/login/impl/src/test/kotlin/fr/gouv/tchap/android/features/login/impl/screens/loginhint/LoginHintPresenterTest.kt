@@ -22,7 +22,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package fr.gouv.tchap.android.features.login.impl.screens.sidentlogin
+package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 
 import com.google.common.truth.Truth.assertThat
 import io.element.android.appconfig.AuthenticationConfig
@@ -44,13 +44,13 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
 
-class SidentLoginPresenterTest {
+class LoginHintPresenterTest {
     @get:Rule
     val warmUpRule = WarmUpRule()
 
     @Test
     fun `present - initial state`() = runTest {
-        createSidentLoginPresenter().test {
+        createLoginHintPresenter().test {
             val initialState = awaitItem()
             assertThat(initialState.accountProvider.url).isEqualTo(AuthenticationConfig.MATRIX_ORG_URL)
             assertThat(initialState.formState).isEqualTo(LoginFormState.Default)
@@ -63,13 +63,13 @@ class SidentLoginPresenterTest {
     fun `present - enter login`() = runTest {
         val authenticationService = FakeMatrixAuthenticationService()
         authenticationService.givenHomeserver(A_HOMESERVER)
-        createSidentLoginPresenter(
+        createLoginHintPresenter(
             loginHelper = createLoginHelper(
                 authenticationService = authenticationService,
             ),
         ).test {
             val initialState = awaitItem()
-            initialState.eventSink.invoke(SidentLoginEvents.SetLogin(A_USER_NAME))
+            initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_NAME))
             val loginState = awaitItem()
             assertThat(loginState.formState).isEqualTo(LoginFormState(login = A_USER_NAME))
             assertThat(loginState.submitEnabled).isTrue()
@@ -80,16 +80,16 @@ class SidentLoginPresenterTest {
     fun `present - submit`() = runTest {
         val authenticationService = FakeMatrixAuthenticationService()
         authenticationService.givenHomeserver(A_HOMESERVER)
-        createSidentLoginPresenter(
+        createLoginHintPresenter(
             loginHelper = createLoginHelper(
                 authenticationService = authenticationService,
             ),
         ).test {
             val initialState = awaitItem()
-            initialState.eventSink.invoke(SidentLoginEvents.SetLogin(A_USER_NAME))
+            initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_NAME))
             skipItems(1)
             val loginState = awaitItem()
-            loginState.eventSink.invoke(SidentLoginEvents.OnContinue)
+            loginState.eventSink.invoke(LoginHintEvents.OnContinue)
             val submitState = awaitItem()
             assertThat(submitState.loginMode).isInstanceOf(AsyncData.Loading::class.java)
             val loggedInState = awaitItem()
@@ -101,17 +101,17 @@ class SidentLoginPresenterTest {
     fun `present - submit with error`() = runTest {
         val authenticationService = FakeMatrixAuthenticationService()
         authenticationService.givenHomeserver(A_HOMESERVER)
-        createSidentLoginPresenter(
+        createLoginHintPresenter(
             loginHelper = createLoginHelper(
                 authenticationService = authenticationService,
             ),
         ).test {
             val initialState = awaitItem()
-            initialState.eventSink.invoke(SidentLoginEvents.SetLogin(A_USER_NAME))
+            initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_NAME))
             skipItems(1)
             val loginState = awaitItem()
             authenticationService.givenLoginError(AN_EXCEPTION)
-            loginState.eventSink.invoke(SidentLoginEvents.OnContinue)
+            loginState.eventSink.invoke(LoginHintEvents.OnContinue)
             val submitState = awaitItem()
             assertThat(submitState.loginMode).isInstanceOf(AsyncData.Loading::class.java)
             val loggedInState = awaitItem()
@@ -123,35 +123,35 @@ class SidentLoginPresenterTest {
     fun `present - clear error`() = runTest {
         val authenticationService = FakeMatrixAuthenticationService()
         authenticationService.givenHomeserver(A_HOMESERVER)
-        createSidentLoginPresenter(
+        createLoginHintPresenter(
             loginHelper = createLoginHelper(
                 authenticationService = authenticationService,
             ),
         ).test {
             val initialState = awaitItem()
-            initialState.eventSink.invoke(SidentLoginEvents.SetLogin(A_USER_NAME))
+            initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_NAME))
             skipItems(1)
             val loginState = awaitItem()
             authenticationService.givenLoginError(AN_EXCEPTION)
-            loginState.eventSink.invoke(SidentLoginEvents.OnContinue)
+            loginState.eventSink.invoke(LoginHintEvents.OnContinue)
             val submitState = awaitItem()
             assertThat(submitState.loginMode).isInstanceOf(AsyncData.Loading::class.java)
             val loggedInState = awaitItem()
             // Check an error was returned
             assertThat(loggedInState.loginMode).isEqualTo(AsyncData.Failure<SessionId>(AN_EXCEPTION))
             // Assert the error is then cleared
-            loggedInState.eventSink(SidentLoginEvents.ClearError)
+            loggedInState.eventSink(LoginHintEvents.ClearError)
             val clearedState = awaitItem()
             assertThat(clearedState.loginMode).isEqualTo(AsyncData.Uninitialized)
         }
     }
 
-    private fun createSidentLoginPresenter(
+    private fun createLoginHintPresenter(
         loginHelper: LoginHelper = createLoginHelper(),
         accountProviderDataSource: AccountProviderDataSource = AccountProviderDataSource(FakeEnterpriseService()),
-    ): SidentLoginPresenter = SidentLoginPresenter(
+    ): LoginHintPresenter = LoginHintPresenter(
         loginHelper = loginHelper,
-        params = SidentLoginPresenter.Params(isAccountCreation = true),
+        params = LoginHintPresenter.Params(isAccountCreation = true),
         accountProviderDataSource = accountProviderDataSource,
         buildMeta = aBuildMeta(),
     )

@@ -22,32 +22,43 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package fr.gouv.tchap.android.features.login.impl.screens.sidentlogin
+package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 
-import android.os.Parcelable
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.element.android.features.login.impl.accountprovider.AccountProvider
+import io.element.android.features.login.impl.accountprovider.anAccountProvider
 import io.element.android.features.login.impl.login.LoginMode
 import io.element.android.libraries.architecture.AsyncData
-import kotlinx.parcelize.Parcelize
 
-data class SidentLoginState(
-    val applicationName: String,
-    val accountProvider: AccountProvider,
-    val isAccountCreation: Boolean,
-    val formState: LoginFormState,
-    val loginMode: AsyncData<LoginMode>,
-    val eventSink: (SidentLoginEvents) -> Unit
-) {
-    val submitEnabled: Boolean
-        get() = accountProvider.url.isNotEmpty() && formState.login.isNotEmpty() &&
-            (loginMode is AsyncData.Uninitialized || loginMode is AsyncData.Loading)
+open class LoginHintStateProvider : PreviewParameterProvider<LoginHintState> {
+    override val values: Sequence<LoginHintState>
+        get() = sequenceOf(
+            aLoginHintState(),
+            // Loading
+            aLoginHintState(loginMode = AsyncData.Loading()),
+            // Error
+            aLoginHintState(loginMode = AsyncData.Failure(Exception("An error occurred"))),
+        )
 }
 
-@Parcelize
-data class LoginFormState(
-    val login: String,
-) : Parcelable {
-    companion object {
-        val Default = LoginFormState("")
-    }
-}
+fun aLoginHintState(
+    applicationName: String = "Tchap",
+    accountProvider: AccountProvider = anAccountProvider(),
+    formState: LoginFormState = LoginFormState.Default,
+    isAccountCreation: Boolean = false,
+    loginMode: AsyncData<LoginMode> = AsyncData.Uninitialized,
+    eventSink: (LoginHintEvents) -> Unit = {},
+) = LoginHintState(
+    applicationName = applicationName,
+    accountProvider = accountProvider,
+    isAccountCreation = isAccountCreation,
+    formState = formState,
+    loginMode = loginMode,
+    eventSink = eventSink,
+)
+
+fun aLoginFormState(
+    login: String = "",
+) = LoginFormState(
+    login = login,
+)

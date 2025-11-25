@@ -22,43 +22,32 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package fr.gouv.tchap.android.features.login.impl.screens.sidentlogin
+package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import android.os.Parcelable
 import io.element.android.features.login.impl.accountprovider.AccountProvider
-import io.element.android.features.login.impl.accountprovider.anAccountProvider
 import io.element.android.features.login.impl.login.LoginMode
 import io.element.android.libraries.architecture.AsyncData
+import kotlinx.parcelize.Parcelize
 
-open class SidentLoginStateProvider : PreviewParameterProvider<SidentLoginState> {
-    override val values: Sequence<SidentLoginState>
-        get() = sequenceOf(
-            aSidentLoginState(),
-            // Loading
-            aSidentLoginState(loginMode = AsyncData.Loading()),
-            // Error
-            aSidentLoginState(loginMode = AsyncData.Failure(Exception("An error occurred"))),
-        )
+data class LoginHintState(
+    val applicationName: String,
+    val accountProvider: AccountProvider,
+    val isAccountCreation: Boolean,
+    val formState: LoginFormState,
+    val loginMode: AsyncData<LoginMode>,
+    val eventSink: (LoginHintEvents) -> Unit
+) {
+    val submitEnabled: Boolean
+        get() = accountProvider.url.isNotEmpty() && formState.login.isNotEmpty() &&
+            (loginMode is AsyncData.Uninitialized || loginMode is AsyncData.Loading)
 }
 
-fun aSidentLoginState(
-    applicationName: String = "Tchap",
-    accountProvider: AccountProvider = anAccountProvider(),
-    formState: LoginFormState = LoginFormState.Default,
-    isAccountCreation: Boolean = false,
-    loginMode: AsyncData<LoginMode> = AsyncData.Uninitialized,
-    eventSink: (SidentLoginEvents) -> Unit = {},
-) = SidentLoginState(
-    applicationName = applicationName,
-    accountProvider = accountProvider,
-    isAccountCreation = isAccountCreation,
-    formState = formState,
-    loginMode = loginMode,
-    eventSink = eventSink,
-)
-
-fun aLoginFormState(
-    login: String = "",
-) = LoginFormState(
-    login = login,
-)
+@Parcelize
+data class LoginFormState(
+    val login: String,
+) : Parcelable {
+    companion object {
+        val Default = LoginFormState("")
+    }
+}

@@ -53,7 +53,7 @@ fun ChooseAccountProviderView(
     onOidcDetails: (OidcDetails) -> Unit,
     onNeedLoginPassword: () -> Unit,
     onLearnMoreClick: () -> Unit,
-    onNeedSidentLogin: () -> Unit,
+    onNeedLoginHint: () -> Unit,
     onCreateAccountContinue: (url: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -132,7 +132,7 @@ fun ChooseAccountProviderView(
                 onLearnMoreClick = onLearnMoreClick,
                 onOidcDetails = onOidcDetails,
                 onNeedLoginPassword = onNeedLoginPassword,
-                onNeedSidentLogin = onNeedSidentLogin,
+                onNeedLoginHint = onNeedLoginHint,
                 onCreateAccountContinue = onCreateAccountContinue,
             )
         }
@@ -148,7 +148,7 @@ internal fun ChooseAccountProviderViewPreview(@PreviewParameter(ChooseAccountPro
         onLearnMoreClick = { },
         onOidcDetails = { },
         onNeedLoginPassword = { },
-        onNeedSidentLogin = { },
+        onNeedLoginHint = { },
         onCreateAccountContinue = { },
     )
 }

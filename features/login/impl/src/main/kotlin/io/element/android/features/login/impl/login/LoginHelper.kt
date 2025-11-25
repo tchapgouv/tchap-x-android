@@ -95,9 +95,9 @@ class LoginHelper(
         suspend {
             authenticationService.setHomeserver(homeserverUrl).map { matrixHomeServerDetails ->
                 if (matrixHomeServerDetails.supportsOidcLogin) {
-                    // Tchap - Show SidentLoginView when loginHint is null
+                    // Tchap - Show LoginHintView when loginHint is null
                     if (loginHint == null) {
-                        LoginMode.SidentLogin
+                        LoginMode.LoginHint
                     } else {
                         // Retrieve the details right now
                         val oidcPrompt = if (isAccountCreation) OidcPrompt.Create else OidcPrompt.Login

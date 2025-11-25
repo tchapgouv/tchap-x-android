@@ -22,7 +22,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package fr.gouv.tchap.android.features.login.impl.screens.sidentlogin
+package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -34,31 +34,29 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
-import dev.zacsweers.metro.Inject
 import io.element.android.features.login.impl.accountprovider.AccountProviderDataSource
 import io.element.android.features.login.impl.login.LoginHelper
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.meta.BuildMeta
 
 @AssistedInject
-@Inject
-class SidentLoginPresenter(
+class LoginHintPresenter(
     @Assisted private val params: Params,
     private val buildMeta: BuildMeta,
     private val loginHelper: LoginHelper,
     private val accountProviderDataSource: AccountProviderDataSource,
-) : Presenter<SidentLoginState> {
+) : Presenter<LoginHintState> {
     data class Params(
         val isAccountCreation: Boolean,
     )
 
     @AssistedFactory
     interface Factory {
-        fun create(params: Params): SidentLoginPresenter
+        fun create(params: Params): LoginHintPresenter
     }
 
     @Composable
-    override fun present(): SidentLoginState {
+    override fun present(): LoginHintState {
         val localCoroutineScope = rememberCoroutineScope()
 
         val formState = rememberSaveable {
@@ -68,22 +66,22 @@ class SidentLoginPresenter(
 
         val loginMode by loginHelper.collectLoginMode()
 
-        fun handleEvents(event: SidentLoginEvents) {
+        fun handleEvents(event: LoginHintEvents) {
             when (event) {
-                is SidentLoginEvents.SetLogin -> updateFormState(formState) {
+                is LoginHintEvents.SetLogin -> updateFormState(formState) {
                     copy(login = event.login)
                 }
-                is SidentLoginEvents.OnContinue -> loginHelper.getHomeserverFromLoginHint(
+                is LoginHintEvents.OnContinue -> loginHelper.getHomeserverFromLoginHint(
                     coroutineScope = localCoroutineScope,
                     isAccountCreation = params.isAccountCreation,
                     accountProviderDataSource = accountProviderDataSource,
                     loginHint = formState.value.login,
                 )
-                SidentLoginEvents.ClearError -> loginHelper.clearError()
+                LoginHintEvents.ClearError -> loginHelper.clearError()
             }
         }
 
-        return SidentLoginState(
+        return LoginHintState(
             applicationName = buildMeta.applicationName,
             accountProvider = accountProvider,
             isAccountCreation = params.isAccountCreation,

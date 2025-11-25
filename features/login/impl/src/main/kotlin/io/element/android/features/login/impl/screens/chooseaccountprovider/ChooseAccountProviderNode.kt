@@ -30,7 +30,7 @@ class ChooseAccountProviderNode(
     private val presenter: ChooseAccountProviderPresenter,
 ) : Node(buildContext, plugins = plugins) {
     interface Callback : Plugin {
-        fun onSidentLoginNeeded()
+        fun onLoginHintNeeded()
         fun navigateToLoginPassword()
         fun navigateToOidc(oidcDetails: OidcDetails)
         fun navigateToCreateAccount(url: String)
@@ -49,6 +49,7 @@ class ChooseAccountProviderNode(
             onOidcDetails = callback::navigateToOidc,
             onNeedLoginPassword = callback::navigateToLoginPassword,
             onNeedSidentLogin = ::onSidentLoginNeeded,
+            onNeedLoginHint = ::onLoginHintNeeded,
             onLearnMoreClick = { openLearnMorePage(context) },
             onCreateAccountContinue = callback::navigateToCreateAccount,
         )

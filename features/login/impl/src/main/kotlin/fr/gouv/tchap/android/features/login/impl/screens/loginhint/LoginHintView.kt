@@ -22,7 +22,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package fr.gouv.tchap.android.features.login.impl.screens.sidentlogin
+package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
@@ -83,11 +83,11 @@ import io.element.android.libraries.ui.strings.CommonStrings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SidentLoginView(
-    state: SidentLoginState,
+fun LoginHintView(
+    state: LoginHintState,
     onBackClick: () -> Unit,
     onOidcDetails: (OidcDetails) -> Unit,
-    onNeedSidentLogin: () -> Unit,
+    onNeedLoginHint: () -> Unit,
     onNeedLoginPassword: () -> Unit,
     onLearnMoreClick: () -> Unit,
     onCreateAccountContinue: (url: String) -> Unit,
@@ -114,7 +114,7 @@ fun SidentLoginView(
 
         autofillManager?.commit()
 
-        state.eventSink(SidentLoginEvents.OnContinue)
+        state.eventSink(LoginHintEvents.OnContinue)
     }
 
     Scaffold(
@@ -187,19 +187,19 @@ fun SidentLoginView(
 
             if (state.loginMode is AsyncData.Failure) {
                 LoginErrorDialog(error = state.loginMode.error, onDismiss = {
-                    state.eventSink(SidentLoginEvents.ClearError)
+                    state.eventSink(LoginHintEvents.ClearError)
                 })
             }
 
             LoginModeView(
                 loginMode = state.loginMode,
                 onClearError = {
-                    state.eventSink(SidentLoginEvents.ClearError)
+                    state.eventSink(LoginHintEvents.ClearError)
                 },
                 onLearnMoreClick = onLearnMoreClick,
                 onOidcDetails = onOidcDetails,
                 onNeedLoginPassword = onNeedLoginPassword,
-                onNeedSidentLogin = onNeedSidentLogin,
+                onNeedLoginHint = onNeedLoginHint,
                 onCreateAccountContinue = onCreateAccountContinue,
             )
         }
@@ -208,7 +208,7 @@ fun SidentLoginView(
 
 @Composable
 private fun LoginForm(
-    state: SidentLoginState,
+    state: LoginHintState,
     isLoading: Boolean,
     onSubmit: () -> Unit,
 ) {
@@ -233,7 +233,7 @@ private fun LoginForm(
             onValueChange = {
                 val sanitized = it.sanitize()
                 loginFieldState = sanitized
-                eventSink(SidentLoginEvents.SetLogin(sanitized))
+                eventSink(LoginHintEvents.SetLogin(sanitized))
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -247,7 +247,7 @@ private fun LoginForm(
                 {
                     Box(Modifier.clickable {
                         loginFieldState = ""
-                        eventSink(SidentLoginEvents.SetLogin(""))
+                        eventSink(LoginHintEvents.SetLogin(""))
                     }) {
                         Icon(
                             imageVector = CompoundIcons.Close(),
@@ -281,12 +281,12 @@ private fun LoginErrorDialog(error: Throwable, onDismiss: () -> Unit) {
 
 @PreviewsDayNight
 @Composable
-internal fun SidentLoginViewPreview(@PreviewParameter(SidentLoginStateProvider::class) state: SidentLoginState) = ElementPreview {
-    SidentLoginView(
+internal fun LoginHintViewPreview(@PreviewParameter(LoginHintStateProvider::class) state: LoginHintState) = ElementPreview {
+    LoginHintView(
         state = state,
         onBackClick = {},
         onOidcDetails = {},
-        onNeedSidentLogin = {},
+        onNeedLoginHint = {},
         onNeedLoginPassword = {},
         onLearnMoreClick = {},
         onCreateAccountContinue = {},
