@@ -63,6 +63,7 @@ class LoginHelper(
 
     fun getHomeserverFromLoginHint(
         coroutineScope: CoroutineScope,
+        isAccountCreation: Boolean,
         accountProviderDataSource: AccountProviderDataSource,
         loginHint: String
     ) {

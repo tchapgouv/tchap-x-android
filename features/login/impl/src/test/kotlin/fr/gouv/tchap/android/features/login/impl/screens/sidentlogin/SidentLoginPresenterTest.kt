@@ -151,6 +151,7 @@ class SidentLoginPresenterTest {
         accountProviderDataSource: AccountProviderDataSource = AccountProviderDataSource(FakeEnterpriseService()),
     ): SidentLoginPresenter = SidentLoginPresenter(
         loginHelper = loginHelper,
+        params = SidentLoginPresenter.Params(isAccountCreation = true),
         accountProviderDataSource = accountProviderDataSource,
         buildMeta = aBuildMeta(),
     )

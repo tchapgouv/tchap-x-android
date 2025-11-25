@@ -147,7 +147,11 @@ fun SidentLoginView(
                 modifier = Modifier.padding(top = 20.dp, start = 16.dp, end = 16.dp),
                 iconStyle = BigIcon.Style.Default(CompoundIcons.UserProfileSolid()),
                 title = stringResource(
-                    id = R.string.tchap_screen_account_provider_signin_title,
+                    id = if (state.isAccountCreation) {
+                        R.string.tchap_screen_account_provider_create_account_title
+                    } else {
+                        R.string.tchap_screen_account_provider_signin_title
+                    },
                     state.applicationName
                 ),
                 subTitle = stringResource(id = R.string.tchap_screen_login_subtitle)
@@ -215,7 +219,7 @@ private fun LoginForm(
 
     Column {
         TextField(
-            label = stringResource(R.string.screen_login_form_header),
+            label = stringResource(R.string.tchap_screen_login_hint_label),
             value = loginFieldState,
             enabled = !isLoading,
             modifier = Modifier

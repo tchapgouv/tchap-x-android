@@ -126,7 +126,9 @@ class LoginFlowNode(
         data object LoginPassword : NavTarget
 
         @Parcelize
-        data object SidentLogin : NavTarget
+        data class SidentLogin(
+            val isAccountCreation: Boolean,
+        ) : NavTarget
 
         @Parcelize
         data class CreateAccount(val url: String) : NavTarget
@@ -145,7 +147,7 @@ class LoginFlowNode(
                     override fun navigateToSignInFlow(mustChooseAccountProvider: Boolean) {
                         backstack.push(
                             if (mustChooseAccountProvider) {
-                                NavTarget.SidentLogin
+                                NavTarget.SidentLogin(isAccountCreation = false)
                             } else {
                                 NavTarget.ConfirmAccountProvider(isAccountCreation = false)
                             }
@@ -161,7 +163,7 @@ class LoginFlowNode(
                     }
 
                     override fun onSidentLoginNeeded() {
-                        backstack.push(NavTarget.SidentLogin)
+                        backstack.push(NavTarget.SidentLogin(isAccountCreation = false))
                     }
 
                     override fun navigateToOidc(oidcDetails: OidcDetails) {
@@ -198,7 +200,7 @@ class LoginFlowNode(
                     }
 
                     override fun onSidentLoginNeeded() {
-                        backstack.push(NavTarget.SidentLogin)
+                        backstack.push(NavTarget.SidentLogin(isAccountCreation = false))
                     }
 
                     override fun navigateToLoginPassword() {
@@ -224,7 +226,7 @@ class LoginFlowNode(
                     }
 
                     override fun onSidentLoginNeeded() {
-                        backstack.push(NavTarget.SidentLogin)
+                        backstack.push(NavTarget.SidentLogin(isAccountCreation = navTarget.isAccountCreation))
                     }
 
                     override fun navigateToLoginPassword() {
@@ -270,10 +272,14 @@ class LoginFlowNode(
             NavTarget.LoginPassword -> {
                 createNode<LoginPasswordNode>(buildContext)
             }
-            NavTarget.SidentLogin -> {
+            is NavTarget.SidentLogin -> {
+                val inputs = SidentLoginNode.Inputs(
+                    isAccountCreation = navTarget.isAccountCreation,
+                )
+
                 val callback = object : SidentLoginNode.Callback {
                     override fun onSidentLoginNeeded() {
-                        backstack.push(NavTarget.SidentLogin)
+                        backstack.push(NavTarget.SidentLogin(isAccountCreation = navTarget.isAccountCreation))
                     }
 
                     override fun onOidcDetails(oidcDetails: OidcDetails) {
@@ -288,7 +294,7 @@ class LoginFlowNode(
                         backstack.push(NavTarget.LoginPassword)
                     }
                 }
-                createNode<SidentLoginNode>(buildContext, listOf(callback))
+                createNode<SidentLoginNode>(buildContext, listOf(inputs, callback))
             }
             is NavTarget.CreateAccount -> {
                 val inputs = CreateAccountNode.Inputs(

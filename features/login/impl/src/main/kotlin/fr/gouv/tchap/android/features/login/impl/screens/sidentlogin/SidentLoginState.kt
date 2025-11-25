@@ -33,12 +33,14 @@ import kotlinx.parcelize.Parcelize
 data class SidentLoginState(
     val applicationName: String,
     val accountProvider: AccountProvider,
+    val isAccountCreation: Boolean,
     val formState: LoginFormState,
     val loginMode: AsyncData<LoginMode>,
     val eventSink: (SidentLoginEvents) -> Unit
 ) {
     val submitEnabled: Boolean
-        get() = accountProvider.url.isNotEmpty() && (loginMode is AsyncData.Uninitialized || loginMode is AsyncData.Loading)
+        get() = accountProvider.url.isNotEmpty() && formState.login.isNotEmpty() &&
+            (loginMode is AsyncData.Uninitialized || loginMode is AsyncData.Loading)
 }
 
 @Parcelize

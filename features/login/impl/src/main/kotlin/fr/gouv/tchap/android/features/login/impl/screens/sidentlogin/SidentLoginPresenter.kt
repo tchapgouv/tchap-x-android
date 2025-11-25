@@ -31,18 +31,32 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.Inject
 import io.element.android.features.login.impl.accountprovider.AccountProviderDataSource
 import io.element.android.features.login.impl.login.LoginHelper
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.meta.BuildMeta
 
+@AssistedInject
 @Inject
 class SidentLoginPresenter(
+    @Assisted private val params: Params,
     private val buildMeta: BuildMeta,
     private val loginHelper: LoginHelper,
     private val accountProviderDataSource: AccountProviderDataSource,
 ) : Presenter<SidentLoginState> {
+    data class Params(
+        val isAccountCreation: Boolean,
+    )
+
+    @AssistedFactory
+    interface Factory {
+        fun create(params: Params): SidentLoginPresenter
+    }
+
     @Composable
     override fun present(): SidentLoginState {
         val localCoroutineScope = rememberCoroutineScope()
@@ -61,6 +75,7 @@ class SidentLoginPresenter(
                 }
                 is SidentLoginEvents.OnContinue -> loginHelper.getHomeserverFromLoginHint(
                     coroutineScope = localCoroutineScope,
+                    isAccountCreation = params.isAccountCreation,
                     accountProviderDataSource = accountProviderDataSource,
                     loginHint = formState.value.login,
                 )
@@ -71,6 +86,7 @@ class SidentLoginPresenter(
         return SidentLoginState(
             applicationName = buildMeta.applicationName,
             accountProvider = accountProvider,
+            isAccountCreation = params.isAccountCreation,
             formState = formState.value,
             eventSink = ::handleEvents,
             loginMode = loginMode,

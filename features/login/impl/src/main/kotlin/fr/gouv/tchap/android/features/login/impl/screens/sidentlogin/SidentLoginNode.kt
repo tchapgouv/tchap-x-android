@@ -36,6 +36,8 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
 import io.element.android.features.login.impl.util.openLearnMorePage
+import io.element.android.libraries.architecture.NodeInputs
+import io.element.android.libraries.architecture.inputs
 import io.element.android.libraries.matrix.api.auth.OidcDetails
 
 @ContributesNode(AppScope::class)
@@ -43,8 +45,19 @@ import io.element.android.libraries.matrix.api.auth.OidcDetails
 class SidentLoginNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
-    private val presenter: SidentLoginPresenter,
+    presenterFactory: SidentLoginPresenter.Factory,
 ) : Node(buildContext, plugins = plugins) {
+    data class Inputs(
+        val isAccountCreation: Boolean,
+    ) : NodeInputs
+
+    private val inputs: Inputs = inputs()
+    private val presenter = presenterFactory.create(
+        SidentLoginPresenter.Params(
+            isAccountCreation = inputs.isAccountCreation,
+        )
+    )
+
     interface Callback : Plugin {
         fun onSidentLoginNeeded()
         fun onLoginPasswordNeeded()

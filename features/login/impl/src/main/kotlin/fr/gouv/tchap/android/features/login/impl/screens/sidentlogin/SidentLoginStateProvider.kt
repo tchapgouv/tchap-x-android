@@ -45,11 +45,13 @@ fun aSidentLoginState(
     applicationName: String = "Tchap",
     accountProvider: AccountProvider = anAccountProvider(),
     formState: LoginFormState = LoginFormState.Default,
+    isAccountCreation: Boolean = false,
     loginMode: AsyncData<LoginMode> = AsyncData.Uninitialized,
     eventSink: (SidentLoginEvents) -> Unit = {},
 ) = SidentLoginState(
     applicationName = applicationName,
     accountProvider = accountProvider,
+    isAccountCreation = isAccountCreation,
     formState = formState,
     loginMode = loginMode,
     eventSink = eventSink,
