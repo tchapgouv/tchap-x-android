@@ -24,6 +24,6 @@
 <resources>
     <!-- Liste de serveurs par défaut, utilisée si aucune version spécifique au flavor n'est trouvée -->
     <string-array name="default_homeservers">
-        <item>matrix.agent.dinum.tchap.gouv.fr</item>
+        <item>agent.dinum.tchap.gouv.fr</item>
     </string-array>
 </resources>

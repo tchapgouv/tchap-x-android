@@ -23,7 +23,8 @@
   -->
 <resources>
     <string-array name="default_homeservers">
-        <item>matrix.dev01.tchap.incubateur.net</item>
-        <item>matrix.dev02.tchap.incubateur.net</item>
+        <item>"dev01.tchap.incubateur.net"</item>
+        <item>"dev02.tchap.incubateur.net"</item>
+        <item>"ext01.tchap.incubateur.net"</item>
     </string-array>
 </resources>

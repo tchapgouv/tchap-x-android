@@ -23,6 +23,8 @@
   -->
 <resources>
     <string-array name="default_homeservers">
-        <item>matrix.i.tchap.gouv.fr</item>
+        <item>"i.tchap.gouv.fr"</item>
+        <item>"a.tchap.gouv.fr"</item>
+        <item>"e.tchap.gouv.fr"</item>
     </string-array>
 </resources>
