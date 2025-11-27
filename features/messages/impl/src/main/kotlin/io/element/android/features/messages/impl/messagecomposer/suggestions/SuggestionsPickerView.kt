@@ -115,7 +115,8 @@ private fun SuggestionItemView(
         }
         val subtitle = when (suggestion) {
             is ResolvedSuggestion.AtRoom -> "@room"
-            is ResolvedSuggestion.Member -> suggestion.roomMember.userId.value.takeIf { showMatrixId } // TCHAP hide the Matrix Id depending of showMatrixId feature flag
+            // TCHAP hide the Matrix Id depending of showMatrixId feature flag
+            is ResolvedSuggestion.Member -> suggestion.roomMember.userId.value.takeIf { showMatrixId }
             is ResolvedSuggestion.Alias -> suggestion.roomAlias.value
         }
         Avatar(

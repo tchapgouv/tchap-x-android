@@ -27,4 +27,5 @@
     <string name="tchap_common_faq">"Frequently Asked Questions"</string>
     <string name="tchap_common_legals">"Legals"</string>
     <string name="tchap_common_terms_of_use">"Terms of use"</string>
+    <string name="tchap_error_multiple_accounts">"Tchap can't manage multiple accounts at this time. Please disconnect all other account."</string>
 </resources>

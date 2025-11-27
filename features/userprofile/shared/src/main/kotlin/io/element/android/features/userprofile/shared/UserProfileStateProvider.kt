@@ -46,6 +46,7 @@ fun aUserProfileState(
     isCurrentUser: Boolean = false,
     dmRoomId: RoomId? = null,
     canCall: Boolean = false,
+    canDm: Boolean = true,
     snackbarMessage: SnackbarMessage? = null,
     eventSink: (UserProfileEvents) -> Unit = {},
 ) = UserProfileState(
@@ -60,6 +61,7 @@ fun aUserProfileState(
     isCurrentUser = isCurrentUser,
     dmRoomId = dmRoomId,
     canCall = canCall,
+    canDm = canDm,
     snackbarMessage = snackbarMessage,
     eventSink = eventSink,
 )

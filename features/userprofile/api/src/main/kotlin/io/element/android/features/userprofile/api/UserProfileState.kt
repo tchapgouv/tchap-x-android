@@ -25,6 +25,7 @@ data class UserProfileState(
     val isCurrentUser: Boolean,
     val dmRoomId: RoomId?,
     val canCall: Boolean,
+    val canDm: Boolean,
     val snackbarMessage: SnackbarMessage?,
     val eventSink: (UserProfileEvents) -> Unit
 ) {

@@ -38,6 +38,7 @@ import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.chrisbanes.haze.rememberHazeState
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.home.impl.components.RoomListContentView
@@ -52,6 +53,7 @@ import io.element.android.features.home.impl.search.RoomListSearchView
 import io.element.android.features.home.impl.spaces.HomeSpacesView
 import io.element.android.features.networkmonitor.api.ui.ConnectivityIndicatorContainer
 import io.element.android.libraries.androidutils.throttler.FirstThrottler
+import io.element.android.libraries.designsystem.components.dialogs.ErrorDialog
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.components.FloatingActionButton
@@ -166,6 +168,20 @@ private fun HomeScaffold(
 
     val hazeState = rememberHazeState()
 
+    if (state.currentUserAndNeighbors.size > 1) {
+        // TCHAP - Multi-user / Multi accounts is not allowed at this time
+        ErrorDialog(
+            content = stringResource(
+                io.element.android.libraries.ui.strings.R.string.tchap_error_multiple_accounts,
+            ),
+            onSubmit = {
+                error("Tchap can't manage multiple accounts at this time. Please disconnect all other account.")
+            },
+        )
+    }
+    // TCHAP - Refactor how we get active account to fill currentUserIsExternal, in case of multiple-accounts
+    val currentUserIsExternal = state.currentUserAndNeighbors.any { it.userId.value.isExternalTchapUser() }
+
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -279,7 +295,7 @@ private fun HomeScaffold(
             }
         },
         floatingActionButton = {
-            if (state.displayActions) {
+            if (state.displayActions && !currentUserIsExternal) {
                 FloatingActionButton(
                     onClick = onStartChatClick,
                 ) {
