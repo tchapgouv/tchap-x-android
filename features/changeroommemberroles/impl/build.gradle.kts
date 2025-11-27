@@ -29,6 +29,7 @@ dependencies {
     api(projects.features.changeroommemberroles.api)
     implementation(projects.appnav)
     implementation(projects.libraries.featureflag.api)
+    implementation(projects.libraries.tchaputils)
     implementation(projects.libraries.architecture)
     implementation(projects.libraries.core)
     implementation(projects.libraries.designsystem)

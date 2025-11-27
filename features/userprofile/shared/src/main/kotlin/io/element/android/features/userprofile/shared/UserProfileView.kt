@@ -89,6 +89,7 @@ fun UserProfileView(
             UserProfileMainActionsSection(
                 isCurrentUser = state.isCurrentUser,
                 canCall = state.canCall,
+                canDm = state.canDm,
                 onShareUser = onShareUser,
                 onStartDM = { state.eventSink(UserProfileEvents.StartDM) },
                 onCall = { state.dmRoomId?.let { onStartCall(it) } }

@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.features.enterprise.api.SessionEnterpriseService
 import io.element.android.features.startchat.api.StartDMAction
 import io.element.android.features.userprofile.api.UserProfileEvents
@@ -86,6 +87,17 @@ class UserProfilePresenter(
     }
 
     @Composable
+    private fun getCanDm(roomId: RoomId?): State<Boolean> {
+        return produceState(initialValue = false, roomId) {
+            value = when {
+                client.findDM(userId).getOrNull() != null -> true
+                client.getUserProfile().getOrNull()?.userId?.value?.isExternalTchapUser() == false -> true
+                else -> false
+            }
+        }
+    }
+
+    @Composable
     override fun present(): UserProfileState {
         val coroutineScope = rememberCoroutineScope()
         val isCurrentUser = remember { client.isMe(userId) }
@@ -94,6 +106,7 @@ class UserProfilePresenter(
         val isBlocked: MutableState<AsyncData<Boolean>> = remember { mutableStateOf(AsyncData.Uninitialized) }
         val dmRoomId by getDmRoomId()
         val canCall by getCanCall(dmRoomId)
+        val canDm by getCanDm(dmRoomId)
         LaunchedEffect(Unit) {
             client.ignoredUsersFlow
                 .map { ignoredUsers -> userId in ignoredUsers }
@@ -159,6 +172,7 @@ class UserProfilePresenter(
             isCurrentUser = isCurrentUser,
             dmRoomId = dmRoomId,
             canCall = canCall,
+            canDm = canDm,
             snackbarMessage = null,
             eventSink = ::handleEvents
         )
