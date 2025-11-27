@@ -102,6 +102,12 @@ fun LoginModeView(
                         onSubmit = onClearError,
                     )
                 }
+                is AuthenticationException.NoHomeserverAvailable -> {
+                    ErrorDialog(
+                        content = stringResource(R.string.tchap_error_no_homeserver_available),
+                        onSubmit = onClearError,
+                    )
+                }
                 is AuthenticationException.AccountAlreadyLoggedIn -> {
                     ErrorDialog(
                         content = stringResource(CommonStrings.error_account_already_logged_in, error.userId),

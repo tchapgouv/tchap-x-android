@@ -25,6 +25,7 @@ import io.element.android.features.login.impl.screens.onboarding.OnBoardingPrese
 import io.element.android.features.login.impl.web.WebClientUrlForAuthenticationRetriever
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.runCatchingUpdatingState
+import io.element.android.libraries.matrix.api.auth.AuthenticationException
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
 import io.element.android.libraries.matrix.api.auth.OidcPrompt
 import io.element.android.libraries.oidc.api.OidcAction
@@ -82,8 +83,7 @@ class LoginHelper(
                 loginHint = loginHint,
             )
         } else {
-            // Tchap TODO - Afficher une erreur claire à l'utilisateur
-            error("Impossible de trouver un serveur d'accueil pour l'identifiant fourni.")
+            loginModeState.value = AsyncData.Failure(AuthenticationException.NoHomeserverAvailable("Failed to resolve the account's homeserver"))
         }
     }
 
