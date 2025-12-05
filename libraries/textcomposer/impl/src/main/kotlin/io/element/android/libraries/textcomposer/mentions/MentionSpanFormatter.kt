@@ -1,15 +1,19 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
 package io.element.android.libraries.textcomposer.mentions
 
 import dev.zacsweers.metro.ContributesBinding
+<<<<<<< HEAD
 import dev.zacsweers.metro.Inject
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.toUserDisplayName
+=======
+>>>>>>> main-element
 import io.element.android.libraries.di.RoomScope
 import io.element.android.libraries.matrix.api.core.RoomIdOrAlias
 import io.element.android.libraries.matrix.api.core.UserId
@@ -29,7 +33,6 @@ interface MentionSpanFormatter {
  * based on its MentionType and context.
  */
 @ContributesBinding(RoomScope::class)
-@Inject
 class DefaultMentionSpanFormatter(
     private val roomMemberProfilesCache: RoomMemberProfilesCache,
     private val roomNamesCache: RoomNamesCache,

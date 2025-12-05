@@ -1,13 +1,13 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
 package io.element.android.features.roomdetails.impl.edit
 
-import android.net.Uri
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.ui.media.AvatarAction
@@ -21,7 +21,7 @@ data class RoomDetailsEditState(
     val canChangeName: Boolean,
     val roomTopic: String,
     val canChangeTopic: Boolean,
-    val roomAvatarUrl: Uri?,
+    val roomAvatarUrl: String?,
     val canChangeAvatar: Boolean,
     val avatarActions: ImmutableList<AvatarAction>,
     val saveButtonEnabled: Boolean,

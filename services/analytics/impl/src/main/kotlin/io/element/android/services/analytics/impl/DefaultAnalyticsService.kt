@@ -1,7 +1,8 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -9,7 +10,6 @@ package io.element.android.services.analytics.impl
 
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
-import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.binding
 import im.vector.app.features.analytics.itf.VectorAnalyticsEvent
@@ -17,24 +17,26 @@ import im.vector.app.features.analytics.itf.VectorAnalyticsScreen
 import im.vector.app.features.analytics.plan.SuperProperties
 import im.vector.app.features.analytics.plan.UserProperties
 import io.element.android.libraries.di.annotations.AppCoroutineScope
-import io.element.android.libraries.sessionstorage.api.SessionStore
 import io.element.android.libraries.sessionstorage.api.observer.SessionListener
 import io.element.android.libraries.sessionstorage.api.observer.SessionObserver
+import io.element.android.services.analytics.api.AnalyticsLongRunningTransaction
 import io.element.android.services.analytics.api.AnalyticsService
+import io.element.android.services.analytics.api.NoopAnalyticsTransaction
 import io.element.android.services.analytics.impl.log.analyticsTag
 import io.element.android.services.analytics.impl.store.AnalyticsStore
 import io.element.android.services.analyticsproviders.api.AnalyticsProvider
+import io.element.android.services.analyticsproviders.api.AnalyticsTransaction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class, binding = binding<AnalyticsService>())
-@Inject
 class DefaultAnalyticsService(
     private val analyticsProviders: Set<@JvmSuppressWildcards AnalyticsProvider>,
     private val analyticsStore: AnalyticsStore,
@@ -42,8 +44,9 @@ class DefaultAnalyticsService(
     @AppCoroutineScope
     private val coroutineScope: CoroutineScope,
     private val sessionObserver: SessionObserver,
-    private val sessionStore: SessionStore,
 ) : AnalyticsService, SessionListener {
+    private val pendingLongRunningTransactions = ConcurrentHashMap<AnalyticsLongRunningTransaction, AnalyticsTransaction>()
+
     // Cache for the store values
     private val userConsent = AtomicBoolean(false)
 
@@ -78,13 +81,9 @@ class DefaultAnalyticsService(
         analyticsStore.setAnalyticsId(analyticsId)
     }
 
-    override suspend fun onSessionCreated(userId: String) {
-        // Nothing to do
-    }
-
-    override suspend fun onSessionDeleted(userId: String) {
+    override suspend fun onSessionDeleted(userId: String, wasLastSession: Boolean) {
         // Delete the store when the last session is deleted
-        if (sessionStore.getAllSessions().isEmpty()) {
+        if (wasLastSession) {
             analyticsStore.reset()
         }
     }
@@ -145,5 +144,32 @@ class DefaultAnalyticsService(
         if (userConsent.get()) {
             analyticsProviders.onEach { it.trackError(throwable) }
         }
+    }
+
+    override fun startTransaction(name: String, operation: String?): AnalyticsTransaction {
+        return if (userConsent.get()) {
+            analyticsProviders.firstNotNullOfOrNull { it.startTransaction(name, operation) }
+        } else {
+            null
+        } ?: NoopAnalyticsTransaction
+    }
+
+    override fun startLongRunningTransaction(
+        longRunningTransaction: AnalyticsLongRunningTransaction,
+        parentTransaction: AnalyticsTransaction?,
+    ): AnalyticsTransaction {
+        val transaction = parentTransaction?.startChild(longRunningTransaction.name, longRunningTransaction.operation)
+            ?: startTransaction(longRunningTransaction.name, longRunningTransaction.operation)
+
+        pendingLongRunningTransactions[longRunningTransaction] = transaction
+        return transaction
+    }
+
+    override fun getLongRunningTransaction(longRunningTransaction: AnalyticsLongRunningTransaction): AnalyticsTransaction? {
+        return pendingLongRunningTransactions[longRunningTransaction]
+    }
+
+    override fun removeLongRunningTransaction(longRunningTransaction: AnalyticsLongRunningTransaction): AnalyticsTransaction? {
+        return pendingLongRunningTransactions.remove(longRunningTransaction)
     }
 }

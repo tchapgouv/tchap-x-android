@@ -1,7 +1,8 @@
 /*
- * Copyright 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2024, 2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -345,7 +346,7 @@ class MediaGalleryPresenterTest {
     }
 
     @Test
-    fun `present - view in timeline invokes the navigator`() = runTest {
+    fun `present - view in timeline closes the bottom sheet and invokes the navigator`() = runTest {
         val onViewInTimelineClickLambda = lambdaRecorder<EventId, Unit> { }
         val navigator = FakeMediaGalleryNavigator(
             onViewInTimelineClickLambda = onViewInTimelineClickLambda,
@@ -353,13 +354,56 @@ class MediaGalleryPresenterTest {
         val presenter = createMediaGalleryPresenter(
             room = FakeJoinedRoom(
                 createTimelineResult = { Result.success(FakeTimeline()) },
+                baseRoom = FakeBaseRoom(
+                    canRedactOwnResult = { Result.success(true) },
+                ),
             ),
             navigator = navigator,
         )
         presenter.test {
             val initialState = awaitFirstItem()
-            initialState.eventSink(MediaGalleryEvents.ViewInTimeline(AN_EVENT_ID))
+            val item = aMediaItemImage(
+                eventId = AN_EVENT_ID,
+                senderId = A_USER_ID,
+            )
+            initialState.eventSink(MediaGalleryEvents.OpenInfo(item))
+            val withBottomSheetState = awaitItem()
+            assertThat(withBottomSheetState.mediaBottomSheetState).isInstanceOf(MediaBottomSheetState.MediaDetailsBottomSheetState::class.java)
+            withBottomSheetState.eventSink(MediaGalleryEvents.ViewInTimeline(AN_EVENT_ID))
+            val finalState = awaitItem()
+            assertThat(finalState.mediaBottomSheetState).isEqualTo(MediaBottomSheetState.Hidden)
             onViewInTimelineClickLambda.assertions().isCalledOnce().with(value(AN_EVENT_ID))
+        }
+    }
+
+    @Test
+    fun `present - forward closes the bottom sheet and invokes the navigator`() = runTest {
+        val onForwardClickLambda = lambdaRecorder<EventId, Unit> { }
+        val navigator = FakeMediaGalleryNavigator(
+            onForwardClickLambda = onForwardClickLambda,
+        )
+        val presenter = createMediaGalleryPresenter(
+            room = FakeJoinedRoom(
+                createTimelineResult = { Result.success(FakeTimeline()) },
+                baseRoom = FakeBaseRoom(
+                    canRedactOwnResult = { Result.success(true) },
+                ),
+            ),
+            navigator = navigator,
+        )
+        presenter.test {
+            val initialState = awaitFirstItem()
+            val item = aMediaItemImage(
+                eventId = AN_EVENT_ID,
+                senderId = A_USER_ID,
+            )
+            initialState.eventSink(MediaGalleryEvents.OpenInfo(item))
+            val withBottomSheetState = awaitItem()
+            assertThat(withBottomSheetState.mediaBottomSheetState).isInstanceOf(MediaBottomSheetState.MediaDetailsBottomSheetState::class.java)
+            withBottomSheetState.eventSink(MediaGalleryEvents.Forward(AN_EVENT_ID))
+            val finalState = awaitItem()
+            assertThat(finalState.mediaBottomSheetState).isEqualTo(MediaBottomSheetState.Hidden)
+            onForwardClickLambda.assertions().isCalledOnce().with(value(AN_EVENT_ID))
         }
     }
 

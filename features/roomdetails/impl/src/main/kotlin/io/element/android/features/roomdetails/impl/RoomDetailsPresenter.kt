@@ -1,7 +1,8 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -21,7 +22,7 @@ import io.element.android.features.leaveroom.api.LeaveRoomEvent
 import io.element.android.features.leaveroom.api.LeaveRoomState
 import io.element.android.features.roomcall.api.RoomCallState
 import io.element.android.features.roomdetails.impl.members.details.RoomMemberDetailsPresenter
-import io.element.android.features.roomdetails.impl.securityandprivacy.permissions.securityAndPrivacyPermissionsAsState
+import io.element.android.features.securityandprivacy.api.securityAndPrivacyPermissionsAsState
 import io.element.android.libraries.androidutils.clipboard.ClipboardHelper
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
@@ -143,7 +144,7 @@ class RoomDetailsPresenter(
         val snackbarDispatcher = LocalSnackbarDispatcher.current
         val snackbarMessage by snackbarDispatcher.collectSnackbarMessageAsState()
 
-        fun handleEvents(event: RoomDetailsEvent) {
+        fun handleEvent(event: RoomDetailsEvent) {
             when (event) {
                 is RoomDetailsEvent.LeaveRoom -> {
                     leaveRoomState.eventSink(LeaveRoomEvent.LeaveRoom(room.roomId, needsConfirmation = event.needsConfirmation))
@@ -171,7 +172,7 @@ class RoomDetailsPresenter(
         val securityAndPrivacyPermissions = room.securityAndPrivacyPermissionsAsState(syncUpdateFlow.value)
         val canShowSecurityAndPrivacy by remember {
             derivedStateOf {
-                isKnockRequestsEnabled && roomType is RoomDetailsType.Room && securityAndPrivacyPermissions.value.hasAny
+                roomType is RoomDetailsType.Room && securityAndPrivacyPermissions.value.hasAny
             }
         }
 
@@ -214,7 +215,8 @@ class RoomDetailsPresenter(
             canReportRoom = canReportRoom,
             isTombstoned = roomInfo.successorRoom != null,
             showDebugInfo = isDeveloperModeEnabled,
-            eventSink = ::handleEvents,
+            roomVersion = roomInfo.roomVersion,
+            eventSink = ::handleEvent,
         )
     }
 

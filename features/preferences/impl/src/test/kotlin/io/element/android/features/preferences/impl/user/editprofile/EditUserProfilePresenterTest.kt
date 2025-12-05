@@ -1,16 +1,14 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
 package io.element.android.features.preferences.impl.user.editprofile
 
 import android.net.Uri
-import app.cash.molecule.RecompositionMode
-import app.cash.molecule.moleculeFlow
-import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import io.element.android.libraries.androidutils.file.TemporaryUriDeleter
 import io.element.android.libraries.architecture.AsyncAction
@@ -36,6 +34,7 @@ import io.element.android.tests.testutils.consumeItemsUntilTimeout
 import io.element.android.tests.testutils.fake.FakeTemporaryUriDeleter
 import io.element.android.tests.testutils.lambda.lambdaRecorder
 import io.element.android.tests.testutils.lambda.value
+import io.element.android.tests.testutils.test
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -68,7 +67,9 @@ class EditUserProfilePresenterTest {
         mockkStatic(Uri::class)
 
         every { Uri.parse(AN_AVATAR_URL) } returns userAvatarUri
+        every { userAvatarUri.toString() } returns AN_AVATAR_URL
         every { Uri.parse(ANOTHER_AVATAR_URL) } returns anotherAvatarUri
+        every { anotherAvatarUri.toString() } returns ANOTHER_AVATAR_URL
     }
 
     @After
@@ -78,7 +79,11 @@ class EditUserProfilePresenterTest {
 
     private fun createEditUserProfilePresenter(
         matrixClient: MatrixClient = FakeMatrixClient(),
+<<<<<<< HEAD
         buildMeta: BuildMeta = aBuildMeta(),
+=======
+        navigator: EditUserProfileNavigator = FakeEditUserProfileNavigator(),
+>>>>>>> main-element
         matrixUser: MatrixUser = aMatrixUser(),
         permissionsPresenter: PermissionsPresenter = FakePermissionsPresenter(),
         temporaryUriDeleter: TemporaryUriDeleter = FakeTemporaryUriDeleter(),
@@ -86,6 +91,7 @@ class EditUserProfilePresenterTest {
     ): EditUserProfilePresenter {
         return EditUserProfilePresenter(
             matrixClient = matrixClient,
+            navigator = navigator,
             matrixUser = matrixUser,
             buildMeta = buildMeta,
             mediaPickerProvider = fakePickerProvider,
@@ -100,13 +106,11 @@ class EditUserProfilePresenterTest {
     fun `present - initial state is created from user info`() = runTest {
         val user = aMatrixUser(avatarUrl = AN_AVATAR_URL)
         val presenter = createEditUserProfilePresenter(matrixUser = user)
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
             assertThat(initialState.userId).isEqualTo(user.userId)
             assertThat(initialState.displayName).isEqualTo(user.displayName)
-            assertThat(initialState.userAvatarUrl).isEqualTo(userAvatarUri)
+            assertThat(initialState.userAvatarUrl).isEqualTo(AN_AVATAR_URL)
             assertThat(initialState.avatarActions).containsExactly(
                 AvatarAction.ChoosePhoto,
                 AvatarAction.TakePhoto,
@@ -114,6 +118,53 @@ class EditUserProfilePresenterTest {
             )
             assertThat(initialState.saveButtonEnabled).isFalse()
             assertThat(initialState.saveAction).isInstanceOf(AsyncAction.Uninitialized::class.java)
+        }
+    }
+
+    @Test
+    fun `present - exit invokes the expected callback`() = runTest {
+        val user = aMatrixUser(avatarUrl = AN_AVATAR_URL)
+        val closeLambda = lambdaRecorder<Unit> {}
+        val presenter = createEditUserProfilePresenter(
+            matrixUser = user,
+            navigator = FakeEditUserProfileNavigator(closeLambda),
+        )
+        presenter.test {
+            val initialState = awaitItem()
+            initialState.eventSink(EditUserProfileEvents.Exit)
+            closeLambda.assertions().isCalledOnce()
+        }
+    }
+
+    @Test
+    fun `present - exit without unsaved changes`() = runTest {
+        val user = aMatrixUser(avatarUrl = AN_AVATAR_URL)
+        val closeLambda = lambdaRecorder<Unit> {}
+        val presenter = createEditUserProfilePresenter(
+            matrixUser = user,
+            navigator = FakeEditUserProfileNavigator(closeLambda),
+        )
+        presenter.test {
+            val initialState = awaitItem()
+            initialState.eventSink(EditUserProfileEvents.UpdateDisplayName("New name"))
+            val withUpdatedName = awaitItem()
+            withUpdatedName.eventSink(EditUserProfileEvents.Exit)
+            val withConfirmation = awaitItem()
+            assertThat(withConfirmation.saveAction).isEqualTo(AsyncAction.ConfirmingCancellation)
+            // Cancel
+            withConfirmation.eventSink(EditUserProfileEvents.CloseDialog)
+            val afterCancel = awaitItem()
+            assertThat(afterCancel.saveAction).isEqualTo(AsyncAction.Uninitialized)
+            // Try again and confirm
+            afterCancel.eventSink(EditUserProfileEvents.Exit)
+            val withConfirmation2 = awaitItem()
+            assertThat(withConfirmation2.saveAction).isEqualTo(AsyncAction.ConfirmingCancellation)
+            closeLambda.assertions().isNeverCalled()
+            withConfirmation2.eventSink(EditUserProfileEvents.Exit)
+            // Dialog is closed
+            val finalState = awaitItem()
+            assertThat(finalState.saveAction).isEqualTo(AsyncAction.Uninitialized)
+            closeLambda.assertions().isCalledOnce()
         }
     }
 
@@ -126,21 +177,19 @@ class EditUserProfilePresenterTest {
                 deleteLambda = { assertThat(it).isEqualTo(userAvatarUri) }
             ),
         )
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
             assertThat(initialState.displayName).isEqualTo("Name")
-            assertThat(initialState.userAvatarUrl).isEqualTo(userAvatarUri)
+            assertThat(initialState.userAvatarUrl).isEqualTo(AN_AVATAR_URL)
             initialState.eventSink(EditUserProfileEvents.UpdateDisplayName("Name II"))
             awaitItem().apply {
                 assertThat(displayName).isEqualTo("Name II")
-                assertThat(userAvatarUrl).isEqualTo(userAvatarUri)
+                assertThat(userAvatarUrl).isEqualTo(AN_AVATAR_URL)
             }
             initialState.eventSink(EditUserProfileEvents.UpdateDisplayName("Name III"))
             awaitItem().apply {
                 assertThat(displayName).isEqualTo("Name III")
-                assertThat(userAvatarUrl).isEqualTo(userAvatarUri)
+                assertThat(userAvatarUrl).isEqualTo(AN_AVATAR_URL)
             }
             initialState.eventSink(EditUserProfileEvents.HandleAvatarAction(AvatarAction.Remove))
             awaitItem().apply {
@@ -160,14 +209,12 @@ class EditUserProfilePresenterTest {
                 deleteLambda = { assertThat(it).isEqualTo(userAvatarUri) }
             ),
         )
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
-            assertThat(initialState.userAvatarUrl).isEqualTo(userAvatarUri)
+            assertThat(initialState.userAvatarUrl).isEqualTo(AN_AVATAR_URL)
             initialState.eventSink(EditUserProfileEvents.HandleAvatarAction(AvatarAction.ChoosePhoto))
             awaitItem().apply {
-                assertThat(userAvatarUrl).isEqualTo(anotherAvatarUri)
+                assertThat(userAvatarUrl).isEqualTo(ANOTHER_AVATAR_URL)
             }
         }
     }
@@ -185,11 +232,9 @@ class EditUserProfilePresenterTest {
                 deleteLambda = deleteCallback,
             ),
         )
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
-            assertThat(initialState.userAvatarUrl).isEqualTo(userAvatarUri)
+            assertThat(initialState.userAvatarUrl).isEqualTo(AN_AVATAR_URL)
             assertThat(initialState.cameraPermissionState.permissionGranted).isFalse()
             initialState.eventSink(EditUserProfileEvents.HandleAvatarAction(AvatarAction.TakePhoto))
             val stateWithAskingPermission = awaitItem()
@@ -198,12 +243,12 @@ class EditUserProfilePresenterTest {
             val stateWithPermission = awaitItem()
             assertThat(stateWithPermission.cameraPermissionState.permissionGranted).isTrue()
             val stateWithNewAvatar = awaitItem()
-            assertThat(stateWithNewAvatar.userAvatarUrl).isEqualTo(anotherAvatarUri)
+            assertThat(stateWithNewAvatar.userAvatarUrl).isEqualTo(ANOTHER_AVATAR_URL)
             // Do it again, no permission is requested
             fakePickerProvider.givenResult(userAvatarUri)
             stateWithNewAvatar.eventSink(EditUserProfileEvents.HandleAvatarAction(AvatarAction.TakePhoto))
             val stateWithNewAvatar2 = awaitItem()
-            assertThat(stateWithNewAvatar2.userAvatarUrl).isEqualTo(userAvatarUri)
+            assertThat(stateWithNewAvatar2.userAvatarUrl).isEqualTo(AN_AVATAR_URL)
             deleteCallback.assertions().isCalledExactly(2).withSequence(
                 listOf(value(userAvatarUri)),
                 listOf(value(anotherAvatarUri)),
@@ -222,9 +267,7 @@ class EditUserProfilePresenterTest {
                 deleteLambda = deleteCallback
             ),
         )
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
             assertThat(initialState.saveButtonEnabled).isFalse()
             // Once a change is made, the save button is enabled
@@ -265,9 +308,7 @@ class EditUserProfilePresenterTest {
                 deleteLambda = deleteCallback
             ),
         )
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
             assertThat(initialState.saveButtonEnabled).isFalse()
             // Once a change is made, the save button is enabled
@@ -308,9 +349,7 @@ class EditUserProfilePresenterTest {
                 deleteLambda = { assertThat(it).isEqualTo(userAvatarUri) }
             ),
         )
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
             initialState.eventSink(EditUserProfileEvents.UpdateDisplayName("New name"))
             initialState.eventSink(EditUserProfileEvents.HandleAvatarAction(AvatarAction.Remove))
@@ -331,9 +370,7 @@ class EditUserProfilePresenterTest {
             matrixClient = matrixClient,
             matrixUser = user
         )
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
             initialState.eventSink(EditUserProfileEvents.UpdateDisplayName("   Name   "))
             initialState.eventSink(EditUserProfileEvents.Save)
@@ -352,9 +389,7 @@ class EditUserProfilePresenterTest {
             matrixClient = matrixClient,
             matrixUser = user
         )
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
             initialState.eventSink(EditUserProfileEvents.UpdateDisplayName(""))
             initialState.eventSink(EditUserProfileEvents.Save)
@@ -377,9 +412,7 @@ class EditUserProfilePresenterTest {
                 deleteLambda = { assertThat(it).isEqualTo(userAvatarUri) }
             ),
         )
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
             initialState.eventSink(EditUserProfileEvents.HandleAvatarAction(AvatarAction.ChoosePhoto))
             initialState.eventSink(EditUserProfileEvents.Save)
@@ -401,9 +434,7 @@ class EditUserProfilePresenterTest {
         )
         fakePickerProvider.givenResult(anotherAvatarUri)
         fakeMediaPreProcessor.givenResult(Result.failure(RuntimeException("Oh no")))
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
             initialState.eventSink(EditUserProfileEvents.HandleAvatarAction(AvatarAction.ChoosePhoto))
             initialState.eventSink(EditUserProfileEvents.Save)
@@ -442,22 +473,20 @@ class EditUserProfilePresenterTest {
     }
 
     @Test
-    fun `present - CancelSaveChanges resets save action state`() = runTest {
+    fun `present - CloseDialog resets save action state`() = runTest {
         givenPickerReturnsFile()
         val user = aMatrixUser(id = A_USER_ID.value, displayName = "Name", avatarUrl = AN_AVATAR_URL)
         val matrixClient = FakeMatrixClient().apply {
             givenSetDisplayNameResult(Result.failure(RuntimeException("!")))
         }
         val presenter = createEditUserProfilePresenter(matrixUser = user, matrixClient = matrixClient)
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
             initialState.eventSink(EditUserProfileEvents.UpdateDisplayName("foo"))
             initialState.eventSink(EditUserProfileEvents.Save)
             skipItems(2)
             assertThat(awaitItem().saveAction).isInstanceOf(AsyncAction.Failure::class.java)
-            initialState.eventSink(EditUserProfileEvents.CancelSaveChanges)
+            initialState.eventSink(EditUserProfileEvents.CloseDialog)
             assertThat(awaitItem().saveAction).isInstanceOf(AsyncAction.Uninitialized::class.java)
         }
     }
@@ -470,9 +499,7 @@ class EditUserProfilePresenterTest {
                 deleteLambda = { assertThat(it).isEqualTo(userAvatarUri) }
             ),
         )
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
             initialState.eventSink(event)
             initialState.eventSink(EditUserProfileEvents.Save)

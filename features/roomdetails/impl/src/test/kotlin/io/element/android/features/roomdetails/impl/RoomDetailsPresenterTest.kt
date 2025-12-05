@@ -1,7 +1,8 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -723,10 +724,6 @@ class RoomDetailsPresenterTest {
         val presenter = createRoomDetailsPresenter(room = room, featureFlagService = featureFlagService)
         presenter.testWithLifecycleOwner(lifecycleOwner = fakeLifecycleOwner) {
             skipItems(1)
-            with(awaitItem()) {
-                assertThat(canShowSecurityAndPrivacy).isFalse()
-            }
-            featureFlagService.setFeatureEnabled(FeatureFlags.Knock, true)
             with(awaitItem()) {
                 assertThat(canShowSecurityAndPrivacy).isTrue()
             }

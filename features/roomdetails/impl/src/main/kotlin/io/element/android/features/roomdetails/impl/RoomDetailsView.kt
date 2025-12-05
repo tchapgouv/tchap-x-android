@@ -1,7 +1,8 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -262,6 +263,7 @@ fun RoomDetailsView(
             if (state.showDebugInfo) {
                 DebugInfoSection(
                     roomId = state.roomId,
+                    roomVersion = state.roomVersion,
                 )
             }
         }
@@ -705,7 +707,10 @@ private fun OtherActionsSection(
 }
 
 @Composable
-private fun DebugInfoSection(roomId: RoomId) {
+private fun DebugInfoSection(
+    roomId: RoomId,
+    roomVersion: String?,
+) {
     val context = LocalContext.current
     PreferenceCategory(showTopDivider = true) {
         ListItem(
@@ -727,6 +732,19 @@ private fun DebugInfoSection(roomId: RoomId) {
                     context.getString(CommonStrings.common_copied_to_clipboard)
                 )
             },
+        )
+        ListItem(
+            headlineContent = {
+                Text("Room version")
+            },
+            supportingContent = {
+                Text(
+                    text = roomVersion ?: "Unknown",
+                    style = ElementTheme.typography.fontBodySmRegular,
+                    color = ElementTheme.colors.textSecondary,
+                )
+            },
+            leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Info())),
         )
     }
 }

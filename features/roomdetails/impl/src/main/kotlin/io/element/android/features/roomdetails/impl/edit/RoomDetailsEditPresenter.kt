@@ -1,7 +1,8 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -61,11 +62,11 @@ class RoomDetailsEditPresenter(
         val cameraPermissionState = cameraPermissionPresenter.present()
         val roomSyncUpdateFlow = room.syncUpdateFlow.collectAsState()
 
-        val roomAvatarUri = room.avatarUrl()?.toUri()
-        var roomAvatarUriEdited by rememberSaveable { mutableStateOf<Uri?>(null) }
+        val roomAvatarUri = room.avatarUrl()
+        var roomAvatarUriEdited by rememberSaveable { mutableStateOf<String?>(null) }
         LaunchedEffect(roomAvatarUri) {
             // Every time the roomAvatar change (from sync), we can set the new avatar.
-            temporaryUriDeleter.delete(roomAvatarUriEdited)
+            temporaryUriDeleter.delete(roomAvatarUriEdited?.toUri())
             roomAvatarUriEdited = roomAvatarUri
         }
 
@@ -107,16 +108,16 @@ class RoomDetailsEditPresenter(
         val cameraPhotoPicker = mediaPickerProvider.registerCameraPhotoPicker(
             onResult = { uri ->
                 if (uri != null) {
-                    temporaryUriDeleter.delete(roomAvatarUriEdited)
-                    roomAvatarUriEdited = uri
+                    temporaryUriDeleter.delete(roomAvatarUriEdited?.toUri())
+                    roomAvatarUriEdited = uri.toString()
                 }
             }
         )
         val galleryImagePicker = mediaPickerProvider.registerGalleryImagePicker(
             onResult = { uri ->
                 if (uri != null) {
-                    temporaryUriDeleter.delete(roomAvatarUriEdited)
-                    roomAvatarUriEdited = uri
+                    temporaryUriDeleter.delete(roomAvatarUriEdited?.toUri())
+                    roomAvatarUriEdited = uri.toString()
                 }
             }
         )
@@ -140,15 +141,15 @@ class RoomDetailsEditPresenter(
 
         val saveAction: MutableState<AsyncAction<Unit>> = remember { mutableStateOf(AsyncAction.Uninitialized) }
         val localCoroutineScope = rememberCoroutineScope()
-        fun handleEvents(event: RoomDetailsEditEvents) {
+        fun handleEvent(event: RoomDetailsEditEvents) {
             when (event) {
                 is RoomDetailsEditEvents.Save -> localCoroutineScope.saveChanges(
                     currentNameTrimmed = roomRawNameTrimmed,
                     newNameTrimmed = roomRawNameEdited.trim(),
                     currentTopicTrimmed = roomTopicTrimmed,
                     newTopicTrimmed = roomTopicEdited.trim(),
-                    currentAvatar = roomAvatarUri,
-                    newAvatarUri = roomAvatarUriEdited,
+                    currentAvatar = roomAvatarUri?.toUri(),
+                    newAvatarUri = roomAvatarUriEdited?.toUri(),
                     action = saveAction,
                 )
                 is RoomDetailsEditEvents.HandleAvatarAction -> {
@@ -161,7 +162,7 @@ class RoomDetailsEditPresenter(
                             cameraPermissionState.eventSink(PermissionsEvents.RequestPermissions)
                         }
                         AvatarAction.Remove -> {
-                            temporaryUriDeleter.delete(roomAvatarUriEdited)
+                            temporaryUriDeleter.delete(roomAvatarUriEdited?.toUri())
                             roomAvatarUriEdited = null
                         }
                     }
@@ -169,7 +170,13 @@ class RoomDetailsEditPresenter(
 
                 is RoomDetailsEditEvents.UpdateRoomName -> roomRawNameEdited = event.name
                 is RoomDetailsEditEvents.UpdateRoomTopic -> roomTopicEdited = event.topic
-                RoomDetailsEditEvents.CancelSaveChanges -> saveAction.value = AsyncAction.Uninitialized
+                RoomDetailsEditEvents.CloseDialog -> saveAction.value = AsyncAction.Uninitialized
+                RoomDetailsEditEvents.OnBackPress -> if (saveButtonEnabled.not() || saveAction.value == AsyncAction.ConfirmingCancellation) {
+                    // No changes to save or already confirming exit without saving
+                    saveAction.value = AsyncAction.Success(Unit)
+                } else {
+                    saveAction.value = AsyncAction.ConfirmingCancellation
+                }
             }
         }
 
@@ -185,7 +192,7 @@ class RoomDetailsEditPresenter(
             saveButtonEnabled = saveButtonEnabled,
             saveAction = saveAction.value,
             cameraPermissionState = cameraPermissionState,
-            eventSink = ::handleEvents,
+            eventSink = ::handleEvent,
         )
     }
 

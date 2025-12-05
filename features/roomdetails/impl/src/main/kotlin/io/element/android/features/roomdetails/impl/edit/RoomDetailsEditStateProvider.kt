@@ -1,15 +1,14 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
 package io.element.android.features.roomdetails.impl.edit
 
-import android.net.Uri
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.core.net.toUri
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.ui.media.AvatarAction
@@ -23,11 +22,12 @@ open class RoomDetailsEditStateProvider : PreviewParameterProvider<RoomDetailsEd
             aRoomDetailsEditState(),
             aRoomDetailsEditState(roomTopic = ""),
             aRoomDetailsEditState(roomRawName = ""),
-            aRoomDetailsEditState(roomAvatarUrl = "example://uri".toUri()),
+            aRoomDetailsEditState(roomAvatarUrl = "example://uri"),
             aRoomDetailsEditState(canChangeName = true, canChangeTopic = false, canChangeAvatar = true, saveButtonEnabled = false),
             aRoomDetailsEditState(canChangeName = false, canChangeTopic = true, canChangeAvatar = false, saveButtonEnabled = false),
             aRoomDetailsEditState(saveAction = AsyncAction.Loading),
             aRoomDetailsEditState(saveAction = AsyncAction.Failure(RuntimeException("Whelp"))),
+            aRoomDetailsEditState(saveAction = AsyncAction.ConfirmingCancellation),
         )
 }
 
@@ -37,7 +37,7 @@ fun aRoomDetailsEditState(
     canChangeName: Boolean = true,
     roomTopic: String = "a room topic that is quite long so should wrap onto multiple lines",
     canChangeTopic: Boolean = true,
-    roomAvatarUrl: Uri? = null,
+    roomAvatarUrl: String? = null,
     canChangeAvatar: Boolean = true,
     avatarActions: List<AvatarAction> = emptyList(),
     saveButtonEnabled: Boolean = true,

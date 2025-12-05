@@ -1,7 +1,8 @@
 /*
- * Copyright 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2024, 2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -22,13 +23,13 @@ import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.matrix.api.core.UserId
-import io.element.android.libraries.matrix.api.timeline.item.event.ProfileTimelineDetails
+import io.element.android.libraries.matrix.api.timeline.item.event.ProfileDetails
 
 // https://www.figma.com/file/Ni6Ii8YKtmXCKYNE90cC67/Timeline-(new)?type=design&node-id=917-80169&mode=design&t=A0CJCBbMqR8NOwUQ-0
 @Composable
 fun SenderName(
     senderId: UserId,
-    senderProfile: ProfileTimelineDetails,
+    senderProfile: ProfileDetails,
     senderNameMode: SenderNameMode,
     modifier: Modifier = Modifier,
 ) {
@@ -38,12 +39,19 @@ fun SenderName(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         when (senderProfile) {
+<<<<<<< HEAD
             is ProfileTimelineDetails.Error,
             ProfileTimelineDetails.Pending,
             ProfileTimelineDetails.Unavailable -> {
                 MainText(text = senderId.extractedDisplayName, mode = senderNameMode) // TCHAP hide the Matrix Id
+=======
+            is ProfileDetails.Error,
+            ProfileDetails.Pending,
+            ProfileDetails.Unavailable -> {
+                MainText(text = senderId.value, mode = senderNameMode)
+>>>>>>> main-element
             }
-            is ProfileTimelineDetails.Ready -> {
+            is ProfileDetails.Ready -> {
                 val displayName = senderProfile.displayName
                 if (displayName.isNullOrEmpty()) {
                     MainText(text = senderId.extractedDisplayName, mode = senderNameMode) // TCHAP hide the Matrix Id
@@ -120,7 +128,7 @@ internal fun SenderNamePreview(
 ) = ElementPreview {
     SenderName(
         senderId = senderNameData.userId,
-        senderProfile = senderNameData.profileTimelineDetails,
+        senderProfile = senderNameData.profileDetails,
         senderNameMode = senderNameData.senderNameMode,
     )
 }

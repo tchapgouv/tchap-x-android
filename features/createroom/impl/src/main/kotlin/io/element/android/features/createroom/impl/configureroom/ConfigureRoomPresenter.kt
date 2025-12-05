@@ -1,7 +1,8 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -17,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.core.net.toUri
 import dev.zacsweers.metro.Inject
 import im.vector.app.features.analytics.plan.CreatedRoom
 import io.element.android.libraries.architecture.AsyncAction
@@ -116,7 +118,7 @@ class ConfigureRoomPresenter(
             localCoroutineScope.createRoom(config, createRoomAction)
         }
 
-        fun handleEvents(event: ConfigureRoomEvents) {
+        fun handleEvent(event: ConfigureRoomEvents) {
             when (event) {
                 is ConfigureRoomEvents.RoomNameChanged -> dataStore.setRoomName(event.name)
                 is ConfigureRoomEvents.TopicChanged -> dataStore.setTopic(event.topic)
@@ -149,7 +151,7 @@ class ConfigureRoomPresenter(
             cameraPermissionState = cameraPermissionState,
             homeserverName = homeserverName,
             roomAddressValidity = roomAddressValidity.value,
-            eventSink = ::handleEvents,
+            eventSink = ::handleEvent,
         )
     }
 
@@ -158,6 +160,7 @@ class ConfigureRoomPresenter(
         createRoomAction: MutableState<AsyncAction<RoomId>>
     ) = launch {
         suspend {
+<<<<<<< HEAD
             val accessRules = RoomAccessRules.RESTRICTED
             val avatarUrl = config.avatarUri?.let { uploadAvatar(it) }
             val params = when (config.roomVisibility) {
@@ -204,6 +207,34 @@ class ConfigureRoomPresenter(
 //                        avatar = avatarUrl,
 //                    )
 //                }
+=======
+            val avatarUrl = config.avatarUri?.let { uploadAvatar(it.toUri()) }
+            val params = if (config.roomVisibility is RoomVisibilityState.Public) {
+                CreateRoomParameters(
+                    name = config.roomName,
+                    topic = config.topic,
+                    isEncrypted = false,
+                    isDirect = false,
+                    visibility = RoomVisibility.Public,
+                    joinRuleOverride = config.roomVisibility.roomAccess.toJoinRule(),
+                    preset = RoomPreset.PUBLIC_CHAT,
+                    invite = config.invites.map { it.userId },
+                    avatar = avatarUrl,
+                    roomAliasName = config.roomVisibility.roomAddress()
+                )
+            } else {
+                CreateRoomParameters(
+                    name = config.roomName,
+                    topic = config.topic,
+                    isEncrypted = config.roomVisibility is RoomVisibilityState.Private,
+                    isDirect = false,
+                    visibility = RoomVisibility.Private,
+                    historyVisibilityOverride = RoomHistoryVisibility.Invited,
+                    preset = RoomPreset.PRIVATE_CHAT,
+                    invite = config.invites.map { it.userId },
+                    avatar = avatarUrl,
+                )
+>>>>>>> main-element
             }
             matrixClient.createRoom(params)
                 .onFailure { failure ->

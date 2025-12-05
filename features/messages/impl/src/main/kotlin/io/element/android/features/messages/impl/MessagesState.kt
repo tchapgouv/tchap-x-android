@@ -1,13 +1,13 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
 package io.element.android.features.messages.impl
 
-import androidx.compose.runtime.Immutable
 import io.element.android.features.messages.api.timeline.voicemessages.composer.VoiceMessageComposerState
 import io.element.android.features.messages.impl.actionlist.ActionListState
 import io.element.android.features.messages.impl.crypto.identity.IdentityChangeState
@@ -31,7 +31,6 @@ import io.element.android.libraries.matrix.api.room.tombstone.SuccessorRoom
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
-@Immutable
 data class MessagesState(
     val showMatrixId: Boolean,
     val isEncrypted: Boolean,
@@ -53,7 +52,6 @@ data class MessagesState(
     val customReactionState: CustomReactionState,
     val reactionSummaryState: ReactionSummaryState,
     val readReceiptBottomSheetState: ReadReceiptBottomSheetState,
-    val hasNetworkConnection: Boolean,
     val snackbarMessage: SnackbarMessage?,
     val inviteProgress: AsyncData<Unit>,
     val showReinvitePrompt: Boolean,

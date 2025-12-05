@@ -1,7 +1,8 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -39,11 +40,15 @@ class ReactionSummaryPresenter(
         }
         val targetWithAvatars = populateSenderAvatars(members = membersState.roomMembers().orEmpty().toImmutableList(), summary = target.value)
 
+<<<<<<< HEAD
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
         fun handleEvents(event: ReactionSummaryEvents) {
+=======
+        fun handleEvent(event: ReactionSummaryEvents) {
+>>>>>>> main-element
             when (event) {
                 is ReactionSummaryEvents.ShowReactionSummary -> target.value = ReactionSummaryState.Summary(
                     showMatrixId = showMatrixId,
@@ -56,7 +61,7 @@ class ReactionSummaryPresenter(
         }
         return ReactionSummaryState(
             target = targetWithAvatars.value,
-            eventSink = { handleEvents(it) }
+            eventSink = ::handleEvent,
         )
     }
 
