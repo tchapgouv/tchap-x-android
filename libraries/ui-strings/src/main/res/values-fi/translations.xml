@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="a11y_add_reaction">"Lisää reaktio: %1$s"</string>
   <string name="a11y_avatar">"Avatar"</string>
+  <string name="a11y_collapse_message_text_field">"Pienennä viestin tekstikenttä"</string>
   <string name="a11y_delete">"Poista"</string>
   <plurals name="a11y_digits_entered">
     <item quantity="one">"%1$d numero syötetty"</item>
     <item quantity="other">"%1$d numeroa syötetty"</item>
   </plurals>
+  <string name="a11y_edit_avatar">"Muokkaa avataria"</string>
+  <string name="a11y_edit_room_address_hint">"Täysi osoite tulee olemaan %1$s"</string>
+  <string name="a11y_encryption_details">"Salauksen tiedot"</string>
+  <string name="a11y_expand_message_text_field">"Laajenna viestin tekstikenttä"</string>
   <string name="a11y_hide_password">"Piilota salasana"</string>
   <string name="a11y_join_call">"Liity puheluun"</string>
   <string name="a11y_jump_to_bottom">"Siirry loppuun"</string>
+  <string name="a11y_move_the_map_to_my_location">"Siirrä kartta sijaintiini"</string>
   <string name="a11y_notifications_mentions_only">"Vain maininnat"</string>
   <string name="a11y_notifications_muted">"Mykistetty"</string>
+  <string name="a11y_notifications_new_mentions">"Uusia mainintoja"</string>
+  <string name="a11y_notifications_new_messages">"Uusia viestejä"</string>
+  <string name="a11y_notifications_ongoing_call">"Käynnissä oleva puhelu"</string>
+  <string name="a11y_other_user_avatar">"Toisen käyttäjän avatar"</string>
   <string name="a11y_page_n">"Sivu %1$d"</string>
   <string name="a11y_pause">"Keskeytä"</string>
   <string name="a11y_paused_voice_message">"Ääniviesti, kesto: %1$s, nykyinen sijainti: %2$s"</string>
@@ -18,7 +29,7 @@
   <string name="a11y_play">"Toista"</string>
   <string name="a11y_poll">"Kysely"</string>
   <string name="a11y_poll_end">"Päättynyt kysely"</string>
-  <string name="a11y_react_with">"Reagoi emojilla %1$s"</string>
+  <string name="a11y_react_with">"Lisää reaktio: %1$s"</string>
   <string name="a11y_react_with_other_emojis">"Reagoi muilla emojeilla"</string>
   <string name="a11y_read_receipts_multiple">"%1$s ja %2$s on lukenut viestin"</string>
   <plurals name="a11y_read_receipts_multiple_with_others">
@@ -27,15 +38,22 @@
   </plurals>
   <string name="a11y_read_receipts_single">"%1$s on lukenut viestin"</string>
   <string name="a11y_read_receipts_tap_to_show_all">"Näytä kaikki napauttamalla"</string>
-  <string name="a11y_remove_reaction">"Poista reaktio emojilla %1$s"</string>
+  <string name="a11y_remove_reaction">"Poista reaktio: %1$s"</string>
+  <string name="a11y_remove_reaction_with">"Poista reaktio: %1$s"</string>
+  <string name="a11y_room_avatar">"Huoneen avatar"</string>
   <string name="a11y_send_files">"Lähetä tiedostoja"</string>
+  <string name="a11y_session_verification_time_limited_action_required">"Aikarajoitettu toimenpide vaaditaan, sinulla on yksi minuutti aikaa vahvistaa"</string>
   <string name="a11y_show_password">"Näytä salasana"</string>
   <string name="a11y_start_call">"Aloita puhelu"</string>
+  <string name="a11y_tombstoned_room">"Haudattu huone"</string>
+  <string name="a11y_user_avatar">"Käyttäjän avatar"</string>
   <string name="a11y_user_menu">"Käyttäjävalikko"</string>
+  <string name="a11y_view_avatar">"Näytä avatar"</string>
   <string name="a11y_view_details">"Näytä tiedot"</string>
   <string name="a11y_voice_message">"Ääniviesti, kesto: %1$s"</string>
   <string name="a11y_voice_message_record">"Nauhoita ääniviesti."</string>
   <string name="a11y_voice_message_stop_recording">"Lopeta nauhoittaminen"</string>
+  <string name="a11y_your_avatar">"Avatarisi"</string>
   <string name="action_accept">"Hyväksy"</string>
   <string name="action_add_caption">"Lisää kuvateksti"</string>
   <string name="action_add_to_timeline">"Lisää aikajanalle"</string>
@@ -62,6 +80,7 @@
   <string name="action_decline">"Hylkää"</string>
   <string name="action_decline_and_block">"Hylkää ja estä"</string>
   <string name="action_delete_poll">"Poista kysely"</string>
+  <string name="action_deselect_all">"Poista kaikki valinnat"</string>
   <string name="action_disable">"Poista käytöstä"</string>
   <string name="action_discard">"Hylkää"</string>
   <string name="action_dismiss">"Sulje"</string>
@@ -72,9 +91,11 @@
   <string name="action_enable">"Ota käyttöön"</string>
   <string name="action_end_poll">"Lopeta kysely"</string>
   <string name="action_enter_pin">"Syötä PIN-koodi"</string>
+  <string name="action_finish">"Valmis"</string>
   <string name="action_forgot_password">"Unohditko salasanan?"</string>
   <string name="action_forward">"Välitä"</string>
   <string name="action_go_back">"Takaisin"</string>
+  <string name="action_go_to_settings">"Siirry asetuksiin"</string>
   <string name="action_ignore">"Ohita"</string>
   <string name="action_invite">"Kutsu"</string>
   <string name="action_invite_friends">"Kutsu ihmisiä"</string>
@@ -86,14 +107,17 @@
   <string name="action_leave">"Poistu"</string>
   <string name="action_leave_conversation">"Poistu keskustelusta"</string>
   <string name="action_leave_room">"Poistu huoneesta"</string>
+  <string name="action_leave_space">"Poistu tilasta"</string>
   <string name="action_load_more">"Lataa lisää"</string>
   <string name="action_manage_account">"Hallitse tiliä"</string>
   <string name="action_manage_devices">"Hallitse laitteita"</string>
   <string name="action_message">"Lähetä viesti"</string>
+  <string name="action_minimize">"Pienennä"</string>
   <string name="action_next">"Seuraava"</string>
   <string name="action_no">"Ei"</string>
   <string name="action_not_now">"Ei nyt"</string>
   <string name="action_ok">"OK"</string>
+  <string name="action_open_context_menu">"Avaa kontekstivalikko"</string>
   <string name="action_open_settings">"Asetukset"</string>
   <string name="action_open_with">"Avaa sovelluksessa"</string>
   <string name="action_pin">"Kiinnitä"</string>
@@ -117,8 +141,11 @@
   <string name="action_retry_decryption">"Yritä salauksen purkamista uudelleen"</string>
   <string name="action_save">"Tallenna"</string>
   <string name="action_search">"Hae"</string>
+  <string name="action_select_all">"Valitse kaikki"</string>
   <string name="action_send">"Lähetä"</string>
+  <string name="action_send_edited_message">"Lähetä muokattu viesti"</string>
   <string name="action_send_message">"Lähetä viesti"</string>
+  <string name="action_send_voice_message">"Lähetä ääniviesti"</string>
   <string name="action_share">"Jaa"</string>
   <string name="action_share_link">"Jaa linkki"</string>
   <string name="action_show">"Näytä"</string>
@@ -134,6 +161,7 @@
   <string name="action_tap_for_options">"Näytä vaihtoehdot napauttamalla"</string>
   <string name="action_try_again">"Yritä uudelleen"</string>
   <string name="action_unpin">"Poista kiinnitys"</string>
+  <string name="action_view">"Näytä"</string>
   <string name="action_view_in_timeline">"Näytä aikajanalla"</string>
   <string name="action_view_source">"Näytä lähde"</string>
   <string name="action_yes">"Kyllä"</string>
@@ -142,11 +170,17 @@
   <string name="banner_migrate_to_native_sliding_sync_title">"Päivitys saatavilla"</string>
   <string name="common_about">"Tietoa"</string>
   <string name="common_acceptable_use_policy">"Hyväksyttävän käytön käytäntö"</string>
+  <string name="common_add_account">"Lisää tili"</string>
+  <string name="common_add_another_account">"Lisää toinen tili"</string>
   <string name="common_adding_caption">"Lisätään kuvatekstiä"</string>
   <string name="common_advanced_settings">"Edistyneet asetukset"</string>
+  <string name="common_an_image">"kuva"</string>
   <string name="common_analytics">"Analytiikka"</string>
+  <string name="common_android_shortcuts_remove_reason_left_room">"Poistuit huoneesta"</string>
+  <string name="common_android_shortcuts_remove_reason_session_logged_out">"Sinut kirjattiin ulos istunnosta"</string>
   <string name="common_appearance">"Ulkoasu"</string>
   <string name="common_audio">"Ääni"</string>
+  <string name="common_beta">"Beeta"</string>
   <string name="common_blocked_users">"Estetyt käyttäjät"</string>
   <string name="common_bubbles">"Kuplat"</string>
   <string name="common_call_started">"Puhelu alkoi"</string>
@@ -156,9 +190,11 @@
   <string name="common_creating_room">"Luodaan huonetta…"</string>
   <string name="common_current_user_canceled_knock">"Pyyntö peruutettu"</string>
   <string name="common_current_user_left_room">"Poistuit huoneesta"</string>
+  <string name="common_current_user_left_space">"Poistuit tilasta"</string>
   <string name="common_current_user_rejected_invite">"Kutsu hylätty"</string>
   <string name="common_dark">"Tumma"</string>
   <string name="common_decryption_error">"Salauksen purkuvirhe"</string>
+  <string name="common_description">"Kuvaus"</string>
   <string name="common_developer_options">"Kehittäjän asetukset"</string>
   <string name="common_device_id">"Laitteen tunnus"</string>
   <string name="common_direct_chat">"Yksityinen keskustelu"</string>
@@ -193,6 +229,7 @@ Syy: %1$s."</string>
   <string name="common_install_apk_android">"Asenna APK"</string>
   <string name="common_invite_unknown_profile">"Tätä Matrix-tunnusta ei löytynyt, joten kutsu ei välttämättä mene perille."</string>
   <string name="common_leaving_room">"Poistutaan huoneesta"</string>
+  <string name="common_leaving_space">"Poistutaan tilasta"</string>
   <string name="common_light">"Vaalea"</string>
   <string name="common_line_copied_to_clipboard">"Rivi kopioitu leikepöydälle"</string>
   <string name="common_link_copied_to_clipboard">"Linkki kopioitu leikepöydälle"</string>
@@ -203,8 +240,8 @@ Syy: %1$s."</string>
     <item quantity="other">"%d muuta"</item>
   </plurals>
   <plurals name="common_member_count">
-    <item quantity="one">"%1$d jäsen"</item>
-    <item quantity="other">"%1$d jäsentä"</item>
+    <item quantity="one">"%1$d Jäsen"</item>
+    <item quantity="other">"%1$d Jäsentä"</item>
   </plurals>
   <string name="common_message">"Viesti"</string>
   <string name="common_message_actions">"Viestitoiminnot"</string>
@@ -215,6 +252,7 @@ Syy: %1$s."</string>
   <string name="common_name_and_id">"%1$s (%2$s)"</string>
   <string name="common_no_results">"Ei tuloksia"</string>
   <string name="common_no_room_name">"Nimetön huone"</string>
+  <string name="common_no_space_name">"Nimetön tila"</string>
   <string name="common_not_encrypted">"Ei salattu"</string>
   <string name="common_offline">"Ei yhteyttä"</string>
   <string name="common_open_source_licenses">"Avoimen lähdekoodin lisenssit"</string>
@@ -234,12 +272,21 @@ Syy: %1$s."</string>
     <item quantity="one">"%d ääni"</item>
     <item quantity="other">"%d ääntä"</item>
   </plurals>
+  <string name="common_preparing">"Valmistellaan…"</string>
   <string name="common_privacy_policy">"Tietosuojakäytäntö"</string>
+  <string name="common_private_room">"Yksityinen huone"</string>
+  <string name="common_private_space">"Yksityinen tila"</string>
+  <string name="common_public_room">"Julkinen huone"</string>
+  <string name="common_public_space">"Julkinen tila"</string>
   <string name="common_reaction">"Reaktio"</string>
   <string name="common_reactions">"Reaktiot"</string>
   <string name="common_reason">"Syy"</string>
   <string name="common_recovery_key">"Palautusavain"</string>
   <string name="common_refreshing">"Päivitetään…"</string>
+  <plurals name="common_replies">
+    <item quantity="one">"%1$d vastaus"</item>
+    <item quantity="other">"%1$d vastausta"</item>
+  </plurals>
   <string name="common_replying_to">"Vastataan käyttäjälle %1$s"</string>
   <string name="common_report_a_bug">"Ilmoita virheestä"</string>
   <string name="common_report_a_problem">"Ilmoita ongelmasta"</string>
@@ -248,6 +295,10 @@ Syy: %1$s."</string>
   <string name="common_room">"Huone"</string>
   <string name="common_room_name">"Huoneen nimi"</string>
   <string name="common_room_name_placeholder">"esim. projektisi nimi"</string>
+  <plurals name="common_rooms">
+    <item quantity="one">"%1$d Huone"</item>
+    <item quantity="other">"%1$d Huonetta"</item>
+  </plurals>
   <string name="common_saved_changes">"Muutokset tallennettu"</string>
   <string name="common_saving">"Tallennetaan"</string>
   <string name="common_screen_lock">"Näyttölukko"</string>
@@ -255,17 +306,27 @@ Syy: %1$s."</string>
   <string name="common_search_results">"Hakutulokset"</string>
   <string name="common_security">"Turvallisuus"</string>
   <string name="common_seen_by">"Nähneet henkilöt"</string>
+  <string name="common_select_account">"Valitse tili"</string>
   <string name="common_send_to">"Jaa"</string>
   <string name="common_sending">"Lähetetään…"</string>
   <string name="common_sending_failed">"Lähetys epäonnistui"</string>
   <string name="common_sent">"Lähetetty"</string>
+  <string name="common_sentence_delimiter">". "</string>
   <string name="common_server_not_supported">"Palvelin ei ole tuettu"</string>
+  <string name="common_server_unreachable">"Palvelimeen ei saada yhteyttä"</string>
   <string name="common_server_url">"Palvelimen osoite"</string>
   <string name="common_settings">"Asetukset"</string>
+  <string name="common_share_space">"Jaa tila"</string>
   <string name="common_shared_location">"Jaettu sijainti"</string>
+  <string name="common_shared_space">"Jaettu tila"</string>
   <string name="common_signing_out">"Kirjaudutaan ulos"</string>
   <string name="common_something_went_wrong">"Jokin meni pieleen"</string>
   <string name="common_something_went_wrong_message">"Kohtasimme ongelman. Yritä uudelleen."</string>
+  <string name="common_space">"Tila"</string>
+  <plurals name="common_spaces">
+    <item quantity="one">"%1$d Tila"</item>
+    <item quantity="other">"%1$d Tilaa"</item>
+  </plurals>
   <string name="common_starting_chat">"Aloitetaan keskustelua…"</string>
   <string name="common_sticker">"Tarra"</string>
   <string name="common_success">"Onnistui"</string>
@@ -296,6 +357,12 @@ Syy: %1$s."</string>
   <string name="common_verify_identity">"Vahvista identiteetti"</string>
   <string name="common_verify_user">"Vahvista käyttäjä"</string>
   <string name="common_video">"Video"</string>
+  <string name="common_video_quality_high">"Korkea laatu"</string>
+  <string name="common_video_quality_high_description">"Paras laatu, mutta suurempi tiedostokoko"</string>
+  <string name="common_video_quality_low">"Heikko laatu"</string>
+  <string name="common_video_quality_low_description">"Nopein lähetysnopeus ja pienin tiedostokoko"</string>
+  <string name="common_video_quality_standard">"Normaali laatu"</string>
+  <string name="common_video_quality_standard_description">"Tasapainotettu laatu ja lähetysnopeus"</string>
   <string name="common_voice_message">"Ääniviesti"</string>
   <string name="common_waiting">"Odotetaan…"</string>
   <string name="common_waiting_for_decryption_key">"Odotetaan viestiä"</string>
@@ -310,6 +377,10 @@ Syy: %1$s."</string>
 
 Haluatko varmasti jatkaa?"</string>
   <string name="dialog_confirm_link_title">"Tarkista tämä linkki"</string>
+  <string name="dialog_default_video_quality_selector_subtitle">"Valitse lähettämäsi videoiden oletuslaatu."</string>
+  <string name="dialog_default_video_quality_selector_title">"Videon lähetyslaatu"</string>
+  <string name="dialog_file_too_large_to_upload_subtitle">"Suurin sallittu tiedostokoko on: %1$s"</string>
+  <string name="dialog_file_too_large_to_upload_title">"Tiedostokoko on liian suuri lähetettäväksi"</string>
   <string name="dialog_room_reported">"Huone ilmoitettu"</string>
   <string name="dialog_room_reported_and_left">"Ilmoitettu ja poistuttu huoneesta"</string>
   <string name="dialog_title_confirmation">"Vahvistus"</string>
@@ -317,13 +388,19 @@ Haluatko varmasti jatkaa?"</string>
   <string name="dialog_title_success">"Onnistui"</string>
   <string name="dialog_title_warning">"Varoitus"</string>
   <string name="dialog_unsaved_changes_description_android">"Muutoksiasi ei ole tallennettu. Haluatko varmasti palata takaisin?"</string>
-  <string name="dialog_unsaved_changes_title">"Tallenna muutokset?"</string>
+  <string name="dialog_unsaved_changes_title">"Tallennetaanko muutokset?"</string>
+  <string name="dialog_video_quality_selector_subtitle_file_size">"Suurin sallittu tiedostokoko on: %1$s"</string>
+  <string name="dialog_video_quality_selector_subtitle_no_file_size">"Valitse lähetettävän videon laatu."</string>
+  <string name="dialog_video_quality_selector_title">"Valitse videon lähetyslaatu"</string>
+  <string name="emoji_picker_search_placeholder">"Etsi emojeja"</string>
+  <string name="error_account_already_logged_in">"Olet jo kirjautuneena tälle laitteelle käyttäjällä %1$s."</string>
   <string name="error_account_creation_not_possible">"Kotipalvelimesi on päivitettävä tukemaan Matrix Authentication Serviceä ja tilin luomista."</string>
   <string name="error_failed_creating_the_permalink">"Pysyvän linkin luominen epäonnistui"</string>
   <string name="error_failed_loading_map">"%1$s ei pystynyt lataamaan karttaa. Yritä myöhemmin uudelleen."</string>
   <string name="error_failed_loading_messages">"Viestien lataaminen epäonnistui"</string>
   <string name="error_failed_locating_user">"%1$s ei päässyt käsiksi sijaintiisi. Yritä myöhemmin uudelleen."</string>
   <string name="error_failed_uploading_voice_message">"Ääniviestin lähettäminen epäonnistui."</string>
+  <string name="error_invalid_invite">"Huone ei ole enää olemassa tai kutsu ei ole enää voimassa."</string>
   <string name="error_message_not_found">"Viestiä ei löytynyt"</string>
   <string name="error_missing_location_auth_android">"%1$s -sovelluksella ei ole lupaa sijaintiisi. Voit sallia sen asetuksista."</string>
   <string name="error_missing_location_rationale_android">"%1$s -sovelluksella ei ole lupaa sijaintiisi. Voit sallia sen painamalla alla olevaa nappia."</string>
@@ -333,6 +410,7 @@ Haluatko varmasti jatkaa?"</string>
   <string name="error_room_address_invalid_symbols">"Jotkin merkit eivät ole sallittuja. Vain kirjaimet, numerot ja seuraavat symbolit ovat tuettuja ! $ &amp; ‘ ( ) * + / ; = ? @ [ ] - . _"</string>
   <string name="error_some_messages_have_not_been_sent">"Joitakin viestejä ei ole lähetetty"</string>
   <string name="error_unknown">"Anteeksi, tapahtui virhe"</string>
+  <string name="event_shield_mismatched_sender">"Tapahtuman lähettäjä ei vastaa sitä lähettäneen laitteen omistajaa."</string>
   <string name="event_shield_reason_authenticity_not_guaranteed">"Tämän salatun viestin aitoutta ei voida taata tällä laitteella."</string>
   <string name="event_shield_reason_previously_verified">"Aiemmin vahvistetun käyttäjän salaama."</string>
   <string name="event_shield_reason_sent_in_clear">"Ei salattu."</string>
@@ -343,10 +421,12 @@ Haluatko varmasti jatkaa?"</string>
   <string name="invite_friends_text">"Hei, keskustele kanssani %1$s -sovelluksessa: %2$s"</string>
   <string name="login_initial_device_name_android">"%1$s Android"</string>
   <string name="preference_rageshake">"Raivostunut ravistaminen ilmoittaa virheestä"</string>
+  <string name="screen_bug_report_a11y_screenshot">"Näyttökuva"</string>
+  <string name="screen_create_poll_option_accessibility_label">"%1$s: %2$s"</string>
+  <string name="screen_create_poll_options_section_title">"Vaihtoehdot"</string>
+  <string name="screen_create_poll_remove_accessibility_label">"Poista %1$s"</string>
+  <string name="screen_create_poll_settings_section_title">"Asetukset"</string>
   <string name="screen_media_picker_error_failed_selection">"Median valinta epäonnistui, yritä uudelleen."</string>
-  <string name="screen_media_upload_preview_caption_warning">"Kuvatekstit eivät välttämättä näy ihmisille, jotka käyttävät vanhempia sovelluksia."</string>
-  <string name="screen_media_upload_preview_error_failed_processing">"Median käsittely epäonnistui, yritä uudelleen."</string>
-  <string name="screen_media_upload_preview_error_failed_sending">"Median lähettäminen epäonnistui, yritä uudelleen."</string>
   <string name="screen_pinned_timeline_empty_state_description">"Paina viestiä ja valitse “%1$s” lisätäksesi sen tänne."</string>
   <string name="screen_pinned_timeline_empty_state_headline">"Kiinnitä tärkeät viestit, jotta ne löytyvät helposti."</string>
   <plurals name="screen_pinned_timeline_screen_title">
@@ -364,9 +444,13 @@ Haluatko varmasti jatkaa?"</string>
   <string name="screen_resolve_send_failure_unsigned_device_title">"Viestiäsi ei lähetetty, koska %1$s ei ole vahvistanut kaikkia laitteitaan."</string>
   <string name="screen_resolve_send_failure_you_unsigned_device_subtitle">"Yksi tai useampi laitteistasi on vahvistamaton. Voit lähettää viestin silti tai peruuttaa sen toistaiseksi ja yrittää uudelleen myöhemmin, kun olet vahvistanut kaikki laitteesi."</string>
   <string name="screen_resolve_send_failure_you_unsigned_device_title">"Viestiäsi ei lähetetty, koska et ole vahvistanut yhtä tai useampaa laitettasi."</string>
+  <string name="screen_room_change_role_administrators_or_owners_title">"Muokkaa ylläpitäjiä tai omistajia"</string>
   <string name="screen_room_error_failed_processing_media">"Median käsittely epäonnistui, yritä uudelleen."</string>
   <string name="screen_room_error_failed_retrieving_user_details">"Käyttäjän tietojen hakeminen epäonnistui"</string>
   <string name="screen_room_event_pill">"Viesti huoneessa %1$s"</string>
+  <string name="screen_room_grouped_state_events_expand">"Laajenna"</string>
+  <string name="screen_room_grouped_state_events_reduce">"Pienennä"</string>
+  <string name="screen_room_permalink_same_room_android">"Katselet jo tätä huonetta!"</string>
   <string name="screen_room_pinned_banner_indicator">"%1$s / %2$s"</string>
   <string name="screen_room_pinned_banner_indicator_description">"Kiinnitetty viesti %1$s"</string>
   <string name="screen_room_pinned_banner_loading_description">"Viestiä ladataan…"</string>
@@ -378,6 +462,10 @@ Haluatko varmasti jatkaa?"</string>
   <string name="screen_share_open_google_maps">"Avaa Google Mapsissa"</string>
   <string name="screen_share_open_osm_maps">"Avaa OpenStreetMapissa"</string>
   <string name="screen_share_this_location_action">"Jaa tämä sijainti"</string>
+  <string name="screen_space_list_description">"Luomasi tai liittymäsi tilat."</string>
+  <string name="screen_space_list_details">"%1$s • %2$s"</string>
+  <string name="screen_space_list_parent_space">"%1$s tila"</string>
+  <string name="screen_space_list_title">"Tilat"</string>
   <string name="screen_timeline_item_menu_send_failure_changed_identity">"Viestiä ei lähetetty, koska käyttäjän %1$s vahvistettu identiteetti nollattiin."</string>
   <string name="screen_timeline_item_menu_send_failure_unsigned_device">"Viestiä ei lähetetty, koska %1$s ei ole vahvistanut kaikkia laitteitaan."</string>
   <string name="screen_timeline_item_menu_send_failure_you_unsigned_device">"Viestiä ei lähetetty, koska et ole vahvistanut yhtä tai useampaa laitettasi."</string>

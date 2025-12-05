@@ -23,6 +23,7 @@ open class SecureBackupSetupStateProvider : PreviewParameterProvider<SecureBacku
                 setupState = SetupState.CreatedAndSaved(aFormattedRecoveryKey()),
                 showSaveConfirmationDialog = true,
             ),
+            aSecureBackupSetupState(setupState = SetupState.Error(Exception("Test error"))),
             // Add other states here
         )
 }
@@ -42,6 +43,7 @@ private fun SetupState.toRecoveryKeyViewState(): RecoveryKeyViewState {
     return RecoveryKeyViewState(
         recoveryKeyUserStory = RecoveryKeyUserStory.Setup,
         formattedRecoveryKey = recoveryKey(),
+        displayTextFieldContents = true,
         inProgress = this is SetupState.Creating,
     )
 }

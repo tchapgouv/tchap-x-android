@@ -28,6 +28,7 @@ sealed interface TimelineItemEventContentWithAttachment :
     TimelineItemEventMutableContent {
     val scanState: BwiContentScannerScanState
     val filename: String
+    val fileSize: Long?
     val caption: String?
     val formattedCaption: CharSequence?
     val mediaSource: MediaSource
@@ -82,7 +83,7 @@ fun TimelineItemEventContent.canReact(): Boolean =
         is TimelineItemStateContent,
         is TimelineItemRedactedContent,
         is TimelineItemLegacyCallInviteContent,
-        is TimelineItemCallNotifyContent,
+        is TimelineItemRtcNotificationContent,
         TimelineItemUnknownContent -> false
     }
 

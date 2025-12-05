@@ -40,6 +40,7 @@ fun UnresolvedUserRow(
     avatarData: AvatarData,
     id: String,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     Row(
         modifier = modifier
@@ -62,7 +63,7 @@ fun UnresolvedUserRow(
                 text = id.toUserDisplayName(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = ElementTheme.colors.textPrimary,
+                color = if (enabled) ElementTheme.colors.textPrimary else ElementTheme.colors.textDisabled,
                 style = ElementTheme.typography.fontBodyLgMedium,
             )
 
@@ -79,11 +80,11 @@ fun UnresolvedUserRow(
                         .size(18.dp)
                         .align(Alignment.Top)
                         .padding(2.dp),
-                    tint = ElementTheme.colors.iconCriticalPrimary,
+                    tint = if (enabled) ElementTheme.colors.iconCriticalPrimary else ElementTheme.colors.iconDisabled,
                 )
                 Text(
                     text = stringResource(CommonStrings.common_invite_unknown_profile),
-                    color = ElementTheme.colors.textSecondary,
+                    color = if (enabled) ElementTheme.colors.textSecondary else ElementTheme.colors.textDisabled,
                     style = ElementTheme.typography.fontBodySmRegular.copy(lineHeight = 16.sp),
                 )
             }
@@ -95,5 +96,8 @@ fun UnresolvedUserRow(
 @Composable
 internal fun UnresolvedUserRowPreview() = ElementThemedPreview {
     val matrixUser = aMatrixUser()
-    UnresolvedUserRow(matrixUser.getAvatarData(size = AvatarSize.UserListItem), matrixUser.userId.value)
+    Column {
+        UnresolvedUserRow(matrixUser.getAvatarData(size = AvatarSize.UserListItem), matrixUser.userId.value)
+        UnresolvedUserRow(matrixUser.getAvatarData(size = AvatarSize.UserListItem), matrixUser.userId.value, enabled = false)
+    }
 }

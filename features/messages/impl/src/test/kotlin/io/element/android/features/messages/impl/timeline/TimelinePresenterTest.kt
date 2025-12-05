@@ -29,9 +29,12 @@ import io.element.android.features.poll.api.actions.SendPollResponseAction
 import io.element.android.features.poll.test.actions.FakeEndPollAction
 import io.element.android.features.poll.test.actions.FakeSendPollResponseAction
 import io.element.android.features.roomcall.api.aStandByCallState
+import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.RoomId
+import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.matrix.api.core.UniqueId
+import io.element.android.libraries.matrix.api.core.asEventId
 import io.element.android.libraries.matrix.api.room.RoomMembersState
 import io.element.android.libraries.matrix.api.room.tombstone.PredecessorRoom
 import io.element.android.libraries.matrix.api.timeline.MatrixTimelineItem
@@ -45,6 +48,8 @@ import io.element.android.libraries.matrix.api.timeline.item.virtual.VirtualTime
 import io.element.android.libraries.matrix.test.AN_EVENT_ID
 import io.element.android.libraries.matrix.test.AN_EVENT_ID_2
 import io.element.android.libraries.matrix.test.A_ROOM_ID
+import io.element.android.libraries.matrix.test.A_THREAD_ID
+import io.element.android.libraries.matrix.test.A_THREAD_ID_2
 import io.element.android.libraries.matrix.test.A_UNIQUE_ID
 import io.element.android.libraries.matrix.test.A_UNIQUE_ID_2
 import io.element.android.libraries.matrix.test.A_USER_ID
@@ -562,7 +567,10 @@ class TimelinePresenterTest {
         val room = FakeJoinedRoom(
             liveTimeline = liveTimeline,
             createTimelineResult = { Result.success(detachedTimeline) },
-            baseRoom = FakeBaseRoom(canUserSendMessageResult = { _, _ -> Result.success(true) }),
+            baseRoom = FakeBaseRoom(
+                canUserSendMessageResult = { _, _ -> Result.success(true) },
+                threadRootIdForEventResult = { _ -> Result.success(null) },
+            ),
         )
         val presenter = createTimelinePresenter(
             room = room,
@@ -640,7 +648,10 @@ class TimelinePresenterTest {
                     timelineItems = flowOf(emptyList()),
                 ),
                 createTimelineResult = { Result.failure(RuntimeException("An error")) },
-                baseRoom = FakeBaseRoom(canUserSendMessageResult = { _, _ -> Result.success(true) }),
+                baseRoom = FakeBaseRoom(
+                    canUserSendMessageResult = { _, _ -> Result.success(true) },
+                    threadRootIdForEventResult = { _ -> Result.success(null) },
+                ),
             )
         )
         moleculeFlow(RecompositionMode.Immediate) {
@@ -663,6 +674,246 @@ class TimelinePresenterTest {
             awaitItem().also { state ->
                 assertThat(state.focusRequestState).isEqualTo(FocusRequestState.None)
             }
+        }
+    }
+
+    @Test
+    fun `present - focus on event in a thread opens the thread`() = runTest {
+        val threadId = A_THREAD_ID
+        val detachedTimeline = FakeTimeline(
+            mode = Timeline.Mode.FocusedOnEvent(AN_EVENT_ID_2),
+            timelineItems = flowOf(
+                listOf(
+                    MatrixTimelineItem.Event(
+                        uniqueId = A_UNIQUE_ID,
+                        event = anEventTimelineItem(),
+                    )
+                )
+            )
+        )
+        val liveTimeline = FakeTimeline(
+            timelineItems = flowOf(emptyList())
+        )
+        val room = FakeJoinedRoom(
+            liveTimeline = liveTimeline,
+            createTimelineResult = { Result.success(detachedTimeline) },
+            baseRoom = FakeBaseRoom(
+                canUserSendMessageResult = { _, _ -> Result.success(true) },
+                threadRootIdForEventResult = { _ -> Result.success(threadId) },
+            ),
+        )
+        val openThreadLambda = lambdaRecorder { _: ThreadId, _: EventId? -> }
+        val navigator = FakeMessagesNavigator(onOpenThreadLambda = openThreadLambda)
+        val presenter = createTimelinePresenter(
+            room = room,
+            timeline = liveTimeline,
+            messagesNavigator = navigator,
+        )
+        moleculeFlow(RecompositionMode.Immediate) {
+            presenter.present()
+        }.test {
+            val initialState = awaitFirstItem()
+            initialState.eventSink.invoke(TimelineEvents.FocusOnEvent(AN_EVENT_ID))
+
+            awaitItem().also { state ->
+                assertThat(state.focusedEventId).isEqualTo(AN_EVENT_ID)
+                assertThat(state.focusRequestState).isEqualTo(FocusRequestState.Requested(AN_EVENT_ID, Duration.ZERO))
+            }
+
+            advanceUntilIdle()
+
+            assertThat(awaitItem().focusRequestState).isEqualTo(FocusRequestState.Loading(AN_EVENT_ID))
+
+            // The live timeline focuses in the thread root
+            assertThat(awaitItem().focusRequestState).isEqualTo(FocusRequestState.Success(A_THREAD_ID.asEventId()))
+
+            // The thread is opened
+            openThreadLambda.assertions()
+                .isCalledOnce()
+                .with(
+                    value(threadId),
+                    value(AN_EVENT_ID),
+                )
+        }
+    }
+
+    @Test
+    fun `present - focus on event in a thread when in the same thread just moves the focus`() = runTest {
+        val threadId = A_THREAD_ID
+        val detachedTimeline = FakeTimeline(
+            mode = Timeline.Mode.FocusedOnEvent(AN_EVENT_ID_2),
+            timelineItems = flowOf(
+                listOf(
+                    MatrixTimelineItem.Event(
+                        uniqueId = A_UNIQUE_ID,
+                        event = anEventTimelineItem(),
+                    )
+                )
+            )
+        )
+        val liveTimeline = FakeTimeline(
+            mode = Timeline.Mode.Thread(threadId),
+            timelineItems = flowOf(emptyList())
+        )
+        val room = FakeJoinedRoom(
+            liveTimeline = liveTimeline,
+            createTimelineResult = { Result.success(detachedTimeline) },
+            baseRoom = FakeBaseRoom(
+                canUserSendMessageResult = { _, _ -> Result.success(true) },
+                threadRootIdForEventResult = { _ -> Result.success(threadId) },
+            ),
+        )
+        val openThreadLambda = lambdaRecorder { _: ThreadId, _: EventId? -> }
+        val navigator = FakeMessagesNavigator(onOpenThreadLambda = openThreadLambda)
+        val presenter = createTimelinePresenter(
+            room = room,
+            timeline = liveTimeline,
+            messagesNavigator = navigator,
+        )
+        moleculeFlow(RecompositionMode.Immediate) {
+            presenter.present()
+        }.test {
+            val initialState = awaitFirstItem()
+            initialState.eventSink.invoke(TimelineEvents.FocusOnEvent(AN_EVENT_ID))
+
+            awaitItem().also { state ->
+                assertThat(state.focusedEventId).isEqualTo(AN_EVENT_ID)
+                assertThat(state.focusRequestState).isEqualTo(FocusRequestState.Requested(AN_EVENT_ID, Duration.ZERO))
+            }
+
+            advanceUntilIdle()
+
+            assertThat(awaitItem().focusRequestState).isEqualTo(FocusRequestState.Loading(AN_EVENT_ID))
+
+            // The live timeline focuses in the event directly since we are already in the thread
+            assertThat(awaitItem().focusRequestState).isEqualTo(FocusRequestState.Success(AN_EVENT_ID))
+
+            // The thread is not opened again
+            openThreadLambda.assertions().isNeverCalled()
+        }
+    }
+
+    @Test
+    fun `present - focus on event in a thread when in a different thread opens the new thread`() = runTest {
+        val currentThreadId = A_THREAD_ID
+        val detachedTimeline = FakeTimeline(
+            mode = Timeline.Mode.FocusedOnEvent(AN_EVENT_ID_2),
+            timelineItems = flowOf(
+                listOf(
+                    MatrixTimelineItem.Event(
+                        uniqueId = A_UNIQUE_ID,
+                        event = anEventTimelineItem(),
+                    )
+                )
+            )
+        )
+        val liveTimeline = FakeTimeline(
+            mode = Timeline.Mode.Thread(currentThreadId),
+            timelineItems = flowOf(emptyList())
+        )
+        val room = FakeJoinedRoom(
+            liveTimeline = liveTimeline,
+            createTimelineResult = { Result.success(detachedTimeline) },
+            baseRoom = FakeBaseRoom(
+                canUserSendMessageResult = { _, _ -> Result.success(true) },
+                // Use a different thread id
+                threadRootIdForEventResult = { _ -> Result.success(A_THREAD_ID_2) },
+            ),
+        )
+        val openThreadLambda = lambdaRecorder { _: ThreadId, _: EventId? -> }
+        val navigator = FakeMessagesNavigator(onOpenThreadLambda = openThreadLambda)
+        val presenter = createTimelinePresenter(
+            room = room,
+            timeline = liveTimeline,
+            messagesNavigator = navigator,
+        )
+        moleculeFlow(RecompositionMode.Immediate) {
+            presenter.present()
+        }.test {
+            val initialState = awaitFirstItem()
+            initialState.eventSink.invoke(TimelineEvents.FocusOnEvent(AN_EVENT_ID))
+
+            awaitItem().also { state ->
+                assertThat(state.focusedEventId).isEqualTo(AN_EVENT_ID)
+                assertThat(state.focusRequestState).isEqualTo(FocusRequestState.Requested(AN_EVENT_ID, Duration.ZERO))
+            }
+
+            advanceUntilIdle()
+
+            assertThat(awaitItem().focusRequestState).isEqualTo(FocusRequestState.Loading(AN_EVENT_ID))
+
+            // The live timeline focuses in the event directly since we are already in the thread
+            assertThat(awaitItem().focusRequestState).isEqualTo(FocusRequestState.Success(A_THREAD_ID_2.asEventId()))
+
+            // The other thread is opened
+            openThreadLambda.assertions()
+                .isCalledOnce()
+                .with(
+                    value(A_THREAD_ID_2),
+                    value(AN_EVENT_ID),
+                )
+        }
+    }
+
+    @Test
+    fun `present - focus on event in a the room while in a thread of that room opens the room`() = runTest {
+        val detachedTimeline = FakeTimeline(
+            mode = Timeline.Mode.FocusedOnEvent(AN_EVENT_ID_2),
+            timelineItems = flowOf(
+                listOf(
+                    MatrixTimelineItem.Event(
+                        uniqueId = A_UNIQUE_ID,
+                        event = anEventTimelineItem(),
+                    )
+                )
+            )
+        )
+        val liveTimeline = FakeTimeline(
+            mode = Timeline.Mode.Thread(A_THREAD_ID),
+            timelineItems = flowOf(emptyList())
+        )
+        val room = FakeJoinedRoom(
+            liveTimeline = liveTimeline,
+            createTimelineResult = { Result.success(detachedTimeline) },
+            baseRoom = FakeBaseRoom(
+                canUserSendMessageResult = { _, _ -> Result.success(true) },
+                // The event is in the main timeline, not in a thread
+                threadRootIdForEventResult = { _ -> Result.success(null) },
+            ),
+        )
+        val openRoomLambda = lambdaRecorder { _: RoomId, _: EventId?, _: List<String> -> }
+        val navigator = FakeMessagesNavigator(onNavigateToRoomLambda = openRoomLambda)
+        val presenter = createTimelinePresenter(
+            room = room,
+            timeline = liveTimeline,
+            messagesNavigator = navigator,
+        )
+        moleculeFlow(RecompositionMode.Immediate) {
+            presenter.present()
+        }.test {
+            val initialState = awaitFirstItem()
+            initialState.eventSink.invoke(TimelineEvents.FocusOnEvent(AN_EVENT_ID))
+
+            awaitItem().also { state ->
+                assertThat(state.focusedEventId).isEqualTo(AN_EVENT_ID)
+                assertThat(state.focusRequestState).isEqualTo(FocusRequestState.Requested(AN_EVENT_ID, Duration.ZERO))
+            }
+
+            advanceUntilIdle()
+
+            assertThat(awaitItem().focusRequestState).isEqualTo(FocusRequestState.Loading(AN_EVENT_ID))
+
+            // The focus state will reset
+            assertThat(awaitItem().focusRequestState).isEqualTo(FocusRequestState.None)
+
+            // The room is opened again
+            openRoomLambda.assertions()
+                .isCalledOnce()
+                .with(
+                    value(room.roomId),
+                    value(AN_EVENT_ID),
+                    value(emptyList<String>())
+                )
         }
     }
 
@@ -738,11 +989,7 @@ class TimelinePresenterTest {
     @Test
     fun `present - timeline room info includes predecessor room when room has predecessor`() = runTest {
         val predecessorRoomId = RoomId("!predecessor:server.org")
-        val predecessorEventId = EventId("\$predecessorEvent:server.org")
-        val predecessorRoom = PredecessorRoom(
-            roomId = predecessorRoomId,
-            lastEventId = predecessorEventId
-        )
+        val predecessorRoom = PredecessorRoom(roomId = predecessorRoomId)
 
         val room = FakeJoinedRoom(
             baseRoom = FakeBaseRoom(
@@ -758,7 +1005,6 @@ class TimelinePresenterTest {
             val initialState = awaitFirstItem()
             assertThat(initialState.timelineRoomInfo.predecessorRoom).isNotNull()
             assertThat(initialState.timelineRoomInfo.predecessorRoom?.roomId).isEqualTo(predecessorRoomId)
-            assertThat(initialState.timelineRoomInfo.predecessorRoom?.lastEventId).isEqualTo(predecessorEventId)
         }
     }
 
@@ -786,18 +1032,21 @@ class TimelinePresenterTest {
                 canUserSendMessageResult = { _, _ -> Result.success(true) },
             ),
         )
-        val onNavigateToRoomLambda = lambdaRecorder<RoomId, Unit> {}
+        val onNavigateToRoomLambda = lambdaRecorder<RoomId, EventId?, List<String>, Unit> { _, _, _ -> }
         val navigator = FakeMessagesNavigator(
             onNavigateToRoomLambda = onNavigateToRoomLambda
         )
         val presenter = createTimelinePresenter(room = room, messagesNavigator = navigator)
         presenter.test {
             val initialState = awaitFirstItem()
-            initialState.eventSink(TimelineEvents.NavigateToRoom(A_ROOM_ID))
+            initialState.eventSink(TimelineEvents.NavigateToPredecessorOrSuccessorRoom(A_ROOM_ID))
             assert(onNavigateToRoomLambda)
                 .isCalledOnce()
                 .with(
-                    value(A_ROOM_ID)
+                    value(A_ROOM_ID),
+                    // No event id when navigating to a successor/predecessor room
+                    value(null),
+                    value(emptyList<String>())
                 )
         }
     }
@@ -819,6 +1068,7 @@ class TimelinePresenterTest {
         sessionPreferencesStore: InMemorySessionPreferencesStore = InMemorySessionPreferencesStore(),
         timelineItemIndexer: TimelineItemIndexer = TimelineItemIndexer(),
         markAsFullyRead: MarkAsFullyRead = FakeMarkAsFullyRead(),
+        featureFlagService: FakeFeatureFlagService = FakeFeatureFlagService(),
     ): TimelinePresenter {
         return TimelinePresenter(
             timelineItemsFactoryCreator = aTimelineItemsFactoryCreator(),
@@ -831,11 +1081,12 @@ class TimelinePresenterTest {
             sendPollResponseAction = sendPollResponseAction,
             sessionPreferencesStore = sessionPreferencesStore,
             timelineItemIndexer = timelineItemIndexer,
-            timelineController = TimelineController(room),
+            timelineController = TimelineController(room, timeline),
             resolveVerifiedUserSendFailurePresenter = { aResolveVerifiedUserSendFailureState() },
             typingNotificationPresenter = { aTypingNotificationState() },
             roomCallStatePresenter = { aStandByCallState() },
             markAsFullyRead = markAsFullyRead,
+            featureFlagService = featureFlagService,
         )
     }
 }

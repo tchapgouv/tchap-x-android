@@ -11,12 +11,10 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,27 +25,24 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import io.element.android.compound.theme.ElementTheme
-import io.element.android.compound.tokens.generated.CompoundIcons
+import io.element.android.features.messages.api.timeline.voicemessages.composer.VoiceMessageComposerEvents
 import io.element.android.features.messages.impl.actionlist.ActionListEvents
 import io.element.android.features.messages.impl.actionlist.ActionListView
 import io.element.android.features.messages.impl.actionlist.model.TimelineItemAction
@@ -65,7 +60,6 @@ import io.element.android.features.messages.impl.pinned.banner.PinnedMessagesBan
 import io.element.android.features.messages.impl.timeline.FOCUS_ON_PINNED_EVENT_DEBOUNCE_DURATION_IN_MILLIS
 import io.element.android.features.messages.impl.timeline.TimelineEvents
 import io.element.android.features.messages.impl.timeline.TimelineView
-import io.element.android.features.messages.impl.timeline.components.CallMenuItem
 import io.element.android.features.messages.impl.timeline.components.customreaction.CustomReactionBottomSheet
 import io.element.android.features.messages.impl.timeline.components.customreaction.CustomReactionEvents
 import io.element.android.features.messages.impl.timeline.components.reactionsummary.ReactionSummaryEvents
@@ -73,30 +67,23 @@ import io.element.android.features.messages.impl.timeline.components.reactionsum
 import io.element.android.features.messages.impl.timeline.components.receipt.bottomsheet.ReadReceiptBottomSheet
 import io.element.android.features.messages.impl.timeline.components.receipt.bottomsheet.ReadReceiptBottomSheetEvents
 import io.element.android.features.messages.impl.timeline.model.TimelineItem
-import io.element.android.features.messages.impl.voicemessages.composer.VoiceMessageComposerEvents
+import io.element.android.features.messages.impl.topbars.MessagesViewTopBar
+import io.element.android.features.messages.impl.topbars.ThreadTopBar
 import io.element.android.features.messages.impl.voicemessages.composer.VoiceMessagePermissionRationaleDialog
 import io.element.android.features.messages.impl.voicemessages.composer.VoiceMessageSendingFailedDialog
 import io.element.android.features.networkmonitor.api.ui.ConnectivityIndicatorView
-import io.element.android.features.roomcall.api.RoomCallState
-import io.element.android.features.roomdetails.impl.BadgeList
-import io.element.android.features.roomdetails.impl.RoomBadge
 import io.element.android.libraries.androidutils.ui.hideKeyboard
 import io.element.android.libraries.designsystem.atomic.molecules.ComposerAlertMolecule
 import io.element.android.libraries.designsystem.components.ExpandableBottomSheetLayout
-import io.element.android.libraries.designsystem.components.avatar.Avatar
-import io.element.android.libraries.designsystem.components.avatar.AvatarData
-import io.element.android.libraries.designsystem.components.avatar.AvatarType
-import io.element.android.libraries.designsystem.components.button.BackButton
+import io.element.android.libraries.designsystem.components.ExpandableBottomSheetLayoutState
 import io.element.android.libraries.designsystem.components.dialogs.ConfirmationDialog
 import io.element.android.libraries.designsystem.components.rememberExpandableBottomSheetLayoutState
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.text.toAnnotatedString
 import io.element.android.libraries.designsystem.theme.components.BottomSheetDragHandle
-import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.Scaffold
 import io.element.android.libraries.designsystem.theme.components.Text
-import io.element.android.libraries.designsystem.theme.components.TopAppBar
 import io.element.android.libraries.designsystem.utils.HideKeyboardWhenDisposed
 import io.element.android.libraries.designsystem.utils.KeepScreenOn
 import io.element.android.libraries.designsystem.utils.OnLifecycleEvent
@@ -107,11 +94,11 @@ import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityState
 import io.element.android.libraries.matrix.api.room.tombstone.SuccessorRoom
+import io.element.android.libraries.matrix.api.timeline.Timeline
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.textcomposer.model.TextEditorState
 import io.element.android.libraries.ui.strings.CommonStrings
 import io.element.android.wysiwyg.link.Link
-import kotlinx.collections.immutable.ImmutableList
 import timber.log.Timber
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -198,18 +185,28 @@ fun MessagesView(
                 topBar = {
                     Column {
                         ConnectivityIndicatorView(isOnline = state.hasNetworkConnection)
-                        MessagesViewTopBar(
-                            roomBadges = state.roomBadges,
-                            roomName = state.roomName,
-                            roomAvatar = state.roomAvatar,
-                            isTombstoned = state.isTombstoned,
-                            heroes = state.heroes,
-                            roomCallState = state.roomCallState,
-                            dmUserIdentityState = state.dmUserVerificationState,
-                            onBackClick = { hidingKeyboard { onBackClick() } },
-                            onRoomDetailsClick = { hidingKeyboard { onRoomDetailsClick() } },
-                            onJoinCallClick = onJoinCallClick,
-                        )
+                        if (state.timelineState.timelineMode is Timeline.Mode.Thread) {
+                            ThreadTopBar(
+                                roomName = state.roomName,
+                                roomAvatarData = state.roomAvatar,
+                                heroes = state.heroes,
+                                isTombstoned = state.isTombstoned,
+                                onBackClick = onBackClick,
+                            )
+                        } else {
+                            MessagesViewTopBar(
+                                roomBadges = state.roomBadges,
+                                roomName = state.roomName,
+                                roomAvatar = state.roomAvatar,
+                                isTombstoned = state.isTombstoned,
+                                heroes = state.heroes,
+                                roomCallState = state.roomCallState,
+                                dmUserIdentityState = state.dmUserVerificationState,
+                                onBackClick = { hidingKeyboard { onBackClick() } },
+                                onRoomDetailsClick = { hidingKeyboard { onRoomDetailsClick() } },
+                                onJoinCallClick = onJoinCallClick,
+                            )
+                        }
                     }
                 },
                 content = { padding ->
@@ -282,12 +279,30 @@ fun MessagesView(
                 state = state,
                 onLinkClick = { url, customTab -> onLinkClick(url, customTab) },
                 onRoomSuccessorClick = { roomId ->
-                    state.timelineState.eventSink(TimelineEvents.NavigateToRoom(roomId = roomId))
+                    state.timelineState.eventSink(TimelineEvents.NavigateToPredecessorOrSuccessorRoom(roomId = roomId))
                 },
             )
         },
         sheetDragHandle = if (state.composerState.showTextFormatting) {
-            @Composable { BottomSheetDragHandle() }
+            @Composable { toggleAction ->
+                val expandA11yLabel = stringResource(CommonStrings.a11y_expand_message_text_field)
+                val collapseA11yLabel = stringResource(CommonStrings.a11y_collapse_message_text_field)
+                BottomSheetDragHandle(
+                    modifier = Modifier.semantics {
+                        role = Role.Button
+
+                        // Accessibility action to toggle the bottom sheet state
+                        val label = when (expandableState.position) {
+                            ExpandableBottomSheetLayoutState.Position.COLLAPSED, ExpandableBottomSheetLayoutState.Position.DRAGGING -> expandA11yLabel
+                            ExpandableBottomSheetLayoutState.Position.EXPANDED -> collapseA11yLabel
+                        }
+                        onClick(label) {
+                            toggleAction()
+                            true
+                        }
+                    }
+                )
+            }
         } else {
             @Composable {}
         },
@@ -381,7 +396,7 @@ private fun MessagesViewContent(
             enableTextFormatting = state.enableTextFormatting,
         )
 
-        if (state.enableVoiceMessages && state.voiceMessageComposerState.showPermissionRationaleDialog) {
+        if (state.voiceMessageComposerState.showPermissionRationaleDialog) {
             VoiceMessagePermissionRationaleDialog(
                 onContinue = {
                     state.voiceMessageComposerState.eventSink(VoiceMessageComposerEvents.AcceptPermissionRationale)
@@ -392,7 +407,7 @@ private fun MessagesViewContent(
                 appName = state.appName
             )
         }
-        if (state.enableVoiceMessages && state.voiceMessageComposerState.showSendFailureDialog) {
+        if (state.voiceMessageComposerState.showSendFailureDialog) {
             VoiceMessageSendingFailedDialog(
                 onDismiss = { state.voiceMessageComposerState.eventSink(VoiceMessageComposerEvents.DismissSendFailureDialog) },
             )
@@ -418,23 +433,26 @@ private fun MessagesViewContent(
                 onJoinCallClick = onJoinCallClick,
                 nestedScrollConnection = scrollBehavior.nestedScrollConnection,
             )
-            AnimatedVisibility(
-                visible = state.pinnedMessagesBannerState is PinnedMessagesBannerState.Visible && scrollBehavior.isVisible,
-                enter = expandVertically(),
-                exit = shrinkVertically(),
-            ) {
-                fun focusOnPinnedEvent(eventId: EventId) {
-                    state.timelineState.eventSink(
-                        TimelineEvents.FocusOnEvent(eventId = eventId, debounce = FOCUS_ON_PINNED_EVENT_DEBOUNCE_DURATION_IN_MILLIS.milliseconds)
+
+            if (state.timelineState.timelineMode !is Timeline.Mode.Thread) {
+                AnimatedVisibility(
+                    visible = state.pinnedMessagesBannerState is PinnedMessagesBannerState.Visible && scrollBehavior.isVisible,
+                    enter = expandVertically(),
+                    exit = shrinkVertically(),
+                ) {
+                    fun focusOnPinnedEvent(eventId: EventId) {
+                        state.timelineState.eventSink(
+                            TimelineEvents.FocusOnEvent(eventId = eventId, debounce = FOCUS_ON_PINNED_EVENT_DEBOUNCE_DURATION_IN_MILLIS.milliseconds)
+                        )
+                    }
+                    PinnedMessagesBannerView(
+                        state = state.pinnedMessagesBannerState,
+                        onClick = ::focusOnPinnedEvent,
+                        onViewAllClick = onViewAllPinnedMessagesClick,
                     )
                 }
-                PinnedMessagesBannerView(
-                    state = state.pinnedMessagesBannerState,
-                    onClick = ::focusOnPinnedEvent,
-                    onViewAllClick = onViewAllPinnedMessagesClick,
-                )
+                knockRequestsBannerView()
             }
-            knockRequestsBannerView()
         }
     }
 }
@@ -469,7 +487,6 @@ private fun MessagesViewComposerBottomSheetContents(
                     MessageComposerView(
                         state = state.composerState,
                         voiceMessageState = state.voiceMessageComposerState,
-                        enableVoiceMessages = state.enableVoiceMessages,
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
@@ -478,112 +495,6 @@ private fun MessagesViewComposerBottomSheetContents(
         else -> {
             CantSendMessageBanner()
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun MessagesViewTopBar(
-    roomBadges: ImmutableList<RoomBadge>,
-    roomName: String?,
-    roomAvatar: AvatarData,
-    isTombstoned: Boolean,
-    heroes: ImmutableList<AvatarData>,
-    roomCallState: RoomCallState,
-    dmUserIdentityState: IdentityState?,
-    onRoomDetailsClick: () -> Unit,
-    onJoinCallClick: () -> Unit,
-    onBackClick: () -> Unit,
-) {
-    TopAppBar(
-        navigationIcon = {
-            BackButton(onClick = onBackClick)
-        },
-        title = {
-            val roundedCornerShape = RoundedCornerShape(8.dp)
-            Row(
-                modifier = Modifier
-                    .clip(roundedCornerShape)
-                    .clickable { onRoomDetailsClick() },
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                val titleModifier = Modifier.weight(1f, fill = false)
-                Column {
-                    RoomAvatarAndNameRow(
-                        roomName = roomName,
-                        roomAvatar = roomAvatar,
-                        isTombstoned = isTombstoned,
-                        heroes = heroes,
-                        modifier = titleModifier
-                    )
-                    BadgeList(
-                        roomBadge = roomBadges,
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                    )
-                }
-
-                when (dmUserIdentityState) {
-                    IdentityState.Verified -> {
-                        Icon(
-                            imageVector = CompoundIcons.Verified(),
-                            tint = ElementTheme.colors.iconSuccessPrimary,
-                            contentDescription = null,
-                        )
-                    }
-                    IdentityState.VerificationViolation -> {
-                        Icon(
-                            imageVector = CompoundIcons.ErrorSolid(),
-                            tint = ElementTheme.colors.iconCriticalPrimary,
-                            contentDescription = null,
-                        )
-                    }
-                    else -> Unit
-                }
-            }
-        },
-        actions = {
-            CallMenuItem(
-                roomCallState = roomCallState,
-                onJoinCallClick = onJoinCallClick,
-            )
-            Spacer(Modifier.width(8.dp))
-        },
-        windowInsets = WindowInsets(0.dp)
-    )
-}
-
-@Composable
-private fun RoomAvatarAndNameRow(
-    roomName: String?,
-    roomAvatar: AvatarData,
-    heroes: ImmutableList<AvatarData>,
-    isTombstoned: Boolean,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Avatar(
-            avatarData = roomAvatar,
-            avatarType = AvatarType.Room(
-                heroes = heroes,
-                isTombstoned = isTombstoned,
-            ),
-        )
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .semantics {
-                    heading()
-                },
-            text = roomName ?: stringResource(CommonStrings.common_no_room_name),
-            style = ElementTheme.typography.fontBodyLgMedium,
-            fontStyle = FontStyle.Italic.takeIf { roomName == null },
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
     }
 }
 

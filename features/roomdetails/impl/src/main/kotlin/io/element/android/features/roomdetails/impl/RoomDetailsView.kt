@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import im.vector.app.features.analytics.plan.Interaction
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
-import io.element.android.features.leaveroom.api.LeaveRoomView
 import io.element.android.features.roomcall.api.hasPermissionToJoin
 import io.element.android.features.userprofile.api.UserProfileVerificationState
 import io.element.android.features.userprofile.shared.blockuser.BlockUserDialogs
@@ -87,7 +86,7 @@ import io.element.android.libraries.ui.strings.CommonStrings
 import io.element.android.services.analytics.compose.LocalAnalyticsService
 import io.element.android.services.analyticsproviders.api.trackers.captureInteraction
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun RoomDetailsView(
@@ -109,6 +108,7 @@ fun RoomDetailsView(
     onProfileClick: (UserId) -> Unit,
     onReportRoomClick: () -> Unit,
     modifier: Modifier = Modifier,
+    leaveRoomView: @Composable () -> Unit,
 ) {
     val snackbarHostState = rememberSnackbarHostState(snackbarMessage = state.snackbarMessage)
     Scaffold(
@@ -128,7 +128,7 @@ fun RoomDetailsView(
                 .verticalScroll(rememberScrollState())
                 .consumeWindowInsets(padding)
         ) {
-            LeaveRoomView(state = state.leaveRoomState)
+            leaveRoomView()
 
             when (state.roomType) {
                 RoomDetailsType.Room -> {
@@ -183,7 +183,7 @@ fun RoomDetailsView(
             }
 
             PreferenceCategory {
-                if (state.canShowNotificationSettings && state.roomNotificationSettings != null) {
+                if (state.roomNotificationSettings != null) {
                     NotificationItem(
                         isDefaultMode = state.roomNotificationSettings.isDefault,
                         openRoomNotificationSettings = openRoomNotificationSettings
@@ -235,20 +235,16 @@ fun RoomDetailsView(
             }
 
             PreferenceCategory {
-                if (state.canShowPinnedMessages) {
-                    PinnedMessagesItem(
-                        pinnedMessagesCount = state.pinnedMessagesCount,
-                        onPinnedMessagesClick = onPinnedMessagesClick
-                    )
-                }
+                PinnedMessagesItem(
+                    pinnedMessagesCount = state.pinnedMessagesCount,
+                    onPinnedMessagesClick = onPinnedMessagesClick
+                )
                 PollsItem(
                     openPollHistory = openPollHistory
                 )
-                if (state.canShowMediaGallery) {
-                    MediaGalleryItem(
-                        onClick = openMediaGallery
-                    )
-                }
+                MediaGalleryItem(
+                    onClick = openMediaGallery
+                )
             }
 
             if (state.roomType is RoomDetailsType.Dm && state.roomMemberDetailsState != null) {
@@ -260,7 +256,7 @@ fun RoomDetailsView(
             OtherActionsSection(
                 canReportRoom = state.canReportRoom,
                 onReportRoomClick = onReportRoomClick,
-                onLeaveRoomClick = { state.eventSink(RoomDetailsEvent.LeaveRoom) }
+                onLeaveRoomClick = { state.eventSink(RoomDetailsEvent.LeaveRoom(needsConfirmation = true)) }
             )
 
             if (state.showDebugInfo) {
@@ -335,8 +331,7 @@ private fun MainActionsSection(
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
-        val roomNotificationSettings = state.roomNotificationSettings
-        if (state.canShowNotificationSettings && roomNotificationSettings != null) {
+        state.roomNotificationSettings?.let { roomNotificationSettings ->
             if (roomNotificationSettings.mode == RoomNotificationMode.MUTE) {
                 MainActionButton(
                     title = stringResource(CommonStrings.common_unmute),
@@ -399,11 +394,11 @@ private fun RoomHeaderSection(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Avatar(
-            avatarData = AvatarData(roomId.value, roomName, avatarUrl, AvatarSize.RoomHeader),
+            avatarData = AvatarData(roomId.value, roomName, avatarUrl, AvatarSize.RoomDetailsHeader),
             avatarType = AvatarType.Room(
                 heroes = heroes.map { user ->
-                    user.getAvatarData(size = AvatarSize.RoomHeader)
-                }.toPersistentList(),
+                    user.getAvatarData(size = AvatarSize.RoomDetailsHeader)
+                }.toImmutableList(),
                 isTombstoned = isTombstoned,
             ),
             contentDescription = avatarUrl?.let { stringResource(CommonStrings.a11y_room_avatar) },
@@ -767,5 +762,6 @@ private fun ContentToPreview(state: RoomDetailsState) {
         onSecurityAndPrivacyClick = {},
         onProfileClick = {},
         onReportRoomClick = {},
+        leaveRoomView = {},
     )
 }

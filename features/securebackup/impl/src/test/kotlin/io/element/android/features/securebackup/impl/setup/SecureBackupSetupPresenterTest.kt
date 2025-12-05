@@ -40,6 +40,7 @@ class SecureBackupSetupPresenterTest {
                 RecoveryKeyViewState(
                     recoveryKeyUserStory = RecoveryKeyUserStory.Setup,
                     formattedRecoveryKey = null,
+                    displayTextFieldContents = true,
                     inProgress = false,
                 )
             )
@@ -63,6 +64,7 @@ class SecureBackupSetupPresenterTest {
                 RecoveryKeyViewState(
                     recoveryKeyUserStory = RecoveryKeyUserStory.Setup,
                     formattedRecoveryKey = null,
+                    displayTextFieldContents = true,
                     inProgress = true,
                 )
             )
@@ -73,6 +75,7 @@ class SecureBackupSetupPresenterTest {
                 RecoveryKeyViewState(
                     recoveryKeyUserStory = RecoveryKeyUserStory.Setup,
                     formattedRecoveryKey = A_RECOVERY_KEY,
+                    displayTextFieldContents = true,
                     inProgress = false,
                 )
             )
@@ -103,9 +106,38 @@ class SecureBackupSetupPresenterTest {
                 RecoveryKeyViewState(
                     recoveryKeyUserStory = RecoveryKeyUserStory.Change,
                     formattedRecoveryKey = null,
+                    displayTextFieldContents = true,
                     inProgress = false,
                 )
             )
+        }
+    }
+
+    @Test
+    fun `present - handle errors`() = runTest {
+        val encryptionService = FakeEncryptionService(
+            enableRecoveryLambda = { Result.failure(IllegalStateException("Test error")) }
+        )
+        val presenter = createSecureBackupSetupPresenter(
+            isChangeRecoveryKeyUserStory = false,
+            encryptionService = encryptionService
+        )
+        moleculeFlow(RecompositionMode.Immediate) {
+            presenter.present()
+        }.test {
+            val initialState = awaitItem()
+            assertThat(initialState.isChangeRecoveryKeyUserStory).isFalse()
+            assertThat(initialState.setupState).isEqualTo(SetupState.Init)
+
+            initialState.eventSink(SecureBackupSetupEvents.CreateRecoveryKey)
+            val creatingState = awaitItem()
+            assertThat(creatingState.setupState).isEqualTo(SetupState.Creating)
+            val failedState = awaitItem()
+            assertThat(failedState.setupState).isInstanceOf(SetupState.Error::class.java)
+            failedState.eventSink(SecureBackupSetupEvents.DismissDialog)
+
+            val finalState = awaitItem()
+            assertThat(finalState.setupState).isEqualTo(SetupState.Init)
         }
     }
 
@@ -127,6 +159,7 @@ class SecureBackupSetupPresenterTest {
                 RecoveryKeyViewState(
                     recoveryKeyUserStory = RecoveryKeyUserStory.Change,
                     formattedRecoveryKey = null,
+                    displayTextFieldContents = true,
                     inProgress = true,
                 )
             )
@@ -136,6 +169,7 @@ class SecureBackupSetupPresenterTest {
                 RecoveryKeyViewState(
                     recoveryKeyUserStory = RecoveryKeyUserStory.Change,
                     formattedRecoveryKey = FakeEncryptionService.FAKE_RECOVERY_KEY,
+                    displayTextFieldContents = true,
                     inProgress = false,
                 )
             )
@@ -153,7 +187,9 @@ class SecureBackupSetupPresenterTest {
 
     private fun createSecureBackupSetupPresenter(
         isChangeRecoveryKeyUserStory: Boolean = false,
-        encryptionService: EncryptionService = FakeEncryptionService(),
+        encryptionService: EncryptionService = FakeEncryptionService(
+            enableRecoveryLambda = { Result.success(Unit) },
+        ),
     ): SecureBackupSetupPresenter {
         return SecureBackupSetupPresenter(
             isChangeRecoveryKeyUserStory = isChangeRecoveryKeyUserStory,

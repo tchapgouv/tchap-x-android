@@ -11,8 +11,13 @@ import android.content.Context
 import android.os.Build
 import androidx.core.net.toFile
 import androidx.core.net.toUri
-import com.squareup.anvil.annotations.ContributesBinding
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.Provider
+import dev.zacsweers.metro.SingleIn
 import io.element.android.appconfig.RageshakeConfig
+import io.element.android.features.rageshake.api.logs.createWriteToFilesConfiguration
 import io.element.android.features.rageshake.api.reporter.BugReporter
 import io.element.android.features.rageshake.api.reporter.BugReporterListener
 import io.element.android.features.rageshake.impl.crash.CrashDataStore
@@ -23,16 +28,17 @@ import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.data.tryOrNull
 import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.core.mimetype.MimeTypes
-import io.element.android.libraries.di.AppScope
-import io.element.android.libraries.di.ApplicationContext
-import io.element.android.libraries.di.SingleIn
+import io.element.android.libraries.di.annotations.ApplicationContext
 import io.element.android.libraries.matrix.api.MatrixClientProvider
 import io.element.android.libraries.matrix.api.SdkMetadata
+import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
 import io.element.android.libraries.matrix.api.core.UserId
+import io.element.android.libraries.matrix.api.tracing.TracingService
 import io.element.android.libraries.network.useragent.UserAgentProvider
 import io.element.android.libraries.sessionstorage.api.SessionStore
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -51,15 +57,14 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import javax.inject.Inject
-import javax.inject.Provider
 
 /**
  * BugReporter creates and sends the bug reports.
  */
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
-class DefaultBugReporter @Inject constructor(
+@Inject
+class DefaultBugReporter(
     @ApplicationContext private val context: Context,
     private val screenshotHolder: ScreenshotHolder,
     private val crashDataStore: CrashDataStore,
@@ -71,6 +76,8 @@ class DefaultBugReporter @Inject constructor(
     private val bugReporterUrlProvider: BugReporterUrlProvider,
     private val sdkMetadata: SdkMetadata,
     private val matrixClientProvider: MatrixClientProvider,
+    private val tracingService: TracingService,
+    matrixAuthenticationService: MatrixAuthenticationService,
 ) : BugReporter {
     companion object {
         // filenames
@@ -81,7 +88,24 @@ class DefaultBugReporter @Inject constructor(
     private val logcatCommandDebug = arrayOf("logcat", "-d", "-v", "threadtime", "*:*")
     private var currentTracingLogLevel: String? = null
 
-    private val logCatErrFile = File(logDirectory().absolutePath, LOG_CAT_FILENAME)
+    private val logCatErrFile: File
+        get() = File(logDirectory(), LOG_CAT_FILENAME)
+    private val baseLogDirectory = File(context.cacheDir, LOG_DIRECTORY_NAME)
+    private var currentLogDirectory: File = baseLogDirectory
+
+    init {
+        if (buildMeta.isEnterpriseBuild) {
+            val logSubfolder = runBlocking {
+                sessionStore.getLatestSession()
+            }?.userId?.substringAfter(":")
+            setCurrentLogDirectory(logSubfolder)
+            matrixAuthenticationService.listenToNewMatrixClients {
+                // When a new Matrix client is created, we update the tracing configuration to write
+                // the files in a dedicated subfolders.
+                setLogDirectorySubfolder(it.userIdServerName())
+            }
+        }
+    }
 
     override suspend fun sendBugReport(
         withDevicesLogs: Boolean,
@@ -91,6 +115,12 @@ class DefaultBugReporter @Inject constructor(
         canContact: Boolean,
         listener: BugReporterListener,
     ) {
+        val url = bugReporterUrlProvider.provide().first()
+        if (url == null) {
+            // It should not happen, but if the URL is null, we cannot proceed
+            Timber.e("## sendBugReport() : bug report URL is null")
+            error("Bug report URL is null, cannot send bug report")
+        }
         // enumerate files to delete
         val bugReportFiles: MutableList<File> = ArrayList()
         var response: Response? = null
@@ -146,8 +176,8 @@ class DefaultBugReporter @Inject constructor(
                     .addFormDataPart("branch_name", buildMeta.gitBranchName)
                 userId?.let {
                     matrixClientProvider.getOrNull(it)?.let { client ->
-                        val curveKey = client.encryptionService().deviceCurve25519()
-                        val edKey = client.encryptionService().deviceEd25519()
+                        val curveKey = client.encryptionService.deviceCurve25519()
+                        val edKey = client.encryptionService.deviceEd25519()
                         if (curveKey != null && edKey != null) {
                             builder.addFormDataPart("device_keys", "curve25519:$curveKey, ed25519:$edKey")
                         }
@@ -220,13 +250,13 @@ class DefaultBugReporter @Inject constructor(
                 }
                 // build the request
                 val request = Request.Builder()
-                    .url(bugReporterUrlProvider.provide())
+                    .url(url)
                     .post(requestBody)
                     .build()
                 var errorMessage: String? = null
                 // trigger the request
                 try {
-                    response = okHttpClient.get()
+                    response = okHttpClient()
                         .newCall(request)
                         .execute()
                 } catch (e: CancellationException) {
@@ -286,16 +316,44 @@ class DefaultBugReporter @Inject constructor(
     }
 
     override fun logDirectory(): File {
-        return File(context.cacheDir, LOG_DIRECTORY_NAME).apply {
+        return currentLogDirectory.apply {
             mkdirs()
+        }
+    }
+
+    override fun setLogDirectorySubfolder(subfolderName: String?) {
+        if (buildMeta.isEnterpriseBuild) {
+            setCurrentLogDirectory(subfolderName)
+            tracingService.updateWriteToFilesConfiguration(createWriteToFilesConfiguration())
+        }
+    }
+
+    private fun setCurrentLogDirectory(subfolderName: String?) {
+        currentLogDirectory = if (subfolderName == null) {
+            baseLogDirectory
+        } else {
+            File(baseLogDirectory, subfolderName)
         }
     }
 
     suspend fun deleteAllFiles(predicate: (File) -> Boolean) {
         withContext(coroutineDispatchers.io) {
-            getLogFiles()
-                .filter(predicate)
-                .forEach { it.safeDelete() }
+            deleteAllFilesRecursive(baseLogDirectory, predicate)
+        }
+    }
+
+    private fun deleteAllFilesRecursive(
+        directory: File,
+        predicate: (File) -> Boolean,
+    ) {
+        directory.listFiles()?.forEach { file ->
+            if (file.isDirectory) {
+                deleteAllFilesRecursive(file, predicate)
+            } else {
+                if (predicate(file)) {
+                    file.safeDelete()
+                }
+            }
         }
     }
 
@@ -325,11 +383,12 @@ class DefaultBugReporter @Inject constructor(
      * @return the file if the operation succeeds
      */
     override fun saveLogCat() {
-        if (logCatErrFile.exists()) {
-            logCatErrFile.safeDelete()
+        val file = logCatErrFile
+        if (file.exists()) {
+            file.safeDelete()
         }
         try {
-            logCatErrFile.writer().use {
+            file.writer().use {
                 getLogCatError(it)
             }
         } catch (error: OutOfMemoryError) {

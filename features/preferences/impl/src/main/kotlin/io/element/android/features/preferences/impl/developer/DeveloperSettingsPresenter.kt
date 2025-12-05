@@ -19,6 +19,7 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import dev.zacsweers.metro.Inject
 import io.element.android.features.preferences.impl.developer.tracing.toLogLevel
 import io.element.android.features.preferences.impl.developer.tracing.toLogLevelItem
 import io.element.android.features.preferences.impl.tasks.ClearCacheUseCase
@@ -36,19 +37,17 @@ import io.element.android.libraries.featureflag.api.Feature
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.featureflag.ui.model.FeatureUiModel
-import io.element.android.libraries.matrix.api.tracing.TraceLogPack
 import io.element.android.libraries.preferences.api.store.AppPreferencesStore
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.net.URL
-import javax.inject.Inject
 
-class DeveloperSettingsPresenter @Inject constructor(
+@Inject
+class DeveloperSettingsPresenter(
     private val featureFlagService: FeatureFlagService,
     private val computeCacheSizeUseCase: ComputeCacheSizeUseCase,
     private val clearCacheUseCase: ClearCacheUseCase,
@@ -81,16 +80,16 @@ class DeveloperSettingsPresenter @Inject constructor(
             appPreferencesStore.getTracingLogLevelFlow().map { AsyncData.Success(it.toLogLevelItem()) }
         }
         val tracingLogLevel by tracingLogLevelFlow.collectAsState(initial = AsyncData.Uninitialized)
-        val tracingLogPacks by produceState(persistentListOf<TraceLogPack>()) {
+        val tracingLogPacks by produceState(persistentListOf()) {
             appPreferencesStore.getTracingLogPacksFlow()
                 // Sort the entries alphabetically by its title
-                .map { it.sortedBy { it.title }.toPersistentList() }
-                .collectLatest { value = it }
+                .map { it.sortedBy { it.title } }
+                .collectLatest { value = it.toImmutableList() }
         }
 
         LaunchedEffect(Unit) {
-            FeatureFlags.entries
-                .filter { it.isFinished.not() }
+            featureFlagService.getAvailableFeatures()
+                .filter { it.isInLabs.not() && it.isFinished.not() }
                 .run {
                     // Never display room directory search in release builds for Play Store
                     if (buildMeta.flavorDescription == "GooglePlay" && buildMeta.buildType == BuildType.RELEASE) {
@@ -168,6 +167,7 @@ class DeveloperSettingsPresenter @Inject constructor(
                         key = feature.key,
                         title = feature.title,
                         description = feature.description,
+                        icon = null,
                         isEnabled = isEnabled
                     )
                 }

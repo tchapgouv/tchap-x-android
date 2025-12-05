@@ -13,6 +13,7 @@
     <item quantity="one">"%d ilmoitus"</item>
     <item quantity="other">"%d ilmoitusta"</item>
   </plurals>
+  <string name="notification_fallback_content">"Sinulle on uusia viestejä."</string>
   <string name="notification_incoming_call">"📹 Saapuva puhelu"</string>
   <string name="notification_inline_reply_failed">"** Lähetys epäonnistui - avaa huone"</string>
   <string name="notification_invitation_action_join">"Liity"</string>
@@ -29,7 +30,7 @@
     <item quantity="one">"%d uusi viesti"</item>
     <item quantity="other">"%d uutta viestiä"</item>
   </plurals>
-  <string name="notification_reaction_body">"Reagoi emojilla %1$s"</string>
+  <string name="notification_reaction_body">"Reaktio: %1$s"</string>
   <string name="notification_room_action_mark_as_read">"Merkitse luetuksi"</string>
   <string name="notification_room_action_quick_reply">"Pikavastaus"</string>
   <string name="notification_room_invite_body">"Kutsui sinut liittymään huoneeseen"</string>
@@ -53,9 +54,20 @@
   <string name="push_distributor_background_sync_android">"Taustasynkronointi"</string>
   <string name="push_distributor_firebase_android">"Googlen palvelut"</string>
   <string name="push_no_valid_google_play_services_apk_android">"Kelvollisia Google Play -palveluita ei löytynyt. Ilmoitukset eivät ehkä toimi oikein."</string>
+  <string name="troubleshoot_notifications_test_blocked_users_description">"Estettyjen käyttäjien tarkistus"</string>
+  <string name="troubleshoot_notifications_test_blocked_users_quick_fix">"Näytä estetyt käyttäjät"</string>
+  <string name="troubleshoot_notifications_test_blocked_users_result_none">"Yhtään käyttäjää ei ole estetty."</string>
+  <plurals name="troubleshoot_notifications_test_blocked_users_result_some">
+    <item quantity="one">"Estit %1$d käyttäjän. Et saa ilmoituksia tältä käyttäjältä."</item>
+    <item quantity="other">"Estit %1$d käyttäjää. Et saa ilmoituksia näiltä käyttäjiltä."</item>
+  </plurals>
+  <string name="troubleshoot_notifications_test_blocked_users_title">"Estetyt käyttäjät"</string>
   <string name="troubleshoot_notifications_test_current_push_provider_description">"Hakee nykyisen palveluntarjoajan nimen."</string>
   <string name="troubleshoot_notifications_test_current_push_provider_failure">"Push-palveluntarjoajia ei ole valittu."</string>
+  <string name="troubleshoot_notifications_test_current_push_provider_failure_distributor_not_found">"Nykyinen push-palveluntarjoaja: %1$s ja nykyinen jakelija: %2$s. Mutta jakelijaa %3$s ei löydy. Ehkä sovellus on poistettu?"</string>
+  <string name="troubleshoot_notifications_test_current_push_provider_failure_no_distributor">"Nykyinen push-palveluntarjoaja: %1$s, mutta jakelijoita ei ole määritetty."</string>
   <string name="troubleshoot_notifications_test_current_push_provider_success">"Nykyinen push-palveluntarjoaja: %1$s."</string>
+  <string name="troubleshoot_notifications_test_current_push_provider_success_with_distributor">"Nykyinen push-palveluntarjoaja: %1$s (%2$s)"</string>
   <string name="troubleshoot_notifications_test_current_push_provider_title">"Nykyinen push-palveluntarjoaja"</string>
   <string name="troubleshoot_notifications_test_detect_push_provider_description">"Varmistaa, että sovelluksella on vähintään yksi push-palveluntarjoaja."</string>
   <string name="troubleshoot_notifications_test_detect_push_provider_failure">"Push-palveluntarjoajia ei löytynyt."</string>

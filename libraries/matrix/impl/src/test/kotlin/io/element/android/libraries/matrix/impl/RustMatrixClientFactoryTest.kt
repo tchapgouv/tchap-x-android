@@ -15,7 +15,7 @@ import io.element.android.libraries.matrix.impl.auth.FakeUserCertificatesProvide
 import io.element.android.libraries.matrix.impl.room.FakeTimelineEventTypeFilterFactory
 import io.element.android.libraries.network.useragent.SimpleUserAgentProvider
 import io.element.android.libraries.sessionstorage.api.SessionStore
-import io.element.android.libraries.sessionstorage.impl.memory.InMemorySessionStore
+import io.element.android.libraries.sessionstorage.test.InMemorySessionStore
 import io.element.android.libraries.sessionstorage.test.aSessionData
 import io.element.android.services.analytics.test.FakeAnalyticsService
 import io.element.android.services.toolbox.test.systemclock.FakeSystemClock
@@ -36,11 +36,12 @@ class RustMatrixClientFactoryTest {
 }
 
 fun TestScope.createRustMatrixClientFactory(
-    baseDirectory: File = File("/base"),
     cacheDirectory: File = File("/cache"),
-    sessionStore: SessionStore = InMemorySessionStore(),
+    sessionStore: SessionStore = InMemorySessionStore(
+        updateUserProfileResult = { _, _, _ -> },
+    ),
+    clientBuilderProvider: ClientBuilderProvider = FakeClientBuilderProvider(),
 ) = RustMatrixClientFactory(
-    baseDirectory = baseDirectory,
     cacheDirectory = cacheDirectory,
     appCoroutineScope = backgroundScope,
     coroutineDispatchers = testCoroutineDispatchers(),
@@ -52,5 +53,5 @@ fun TestScope.createRustMatrixClientFactory(
     analyticsService = FakeAnalyticsService(),
     featureFlagService = FakeFeatureFlagService(),
     timelineEventTypeFilterFactory = FakeTimelineEventTypeFilterFactory(),
-    clientBuilderProvider = FakeClientBuilderProvider(),
+    clientBuilderProvider = clientBuilderProvider,
 )

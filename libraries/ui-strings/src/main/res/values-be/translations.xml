@@ -209,6 +209,8 @@
     <item quantity="many">"%d галасоў"</item>
   </plurals>
   <string name="common_privacy_policy">"Палітыка прыватнасці"</string>
+  <string name="common_private_room">"Прыватны пакой"</string>
+  <string name="common_public_room">"Публічны пакой"</string>
   <string name="common_reaction">"Рэакцыя"</string>
   <string name="common_reactions">"Рэакцыі"</string>
   <string name="common_recovery_key">"Ключ аднаўлення"</string>
@@ -295,8 +297,6 @@
   <string name="login_initial_device_name_android">"%1$s Android"</string>
   <string name="preference_rageshake">"Паведаміць аб памылцы з дапамогай Rageshake"</string>
   <string name="screen_media_picker_error_failed_selection">"Не ўдалося выбраць носьбіт, паўтарыце спробу."</string>
-  <string name="screen_media_upload_preview_error_failed_processing">"Не атрымалася апрацаваць медыяфайл для загрузкі, паспрабуйце яшчэ раз."</string>
-  <string name="screen_media_upload_preview_error_failed_sending">"Не атрымалася загрузіць медыяфайлы, паспрабуйце яшчэ раз."</string>
   <string name="screen_pinned_timeline_empty_state_description">"Націсніце на паведамленне і абярыце «%1$s », каб уключыць сюды."</string>
   <string name="screen_pinned_timeline_empty_state_headline">"Замацуеце важныя паведамленні, каб іх можна было лёгка знайсці"</string>
   <plurals name="screen_pinned_timeline_screen_title">
@@ -326,4 +326,5 @@
   <string name="screen_view_location_title">"Месцазнаходжанне"</string>
   <string name="settings_version_number">"Версія: %1$s (%2$s)"</string>
   <string name="test_language_identifier">"be"</string>
+  <string name="timeline_decryption_failure_historical_event_user_not_joined">"У вас няма доступу да гэтага паведамлення"</string>
 </resources>

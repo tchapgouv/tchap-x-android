@@ -15,16 +15,15 @@ import androidx.lifecycle.lifecycleScope
 import com.bumble.appyx.core.lifecycle.subscribe
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
-import com.bumble.appyx.core.node.node
 import com.bumble.appyx.core.plugin.Plugin
 import com.bumble.appyx.core.plugin.plugins
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.push
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedInject
 import im.vector.app.features.analytics.plan.Interaction
-import io.element.android.anvilannotations.ContributesNode
+import io.element.android.annotations.ContributesNode
 import io.element.android.features.call.api.CallType
 import io.element.android.features.call.api.ElementCallEntryPoint
 import io.element.android.features.knockrequests.api.list.KnockRequestsListEntryPoint
@@ -39,6 +38,7 @@ import io.element.android.features.messages.impl.forward.ForwardMessagesNode
 import io.element.android.features.messages.impl.pinned.PinnedEventsTimelineProvider
 import io.element.android.features.messages.impl.pinned.list.PinnedMessagesListNode
 import io.element.android.features.messages.impl.report.ReportMessageNode
+import io.element.android.features.messages.impl.threads.ThreadedMessagesNode
 import io.element.android.features.messages.impl.timeline.TimelineController
 import io.element.android.features.messages.impl.timeline.debug.EventDebugInfoNode
 import io.element.android.features.messages.impl.timeline.model.TimelineItem
@@ -63,9 +63,10 @@ import io.element.android.libraries.dateformatter.api.DateFormatter
 import io.element.android.libraries.dateformatter.api.DateFormatterMode
 import io.element.android.libraries.dateformatter.api.toHumanReadableDuration
 import io.element.android.libraries.di.RoomScope
-import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.RoomId
+import io.element.android.libraries.matrix.api.core.SessionId
+import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.core.toRoomIdOrAlias
 import io.element.android.libraries.matrix.api.media.MediaSource
@@ -73,6 +74,7 @@ import io.element.android.libraries.matrix.api.permalink.PermalinkData
 import io.element.android.libraries.matrix.api.room.BaseRoom
 import io.element.android.libraries.matrix.api.room.alias.matches
 import io.element.android.libraries.matrix.api.room.joinedRoomMembers
+import io.element.android.libraries.matrix.api.roomlist.RoomListService
 import io.element.android.libraries.matrix.api.timeline.Timeline
 import io.element.android.libraries.matrix.api.timeline.item.TimelineItemDebugInfo
 import io.element.android.libraries.matrix.ui.messages.RoomMemberProfilesCache
@@ -91,10 +93,12 @@ import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 
 @ContributesNode(RoomScope::class)
-class MessagesFlowNode @AssistedInject constructor(
+@AssistedInject
+class MessagesFlowNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
-    private val matrixClient: MatrixClient,
+    private val roomListService: RoomListService,
+    private val sessionId: SessionId,
     private val sendLocationEntryPoint: SendLocationEntryPoint,
     private val showLocationEntryPoint: ShowLocationEntryPoint,
     private val createPollEntryPoint: CreatePollEntryPoint,
@@ -125,9 +129,6 @@ class MessagesFlowNode @AssistedInject constructor(
 ) {
     sealed interface NavTarget : Parcelable {
         @Parcelize
-        data object Empty : NavTarget
-
-        @Parcelize
         data class Messages(val focusedEventId: EventId?) : NavTarget
 
         @Parcelize
@@ -140,7 +141,7 @@ class MessagesFlowNode @AssistedInject constructor(
         ) : NavTarget
 
         @Parcelize
-        data class AttachmentPreview(val attachment: Attachment) : NavTarget
+        data class AttachmentPreview(val timelineMode: Timeline.Mode, val attachment: Attachment, val inReplyToEventId: EventId?) : NavTarget
 
         @Parcelize
         data class LocationViewer(val location: Location, val description: String?) : NavTarget
@@ -155,19 +156,22 @@ class MessagesFlowNode @AssistedInject constructor(
         data class ReportMessage(val eventId: EventId, val senderId: UserId) : NavTarget
 
         @Parcelize
-        data object SendLocation : NavTarget
+        data class SendLocation(val timelineMode: Timeline.Mode) : NavTarget
 
         @Parcelize
-        data object CreatePoll : NavTarget
+        data class CreatePoll(val timelineMode: Timeline.Mode) : NavTarget
 
         @Parcelize
-        data class EditPoll(val eventId: EventId) : NavTarget
+        data class EditPoll(val timelineMode: Timeline.Mode, val eventId: EventId) : NavTarget
 
         @Parcelize
         data object PinnedMessagesList : NavTarget
 
         @Parcelize
         data object KnockRequestsList : NavTarget
+
+        @Parcelize
+        data class OpenThread(val threadRootId: ThreadId, val focusedEventId: EventId?) : NavTarget
     }
 
     private val callbacks = plugins<MessagesEntryPoint.Callback>()
@@ -193,7 +197,7 @@ class MessagesFlowNode @AssistedInject constructor(
             }
             .launchIn(lifecycleScope)
 
-        matrixClient.roomListService
+        roomListService
             .allRooms
             .summaries
             .onEach {
@@ -212,20 +216,26 @@ class MessagesFlowNode @AssistedInject constructor(
                         callbacks.forEach { it.onRoomDetailsClick() }
                     }
 
-                    override fun onEventClick(isLive: Boolean, event: TimelineItem.Event): Boolean {
+                    override fun onEventClick(timelineMode: Timeline.Mode, event: TimelineItem.Event): Boolean {
                         // TCHAP content scanner
                         if (event.content is TimelineItemEventContentWithAttachment &&
                             event.content.scanState != BwiContentScannerScanState.TRUSTED) {
                             return false
                         }
                         return processEventClick(
-                            timelineMode = if (isLive) Timeline.Mode.LIVE else Timeline.Mode.FOCUSED_ON_EVENT,
+                            timelineMode = timelineMode,
                             event = event,
                         )
                     }
 
-                    override fun onPreviewAttachments(attachments: ImmutableList<Attachment>) {
-                        backstack.push(NavTarget.AttachmentPreview(attachments.first()))
+                    override fun onPreviewAttachments(attachments: ImmutableList<Attachment>, inReplyToEventId: EventId?) {
+                        backstack.push(
+                            NavTarget.AttachmentPreview(
+                                attachment = attachments.first(),
+                                timelineMode = Timeline.Mode.Live,
+                                inReplyToEventId = inReplyToEventId,
+                            )
+                        )
                     }
 
                     override fun onUserDataClick(userId: UserId) {
@@ -249,20 +259,20 @@ class MessagesFlowNode @AssistedInject constructor(
                     }
 
                     override fun onSendLocationClick() {
-                        backstack.push(NavTarget.SendLocation)
+                        backstack.push(NavTarget.SendLocation(Timeline.Mode.Live))
                     }
 
                     override fun onCreatePollClick() {
-                        backstack.push(NavTarget.CreatePoll)
+                        backstack.push(NavTarget.CreatePoll(Timeline.Mode.Live))
                     }
 
                     override fun onEditPollClick(eventId: EventId) {
-                        backstack.push(NavTarget.EditPoll(eventId))
+                        backstack.push(NavTarget.EditPoll(Timeline.Mode.Live, eventId))
                     }
 
                     override fun onJoinCallClick(roomId: RoomId) {
                         val callType = CallType.RoomCall(
-                            sessionId = matrixClient.sessionId,
+                            sessionId = sessionId,
                             roomId = roomId,
                         )
                         analyticsService.captureInteraction(Interaction.Name.MobileRoomCallButton)
@@ -275,6 +285,10 @@ class MessagesFlowNode @AssistedInject constructor(
 
                     override fun onViewKnockRequests() {
                         backstack.push(NavTarget.KnockRequestsList)
+                    }
+
+                    override fun onOpenThread(threadRootId: ThreadId, focusedEventId: EventId?) {
+                        backstack.push(NavTarget.OpenThread(threadRootId, focusedEventId))
                     }
                 }
                 val inputs = MessagesNode.Inputs(focusedEventId = navTarget.focusedEventId)
@@ -304,7 +318,11 @@ class MessagesFlowNode @AssistedInject constructor(
                     .build()
             }
             is NavTarget.AttachmentPreview -> {
-                val inputs = AttachmentsPreviewNode.Inputs(navTarget.attachment)
+                val inputs = AttachmentsPreviewNode.Inputs(
+                    attachment = navTarget.attachment,
+                    timelineMode = navTarget.timelineMode,
+                    inReplyToEventId = navTarget.inReplyToEventId,
+                )
                 createNode<AttachmentsPreviewNode>(buildContext, listOf(inputs))
             }
             is NavTarget.LocationViewer -> {
@@ -333,24 +351,36 @@ class MessagesFlowNode @AssistedInject constructor(
                 val inputs = ReportMessageNode.Inputs(navTarget.eventId, navTarget.senderId)
                 createNode<ReportMessageNode>(buildContext, listOf(inputs))
             }
-            NavTarget.SendLocation -> {
-                sendLocationEntryPoint.createNode(this, buildContext)
+            is NavTarget.SendLocation -> {
+                sendLocationEntryPoint
+                    .builder(navTarget.timelineMode)
+                    .build(this, buildContext)
             }
-            NavTarget.CreatePoll -> {
+            is NavTarget.CreatePoll -> {
                 createPollEntryPoint.nodeBuilder(this, buildContext)
-                    .params(CreatePollEntryPoint.Params(mode = CreatePollMode.NewPoll))
+                    .params(
+                        CreatePollEntryPoint.Params(
+                            timelineMode = navTarget.timelineMode,
+                            mode = CreatePollMode.NewPoll
+                        )
+                    )
                     .build()
             }
             is NavTarget.EditPoll -> {
                 createPollEntryPoint.nodeBuilder(this, buildContext)
-                    .params(CreatePollEntryPoint.Params(mode = CreatePollMode.EditPoll(eventId = navTarget.eventId)))
+                    .params(
+                        CreatePollEntryPoint.Params(
+                            timelineMode = navTarget.timelineMode,
+                            mode = CreatePollMode.EditPoll(eventId = navTarget.eventId)
+                        )
+                    )
                     .build()
             }
             NavTarget.PinnedMessagesList -> {
                 val callback = object : PinnedMessagesListNode.Callback {
                     override fun onEventClick(event: TimelineItem.Event) {
                         processEventClick(
-                            timelineMode = Timeline.Mode.PINNED_EVENTS,
+                            timelineMode = Timeline.Mode.PinnedEvents,
                             event = event,
                         )
                     }
@@ -377,11 +407,78 @@ class MessagesFlowNode @AssistedInject constructor(
                 }
                 createNode<PinnedMessagesListNode>(buildContext, plugins = listOf(callback))
             }
-            NavTarget.Empty -> {
-                node(buildContext) {}
-            }
             NavTarget.KnockRequestsList -> {
                 knockRequestsListEntryPoint.createNode(this, buildContext)
+            }
+            is NavTarget.OpenThread -> {
+                val inputs = ThreadedMessagesNode.Inputs(
+                    threadRootEventId = navTarget.threadRootId,
+                    focusedEventId = navTarget.focusedEventId,
+                )
+                val callback = object : ThreadedMessagesNode.Callback {
+                    override fun onEventClick(timelineMode: Timeline.Mode, event: TimelineItem.Event): Boolean {
+                        return processEventClick(
+                            timelineMode = timelineMode,
+                            event = event,
+                        )
+                    }
+
+                    override fun onPreviewAttachments(attachments: ImmutableList<Attachment>, inReplyToEventId: EventId?) {
+                        backstack.push(
+                            NavTarget.AttachmentPreview(
+                                attachment = attachments.first(),
+                                timelineMode = Timeline.Mode.Thread(navTarget.threadRootId),
+                                inReplyToEventId = inReplyToEventId,
+                            )
+                        )
+                    }
+
+                    override fun onUserDataClick(userId: UserId) {
+                        callbacks.forEach { it.onUserDataClick(userId) }
+                    }
+
+                    override fun onPermalinkClick(data: PermalinkData) {
+                        callbacks.forEach { it.onPermalinkClick(data, pushToBackstack = true) }
+                    }
+
+                    override fun onShowEventDebugInfoClick(eventId: EventId?, debugInfo: TimelineItemDebugInfo) {
+                        backstack.push(NavTarget.EventDebugInfo(eventId, debugInfo))
+                    }
+
+                    override fun onForwardEventClick(eventId: EventId) {
+                        backstack.push(NavTarget.ForwardEvent(eventId, fromPinnedEvents = false))
+                    }
+
+                    override fun onReportMessage(eventId: EventId, senderId: UserId) {
+                        backstack.push(NavTarget.ReportMessage(eventId, senderId))
+                    }
+
+                    override fun onSendLocationClick() {
+                        backstack.push(NavTarget.SendLocation(Timeline.Mode.Thread(navTarget.threadRootId)))
+                    }
+
+                    override fun onCreatePollClick() {
+                        backstack.push(NavTarget.CreatePoll(Timeline.Mode.Thread(navTarget.threadRootId)))
+                    }
+
+                    override fun onEditPollClick(eventId: EventId) {
+                        backstack.push(NavTarget.EditPoll(Timeline.Mode.Thread(navTarget.threadRootId), eventId))
+                    }
+
+                    override fun onJoinCallClick(roomId: RoomId) {
+                        val callType = CallType.RoomCall(
+                            sessionId = sessionId,
+                            roomId = roomId,
+                        )
+                        analyticsService.captureInteraction(Interaction.Name.MobileRoomCallButton)
+                        elementCallEntryPoint.startCall(callType)
+                    }
+
+                    override fun onOpenThread(threadRootId: ThreadId, focusedEventId: EventId?) {
+                        backstack.push(NavTarget.OpenThread(threadRootId, focusedEventId))
+                    }
+                }
+                createNode<ThreadedMessagesNode>(buildContext, listOf(inputs, callback))
             }
         }
     }
@@ -468,6 +565,7 @@ class MessagesFlowNode @AssistedInject constructor(
             eventId = event.eventId,
             mediaInfo = MediaInfo(
                 filename = content.filename,
+                fileSize = content.fileSize,
                 caption = content.caption,
                 mimeType = content.mimeType,
                 formattedFileSize = content.formattedFileSize,

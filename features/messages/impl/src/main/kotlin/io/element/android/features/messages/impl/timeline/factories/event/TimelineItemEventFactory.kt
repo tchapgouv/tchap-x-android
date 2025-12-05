@@ -7,9 +7,9 @@
 
 package io.element.android.features.messages.impl.timeline.factories.event
 
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 import io.element.android.features.messages.impl.timeline.factories.TimelineItemsFactoryConfig
 import io.element.android.features.messages.impl.timeline.groups.canBeDisplayedInBubbleBlock
 import io.element.android.features.messages.impl.timeline.model.AggregatedReaction
@@ -19,6 +19,9 @@ import io.element.android.features.messages.impl.timeline.model.TimelineItem
 import io.element.android.features.messages.impl.timeline.model.TimelineItemGroupPosition
 import io.element.android.features.messages.impl.timeline.model.TimelineItemReactions
 import io.element.android.features.messages.impl.timeline.model.TimelineItemReadReceipts
+import io.element.android.features.messages.impl.timeline.model.TimelineItemThreadInfo
+import io.element.android.features.messages.impl.utils.messagesummary.MessageSummaryFormatter
+import io.element.android.libraries.architecture.map
 import io.element.android.libraries.core.bool.orTrue
 import io.element.android.libraries.dateformatter.api.DateFormatter
 import io.element.android.libraries.dateformatter.api.DateFormatterMode
@@ -28,6 +31,7 @@ import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.permalink.PermalinkParser
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.timeline.MatrixTimelineItem
+import io.element.android.libraries.matrix.api.timeline.item.EventThreadInfo
 import io.element.android.libraries.matrix.api.timeline.item.event.getAvatarUrl
 import io.element.android.libraries.matrix.api.timeline.item.event.getDisambiguatedDisplayName
 import io.element.android.libraries.matrix.ui.messages.reply.map
@@ -35,12 +39,14 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import java.util.Date
 
-class TimelineItemEventFactory @AssistedInject constructor(
+@AssistedInject
+class TimelineItemEventFactory(
     @Assisted private val config: TimelineItemsFactoryConfig,
     private val contentFactory: TimelineItemContentFactory,
     private val matrixClient: MatrixClient,
     private val dateFormatter: DateFormatter,
     private val permalinkParser: PermalinkParser,
+    private val summaryFormatter: MessageSummaryFormatter,
 ) {
     @AssistedFactory
     interface Creator {
@@ -67,7 +73,29 @@ class TimelineItemEventFactory @AssistedInject constructor(
             url = senderProfile.getAvatarUrl(),
             size = AvatarSize.TimelineSender
         )
-        currentTimelineItem.event
+        val mappedThreadInfo = when (val threadInfo = currentTimelineItem.event.threadInfo()) {
+            is EventThreadInfo.ThreadResponse -> {
+                TimelineItemThreadInfo.ThreadResponse(threadInfo.threadRootId)
+            }
+            is EventThreadInfo.ThreadRoot -> {
+                TimelineItemThreadInfo.ThreadRoot(
+                    summary = threadInfo.summary,
+                    latestEventText = threadInfo.summary.latestEvent.dataOrNull()
+                        ?.let {
+                            contentFactory.create(
+                                itemContent = it.content,
+                                eventId = it.eventOrTransactionId.eventId,
+                                isEditable = false,
+                                sender = it.senderId,
+                                senderProfile = it.senderProfile,
+                            )
+                        }
+                        ?.let(summaryFormatter::format)
+                )
+            }
+            null -> null
+        }
+
         return TimelineItem.Event(
             id = currentTimelineItem.uniqueId,
             eventId = currentTimelineItem.eventId,
@@ -86,7 +114,7 @@ class TimelineItemEventFactory @AssistedInject constructor(
             readReceiptState = currentTimelineItem.computeReadReceiptState(roomMembers),
             localSendState = currentTimelineItem.event.localSendState,
             inReplyTo = currentTimelineItem.event.inReplyTo()?.map(permalinkParser = permalinkParser),
-            isThreaded = currentTimelineItem.event.isThreaded(),
+            threadInfo = mappedThreadInfo,
             origin = currentTimelineItem.event.origin,
             timelineItemDebugInfoProvider = currentTimelineItem.event.timelineItemDebugInfoProvider,
             messageShieldProvider = currentTimelineItem.event.messageShieldProvider,

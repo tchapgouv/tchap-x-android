@@ -15,6 +15,7 @@ import kotlin.time.Duration
 data class TimelineItemAudioContent(
     override val scanState: BwiContentScannerScanState = BwiContentScannerScanState.UNKNOWN,
     override val filename: String,
+    override val fileSize: Long?,
     override val caption: String?,
     override val formattedCaption: CharSequence?,
     override val isEdited: Boolean,

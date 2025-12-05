@@ -79,10 +79,10 @@ git checkout main
 git pull
 
 printf "\nBuilding the SDK for ${target_arch}...\n\n"
-./scripts/build.sh -p "${rustSdkPath}" -m sdk -t "${target_arch}" -o "${elementPwd}/libraries/rustsdk"
+./scripts/build.sh -p "${rustSdkPath}" -m sdk -r -t "${target_arch}" -o "${elementPwd}/libraries/rustsdk"
 
 cd "${elementPwd}"
-mv ./libraries/rustsdk/sdk-android-debug.aar ./libraries/rustsdk/matrix-rust-sdk.aar
+mv ./libraries/rustsdk/sdk-android-release.aar ./libraries/rustsdk/matrix-rust-sdk.aar
 mkdir -p ./libraries/rustsdk/sdks
 cp ./libraries/rustsdk/matrix-rust-sdk.aar ./libraries/rustsdk/sdks/matrix-rust-sdk-"${date}".aar
 

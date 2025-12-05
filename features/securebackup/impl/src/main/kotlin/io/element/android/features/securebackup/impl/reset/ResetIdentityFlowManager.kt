@@ -7,9 +7,10 @@
 
 package io.element.android.features.securebackup.impl.reset
 
+import dev.zacsweers.metro.Inject
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
-import io.element.android.libraries.matrix.api.MatrixClient
+import io.element.android.libraries.matrix.api.encryption.EncryptionService
 import io.element.android.libraries.matrix.api.encryption.IdentityResetHandle
 import io.element.android.libraries.matrix.api.verification.SessionVerificationService
 import io.element.android.libraries.matrix.api.verification.SessionVerifiedStatus
@@ -20,10 +21,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class ResetIdentityFlowManager @Inject constructor(
-    private val matrixClient: MatrixClient,
+@Inject
+class ResetIdentityFlowManager(
+    private val encryptionService: EncryptionService,
     @SessionCoroutineScope private val sessionCoroutineScope: CoroutineScope,
     private val sessionVerificationService: SessionVerificationService,
 ) {
@@ -45,7 +46,7 @@ class ResetIdentityFlowManager @Inject constructor(
             resetHandleFlow.value = AsyncData.Loading()
 
             sessionCoroutineScope.launch {
-                matrixClient.encryptionService().startIdentityReset()
+                encryptionService.startIdentityReset()
                     .onSuccess { handle ->
                         resetHandleFlow.value = AsyncData.Success(handle)
                     }

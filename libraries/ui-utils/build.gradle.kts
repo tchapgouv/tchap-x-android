@@ -1,3 +1,5 @@
+import extension.testCommonDependencies
+
 /*
  * Copyright 2023, 2024 New Vector Ltd.
  *
@@ -13,9 +15,9 @@ android {
     namespace = "io.element.android.libraries.ui.utils"
 
     dependencies {
-        testImplementation(libs.test.junit)
-        testImplementation(libs.test.truth)
-        testImplementation(libs.coroutines.test)
-        testImplementation(libs.test.truth)
+        implementation(projects.libraries.androidutils)
+        implementation(projects.services.toolbox.impl)
+
+        testCommonDependencies(libs)
     }
 }

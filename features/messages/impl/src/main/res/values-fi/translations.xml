@@ -7,7 +7,18 @@
   <string name="emoji_picker_category_objects">"Esineet"</string>
   <string name="emoji_picker_category_people">"Hymiöt ja ihmiset"</string>
   <string name="emoji_picker_category_places">"Matkustaminen ja paikat"</string>
+  <string name="emoji_picker_category_recent">"Viimeaikaiset emojit"</string>
   <string name="emoji_picker_category_symbols">"Symbolit"</string>
+  <string name="screen_media_upload_preview_caption_warning">"Kuvatekstit eivät välttämättä näy ihmisille, jotka käyttävät vanhempia sovelluksia."</string>
+  <string name="screen_media_upload_preview_change_video_quality_prompt">"Napauta muuttaaksesi videon lähetyslaatua"</string>
+  <string name="screen_media_upload_preview_error_could_not_be_uploaded">"Tiedostoa ei voitu lähettää."</string>
+  <string name="screen_media_upload_preview_error_failed_processing">"Median käsittely epäonnistui, yritä uudelleen."</string>
+  <string name="screen_media_upload_preview_error_failed_sending">"Median lähettäminen epäonnistui, yritä uudelleen."</string>
+  <string name="screen_media_upload_preview_error_too_large_message">"Suurin sallittu tiedostokoko on %1$s."</string>
+  <string name="screen_media_upload_preview_error_too_large_title">"Tiedosto on liian suuri lähetettäväksi"</string>
+  <string name="screen_media_upload_preview_item_count">"Kohde %1$d / %2$d"</string>
+  <string name="screen_media_upload_preview_optimize_image_quality_title">"Optimoi kuvanlaatu"</string>
+  <string name="screen_media_upload_preview_processing">"Käsitellään…"</string>
   <string name="screen_report_content_block_user">"Estä käyttäjä"</string>
   <string name="screen_report_content_block_user_hint">"Valitse tämä, jos haluat piilottaa kaikki nykyiset ja tulevat viestit tältä käyttäjältä"</string>
   <string name="screen_report_content_explanation">"Tämä viesti ilmoitetaan kotipalvelimesi ylläpitäjälle. Ylläpitäjä ei pysty lukemaan salattuja viestejä."</string>
@@ -28,15 +39,25 @@
   <string name="screen_room_mentions_at_room_title">"Kaikki"</string>
   <string name="screen_room_retry_send_menu_send_again_action">"Lähetä uudelleen"</string>
   <string name="screen_room_retry_send_menu_title">"Viestisi lähettäminen epäonnistui"</string>
-  <string name="screen_room_timeline_add_reaction">"Lisää emoji"</string>
+  <string name="screen_room_timeline_add_reaction">"Lisää reaktio"</string>
   <string name="screen_room_timeline_beginning_of_room">"Tämä on huoneen %1$s alku."</string>
   <string name="screen_room_timeline_beginning_of_room_no_name">"Tämä on tämän keskustelun alku."</string>
   <string name="screen_room_timeline_legacy_call">"Puhelu, jota ei tueta. Kysy, voiko soittaja käyttää uutta Element X -sovellusta."</string>
   <string name="screen_room_timeline_less_reactions">"Näytä vähemmän"</string>
   <string name="screen_room_timeline_message_copied">"Viesti kopioitu"</string>
   <string name="screen_room_timeline_no_permission_to_post">"Sinulla ei ole oikeutta kirjoittaa tässä huoneessa"</string>
+  <plurals name="screen_room_timeline_reaction_a11y">
+    <item quantity="one">"%1$d jäsen reagoi %2$s"</item>
+    <item quantity="other">"%1$d jäsentä reagoivat %2$s"</item>
+  </plurals>
+  <plurals name="screen_room_timeline_reaction_including_you_a11y">
+    <item quantity="one">"Sinä ja %1$d jäsen reagoitte %2$s"</item>
+    <item quantity="other">"Sinä ja %1$d jäsentä reagoitte %2$s"</item>
+  </plurals>
+  <string name="screen_room_timeline_reaction_you_a11y">"Reagoit seuraavasti: %1$s"</string>
   <string name="screen_room_timeline_reactions_show_less">"Näytä vähemmän"</string>
   <string name="screen_room_timeline_reactions_show_more">"Näytä lisää"</string>
+  <string name="screen_room_timeline_reactions_show_reactions_summary">"Näytä reaktioiden yhteenveto"</string>
   <string name="screen_room_timeline_read_marker_title">"Uusi"</string>
   <plurals name="screen_room_timeline_state_changes">
     <item quantity="one">"%1$d muutos huoneeseen"</item>

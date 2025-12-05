@@ -69,7 +69,7 @@ class InReplyToDetailTest {
                 body = "**Hello!**",
                 inReplyTo = null,
                 isEdited = false,
-                isThreaded = false,
+                threadInfo = null,
                 type = TextMessageType(
                     body = "**Hello!**",
                     formatted = FormattedBody(
@@ -94,7 +94,7 @@ class InReplyToDetailTest {
                 body = "**Hello!**",
                 inReplyTo = null,
                 isEdited = false,
-                isThreaded = false,
+                threadInfo = null,
                 type = TextMessageType(
                     body = "**Hello!**",
                     formatted = null,

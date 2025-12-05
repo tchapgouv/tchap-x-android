@@ -12,6 +12,8 @@ import app.cash.molecule.moleculeFlow
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import im.vector.app.features.analytics.plan.Interaction
+import io.element.android.features.announcement.api.Announcement
+import io.element.android.features.announcement.api.AnnouncementService
 import io.element.android.features.home.impl.FakeDateTimeObserver
 import io.element.android.features.home.impl.datasource.RoomListDataSource
 import io.element.android.features.home.impl.datasource.aRoomListRoomSummaryFactory
@@ -24,18 +26,17 @@ import io.element.android.features.home.impl.search.aRoomListSearchState
 import io.element.android.features.invite.api.SeenInvitesStore
 import io.element.android.features.invite.api.acceptdecline.AcceptDeclineInviteEvents
 import io.element.android.features.invite.api.acceptdecline.AcceptDeclineInviteState
+import io.element.android.features.invite.api.acceptdecline.anAcceptDeclineInviteState
 import io.element.android.features.invite.test.InMemorySeenInvitesStore
 import io.element.android.features.leaveroom.api.LeaveRoomEvent
 import io.element.android.features.leaveroom.api.LeaveRoomState
-import io.element.android.features.leaveroom.api.aLeaveRoomState
+import io.element.android.features.rageshake.test.logs.FakeAnnouncementService
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.dateformatter.api.DateFormatter
 import io.element.android.libraries.dateformatter.test.FakeDateFormatter
 import io.element.android.libraries.eventformatter.api.RoomLastMessageFormatter
 import io.element.android.libraries.eventformatter.test.FakeRoomLastMessageFormatter
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.fullscreenintent.api.aFullScreenIntentPermissionsState
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
@@ -79,6 +80,7 @@ import io.element.android.tests.testutils.lambda.value
 import io.element.android.tests.testutils.test
 import io.element.android.tests.testutils.testCoroutineDispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
@@ -220,7 +222,6 @@ class RoomListPresenterTest {
                             roomName = summary.name,
                             isDm = false,
                             isFavorite = false,
-                            markAsUnreadFeatureFlagEnabled = true,
                             hasNewContent = false,
                             displayClearRoomCacheAction = false,
                         )
@@ -238,7 +239,6 @@ class RoomListPresenterTest {
                             roomName = summary.name,
                             isDm = false,
                             isFavorite = true,
-                            markAsUnreadFeatureFlagEnabled = true,
                             hasNewContent = false,
                             displayClearRoomCacheAction = false,
                         )
@@ -266,7 +266,6 @@ class RoomListPresenterTest {
                             roomName = summary.name,
                             isDm = false,
                             isFavorite = false,
-                            markAsUnreadFeatureFlagEnabled = true,
                             // true here.
                             hasNewContent = false,
                             displayClearRoomCacheAction = true,
@@ -298,7 +297,6 @@ class RoomListPresenterTest {
                         roomName = summary.name,
                         isDm = false,
                         isFavorite = false,
-                        markAsUnreadFeatureFlagEnabled = true,
                         hasNewContent = false,
                         displayClearRoomCacheAction = false,
                     )
@@ -321,8 +319,8 @@ class RoomListPresenterTest {
             presenter.present()
         }.test {
             val initialState = awaitItem()
-            initialState.eventSink(RoomListEvents.LeaveRoom(A_ROOM_ID))
-            leaveRoomEventsRecorder.assertSingle(LeaveRoomEvent.ShowConfirmation(A_ROOM_ID))
+            initialState.eventSink(RoomListEvents.LeaveRoom(A_ROOM_ID, needsConfirmation = true))
+            leaveRoomEventsRecorder.assertSingle(LeaveRoomEvent.LeaveRoom(A_ROOM_ID, needsConfirmation = true))
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -601,6 +599,42 @@ class RoomListPresenterTest {
         }
     }
 
+    @Test
+    fun `present - notification sound banner`() = runTest {
+        val subscribeToVisibleRoomsLambda = lambdaRecorder { _: List<RoomId> -> }
+        val roomListService = FakeRoomListService(subscribeToVisibleRoomsLambda = subscribeToVisibleRoomsLambda)
+        val matrixClient = FakeMatrixClient(
+            roomListService = roomListService,
+        )
+        val roomSummary = aRoomSummary(
+            currentUserMembership = CurrentUserMembership.INVITED
+        )
+        roomListService.postAllRoomsLoadingState(RoomList.LoadingState.Loaded(1))
+        roomListService.postAllRooms(listOf(roomSummary))
+        val onAnnouncementDismissedResult = lambdaRecorder<Announcement, Unit> { }
+        val announcementService = FakeAnnouncementService(
+            onAnnouncementDismissedResult = onAnnouncementDismissedResult,
+        )
+        val presenter = createRoomListPresenter(
+            client = matrixClient,
+            announcementService = announcementService,
+        )
+        presenter.test {
+            assertThat(announcementService.announcementsToShowFlow().first()).isEmpty()
+            skipItems(1)
+            val state = awaitItem()
+            assertThat(state.contentAsRooms().showNewNotificationSoundBanner).isFalse()
+            announcementService.emitAnnouncementsToShow(listOf(Announcement.NewNotificationSound))
+            assertThat(awaitItem().contentAsRooms().showNewNotificationSoundBanner).isTrue()
+            state.eventSink(RoomListEvents.DismissNewNotificationSoundBanner)
+            onAnnouncementDismissedResult.assertions().isCalledOnce()
+                .with(value(Announcement.NewNotificationSound))
+            // Simulate service updating the value
+            announcementService.emitAnnouncementsToShow(emptyList())
+            assertThat(awaitItem().contentAsRooms().showNewNotificationSoundBanner).isFalse()
+        }
+    }
+
     private fun TestScope.createRoomListPresenter(
         buildMeta: BuildMeta = aBuildMeta(),
         client: MatrixClient = FakeMatrixClient(),
@@ -608,7 +642,6 @@ class RoomListPresenterTest {
         dateFormatter: DateFormatter = FakeDateFormatter(),
         roomLastMessageFormatter: RoomLastMessageFormatter = FakeRoomLastMessageFormatter(),
         sessionPreferencesStore: SessionPreferencesStore = InMemorySessionPreferencesStore(),
-        featureFlagService: FeatureFlagService = FakeFeatureFlagService(),
         analyticsService: AnalyticsService = FakeAnalyticsService(),
         filtersPresenter: Presenter<RoomListFiltersState> = Presenter { aRoomListFiltersState() },
         searchPresenter: Presenter<RoomListSearchState> = Presenter { aRoomListSearchState() },
@@ -616,6 +649,7 @@ class RoomListPresenterTest {
         notificationCleaner: NotificationCleaner = FakeNotificationCleaner(),
         appPreferencesStore: AppPreferencesStore = InMemoryAppPreferencesStore(),
         seenInvitesStore: SeenInvitesStore = InMemorySeenInvitesStore(),
+        announcementService: AnnouncementService = FakeAnnouncementService(),
     ) = RoomListPresenter(
         buildMeta = buildMeta,
         client = client,
@@ -627,11 +661,10 @@ class RoomListPresenterTest {
                 roomLastMessageFormatter = roomLastMessageFormatter,
             ),
             coroutineDispatchers = testCoroutineDispatchers(),
-            notificationSettingsService = client.notificationSettingsService(),
+            notificationSettingsService = client.notificationSettingsService,
             sessionCoroutineScope = backgroundScope,
             dateTimeObserver = FakeDateTimeObserver(),
         ),
-        featureFlagService = featureFlagService,
         searchPresenter = searchPresenter,
         sessionPreferencesStore = sessionPreferencesStore,
         filtersPresenter = filtersPresenter,
@@ -642,5 +675,6 @@ class RoomListPresenterTest {
         notificationCleaner = notificationCleaner,
         appPreferencesStore = appPreferencesStore,
         seenInvitesStore = seenInvitesStore,
+        announcementService = announcementService,
     )
 }

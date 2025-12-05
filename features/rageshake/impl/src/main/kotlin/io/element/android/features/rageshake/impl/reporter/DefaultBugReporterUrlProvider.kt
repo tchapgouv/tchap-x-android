@@ -7,16 +7,34 @@
 
 package io.element.android.features.rageshake.impl.reporter
 
-import com.squareup.anvil.annotations.ContributesBinding
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import io.element.android.appconfig.RageshakeConfig
-import io.element.android.libraries.di.AppScope
+import io.element.android.features.enterprise.api.BugReportUrl
+import io.element.android.features.enterprise.api.EnterpriseService
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import javax.inject.Inject
 
 @ContributesBinding(AppScope::class)
-class DefaultBugReporterUrlProvider @Inject constructor() : BugReporterUrlProvider {
-    override fun provide(): HttpUrl {
-        return RageshakeConfig.BUG_REPORT_URL.toHttpUrl()
+@Inject
+class DefaultBugReporterUrlProvider(
+    private val bugReportAppNameProvider: BugReportAppNameProvider,
+    private val enterpriseService: EnterpriseService,
+) : BugReporterUrlProvider {
+    override fun provide(): Flow<HttpUrl?> {
+        if (bugReportAppNameProvider.provide().isEmpty()) return flowOf(null)
+        return enterpriseService.bugReportUrlFlow
+            .map { bugReportUrl ->
+                when (bugReportUrl) {
+                    is BugReportUrl.Custom -> bugReportUrl.url
+                    BugReportUrl.Disabled -> null
+                    BugReportUrl.UseDefault -> RageshakeConfig.BUG_REPORT_URL.takeIf { it.isNotEmpty() }
+                }
+            }
+            .map { it?.toHttpUrl() }
     }
 }

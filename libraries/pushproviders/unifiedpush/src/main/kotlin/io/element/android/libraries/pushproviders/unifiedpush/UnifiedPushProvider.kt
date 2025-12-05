@@ -7,18 +7,19 @@
 
 package io.element.android.libraries.pushproviders.unifiedpush
 
-import com.squareup.anvil.annotations.ContributesMultibinding
-import io.element.android.libraries.di.AppScope
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.Inject
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.SessionId
 import io.element.android.libraries.pushproviders.api.CurrentUserPushConfig
 import io.element.android.libraries.pushproviders.api.Distributor
 import io.element.android.libraries.pushproviders.api.PushProvider
 import io.element.android.libraries.pushstore.api.clientsecret.PushClientSecret
-import javax.inject.Inject
 
-@ContributesMultibinding(AppScope::class)
-class UnifiedPushProvider @Inject constructor(
+@ContributesIntoSet(AppScope::class)
+@Inject
+class UnifiedPushProvider(
     private val unifiedPushDistributorProvider: UnifiedPushDistributorProvider,
     private val registerUnifiedPushUseCase: RegisterUnifiedPushUseCase,
     private val unRegisterUnifiedPushUseCase: UnregisterUnifiedPushUseCase,
@@ -28,6 +29,7 @@ class UnifiedPushProvider @Inject constructor(
 ) : PushProvider {
     override val index = UnifiedPushConfig.INDEX
     override val name = UnifiedPushConfig.NAME
+    override val supportMultipleDistributors = true
 
     override fun getDistributors(): List<Distributor> {
         return unifiedPushDistributorProvider.getDistributors()
@@ -39,6 +41,10 @@ class UnifiedPushProvider @Inject constructor(
             .onSuccess {
                 unifiedPushStore.setDistributorValue(matrixClient.sessionId, distributor.value)
             }
+    }
+
+    override suspend fun getCurrentDistributorValue(sessionId: SessionId): String? {
+        return unifiedPushStore.getDistributorValue(sessionId)
     }
 
     override suspend fun getCurrentDistributor(sessionId: SessionId): Distributor? {

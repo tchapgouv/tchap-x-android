@@ -12,11 +12,14 @@ import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import androidx.exifinterface.media.ExifInterface
-import com.squareup.anvil.annotations.ContributesBinding
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import dev.zacsweers.metro.Inject
 import io.element.android.libraries.androidutils.file.TemporaryUriDeleter
 import io.element.android.libraries.androidutils.file.createTmpFile
 import io.element.android.libraries.androidutils.file.getFileName
 import io.element.android.libraries.androidutils.file.safeRenameTo
+import io.element.android.libraries.androidutils.hash.hash
 import io.element.android.libraries.androidutils.media.runAndRelease
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.data.tryOrNull
@@ -26,14 +29,15 @@ import io.element.android.libraries.core.mimetype.MimeTypes
 import io.element.android.libraries.core.mimetype.MimeTypes.isMimeTypeAudio
 import io.element.android.libraries.core.mimetype.MimeTypes.isMimeTypeImage
 import io.element.android.libraries.core.mimetype.MimeTypes.isMimeTypeVideo
-import io.element.android.libraries.di.AppScope
-import io.element.android.libraries.di.ApplicationContext
+import io.element.android.libraries.di.annotations.ApplicationContext
 import io.element.android.libraries.matrix.api.media.AudioInfo
 import io.element.android.libraries.matrix.api.media.FileInfo
 import io.element.android.libraries.matrix.api.media.ImageInfo
 import io.element.android.libraries.matrix.api.media.VideoInfo
+import io.element.android.libraries.mediaupload.api.MediaOptimizationConfig
 import io.element.android.libraries.mediaupload.api.MediaPreProcessor
 import io.element.android.libraries.mediaupload.api.MediaUploadInfo
+import io.element.android.libraries.preferences.api.store.VideoCompressionPreset
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
@@ -41,12 +45,13 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
 import java.io.InputStream
-import javax.inject.Inject
+import java.util.UUID
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @ContributesBinding(AppScope::class)
-class AndroidMediaPreProcessor @Inject constructor(
+@Inject
+class AndroidMediaPreProcessor(
     @ApplicationContext private val context: Context,
     private val thumbnailFactory: ThumbnailFactory,
     private val imageCompressor: ImageCompressor,
@@ -68,11 +73,14 @@ class AndroidMediaPreProcessor @Inject constructor(
 
     private val contentResolver = context.contentResolver
 
+    private val cacheDir = context.cacheDir
+    private val baseTmpFileDir = File(cacheDir, "uploads")
+
     override suspend fun process(
         uri: Uri,
         mimeType: String,
         deleteOriginal: Boolean,
-        compressIfPossible: Boolean,
+        mediaOptimizationConfig: MediaOptimizationConfig,
     ): Result<MediaUploadInfo> = withContext(coroutineDispatchers.computation) {
         runCatchingExceptions {
             val result = when {
@@ -81,10 +89,10 @@ class AndroidMediaPreProcessor @Inject constructor(
                     processFile(uri, mimeType)
                 }
                 mimeType.isMimeTypeImage() -> {
-                    val shouldBeCompressed = compressIfPossible && mimeType !in notCompressibleImageTypes
+                    val shouldBeCompressed = mediaOptimizationConfig.compressImages && mimeType !in notCompressibleImageTypes
                     processImage(uri, mimeType, shouldBeCompressed)
                 }
-                mimeType.isMimeTypeVideo() -> processVideo(uri, mimeType, compressIfPossible)
+                mimeType.isMimeTypeVideo() -> processVideo(uri, mimeType, mediaOptimizationConfig.videoCompressionPreset)
                 mimeType.isMimeTypeAudio() -> processAudio(uri, mimeType)
                 else -> processFile(uri, mimeType)
             }
@@ -100,7 +108,32 @@ class AndroidMediaPreProcessor @Inject constructor(
         }
     }.mapFailure { MediaPreProcessor.Failure(it) }
 
+    override fun cleanUp() {
+        Timber.d("Cleaning up temporary media files")
+
+        // Clear temporary files created in older versions of the app
+        cacheDir.listFiles()?.onEach { file ->
+            if (file.isFile) {
+                val nameWithoutExtension = file.nameWithoutExtension
+                // UUIDs are 36 characters long, so we check if we can take those 36 characters
+                val nameWithoutExtensionAndRandom = if (nameWithoutExtension.length > 36) {
+                    nameWithoutExtension.substring(0, 36)
+                } else {
+                    // Not a temp file
+                    return@onEach
+                }
+                val isUUID = tryOrNull { UUID.fromString(nameWithoutExtensionAndRandom) } != null
+                if (isUUID && file.extension.isNotEmpty()) {
+                    file.delete()
+                }
+            }
+        }
+        // Clear temporary files created by this pre-processor in the separate uploads directory
+        baseTmpFileDir.listFiles()?.onEach { it.delete() }
+    }
+
     private suspend fun processFile(uri: Uri, mimeType: String): MediaUploadInfo {
+        Timber.d("Processing file ${uri.path.orEmpty().hash()}")
         val file = copyToTmpFile(uri)
         val info = FileInfo(
             mimetype = mimeType,
@@ -112,6 +145,7 @@ class AndroidMediaPreProcessor @Inject constructor(
     }
 
     private fun MediaUploadInfo.postProcess(uri: Uri): MediaUploadInfo {
+        Timber.d("Finished processing, post-processing ${uri.path.orEmpty().hash()}")
         val name = context.getFileName(uri) ?: return this
         val renamedFile = File(context.cacheDir, name).also {
             file.safeRenameTo(it)
@@ -126,6 +160,7 @@ class AndroidMediaPreProcessor @Inject constructor(
     }
 
     private suspend fun processImage(uri: Uri, mimeType: String, shouldBeCompressed: Boolean): MediaUploadInfo {
+        Timber.d("Processing image ${uri.path.orEmpty().hash()}")
         suspend fun processImageWithCompression(): MediaUploadInfo {
             // Read the orientation metadata from its own stream. Trying to reuse this stream for compression will fail.
             val orientation = contentResolver.openInputStream(uri).use { input ->
@@ -188,16 +223,24 @@ class AndroidMediaPreProcessor @Inject constructor(
         }
     }
 
-    private suspend fun processVideo(uri: Uri, mimeType: String?, shouldBeCompressed: Boolean): MediaUploadInfo {
+    private suspend fun processVideo(uri: Uri, mimeType: String?, videoCompressionPreset: VideoCompressionPreset): MediaUploadInfo {
+        Timber.d("Processing video ${uri.path.orEmpty().hash()}")
         val resultFile = runCatchingExceptions {
-            videoCompressor.compress(uri, shouldBeCompressed)
+            videoCompressor.compress(uri, videoCompressionPreset)
                 .onEach {
-                    // TODO handle progress
+                    if (it is VideoTranscodingEvent.Progress) {
+                        Timber.d("Video compression progress: ${it.value}%")
+                    } else if (it is VideoTranscodingEvent.Completed) {
+                        Timber.d("Video compression completed: ${it.file.path}")
+                    }
                 }
                 .filterIsInstance<VideoTranscodingEvent.Completed>()
                 .first()
                 .file
         }
+            .onFailure {
+                Timber.e(it, "Failed to compress video: $uri")
+            }
             .getOrNull()
 
         if (resultFile != null) {
@@ -209,12 +252,14 @@ class AndroidMediaPreProcessor @Inject constructor(
                 thumbnailFile = thumbnailInfo?.file
             )
         } else {
+            Timber.d("Could not transcode video ${uri.path.orEmpty().hash()}, sending original file as plain file")
             // If the video could not be compressed, just use the original one, but send it as a file
             return processFile(uri, MimeTypes.OctetStream)
         }
     }
 
     private suspend fun processAudio(uri: Uri, mimeType: String?): MediaUploadInfo {
+        Timber.d("Processing audio ${uri.path.orEmpty().hash()}")
         val file = copyToTmpFile(uri)
         return MediaMetadataRetriever().runAndRelease {
             setDataSource(context, Uri.fromFile(file))
@@ -273,7 +318,10 @@ class AndroidMediaPreProcessor @Inject constructor(
     private suspend fun createTmpFileWithInput(inputStream: InputStream): File? {
         return withContext(coroutineDispatchers.io) {
             tryOrNull {
-                val tmpFile = context.createTmpFile()
+                if (!baseTmpFileDir.exists()) {
+                    baseTmpFileDir.mkdirs()
+                }
+                val tmpFile = context.createTmpFile(baseTmpFileDir)
                 tmpFile.outputStream().use { inputStream.copyTo(it) }
                 tmpFile
             }
@@ -283,10 +331,17 @@ class AndroidMediaPreProcessor @Inject constructor(
     private fun extractVideoMetadata(file: File, mimeType: String?, thumbnailResult: ThumbnailResult?): VideoInfo =
         MediaMetadataRetriever().runAndRelease {
             setDataSource(context, Uri.fromFile(file))
+
+            val rotation = extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)?.toInt() ?: 0
+            val rawWidth = extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toLong() ?: 0L
+            val rawHeight = extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toLong() ?: 0L
+
+            val (width, height) = if (rotation == 90 || rotation == 270) rawHeight to rawWidth else rawWidth to rawHeight
+
             VideoInfo(
                 duration = extractDuration(),
-                width = extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)?.toLong() ?: 0L,
-                height = extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toLong() ?: 0L,
+                width = width,
+                height = height,
                 mimetype = mimeType,
                 size = file.length(),
                 thumbnailInfo = thumbnailResult?.info,

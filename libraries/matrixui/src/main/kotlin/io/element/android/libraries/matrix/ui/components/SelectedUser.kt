@@ -7,43 +7,20 @@
 
 package io.element.android.libraries.matrix.ui.components
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.LayoutDirection
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
-import io.element.android.compound.theme.ElementTheme
-import io.element.android.compound.tokens.generated.CompoundIcons
-import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.components.avatar.AvatarType
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
-import io.element.android.libraries.designsystem.theme.badgeExternalBackgroundColor
-import io.element.android.libraries.designsystem.theme.badgeExternalContentColor
-import io.element.android.libraries.designsystem.theme.components.Icon
-import io.element.android.libraries.designsystem.theme.components.Surface
-import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.matrix.ui.model.getAvatarData
 import io.element.android.libraries.matrix.ui.model.getBestName
-import io.element.android.libraries.ui.strings.CommonStrings
 
 @Composable
 fun SelectedUser(
@@ -52,67 +29,18 @@ fun SelectedUser(
     onUserRemove: (MatrixUser) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier
-            .width(AvatarSize.SelectedUser.dp)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Avatar(
-                avatarData = matrixUser.getAvatarData(size = AvatarSize.SelectedUser),
-                avatarType = AvatarType.User,
-            )
-            // TCHAP external user
-            if (matrixUser.userId.toString().isExternalTchapUser()) {
-                Surface(
-                    color = ElementTheme.colors.badgeExternalBackgroundColor,
-                    contentColor = ElementTheme.colors.badgeExternalContentColor,
-                    shape = RoundedCornerShape(9.dp),
-                ) {
-                    Text(
-                        modifier = Modifier.clipToBounds()
-                            .padding(4.dp),
-                        text = matrixUser.getBestName(),
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 2,
-                        style = ElementTheme.typography.fontBodyMdRegular,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            } else {
-                Text(
-                    modifier = Modifier.clipToBounds(),
-                    text = matrixUser.getBestName(),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 2,
-                    style = ElementTheme.typography.fontBodyMdRegular,
-                    textAlign = TextAlign.Center,
-                )
-            }
-        }
-        if (canRemove) {
-            Surface(
-                color = ElementTheme.colors.textPrimary,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(20.dp)
-                    .align(Alignment.TopEnd)
-                    .clickable(
-                        indication = ripple(),
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = { onUserRemove(matrixUser) }
-                    ),
-            ) {
-                Icon(
-                    imageVector = CompoundIcons.Close(),
-                    contentDescription = stringResource(id = CommonStrings.action_remove),
-                    tint = ElementTheme.colors.iconOnSolidPrimary,
-                    modifier = Modifier.padding(2.dp)
-                )
-            }
-        }
-    }
+    SelectedItem(
+        avatarData = matrixUser.getAvatarData(size = AvatarSize.SelectedUser),
+        avatarType = AvatarType.User,
+        text = matrixUser.getBestName(),
+        maxLines = 2,
+        a11yContentDescription = matrixUser.getBestName(),
+        canRemove = canRemove,
+        onRemoveClick = { onUserRemove(matrixUser) },
+        modifier = modifier,
+        // TCHAP external user
+        isExternalTchapUser = matrixUser.userId.toString().isExternalTchapUser(),
+    )
 }
 
 @PreviewsDayNight
@@ -127,9 +55,9 @@ internal fun SelectedUserExternalPreview() = ElementPreview {
 
 @PreviewsDayNight
 @Composable
-internal fun SelectedUserPreview() = ElementPreview {
+internal fun SelectedUserPreview(@PreviewParameter(MatrixUserWithAvatarProvider::class) user: MatrixUser) = ElementPreview {
     SelectedUser(
-        aMatrixUser(displayName = "John Doe"),
+        matrixUser = user,
         canRemove = true,
         onUserRemove = {},
     )
@@ -137,9 +65,23 @@ internal fun SelectedUserPreview() = ElementPreview {
 
 @PreviewsDayNight
 @Composable
+internal fun SelectedUserRtlPreview() = CompositionLocalProvider(
+    LocalLayoutDirection provides LayoutDirection.Rtl,
+) {
+    ElementPreview {
+        SelectedUser(
+            matrixUser = aMatrixUser(displayName = "John Doe"),
+            canRemove = true,
+            onUserRemove = {},
+        )
+    }
+}
+
+@PreviewsDayNight
+@Composable
 internal fun SelectedUserCannotRemovePreview() = ElementPreview {
     SelectedUser(
-        aMatrixUser(),
+        matrixUser = aMatrixUser(),
         canRemove = false,
         onUserRemove = {},
     )

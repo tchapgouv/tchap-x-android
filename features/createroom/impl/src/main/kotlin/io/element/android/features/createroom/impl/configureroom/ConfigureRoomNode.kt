@@ -14,23 +14,25 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.plugin.Plugin
 import com.bumble.appyx.core.plugin.plugins
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedInject
 import im.vector.app.features.analytics.plan.MobileScreen
-import io.element.android.anvilannotations.ContributesNode
-import io.element.android.features.createroom.CreateRoomNavigator
-import io.element.android.features.createroom.impl.di.CreateRoomScope
-import io.element.android.libraries.matrix.api.core.toRoomIdOrAlias
+import io.element.android.annotations.ContributesNode
+import io.element.android.libraries.di.SessionScope
+import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.services.analytics.api.AnalyticsService
 
-@ContributesNode(CreateRoomScope::class)
-class ConfigureRoomNode @AssistedInject constructor(
+@ContributesNode(SessionScope::class)
+@AssistedInject
+class ConfigureRoomNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
     private val presenter: ConfigureRoomPresenter,
     private val analyticsService: AnalyticsService,
 ) : Node(buildContext, plugins = plugins) {
-    private val navigator = plugins<CreateRoomNavigator>().first()
+    interface Callback : Plugin {
+        fun onCreateRoomSuccess(roomId: RoomId)
+    }
 
     init {
         lifecycle.subscribe(
@@ -40,6 +42,10 @@ class ConfigureRoomNode @AssistedInject constructor(
         )
     }
 
+    private fun onCreateRoomSuccess(roomId: RoomId) {
+        plugins<Callback>().forEach { it.onCreateRoomSuccess(roomId) }
+    }
+
     @Composable
     override fun View(modifier: Modifier) {
         val state = presenter.present()
@@ -47,9 +53,7 @@ class ConfigureRoomNode @AssistedInject constructor(
             state = state,
             modifier = modifier,
             onBackClick = this::navigateUp,
-            onCreateRoomSuccess = {
-                navigator.onOpenRoom(roomIdOrAlias = it.toRoomIdOrAlias(), serverNames = emptyList())
-            },
+            onCreateRoomSuccess = ::onCreateRoomSuccess,
         )
     }
 }

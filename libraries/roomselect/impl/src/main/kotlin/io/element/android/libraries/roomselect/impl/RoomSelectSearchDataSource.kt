@@ -7,6 +7,7 @@
 
 package io.element.android.libraries.roomselect.impl
 
+import dev.zacsweers.metro.Inject
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.matrix.api.room.CurrentUserMembership
 import io.element.android.libraries.matrix.api.roomlist.RoomList
@@ -15,13 +16,12 @@ import io.element.android.libraries.matrix.api.roomlist.RoomListService
 import io.element.android.libraries.matrix.api.roomlist.loadAllIncrementally
 import io.element.android.libraries.matrix.ui.model.SelectRoomInfo
 import io.element.android.libraries.matrix.ui.model.toSelectRoomInfo
-import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 private const val PAGE_SIZE = 30
 
@@ -29,7 +29,8 @@ private const val PAGE_SIZE = 30
  * DataSource for RoomSummaryDetails that can be filtered by a search query,
  * and which only includes rooms the user has joined.
  */
-class RoomSelectSearchDataSource @Inject constructor(
+@Inject
+class RoomSelectSearchDataSource(
     roomListService: RoomListService,
     coroutineDispatchers: CoroutineDispatchers,
 ) {
@@ -39,13 +40,13 @@ class RoomSelectSearchDataSource @Inject constructor(
         source = RoomList.Source.All,
     )
 
-    val roomInfoList: Flow<PersistentList<SelectRoomInfo>> = roomList.filteredSummaries
+    val roomInfoList: Flow<ImmutableList<SelectRoomInfo>> = roomList.filteredSummaries
         .map { roomSummaries ->
             roomSummaries
                 .filter { it.info.currentUserMembership == CurrentUserMembership.JOINED }
                 .distinctBy { it.roomId } // This should be removed once we're sure no duplicate Rooms can be received
                 .map { roomSummary -> roomSummary.toSelectRoomInfo() }
-                .toPersistentList()
+                .toImmutableList()
         }
         .flowOn(coroutineDispatchers.computation)
 

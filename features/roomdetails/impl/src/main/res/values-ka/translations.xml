@@ -32,8 +32,6 @@
   <string name="screen_room_change_role_unsaved_changes_description">"თქვენ გაქვთ შეუნახავი ცვლილებები"</string>
   <string name="screen_room_change_role_unsaved_changes_title">"შენახვა?"</string>
   <string name="screen_room_details_add_topic_title">"თემის დამატება"</string>
-  <string name="screen_room_details_already_a_member">"უკვე წევრია"</string>
-  <string name="screen_room_details_already_invited">"უკვე მოწვეულია"</string>
   <string name="screen_room_details_edit_room_title">"ოთახის რედაქტირება"</string>
   <string name="screen_room_details_edition_error">"უცნობი შეცდომა მოხდა. ინფორმაციის შეცვლა ვერ მოხერხდა."</string>
   <string name="screen_room_details_edition_error_title">"ოთახის განახლება შეუძლებელია"</string>
@@ -48,6 +46,7 @@
   <string name="screen_room_details_notification_mode_custom">"მორგებული"</string>
   <string name="screen_room_details_notification_mode_default">"ნაგულისხმევი"</string>
   <string name="screen_room_details_notification_title">"შეტყობინებები"</string>
+  <string name="screen_room_details_profile_row_title">"პროფილი"</string>
   <string name="screen_room_details_roles_and_permissions">"როლები და ნებართვები"</string>
   <string name="screen_room_details_room_name_label">"ოთახის სახელი"</string>
   <string name="screen_room_details_security_title">"უსაფრთხოება"</string>

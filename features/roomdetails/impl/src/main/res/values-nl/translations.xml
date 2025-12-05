@@ -33,8 +33,6 @@
   <string name="screen_room_change_role_unsaved_changes_description">"Je hebt niet-opgeslagen wijzigingen"</string>
   <string name="screen_room_change_role_unsaved_changes_title">"Wijzigingen opslaan?"</string>
   <string name="screen_room_details_add_topic_title">"Onderwerp toevoegen"</string>
-  <string name="screen_room_details_already_a_member">"Reeds lid"</string>
-  <string name="screen_room_details_already_invited">"Reeds uitgenodigd"</string>
   <string name="screen_room_details_badge_encrypted">"Versleuteld"</string>
   <string name="screen_room_details_badge_not_encrypted">"Niet versleuteld"</string>
   <string name="screen_room_details_badge_public">"Openbare kamer"</string>
@@ -53,6 +51,7 @@
   <string name="screen_room_details_notification_mode_default">"Standaard"</string>
   <string name="screen_room_details_notification_title">"Meldingen"</string>
   <string name="screen_room_details_pinned_events_row_title">"Vastgezette berichten"</string>
+  <string name="screen_room_details_profile_row_title">"Profiel"</string>
   <string name="screen_room_details_roles_and_permissions">"Rollen en rechten"</string>
   <string name="screen_room_details_room_name_label">"Naam van de kamer"</string>
   <string name="screen_room_details_security_title">"Beveiliging"</string>

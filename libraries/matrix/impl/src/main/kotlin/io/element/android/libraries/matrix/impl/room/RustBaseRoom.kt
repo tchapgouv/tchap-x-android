@@ -38,10 +38,12 @@ import io.element.android.libraries.matrix.impl.timeline.toRustReceiptType
 import io.element.android.libraries.matrix.impl.util.mxCallbackFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
+import org.matrix.rustcomponents.sdk.CallDeclineListener
 import org.matrix.rustcomponents.sdk.RoomInfoListener
 import org.matrix.rustcomponents.sdk.use
 import timber.log.Timber
@@ -128,7 +130,11 @@ class RustBaseRoom(
 
     override suspend fun userRole(userId: UserId): Result<RoomMember.Role> = withContext(roomDispatcher) {
         runCatchingExceptions {
-            RoomMemberMapper.mapRole(innerRoom.suggestedRoleForUser(userId.value))
+            val powerLevel = roomInfoFlow.value.roomPowerLevels?.powerLevelOf(userId) ?: 0L
+            RoomMemberMapper.mapRole(
+                role = innerRoom.suggestedRoleForUser(userId.value),
+                powerLevel = powerLevel,
+            )
         }
     }
 
@@ -151,7 +157,11 @@ class RustBaseRoom(
         runCatchingExceptions {
             innerRoom.leave()
         }.onSuccess {
-            roomMembershipObserver.notifyUserLeftRoom(roomId, membershipBeforeLeft)
+            roomMembershipObserver.notifyUserLeftRoom(
+                roomId = roomId,
+                isSpace = roomInfoFlow.value.isSpace,
+                membershipBeforeLeft = membershipBeforeLeft,
+            )
         }
     }
 
@@ -293,7 +303,31 @@ class RustBaseRoom(
     override suspend fun reportRoom(reason: String?): Result<Unit> = withContext(roomDispatcher) {
         runCatchingExceptions {
             Timber.d("reportRoom $roomId")
-            innerRoom.reportRoom(reason)
+            innerRoom.reportRoom(reason.orEmpty())
+        }
+    }
+
+    override suspend fun declineCall(notificationEventId: EventId): Result<Unit> = withContext(roomDispatcher) {
+        runCatchingExceptions {
+            innerRoom.declineCall(notificationEventId.value)
+        }
+    }
+
+    override suspend fun subscribeToCallDecline(notificationEventId: EventId): Flow<UserId> = withContext(roomDispatcher) {
+        mxCallbackFlow {
+            innerRoom.subscribeToCallDeclineEvents(notificationEventId.value, object : CallDeclineListener {
+                override fun call(declinerUserId: String) {
+                    trySend(UserId(declinerUserId))
+                }
+            })
+        }
+    }
+
+    override suspend fun threadRootIdForEvent(eventId: EventId): Result<ThreadId?> = withContext(roomDispatcher) {
+        runCatchingExceptions {
+            innerRoom.loadOrFetchEvent(eventId.value).use {
+                it.threadRootEventId()?.let(::ThreadId)
+            }
         }
     }
 }

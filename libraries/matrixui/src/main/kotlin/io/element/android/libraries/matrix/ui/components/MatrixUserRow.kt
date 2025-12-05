@@ -30,7 +30,7 @@ fun MatrixUserRow(
     name = matrixUser.getBestName(),
     subtext = if (matrixUser.displayName.isNullOrEmpty()) null else matrixUser.userId.value,
     modifier = modifier,
-    trailingContent,
+    trailingContent = trailingContent,
 )
 
 @PreviewsDayNight

@@ -25,6 +25,8 @@ const val A_USER_NAME_2 = "Bob"
 const val A_PASSWORD = "password"
 const val A_PASSPHRASE = "passphrase"
 const val A_SECRET = "secret"
+const val AN_APPLICATION_NAME = "AppName"
+const val AN_APPLICATION_NAME_DESKTOP = "AppNameDesktop"
 
 val A_USER_ID = UserId("@alice:server.org")
 val A_USER_ID_2 = UserId("@bob:server.org")
@@ -64,11 +66,14 @@ const val ANOTHER_MESSAGE = "Hello universe!"
 const val A_CAPTION = "A media caption"
 const val A_REASON = "A reason"
 
+const val A_SPACE_NAME = "A space name"
+
 const val A_REDACTION_REASON = "A redaction reason"
 
 const val A_HOMESERVER_URL = "matrix.org"
 const val A_HOMESERVER_URL_2 = "matrix-client.org"
 
+const val AN_ACCOUNT_PROVIDER_URL = "https://account.provider.org"
 const val AN_ACCOUNT_PROVIDER = "matrix.org"
 const val AN_ACCOUNT_PROVIDER_2 = "element.io"
 const val AN_ACCOUNT_PROVIDER_3 = "other.io"

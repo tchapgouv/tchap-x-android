@@ -1,4 +1,5 @@
-import extension.setupAnvil
+import extension.setupDependencyInjection
+import extension.testCommonDependencies
 
 /*
  * Copyright 2023, 2024 New Vector Ltd.
@@ -22,10 +23,9 @@ android {
     }
 }
 
-setupAnvil()
+setupDependencyInjection()
 
 dependencies {
-    implementation(libs.dagger)
     implementation(libs.androidx.corektx)
     implementation(libs.androidx.datastore.preferences)
     implementation(platform(libs.network.retrofit.bom))
@@ -54,6 +54,7 @@ dependencies {
     implementation(projects.libraries.uiStrings)
     implementation(projects.libraries.troubleshoot.api)
     implementation(projects.features.call.api)
+    implementation(projects.features.lockscreen.api)
     implementation(projects.libraries.featureflag.api)
     api(projects.libraries.pushproviders.api)
     api(projects.libraries.pushstore.api)
@@ -63,21 +64,17 @@ dependencies {
     implementation(projects.services.appnavstate.api)
     implementation(projects.services.toolbox.api)
 
-    testImplementation(libs.test.junit)
-    testImplementation(libs.test.mockk)
-    testImplementation(libs.test.robolectric)
-    testImplementation(libs.test.truth)
-    testImplementation(libs.test.turbine)
+    testCommonDependencies(libs)
     testImplementation(libs.coil.test)
-    testImplementation(libs.coroutines.test)
     testImplementation(projects.libraries.matrix.test)
     testImplementation(projects.libraries.preferences.test)
     testImplementation(projects.libraries.sessionStorage.test)
     testImplementation(projects.libraries.push.test)
     testImplementation(projects.libraries.pushproviders.test)
     testImplementation(projects.libraries.pushstore.test)
-    testImplementation(projects.tests.testutils)
+    testImplementation(projects.libraries.troubleshoot.test)
     testImplementation(projects.features.call.test)
+    testImplementation(projects.features.lockscreen.test)
     testImplementation(projects.services.appnavstate.test)
     testImplementation(projects.services.toolbox.impl)
     testImplementation(projects.services.toolbox.test)

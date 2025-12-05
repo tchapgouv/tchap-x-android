@@ -7,27 +7,29 @@
 
 package io.element.android.features.login.impl.resolver
 
-import io.element.android.features.login.impl.resolver.network.WellknownRequest
+import dev.zacsweers.metro.Inject
 import io.element.android.libraries.core.bool.orFalse
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.coroutine.parallelMap
 import io.element.android.libraries.core.data.tryOrNull
 import io.element.android.libraries.core.uri.ensureProtocol
 import io.element.android.libraries.core.uri.isValidUrl
+import io.element.android.libraries.wellknown.api.WellKnown
+import io.element.android.libraries.wellknown.api.WellknownRetriever
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import java.util.Collections
-import javax.inject.Inject
 
 /**
  * Resolve homeserver base on search terms.
  */
-class HomeserverResolver @Inject constructor(
+@Inject
+class HomeserverResolver(
     private val dispatchers: CoroutineDispatchers,
-    private val wellknownRequest: WellknownRequest,
+    private val wellknownRetriever: WellknownRetriever,
 ) {
     fun resolve(userInput: String): Flow<List<HomeserverData>> = flow {
         val flowContext = currentCoroutineContext()
@@ -41,7 +43,7 @@ class HomeserverResolver @Inject constructor(
             list.parallelMap { url ->
                 val wellKnown = tryOrNull {
                     withTimeout(5000) {
-                        wellknownRequest.execute(url)
+                        wellknownRetriever.getWellKnown(url)
                     }
                 }
                 val isValid = wellKnown?.isValid().orFalse()
@@ -85,4 +87,8 @@ class HomeserverResolver @Inject constructor(
             add(data)
         }
     }
+}
+
+private fun WellKnown.isValid(): Boolean {
+    return homeServer?.baseURL?.isNotBlank().orFalse()
 }

@@ -33,8 +33,6 @@
   <string name="screen_room_change_role_unsaved_changes_description">"У вас ёсць незахаваныя змены."</string>
   <string name="screen_room_change_role_unsaved_changes_title">"Захаваць змены?"</string>
   <string name="screen_room_details_add_topic_title">"Дадаць тэму"</string>
-  <string name="screen_room_details_already_a_member">"Ужо ўдзельнік"</string>
-  <string name="screen_room_details_already_invited">"Ужо запрасілі"</string>
   <string name="screen_room_details_badge_encrypted">"Зашыфраваны"</string>
   <string name="screen_room_details_badge_not_encrypted">"Не зашыфраваны"</string>
   <string name="screen_room_details_badge_public">"Публічны пакой"</string>
@@ -53,6 +51,7 @@
   <string name="screen_room_details_notification_mode_default">"Стандартныя"</string>
   <string name="screen_room_details_notification_title">"Апавяшчэнні"</string>
   <string name="screen_room_details_pinned_events_row_title">"Замацаваныя паведамленні"</string>
+  <string name="screen_room_details_profile_row_title">"Профіль"</string>
   <string name="screen_room_details_roles_and_permissions">"Ролі і дазволы"</string>
   <string name="screen_room_details_room_name_label">"Назва пакоя"</string>
   <string name="screen_room_details_security_title">"Бяспека"</string>

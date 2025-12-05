@@ -11,33 +11,32 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.pager.VerticalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import io.element.android.appconfig.RoomListConfig
 import io.element.android.compound.theme.ElementTheme
@@ -48,15 +47,12 @@ import io.element.android.features.home.impl.filters.RoomListFiltersView
 import io.element.android.features.home.impl.filters.aRoomListFiltersState
 import io.element.android.libraries.designsystem.atomic.atoms.RedIndicatorAtom
 import io.element.android.libraries.designsystem.components.avatar.Avatar
-import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.components.avatar.AvatarType
-import io.element.android.libraries.designsystem.components.avatarBloom
+import io.element.android.libraries.designsystem.modifiers.backgroundVerticalGradient
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.text.applyScaleDown
-import io.element.android.libraries.designsystem.text.roundToPx
-import io.element.android.libraries.designsystem.text.toDp
 import io.element.android.libraries.designsystem.text.toSp
 import io.element.android.libraries.designsystem.theme.aliasScreenTitle
 import io.element.android.libraries.designsystem.theme.components.DropdownMenu
@@ -66,25 +62,29 @@ import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.IconButton
 import io.element.android.libraries.designsystem.theme.components.MediumTopAppBar
 import io.element.android.libraries.designsystem.theme.components.Text
+import io.element.android.libraries.matrix.api.core.SessionId
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.user.MatrixUser
+import io.element.android.libraries.matrix.ui.components.aMatrixUserList
 import io.element.android.libraries.matrix.ui.model.getAvatarData
 import io.element.android.libraries.testtags.TestTags
 import io.element.android.libraries.testtags.testTag
 import io.element.android.libraries.ui.strings.CommonStrings
-
-private val avatarBloomSize = 430.dp
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoomListTopBar(
     title: String,
-    matrixUser: MatrixUser,
+    currentUserAndNeighbors: ImmutableList<MatrixUser>,
     showAvatarIndicator: Boolean,
     areSearchResultsDisplayed: Boolean,
     onToggleSearch: () -> Unit,
     onMenuActionClick: (RoomListMenuAction) -> Unit,
     onOpenSettings: () -> Unit,
+    onAccountSwitch: (SessionId) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
     displayMenuItems: Boolean,
     displayFilters: Boolean,
@@ -94,10 +94,11 @@ fun RoomListTopBar(
 ) {
     DefaultRoomListTopBar(
         title = title,
-        matrixUser = matrixUser,
+        currentUserAndNeighbors = currentUserAndNeighbors,
         showAvatarIndicator = showAvatarIndicator,
         areSearchResultsDisplayed = areSearchResultsDisplayed,
         onOpenSettings = onOpenSettings,
+        onAccountSwitch = onAccountSwitch,
         onSearchClick = onToggleSearch,
         onMenuActionClick = onMenuActionClick,
         scrollBehavior = scrollBehavior,
@@ -113,11 +114,12 @@ fun RoomListTopBar(
 @Composable
 private fun DefaultRoomListTopBar(
     title: String,
-    matrixUser: MatrixUser,
+    currentUserAndNeighbors: ImmutableList<MatrixUser>,
     showAvatarIndicator: Boolean,
     areSearchResultsDisplayed: Boolean,
     scrollBehavior: TopAppBarScrollBehavior,
     onOpenSettings: () -> Unit,
+    onAccountSwitch: (SessionId) -> Unit,
     onSearchClick: () -> Unit,
     onMenuActionClick: (RoomListMenuAction) -> Unit,
     displayMenuItems: Boolean,
@@ -126,25 +128,7 @@ private fun DefaultRoomListTopBar(
     canReportBug: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    // We need this to manually clip the top app bar in preview mode
-    val previewAppBarHeight = if (LocalInspectionMode.current) {
-        112.dp.roundToPx()
-    } else {
-        null
-    }
     val collapsedFraction = scrollBehavior.state.collapsedFraction
-    var appBarHeight by remember {
-        mutableIntStateOf(previewAppBarHeight ?: 0)
-    }
-
-    val avatarData by remember(matrixUser) {
-        derivedStateOf {
-            matrixUser.getAvatarData(size = AvatarSize.CurrentUserTopBar)
-        }
-    }
-
-    val statusBarPadding = with(LocalDensity.current) { WindowInsets.statusBars.getTop(this).toDp() }
-
     Box(modifier = modifier) {
         val collapsedTitleTextStyle = ElementTheme.typography.aliasScreenTitle
         val expandedTitleTextStyle = ElementTheme.typography.fontHeadingLgBold.copy(
@@ -160,40 +144,13 @@ private fun DefaultRoomListTopBar(
                 titleLarge = collapsedTitleTextStyle
             ),
         ) {
-            Column(
-                modifier = Modifier
-                    .onSizeChanged {
-                        appBarHeight = it.height
-                    }
-                    .avatarBloom(
-                        avatarData = avatarData,
-                        background = if (ElementTheme.isLightTheme) {
-                            // Workaround to display a very subtle bloom for avatars with very soft colors
-                            Color(0xFFF9F9F9)
-                        } else {
-                            ElementTheme.colors.bgCanvasDefault
-                        },
-                        blurSize = DpSize(avatarBloomSize, avatarBloomSize),
-                        offset = DpOffset(24.dp, 24.dp + statusBarPadding),
-                        clipToSize = if (appBarHeight > 0) {
-                            DpSize(
-                                avatarBloomSize,
-                                appBarHeight.toDp()
-                            )
-                        } else {
-                            DpSize.Unspecified
-                        },
-                        bottomSoftEdgeColor = ElementTheme.colors.bgCanvasDefault,
-                        bottomSoftEdgeAlpha = if (displayFilters) {
-                            1f
-                        } else {
-                            1f - collapsedFraction
-                        },
-                        alpha = if (areSearchResultsDisplayed) 0f else 1f,
-                    )
-                    .statusBarsPadding(),
-            ) {
+            Column {
                 MediumTopAppBar(
+                    modifier = Modifier
+                        .backgroundVerticalGradient(
+                            isVisible = !areSearchResultsDisplayed,
+                        )
+                        .statusBarsPadding(),
                     colors = TopAppBarDefaults.mediumTopAppBarColors(
                         containerColor = Color.Transparent,
                         scrolledContainerColor = Color.Transparent,
@@ -208,8 +165,9 @@ private fun DefaultRoomListTopBar(
                     },
                     navigationIcon = {
                         NavigationIcon(
-                            avatarData = avatarData,
+                            currentUserAndNeighbors = currentUserAndNeighbors,
                             showAvatarIndicator = showAvatarIndicator,
+                            onAccountSwitch = onAccountSwitch,
                             onClick = onOpenSettings,
                         )
                     },
@@ -297,19 +255,67 @@ private fun DefaultRoomListTopBar(
 
 @Composable
 private fun NavigationIcon(
-    avatarData: AvatarData,
+    currentUserAndNeighbors: ImmutableList<MatrixUser>,
+    showAvatarIndicator: Boolean,
+    onAccountSwitch: (SessionId) -> Unit,
+    onClick: () -> Unit,
+) {
+    if (currentUserAndNeighbors.size == 1) {
+        AccountIcon(
+            matrixUser = currentUserAndNeighbors.single(),
+            isCurrentAccount = true,
+            showAvatarIndicator = showAvatarIndicator,
+            onClick = onClick,
+        )
+    } else {
+        // Render a vertical pager
+        val pagerState = rememberPagerState(initialPage = 1) { currentUserAndNeighbors.size }
+        // Listen to page changes and switch account if needed
+        val latestOnAccountSwitch by rememberUpdatedState(onAccountSwitch)
+        LaunchedEffect(pagerState) {
+            snapshotFlow { pagerState.settledPage }.collect { page ->
+                latestOnAccountSwitch(SessionId(currentUserAndNeighbors[page].userId.value))
+            }
+        }
+        VerticalPager(
+            state = pagerState,
+            modifier = Modifier.height(48.dp),
+        ) { page ->
+            AccountIcon(
+                matrixUser = currentUserAndNeighbors[page],
+                isCurrentAccount = page == 1,
+                showAvatarIndicator = page == 1 && showAvatarIndicator,
+                onClick = if (page == 1) {
+                    onClick
+                } else {
+                    {}
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun AccountIcon(
+    matrixUser: MatrixUser,
+    isCurrentAccount: Boolean,
     showAvatarIndicator: Boolean,
     onClick: () -> Unit,
 ) {
     IconButton(
-        modifier = Modifier.testTag(TestTags.homeScreenSettings),
+        modifier = if (isCurrentAccount) Modifier.testTag(TestTags.homeScreenSettings) else Modifier,
         onClick = onClick,
     ) {
         Box {
+            val avatarData by remember(matrixUser) {
+                derivedStateOf {
+                    matrixUser.getAvatarData(size = AvatarSize.CurrentUserTopBar)
+                }
+            }
             Avatar(
                 avatarData = avatarData,
                 avatarType = AvatarType.User,
-                contentDescription = stringResource(CommonStrings.common_settings),
+                contentDescription = if (isCurrentAccount) stringResource(CommonStrings.common_settings) else null,
             )
             if (showAvatarIndicator) {
                 RedIndicatorAtom(
@@ -326,11 +332,12 @@ private fun NavigationIcon(
 internal fun DefaultRoomListTopBarPreview() = ElementPreview {
     DefaultRoomListTopBar(
         title = stringResource(R.string.screen_roomlist_main_space_title),
-        matrixUser = MatrixUser(UserId("@id:domain"), "Alice"),
+        currentUserAndNeighbors = persistentListOf(MatrixUser(UserId("@id:domain"), "Alice")),
         showAvatarIndicator = false,
         areSearchResultsDisplayed = false,
         scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
         onOpenSettings = {},
+        onAccountSwitch = {},
         onSearchClick = {},
         displayMenuItems = true,
         displayFilters = true,
@@ -346,11 +353,33 @@ internal fun DefaultRoomListTopBarPreview() = ElementPreview {
 internal fun DefaultRoomListTopBarWithIndicatorPreview() = ElementPreview {
     DefaultRoomListTopBar(
         title = stringResource(R.string.screen_roomlist_main_space_title),
-        matrixUser = MatrixUser(UserId("@id:domain"), "Alice"),
+        currentUserAndNeighbors = persistentListOf(MatrixUser(UserId("@id:domain"), "Alice")),
         showAvatarIndicator = true,
         areSearchResultsDisplayed = false,
         scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
         onOpenSettings = {},
+        onAccountSwitch = {},
+        onSearchClick = {},
+        displayMenuItems = true,
+        displayFilters = true,
+        filtersState = aRoomListFiltersState(),
+        canReportBug = true,
+        onMenuActionClick = {},
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@PreviewsDayNight
+@Composable
+internal fun DefaultRoomListTopBarMultiAccountPreview() = ElementPreview {
+    DefaultRoomListTopBar(
+        title = stringResource(R.string.screen_roomlist_main_space_title),
+        currentUserAndNeighbors = aMatrixUserList().take(3).toImmutableList(),
+        showAvatarIndicator = false,
+        areSearchResultsDisplayed = false,
+        scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
+        onOpenSettings = {},
+        onAccountSwitch = {},
         onSearchClick = {},
         displayMenuItems = true,
         displayFilters = true,
