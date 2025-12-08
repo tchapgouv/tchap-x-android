@@ -111,13 +111,13 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
-<<<<<<< HEAD
+    // TCHAP feature flag to show matrix ID in user rows or user profile
     ShowMatrixId(
         key = "feature.showMatrixId",
         title = "Show Matrix ID",
         defaultValue = { false },
         isFinished = true,
-=======
+    ),
     SyncNotificationsWithWorkManager(
         key = "feature.sync_notifications_with_workmanager",
         title = "Sync notifications with WorkManager",
@@ -125,6 +125,5 @@ enum class FeatureFlags(
             " This should improve reliability and battery usage.",
         defaultValue = { true },
         isFinished = false,
->>>>>>> main-element
     ),
 }

@@ -54,15 +54,11 @@ class CreateAccountPresenter(
         val pageProgress: MutableState<Int> = remember { mutableIntStateOf(0) }
         val createAction: MutableState<AsyncAction<SessionId>> = remember { mutableStateOf(AsyncAction.Uninitialized) }
 
-<<<<<<< HEAD
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
-        fun handleEvents(event: CreateAccountEvents) {
-=======
         fun handleEvent(event: CreateAccountEvents) {
->>>>>>> main-element
             when (event) {
                 is CreateAccountEvents.SetPageProgress -> {
                     pageProgress.value = event.progress

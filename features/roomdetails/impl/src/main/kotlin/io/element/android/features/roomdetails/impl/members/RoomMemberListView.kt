@@ -89,32 +89,6 @@ fun RoomMemberListView(
                 .consumeWindowInsets(padding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-<<<<<<< HEAD
-            RoomMemberSearchBar(
-                showMatrixId = state.showMatrixId,
-                query = state.searchQuery,
-                state = state.searchResults,
-                active = state.isSearchActive,
-                placeHolderTitle = stringResource(CommonStrings.common_search_for_someone),
-                onActiveChange = { state.eventSink(RoomMemberListEvents.OnSearchActiveChanged(it)) },
-                onTextChange = { state.eventSink(RoomMemberListEvents.UpdateSearchQuery(it)) },
-                onSelectUser = ::onSelectUser,
-                selectedSection = selectedSection,
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            if (!state.isSearchActive) {
-                RoomMemberList(
-                    showMatrixId = state.showMatrixId,
-                    roomMembers = state.roomMembers,
-                    showMembersCount = true,
-                    canDisplayBannedUsersControls = state.moderationState.canBan,
-                    selectedSection = selectedSection,
-                    onSelectedSectionChange = { selectedSection = it },
-                    onSelectUser = ::onSelectUser,
-                )
-            }
-=======
             var searchQuery by textFieldState(state.searchQuery)
             SearchField(
                 value = searchQuery,
@@ -128,6 +102,7 @@ fun RoomMemberListView(
                 placeholder = stringResource(CommonStrings.common_search_for_someone),
             )
             RoomMemberList(
+                showMatrixId = state.showMatrixId,
                 roomMembersData = state.filteredRoomMembers,
                 selectedSection = state.selectedSection,
                 showBannedSection = state.showBannedSection,
@@ -135,20 +110,14 @@ fun RoomMemberListView(
                 onSelectedSectionChange = { state.eventSink(RoomMemberListEvents.ChangeSelectedSection(it)) },
                 onSelectUser = ::onSelectUser,
             )
->>>>>>> main-element
         }
     }
 }
 
 @Composable
 private fun RoomMemberList(
-<<<<<<< HEAD
     showMatrixId: Boolean,
-    roomMembers: AsyncData<RoomMembers>,
-    showMembersCount: Boolean,
-=======
     roomMembersData: AsyncData<RoomMembers>,
->>>>>>> main-element
     selectedSection: SelectedSection,
     showBannedSection: Boolean,
     searchQuery: String,
@@ -188,28 +157,19 @@ private fun RoomMemberList(
         when (roomMembersData) {
             is AsyncData.Failure -> failureItem(roomMembersData.error)
             is AsyncData.Loading,
-<<<<<<< HEAD
-            is AsyncData.Success -> memberItems(
-                showMatrixId = showMatrixId,
-                roomMembers = roomMembers.dataOrNull() ?: return@LazyColumn,
-                selectedSection = selectedSection,
-                onSelectUser = onSelectUser,
-                showMembersCount = showMembersCount,
-            )
-=======
             is AsyncData.Success -> {
                 val roomMembers = roomMembersData.dataOrNull() ?: return@LazyColumn
                 if (roomMembers.isEmpty(selectedSection)) {
                     emptySearchItem(searchQuery)
                 } else {
                     memberItems(
+                        showMatrixId = showMatrixId,
                         roomMembers = roomMembers,
                         selectedSection = selectedSection,
                         onSelectUser = onSelectUser,
                     )
                 }
             }
->>>>>>> main-element
             AsyncData.Uninitialized -> Unit
         }
     }
@@ -224,11 +184,6 @@ private fun LazyListScope.memberItems(
     when (selectedSection) {
         SelectedSection.MEMBERS -> {
             if (roomMembers.invited.isNotEmpty()) {
-<<<<<<< HEAD
-                roomMemberListSection(
-                    showMatrixId = showMatrixId,
-                    headerText = { stringResource(id = R.string.screen_room_member_list_pending_header_title) },
-=======
                 roomMemberListSectionHeader(
                     text = {
                         val memberCount = roomMembers.invited.count()
@@ -236,31 +191,20 @@ private fun LazyListScope.memberItems(
                     },
                 )
                 roomMemberListSectionItems(
->>>>>>> main-element
+                    showMatrixId = showMatrixId,
                     members = roomMembers.invited,
                     onMemberSelected = { onSelectUser(it) }
                 )
             }
             if (roomMembers.joined.isNotEmpty()) {
-<<<<<<< HEAD
-                roomMemberListSection(
-                    showMatrixId = showMatrixId,
-                    headerText = {
-                        if (showMembersCount) {
-                            val memberCount = roomMembers.joined.count()
-                            pluralStringResource(id = R.plurals.screen_room_member_list_header_title, count = memberCount, memberCount)
-                        } else {
-                            stringResource(id = R.string.screen_room_member_list_room_members_header_title)
-                        }
-=======
                 roomMemberListSectionHeader(
                     text = {
                         val memberCount = roomMembers.joined.count()
                         pluralStringResource(id = R.plurals.screen_room_member_list_header_title, count = memberCount, memberCount)
->>>>>>> main-element
                     },
                 )
                 roomMemberListSectionItems(
+                    showMatrixId = showMatrixId,
                     members = roomMembers.joined,
                     onMemberSelected = { onSelectUser(it) }
                 )
@@ -268,11 +212,6 @@ private fun LazyListScope.memberItems(
         }
         SelectedSection.BANNED -> {
             if (roomMembers.banned.isNotEmpty()) {
-<<<<<<< HEAD
-                roomMemberListSection(
-                    showMatrixId = showMatrixId,
-                    headerText = null,
-=======
                 roomMemberListSectionHeader(
                     text = {
                         val memberCount = roomMembers.banned.count()
@@ -281,7 +220,7 @@ private fun LazyListScope.memberItems(
                     isCritical = true,
                 )
                 roomMemberListSectionItems(
->>>>>>> main-element
+                    showMatrixId = showMatrixId,
                     members = roomMembers.banned,
                     onMemberSelected = { onSelectUser(it) }
                 )
@@ -303,11 +242,6 @@ private fun LazyListScope.failureItem(failure: Throwable) {
     }
 }
 
-<<<<<<< HEAD
-private fun LazyListScope.roomMemberListSection(
-    showMatrixId: Boolean,
-    headerText: @Composable (() -> String)?,
-=======
 private fun LazyListScope.roomMemberListSectionHeader(
     text: @Composable (() -> String),
     modifier: Modifier = Modifier,
@@ -324,7 +258,7 @@ private fun LazyListScope.roomMemberListSectionHeader(
 }
 
 private fun LazyListScope.roomMemberListSectionItems(
->>>>>>> main-element
+    showMatrixId: Boolean,
     members: ImmutableList<RoomMemberWithIdentityState>?,
     onMemberSelected: (RoomMember) -> Unit,
 ) {
@@ -435,45 +369,6 @@ private fun RoomMemberListTopBar(
     )
 }
 
-<<<<<<< HEAD
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun RoomMemberSearchBar(
-    showMatrixId: Boolean,
-    query: String,
-    state: SearchBarResultState<AsyncData<RoomMembers>>,
-    active: Boolean,
-    placeHolderTitle: String,
-    onActiveChange: (Boolean) -> Unit,
-    onTextChange: (String) -> Unit,
-    onSelectUser: (RoomMember) -> Unit,
-    selectedSection: SelectedSection,
-    modifier: Modifier = Modifier,
-) {
-    SearchBar(
-        query = query,
-        onQueryChange = onTextChange,
-        active = active,
-        onActiveChange = onActiveChange,
-        modifier = modifier,
-        placeHolderTitle = placeHolderTitle,
-        resultState = state,
-        resultHandler = { results ->
-            RoomMemberList(
-                showMatrixId = showMatrixId,
-                roomMembers = results,
-                showMembersCount = false,
-                onSelectUser = { onSelectUser(it) },
-                canDisplayBannedUsersControls = false,
-                selectedSection = selectedSection,
-                onSelectedSectionChange = {},
-            )
-        },
-    )
-}
-
-=======
->>>>>>> main-element
 @PreviewsDayNight
 @Composable
 internal fun RoomMemberListViewPreview(@PreviewParameter(RoomMemberListStateProvider::class) state: RoomMemberListState) = ElementPreview {

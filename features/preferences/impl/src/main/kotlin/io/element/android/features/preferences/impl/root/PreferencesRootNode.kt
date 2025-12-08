@@ -21,7 +21,6 @@ import com.bumble.appyx.core.plugin.Plugin
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
-import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.logout.api.direct.DirectLogoutEvents
 import io.element.android.features.logout.api.direct.DirectLogoutView
@@ -47,6 +46,7 @@ class PreferencesRootNode(
         fun navigateToSecureBackup()
         fun navigateToAnalyticsSettings()
         fun navigateToAbout()
+        fun onOpenFAQ(activity: Activity, darkTheme: Boolean)
         fun navigateToDeveloperSettings()
         fun navigateToNotificationSettings()
         fun navigateToLockScreenSettings()
@@ -58,52 +58,7 @@ class PreferencesRootNode(
         fun startAccountDeactivationFlow()
     }
 
-<<<<<<< HEAD
-    private fun onAddAccount() {
-        plugins<Callback>().forEach { it.onAddAccount() }
-    }
-
-    private fun onOpenBugReport() {
-        plugins<Callback>().forEach { it.onOpenBugReport() }
-    }
-
-    private fun onSecureBackupClick() {
-        plugins<Callback>().forEach { it.onSecureBackupClick() }
-    }
-
-    private fun onOpenDeveloperSettings() {
-        plugins<Callback>().forEach { it.onOpenDeveloperSettings() }
-    }
-
-    private fun onOpenAdvancedSettings() {
-        plugins<Callback>().forEach { it.onOpenAdvancedSettings() }
-    }
-
-    private fun onOpenLabs() {
-        plugins<Callback>().forEach { it.onOpenLabs() }
-    }
-
-    private fun onOpenAnalytics() {
-        plugins<Callback>().forEach { it.onOpenAnalytics() }
-    }
-
-    private fun onOpenFAQ(
-        activity: Activity,
-        darkTheme: Boolean,
-    ) {
-        activity.openUrlInChromeCustomTab(
-            null,
-            darkTheme,
-            url = LearnMoreConfig.FAQ_URL
-        )
-    }
-
-    private fun onOpenAbout() {
-        plugins<Callback>().forEach { it.onOpenAbout() }
-    }
-=======
     private val callback: Callback = callback()
->>>>>>> main-element
 
     private fun onManageAccountClick(
         activity: Activity,
@@ -133,26 +88,15 @@ class PreferencesRootNode(
             state = state,
             modifier = modifier,
             onBackClick = this::navigateUp,
-<<<<<<< HEAD
-            onAddAccountClick = this::onAddAccount,
-            onOpenRageShake = this::onOpenBugReport,
-            onOpenAnalytics = this::onOpenAnalytics,
-            onOpenFAQ = { onOpenFAQ(activity, isDark) },
-            onOpenAbout = this::onOpenAbout,
-            onSecureBackupClick = this::onSecureBackupClick,
-            onOpenDeveloperSettings = this::onOpenDeveloperSettings,
-            onOpenAdvancedSettings = this::onOpenAdvancedSettings,
-            onOpenLabs = this::onOpenLabs,
-=======
             onAddAccountClick = callback::navigateToAddAccount,
             onOpenRageShake = callback::navigateToBugReport,
             onOpenAnalytics = callback::navigateToAnalyticsSettings,
             onOpenAbout = callback::navigateToAbout,
+            onOpenFAQ = { callback.onOpenFAQ(activity, isDark) },
             onSecureBackupClick = callback::navigateToSecureBackup,
             onOpenDeveloperSettings = callback::navigateToDeveloperSettings,
             onOpenAdvancedSettings = callback::navigateToAdvancedSettings,
             onOpenLabs = callback::navigateToLabs,
->>>>>>> main-element
             onManageAccountClick = { onManageAccountClick(activity, it, isDark) },
             onOpenNotificationSettings = callback::navigateToNotificationSettings,
             onOpenLockScreenSettings = callback::navigateToLockScreenSettings,
@@ -165,12 +109,8 @@ class PreferencesRootNode(
                     callback.startSignOutFlow()
                 }
             },
-<<<<<<< HEAD
-            onDeactivateClick = this::onOpenAccountDeactivation,
+            onDeactivateClick = callback::startAccountDeactivationFlow,
             showMatrixId = showMatrixId,
-=======
-            onDeactivateClick = callback::startAccountDeactivationFlow
->>>>>>> main-element
         )
 
         directLogoutView.Render(state = state.directLogoutState)

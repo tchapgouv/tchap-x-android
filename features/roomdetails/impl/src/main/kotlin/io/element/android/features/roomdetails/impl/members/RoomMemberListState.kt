@@ -17,14 +17,10 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 data class RoomMemberListState(
-<<<<<<< HEAD
     val showMatrixId: Boolean,
-    val roomMembers: AsyncData<RoomMembers>,
-=======
     // Only used to know if we can show the banned section
     private val roomMembers: AsyncData<RoomMembers>,
     val filteredRoomMembers: AsyncData<RoomMembers>,
->>>>>>> main-element
     val searchQuery: String,
     val canInvite: Boolean,
     val selectedSection: SelectedSection,

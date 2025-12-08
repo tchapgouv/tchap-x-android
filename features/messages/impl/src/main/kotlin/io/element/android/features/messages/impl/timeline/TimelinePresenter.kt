@@ -329,7 +329,6 @@ class TimelinePresenter(
         )
     }
 
-<<<<<<< HEAD
     private fun TimelineItem.getBwiScanStateModel(): TimelineItemBwiScanStateChangedModel? {
         if (this !is Virtual || model !is TimelineItemBwiScanStateChangedModel) return null
         return model
@@ -428,7 +427,8 @@ class TimelinePresenter(
 //                item
 //            }
 //        }.toImmutableList()
-=======
+    }
+
     private suspend fun focusOnEvent(
         eventId: EventId,
         focusRequestState: MutableState<FocusRequestState>,
@@ -476,7 +476,6 @@ class TimelinePresenter(
                     focusRequestState.value = FocusRequestState.Failure(it)
                 }
         }
->>>>>>> main-element
     }
 
     /**

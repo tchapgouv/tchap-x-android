@@ -148,7 +148,7 @@ class DefaultInvitePeoplePresenter(
                     if (hasSelectedExternalUsers && !room.dataOrNull()?.info()?.isOpenToExternalUsers!!) {
                         showOpenRoomToExternalsDialog = true
                     } else {
-                        handleEvents(InvitePeopleEvents.SendInvites)
+                        handleEvent(InvitePeopleEvents.SendInvites)
                     }
                 }
             }
@@ -164,7 +164,7 @@ class DefaultInvitePeoplePresenter(
                         sessionCoroutineScope.launch {
                             it.setAccessRule(RoomAccessRules.UNRESTRICTED)
                                 .onSuccess {
-                                    handleEvents(InvitePeopleEvents.SendInvites)
+                                    handleEvent(InvitePeopleEvents.SendInvites)
                                 }
                                 .onFailure {
                                     showOpenRoomToExternalsDialog = false

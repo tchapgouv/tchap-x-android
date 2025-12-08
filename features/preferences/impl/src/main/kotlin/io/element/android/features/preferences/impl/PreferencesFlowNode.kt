@@ -8,6 +8,7 @@
 
 package io.element.android.features.preferences.impl
 
+import android.app.Activity
 import android.os.Parcelable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,6 +21,7 @@ import com.bumble.appyx.navmodel.backstack.operation.push
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
+import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.features.deactivation.api.AccountDeactivationEntryPoint
 import io.element.android.features.licenses.api.OpenSourceLicensesEntryPoint
 import io.element.android.features.lockscreen.api.LockScreenEntryPoint
@@ -35,6 +37,7 @@ import io.element.android.features.preferences.impl.notifications.NotificationSe
 import io.element.android.features.preferences.impl.notifications.edit.EditDefaultNotificationSettingNode
 import io.element.android.features.preferences.impl.root.PreferencesRootNode
 import io.element.android.features.preferences.impl.user.editprofile.EditUserProfileNode
+import io.element.android.libraries.androidutils.browser.openUrlInChromeCustomTab
 import io.element.android.libraries.architecture.BackstackView
 import io.element.android.libraries.architecture.BaseFlowNode
 import io.element.android.libraries.architecture.appyx.canPop
@@ -141,6 +144,14 @@ class PreferencesFlowNode(
 
                     override fun navigateToAbout() {
                         backstack.push(NavTarget.About)
+                    }
+
+                    override fun onOpenFAQ(activity: Activity, darkTheme: Boolean) {
+                        activity.openUrlInChromeCustomTab(
+                            null,
+                            darkTheme,
+                            url = LearnMoreConfig.FAQ_URL
+                        )
                     }
 
                     override fun navigateToDeveloperSettings() {

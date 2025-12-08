@@ -8,11 +8,7 @@
 
 package io.element.android.libraries.designsystem.components.avatar
 
-<<<<<<< HEAD
-import androidx.compose.runtime.Immutable
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.toUserDisplayName
-=======
->>>>>>> main-element
 import io.element.android.libraries.core.data.tryOrNull
 import java.text.BreakIterator
 

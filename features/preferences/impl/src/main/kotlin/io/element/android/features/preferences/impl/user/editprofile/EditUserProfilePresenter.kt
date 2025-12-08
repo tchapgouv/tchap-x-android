@@ -165,19 +165,10 @@ class EditUserProfilePresenter(
             }
         }
 
-<<<<<<< HEAD
-        val canSave = remember(userDisplayName, userAvatarUri) {
-            val hasProfileChanged = hasDisplayNameChanged(userDisplayName, matrixUser) ||
-                hasAvatarUrlChanged(userAvatarUri, matrixUser)
-            !userDisplayName.isNullOrBlank() && hasProfileChanged
-        }
-
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
-=======
->>>>>>> main-element
         return EditUserProfileState(
             showMatrixId = showMatrixId,
             userId = matrixUser.userId,

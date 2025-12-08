@@ -26,30 +26,6 @@ android {
             consumerProguardFiles("consumer-rules.pro")
         }
     }
-<<<<<<< HEAD
-
-    dependencies {
-        api(projects.libraries.compound)
-
-        implementation(libs.androidx.compose.material3.windowsizeclass)
-        implementation(libs.androidx.compose.material3.adaptive)
-        implementation(libs.coil.compose)
-        implementation(libs.vanniktech.blurhash)
-        implementation(projects.features.enterprise.api)
-        implementation(projects.libraries.androidutils)
-        implementation(projects.libraries.architecture)
-        implementation(projects.libraries.core)
-        implementation(projects.libraries.preferences.api)
-        implementation(projects.libraries.tchaputils)
-        implementation(projects.libraries.testtags)
-        implementation(projects.libraries.uiStrings)
-
-        ksp(libs.showkase.processor)
-        implementation(libs.showkase)
-
-        testCommonDependencies(libs)
-    }
-=======
 }
 
 dependencies {
@@ -59,10 +35,12 @@ dependencies {
     implementation(libs.androidx.compose.material3.adaptive)
     implementation(libs.coil.compose)
     implementation(libs.vanniktech.blurhash)
+    implementation(projects.features.enterprise.api)
     implementation(projects.libraries.androidutils)
     implementation(projects.libraries.architecture)
     implementation(projects.libraries.core)
     implementation(projects.libraries.preferences.api)
+    implementation(projects.libraries.tchaputils)
     implementation(projects.libraries.testtags)
     implementation(projects.libraries.uiStrings)
 
@@ -70,5 +48,4 @@ dependencies {
     implementation(libs.showkase)
 
     testCommonDependencies(libs)
->>>>>>> main-element
 }

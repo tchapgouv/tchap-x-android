@@ -184,32 +184,6 @@ fun MessagesView(
             Scaffold(
                 contentWindowInsets = WindowInsets.statusBars,
                 topBar = {
-<<<<<<< HEAD
-                    Column {
-                        ConnectivityIndicatorView(isOnline = state.hasNetworkConnection)
-                        if (state.timelineState.timelineMode is Timeline.Mode.Thread) {
-                            ThreadTopBar(
-                                roomName = state.roomName,
-                                roomAvatarData = state.roomAvatar,
-                                heroes = state.heroes,
-                                isTombstoned = state.isTombstoned,
-                                onBackClick = onBackClick,
-                            )
-                        } else {
-                            MessagesViewTopBar(
-                                roomBadges = state.roomBadges,
-                                roomName = state.roomName,
-                                roomAvatar = state.roomAvatar,
-                                isTombstoned = state.isTombstoned,
-                                heroes = state.heroes,
-                                roomCallState = state.roomCallState,
-                                dmUserIdentityState = state.dmUserVerificationState,
-                                onBackClick = { hidingKeyboard { onBackClick() } },
-                                onRoomDetailsClick = { hidingKeyboard { onRoomDetailsClick() } },
-                                onJoinCallClick = onJoinCallClick,
-                            )
-                        }
-=======
                     if (state.timelineState.timelineMode is Timeline.Mode.Thread) {
                         ThreadTopBar(
                             roomName = state.roomName,
@@ -220,6 +194,7 @@ fun MessagesView(
                         )
                     } else {
                         MessagesViewTopBar(
+                            roomBadges = state.roomBadges,
                             roomName = state.roomName,
                             roomAvatar = state.roomAvatar,
                             isTombstoned = state.isTombstoned,
@@ -230,7 +205,6 @@ fun MessagesView(
                             onRoomDetailsClick = { hidingKeyboard { onRoomDetailsClick() } },
                             onJoinCallClick = onJoinCallClick,
                         )
->>>>>>> main-element
                     }
                 },
                 content = { padding ->

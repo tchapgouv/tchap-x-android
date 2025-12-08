@@ -79,11 +79,8 @@ class EditUserProfilePresenterTest {
 
     private fun createEditUserProfilePresenter(
         matrixClient: MatrixClient = FakeMatrixClient(),
-<<<<<<< HEAD
         buildMeta: BuildMeta = aBuildMeta(),
-=======
         navigator: EditUserProfileNavigator = FakeEditUserProfileNavigator(),
->>>>>>> main-element
         matrixUser: MatrixUser = aMatrixUser(),
         permissionsPresenter: PermissionsPresenter = FakePermissionsPresenter(),
         temporaryUriDeleter: TemporaryUriDeleter = FakeTemporaryUriDeleter(),

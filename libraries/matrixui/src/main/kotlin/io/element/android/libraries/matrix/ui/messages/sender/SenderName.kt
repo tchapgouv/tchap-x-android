@@ -39,17 +39,10 @@ fun SenderName(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         when (senderProfile) {
-<<<<<<< HEAD
-            is ProfileTimelineDetails.Error,
-            ProfileTimelineDetails.Pending,
-            ProfileTimelineDetails.Unavailable -> {
-                MainText(text = senderId.extractedDisplayName, mode = senderNameMode) // TCHAP hide the Matrix Id
-=======
             is ProfileDetails.Error,
             ProfileDetails.Pending,
             ProfileDetails.Unavailable -> {
-                MainText(text = senderId.value, mode = senderNameMode)
->>>>>>> main-element
+                MainText(text = senderId.extractedDisplayName, mode = senderNameMode)
             }
             is ProfileDetails.Ready -> {
                 val displayName = senderProfile.displayName

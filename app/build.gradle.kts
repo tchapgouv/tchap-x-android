@@ -127,12 +127,19 @@ android {
             )
             signingConfig = signingConfigs.getByName("debug")
 
-            optimization {
-                enable = true
-                keepRules {
-                    files.add(File(projectDir, "proguard-rules.pro"))
-                    files.add(getDefaultProguardFile("proguard-android-optimize.txt"))
-                }
+//            optimization {
+//                enable = true
+//                keepRules {
+//                    files.add(File(projectDir, "proguard-rules.pro"))
+//                    files.add(getDefaultProguardFile("proguard-android-optimize.txt"))
+//                }
+//            }
+            postprocessing {
+                isRemoveUnusedCode = true
+                isObfuscate = false
+                isOptimizeCode = true
+                isRemoveUnusedResources = true
+                proguardFiles("proguard-rules.pro")
             }
         }
 
