@@ -237,44 +237,21 @@ private fun RoomMemberActionsBottomSheet(
                     .padding(bottom = 24.dp)
                     .align(Alignment.CenterHorizontally)
             )
-<<<<<<< HEAD
-            Text(
-                // TCHAP display a value generated from userId if displayname does not exist
-                text = user.getBestName(),
-                style = ElementTheme.typography.fontBodyLgRegular,
-                color = ElementTheme.colors.textSecondary,
-=======
             val bestName = user.getBestName()
             Text(
                 text = bestName,
                 style = ElementTheme.typography.fontHeadingLgBold,
->>>>>>> main-element
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-<<<<<<< HEAD
-                        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
-                        .fillMaxWidth()
-            )
-            // TCHAP show the Matrix Id depending of feature flag showMatrixId
-            if (showMatrixId) {
-                Text(
-                    text = user.userId.toString(),
-                    style = ElementTheme.typography.fontBodyLgRegular,
-                    color = ElementTheme.colors.textSecondary,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .fillMaxWidth()
-=======
                     .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
                     .fillMaxWidth()
             )
-            // Show user ID only if it's different from the display name
-            if (bestName != user.userId.value) {
+//            // Show user ID only if it's different from the display name
+//            if (bestName != user.userId.value) {
+            // TCHAP show the Matrix Id depending of feature flag showMatrixId
+            if (showMatrixId && bestName != user.userId.value) {
                 Text(
                     text = user.userId.value,
                     style = ElementTheme.typography.fontBodyMdRegular,
@@ -285,7 +262,6 @@ private fun RoomMemberActionsBottomSheet(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .fillMaxWidth()
->>>>>>> main-element
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))

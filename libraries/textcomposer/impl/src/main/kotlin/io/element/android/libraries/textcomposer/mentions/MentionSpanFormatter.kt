@@ -9,11 +9,7 @@
 package io.element.android.libraries.textcomposer.mentions
 
 import dev.zacsweers.metro.ContributesBinding
-<<<<<<< HEAD
-import dev.zacsweers.metro.Inject
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.toUserDisplayName
-=======
->>>>>>> main-element
 import io.element.android.libraries.di.RoomScope
 import io.element.android.libraries.matrix.api.core.RoomIdOrAlias
 import io.element.android.libraries.matrix.api.core.UserId

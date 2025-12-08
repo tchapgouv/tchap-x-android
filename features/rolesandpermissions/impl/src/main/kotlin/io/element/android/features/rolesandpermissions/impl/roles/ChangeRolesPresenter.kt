@@ -29,12 +29,9 @@ import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runUpdatingState
 import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
-<<<<<<< HEAD:features/changeroommemberroles/impl/src/main/kotlin/io/element/android/features/changeroommemberroles/impl/ChangeRolesPresenter.kt
+import io.element.android.libraries.di.annotations.RoomCoroutineScope
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
-=======
-import io.element.android.libraries.di.annotations.RoomCoroutineScope
->>>>>>> main-element:features/rolesandpermissions/impl/src/main/kotlin/io/element/android/features/rolesandpermissions/impl/roles/ChangeRolesPresenter.kt
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomMember
@@ -129,19 +126,15 @@ class ChangeRolesPresenter(
             }
         }
 
-<<<<<<< HEAD:features/changeroommemberroles/impl/src/main/kotlin/io/element/android/features/changeroommemberroles/impl/ChangeRolesPresenter.kt
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
-        val hasPendingChanges = usersWithRole.value != selectedUsers.value
-=======
         val hasPendingChanges by remember {
             derivedStateOf {
                 usersWithRole.value.toSet() != selectedUsers.value.toSet()
             }
         }
->>>>>>> main-element:features/rolesandpermissions/impl/src/main/kotlin/io/element/android/features/rolesandpermissions/impl/roles/ChangeRolesPresenter.kt
 
         val roomInfo by room.roomInfoFlow.collectAsState()
         fun canChangeMemberRole(userId: UserId): Boolean {

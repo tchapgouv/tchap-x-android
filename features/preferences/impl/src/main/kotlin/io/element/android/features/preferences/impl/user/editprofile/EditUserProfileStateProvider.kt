@@ -35,14 +35,9 @@ fun aEditUserProfileState(
     cameraPermissionState: PermissionsState = aPermissionsState(showDialog = false),
     eventSink: (EditUserProfileEvents) -> Unit = {},
 ) = EditUserProfileState(
-<<<<<<< HEAD
     showMatrixId = false,
-    userId = UserId("@john.doe:matrix.org"),
-    displayName = "John Doe",
-=======
     userId = userId,
     displayName = displayName,
->>>>>>> main-element
     userAvatarUrl = userAvatarUrl,
     avatarActions = avatarActions.toImmutableList(),
     saveButtonEnabled = saveButtonEnabled,

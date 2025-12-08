@@ -25,12 +25,8 @@ import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.map
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
-<<<<<<< HEAD
-import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
-=======
->>>>>>> main-element
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.encryption.EncryptionService
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityState
@@ -146,12 +142,8 @@ class RoomMemberListPresenter(
             }
         }
 
-<<<<<<< HEAD
-        return RoomMemberListState(
-            showMatrixId = showMatrixId,
-=======
         val state = RoomMemberListState(
->>>>>>> main-element
+            showMatrixId = showMatrixId,
             roomMembers = roomMembers,
             filteredRoomMembers = filteredRoomMembers,
             searchQuery = searchQuery,

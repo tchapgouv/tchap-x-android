@@ -224,16 +224,12 @@ class MessagesFlowNode(
                         callback.navigateToRoomDetails()
                     }
 
-<<<<<<< HEAD
-                    override fun onEventClick(timelineMode: Timeline.Mode, event: TimelineItem.Event): Boolean {
+                    override fun handleEventClick(timelineMode: Timeline.Mode, event: TimelineItem.Event): Boolean {
                         // TCHAP content scanner
                         if (event.content is TimelineItemEventContentWithAttachment &&
                             event.content.scanState != BwiContentScannerScanState.TRUSTED) {
                             return false
                         }
-=======
-                    override fun handleEventClick(timelineMode: Timeline.Mode, event: TimelineItem.Event): Boolean {
->>>>>>> main-element
                         return processEventClick(
                             timelineMode = timelineMode,
                             event = event,

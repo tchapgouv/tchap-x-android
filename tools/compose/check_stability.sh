@@ -10,7 +10,7 @@ set -e
 
 # Build the project with compose report
 echo "Building the project with compose report..."
-./gradlew assembleGplayDebug -PcomposeCompilerReports=true -PcomposeCompilerMetrics=true --stacktrace
+./gradlew assembleGplayTchapWithpinningDebug -PcomposeCompilerReports=true -PcomposeCompilerMetrics=true --stacktrace
 
 echo "Checking stability of State classes..."
 # Using the find command, list all the files ending with -classes.txt

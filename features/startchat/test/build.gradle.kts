@@ -12,6 +12,16 @@ plugins {
 
 android {
     namespace = "io.element.android.features.invitepeople.test"
+
+    flavorDimensions += listOf("pinning")
+    productFlavors {
+        create("withpinning") {
+            dimension = "pinning"
+        }
+        create("withoutpinning") {
+            dimension = "pinning"
+        }
+    }
 }
 
 dependencies {

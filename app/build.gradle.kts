@@ -127,12 +127,22 @@ android {
             )
             signingConfig = signingConfigs.getByName("debug")
 
-            optimization {
-                enable = true
-                keepRules {
-                    files.add(File(projectDir, "proguard-rules.pro"))
-                    files.add(getDefaultProguardFile("proguard-android-optimize.txt"))
-                }
+            // Tchap TODO : Use optimization after upgrade gradle plugin (https://github.com/tchapgouv/tchap-x-android/issues/110)
+//            optimization {
+//                enable = true
+//                keepRules {
+//                    files.add(File(projectDir, "proguard-rules.pro"))
+//                    files.add(getDefaultProguardFile("proguard-android-optimize.txt"))
+//                }
+//            }
+
+            // Tchap TODO : Remove postprocessing after upgrade gradle plugin (https://github.com/tchapgouv/tchap-x-android/issues/110)
+            postprocessing {
+                isRemoveUnusedCode = true
+                isObfuscate = false
+                isOptimizeCode = true
+                isRemoveUnusedResources = true
+                proguardFiles("proguard-rules.pro")
             }
         }
 
