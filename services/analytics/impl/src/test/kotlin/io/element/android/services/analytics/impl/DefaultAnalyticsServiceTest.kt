@@ -1,7 +1,8 @@
 /*
- * Copyright 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2024, 2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -16,9 +17,7 @@ import im.vector.app.features.analytics.plan.MobileScreen
 import im.vector.app.features.analytics.plan.PollEnd
 import im.vector.app.features.analytics.plan.SuperProperties
 import im.vector.app.features.analytics.plan.UserProperties
-import io.element.android.libraries.sessionstorage.api.SessionStore
 import io.element.android.libraries.sessionstorage.api.observer.SessionObserver
-import io.element.android.libraries.sessionstorage.test.InMemorySessionStore
 import io.element.android.libraries.sessionstorage.test.observer.NoOpSessionObserver
 import io.element.android.services.analytics.impl.store.AnalyticsStore
 import io.element.android.services.analytics.impl.store.FakeAnalyticsStore
@@ -178,8 +177,22 @@ class DefaultAnalyticsServiceTest {
             coroutineScope = backgroundScope,
             analyticsStore = store,
         )
-        sut.onSessionDeleted("userId")
+        sut.onSessionDeleted("userId", true)
         resetLambda.assertions().isCalledOnce()
+    }
+
+    @Test
+    fun `when a session is deleted, the store is not reset if it was not the last session`() = runTest {
+        val resetLambda = lambdaRecorder<Unit> { }
+        val store = FakeAnalyticsStore(
+            resetLambda = resetLambda,
+        )
+        val sut = createDefaultAnalyticsService(
+            coroutineScope = backgroundScope,
+            analyticsStore = store,
+        )
+        sut.onSessionDeleted("userId", false)
+        resetLambda.assertions().isNeverCalled()
     }
 
     @Test
@@ -260,13 +273,11 @@ class DefaultAnalyticsServiceTest {
         ),
         analyticsStore: AnalyticsStore = FakeAnalyticsStore(),
         sessionObserver: SessionObserver = NoOpSessionObserver(),
-        sessionStore: SessionStore = InMemorySessionStore(),
     ) = DefaultAnalyticsService(
         analyticsProviders = analyticsProviders,
         analyticsStore = analyticsStore,
         coroutineScope = coroutineScope,
         sessionObserver = sessionObserver,
-        sessionStore = sessionStore,
     ).also {
         // Wait for the service to be ready
         delay(1)

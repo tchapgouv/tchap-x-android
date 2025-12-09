@@ -1,7 +1,8 @@
 /*
+ * Copyright (c) 2025 Element Creations Ltd.
  * Copyright 2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -26,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 /**
   * This class holds all the semantic tokens of the Compound theme.
   */
-@Immutable
 data class SemanticColors(
     /** Background colour for accent or brand actions. State: Hover */
     val bgAccentHovered: Color,

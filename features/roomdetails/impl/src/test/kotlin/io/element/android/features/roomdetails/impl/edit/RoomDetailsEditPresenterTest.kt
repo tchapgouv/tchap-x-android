@@ -1,7 +1,8 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -66,7 +67,9 @@ class RoomDetailsEditPresenterTest {
         mockkStatic(Uri::class)
 
         every { Uri.parse(AN_AVATAR_URL) } returns roomAvatarUri
+        every { roomAvatarUri.toString() } returns AN_AVATAR_URL
         every { Uri.parse(ANOTHER_AVATAR_URL) } returns anotherAvatarUri
+        every { anotherAvatarUri.toString() } returns ANOTHER_AVATAR_URL
     }
 
     @After
@@ -107,7 +110,7 @@ class RoomDetailsEditPresenterTest {
             val initialState = awaitFirstItem()
             assertThat(initialState.roomId).isEqualTo(room.roomId)
             assertThat(initialState.roomRawName).isEqualTo(A_ROOM_RAW_NAME)
-            assertThat(initialState.roomAvatarUrl).isEqualTo(roomAvatarUri)
+            assertThat(initialState.roomAvatarUrl).isEqualTo(AN_AVATAR_URL)
             assertThat(initialState.roomTopic).isEqualTo(room.info().topic.orEmpty())
             assertThat(initialState.avatarActions).containsExactly(
                 AvatarAction.ChoosePhoto,
@@ -233,24 +236,24 @@ class RoomDetailsEditPresenterTest {
             val initialState = awaitFirstItem()
             assertThat(initialState.roomTopic).isEqualTo("My topic")
             assertThat(initialState.roomRawName).isEqualTo("Name")
-            assertThat(initialState.roomAvatarUrl).isEqualTo(roomAvatarUri)
+            assertThat(initialState.roomAvatarUrl).isEqualTo(AN_AVATAR_URL)
             initialState.eventSink(RoomDetailsEditEvents.UpdateRoomName("Name II"))
             awaitItem().apply {
                 assertThat(roomTopic).isEqualTo("My topic")
                 assertThat(roomRawName).isEqualTo("Name II")
-                assertThat(roomAvatarUrl).isEqualTo(roomAvatarUri)
+                assertThat(roomAvatarUrl).isEqualTo(AN_AVATAR_URL)
             }
             initialState.eventSink(RoomDetailsEditEvents.UpdateRoomName("Name III"))
             awaitItem().apply {
                 assertThat(roomTopic).isEqualTo("My topic")
                 assertThat(roomRawName).isEqualTo("Name III")
-                assertThat(roomAvatarUrl).isEqualTo(roomAvatarUri)
+                assertThat(roomAvatarUrl).isEqualTo(AN_AVATAR_URL)
             }
             initialState.eventSink(RoomDetailsEditEvents.UpdateRoomTopic("Another topic"))
             awaitItem().apply {
                 assertThat(roomTopic).isEqualTo("Another topic")
                 assertThat(roomRawName).isEqualTo("Name III")
-                assertThat(roomAvatarUrl).isEqualTo(roomAvatarUri)
+                assertThat(roomAvatarUrl).isEqualTo(AN_AVATAR_URL)
             }
             initialState.eventSink(RoomDetailsEditEvents.HandleAvatarAction(AvatarAction.Remove))
             awaitItem().apply {
@@ -277,10 +280,10 @@ class RoomDetailsEditPresenterTest {
         )
         presenter.test {
             val initialState = awaitFirstItem()
-            assertThat(initialState.roomAvatarUrl).isEqualTo(roomAvatarUri)
+            assertThat(initialState.roomAvatarUrl).isEqualTo(AN_AVATAR_URL)
             initialState.eventSink(RoomDetailsEditEvents.HandleAvatarAction(AvatarAction.ChoosePhoto))
             awaitItem().apply {
-                assertThat(roomAvatarUrl).isEqualTo(anotherAvatarUri)
+                assertThat(roomAvatarUrl).isEqualTo(anotherAvatarUri.toString())
             }
         }
     }
@@ -303,7 +306,7 @@ class RoomDetailsEditPresenterTest {
         )
         presenter.test {
             val initialState = awaitFirstItem()
-            assertThat(initialState.roomAvatarUrl).isEqualTo(roomAvatarUri)
+            assertThat(initialState.roomAvatarUrl).isEqualTo(AN_AVATAR_URL)
             assertThat(initialState.cameraPermissionState.permissionGranted).isFalse()
             initialState.eventSink(RoomDetailsEditEvents.HandleAvatarAction(AvatarAction.TakePhoto))
             val stateWithAskingPermission = awaitItem()
@@ -312,12 +315,12 @@ class RoomDetailsEditPresenterTest {
             val stateWithPermission = awaitItem()
             assertThat(stateWithPermission.cameraPermissionState.permissionGranted).isTrue()
             val stateWithNewAvatar = awaitItem()
-            assertThat(stateWithNewAvatar.roomAvatarUrl).isEqualTo(anotherAvatarUri)
+            assertThat(stateWithNewAvatar.roomAvatarUrl).isEqualTo(anotherAvatarUri.toString())
             // Do it again, no permission is requested
             fakePickerProvider.givenResult(roomAvatarUri)
             stateWithNewAvatar.eventSink(RoomDetailsEditEvents.HandleAvatarAction(AvatarAction.TakePhoto))
             val stateWithNewAvatar2 = awaitItem()
-            assertThat(stateWithNewAvatar2.roomAvatarUrl).isEqualTo(roomAvatarUri)
+            assertThat(stateWithNewAvatar2.roomAvatarUrl).isEqualTo(AN_AVATAR_URL)
             deleteCallback.assertions().isCalledExactly(3).withSequence(
                 listOf(value(null)),
                 listOf(value(roomAvatarUri)),
@@ -647,8 +650,85 @@ class RoomDetailsEditPresenterTest {
             initialState.eventSink(RoomDetailsEditEvents.Save)
             skipItems(3)
             assertThat(awaitItem().saveAction).isInstanceOf(AsyncAction.Failure::class.java)
-            initialState.eventSink(RoomDetailsEditEvents.CancelSaveChanges)
+            initialState.eventSink(RoomDetailsEditEvents.CloseDialog)
             assertThat(awaitItem().saveAction).isInstanceOf(AsyncAction.Uninitialized::class.java)
+        }
+    }
+
+    @Test
+    fun `present - leave without saving - cancel`() = runTest {
+        val room = aJoinedRoom(
+            displayName = "Name",
+            canSendStateResult = { _, _ -> Result.success(true) }
+        )
+        val deleteCallback = lambdaRecorder<Uri?, Unit> {}
+        val presenter = createRoomDetailsEditPresenter(
+            room = room,
+            temporaryUriDeleter = FakeTemporaryUriDeleter(deleteCallback),
+        )
+        presenter.test {
+            val initialState = awaitFirstItem()
+            assertThat(initialState.saveButtonEnabled).isFalse()
+            // Once a change is made, the save button is enabled
+            initialState.eventSink(RoomDetailsEditEvents.UpdateRoomName("Name edited"))
+            awaitItem().apply {
+                assertThat(saveButtonEnabled).isTrue()
+                eventSink(RoomDetailsEditEvents.OnBackPress)
+            }
+            awaitItem().apply {
+                assertThat(saveAction).isEqualTo(AsyncAction.ConfirmingCancellation)
+                eventSink(RoomDetailsEditEvents.CloseDialog)
+            }
+            awaitItem().apply {
+                assertThat(saveAction).isEqualTo(AsyncAction.Uninitialized)
+            }
+        }
+    }
+
+    @Test
+    fun `present - leave no changes, no confirmation`() = runTest {
+        val room = aJoinedRoom(
+            displayName = "Name",
+            canSendStateResult = { _, _ -> Result.success(true) }
+        )
+        val presenter = createRoomDetailsEditPresenter(
+            room = room,
+            temporaryUriDeleter = FakeTemporaryUriDeleter {},
+        )
+        presenter.test {
+            val initialState = awaitFirstItem()
+            assertThat(initialState.saveButtonEnabled).isFalse()
+            initialState.eventSink(RoomDetailsEditEvents.OnBackPress)
+            assertThat(awaitItem().saveAction).isEqualTo(AsyncAction.Success(Unit))
+        }
+    }
+
+    @Test
+    fun `present - leave without saving - confirm`() = runTest {
+        val room = aJoinedRoom(
+            displayName = "Name",
+            canSendStateResult = { _, _ -> Result.success(true) }
+        )
+        val presenter = createRoomDetailsEditPresenter(
+            room = room,
+            temporaryUriDeleter = FakeTemporaryUriDeleter({}),
+        )
+        presenter.test {
+            val initialState = awaitFirstItem()
+            assertThat(initialState.saveButtonEnabled).isFalse()
+            // Once a change is made, the save button is enabled
+            initialState.eventSink(RoomDetailsEditEvents.UpdateRoomName("Name edited"))
+            awaitItem().apply {
+                assertThat(saveButtonEnabled).isTrue()
+                eventSink(RoomDetailsEditEvents.OnBackPress)
+            }
+            awaitItem().apply {
+                assertThat(saveAction).isEqualTo(AsyncAction.ConfirmingCancellation)
+                eventSink(RoomDetailsEditEvents.OnBackPress)
+            }
+            awaitItem().apply {
+                assertThat(saveAction).isEqualTo(AsyncAction.Success(Unit))
+            }
         }
     }
 

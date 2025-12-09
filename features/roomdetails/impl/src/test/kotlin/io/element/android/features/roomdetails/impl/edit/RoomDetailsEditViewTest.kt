@@ -1,7 +1,8 @@
 /*
- * Copyright 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2024, 2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -38,17 +39,41 @@ class RoomDetailsEditViewTest {
     @get:Rule val rule = createAndroidComposeRule<ComponentActivity>()
 
     @Test
-    fun `clicking on back invoke back callback`() {
-        val eventsRecorder = EventsRecorder<RoomDetailsEditEvents>(expectEvents = false)
-        ensureCalledOnce { callback ->
-            rule.setRoomDetailsEditView(
-                aRoomDetailsEditState(
-                    eventSink = eventsRecorder
-                ),
-                onBackClick = callback,
-            )
-            rule.pressBack()
-        }
+    fun `clicking on back emits the expected Event`() {
+        val eventsRecorder = EventsRecorder<RoomDetailsEditEvents>()
+        rule.setRoomDetailsEditView(
+            aRoomDetailsEditState(
+                eventSink = eventsRecorder
+            ),
+        )
+        rule.pressBack()
+        eventsRecorder.assertSingle(RoomDetailsEditEvents.OnBackPress)
+    }
+
+    @Test
+    fun `clicking on OK when confirming exit emits the expected Event`() {
+        val eventsRecorder = EventsRecorder<RoomDetailsEditEvents>()
+        rule.setRoomDetailsEditView(
+            aRoomDetailsEditState(
+                saveAction = AsyncAction.ConfirmingCancellation,
+                eventSink = eventsRecorder,
+            ),
+        )
+        rule.clickOn(CommonStrings.action_ok)
+        eventsRecorder.assertSingle(RoomDetailsEditEvents.OnBackPress)
+    }
+
+    @Test
+    fun `clicking on cancel when confirming exit emits the expected Event`() {
+        val eventsRecorder = EventsRecorder<RoomDetailsEditEvents>()
+        rule.setRoomDetailsEditView(
+            aRoomDetailsEditState(
+                saveAction = AsyncAction.ConfirmingCancellation,
+                eventSink = eventsRecorder,
+            ),
+        )
+        rule.clickOn(CommonStrings.action_cancel)
+        eventsRecorder.assertSingle(RoomDetailsEditEvents.CloseDialog)
     }
 
     @Test
@@ -60,7 +85,7 @@ class RoomDetailsEditViewTest {
                     eventSink = eventsRecorder,
                     saveAction = AsyncAction.Success(Unit)
                 ),
-                onRoomEdited = callback,
+                onDone = callback,
             )
         }
     }
@@ -209,20 +234,18 @@ class RoomDetailsEditViewTest {
             ),
         )
         rule.clickOn(CommonStrings.action_ok)
-        eventsRecorder.assertSingle(RoomDetailsEditEvents.CancelSaveChanges)
+        eventsRecorder.assertSingle(RoomDetailsEditEvents.CloseDialog)
     }
 }
 
 private fun <R : TestRule> AndroidComposeTestRule<R, ComponentActivity>.setRoomDetailsEditView(
     state: RoomDetailsEditState,
-    onBackClick: () -> Unit = EnsureNeverCalled(),
-    onRoomEdited: () -> Unit = EnsureNeverCalled(),
+    onDone: () -> Unit = EnsureNeverCalled(),
 ) {
     setContent {
         RoomDetailsEditView(
             state = state,
-            onBackClick = onBackClick,
-            onRoomEditSuccess = onRoomEdited,
+            onDone = onDone,
         )
     }
 }

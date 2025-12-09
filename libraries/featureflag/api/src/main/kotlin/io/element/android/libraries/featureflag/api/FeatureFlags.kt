@@ -1,7 +1,8 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -110,10 +111,20 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
+
+    // TCHAP feature flag to show matrix ID in user rows or user profile
     ShowMatrixId(
         key = "feature.showMatrixId",
         title = "Show Matrix ID",
         defaultValue = { false },
         isFinished = true,
+    ),
+    SyncNotificationsWithWorkManager(
+        key = "feature.sync_notifications_with_workmanager",
+        title = "Sync notifications with WorkManager",
+        description = "Use WorkManager to schedule notification sync tasks when a push is received." +
+            " This should improve reliability and battery usage.",
+        defaultValue = { true },
+        isFinished = false,
     ),
 }

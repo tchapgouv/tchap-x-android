@@ -1,7 +1,8 @@
 /*
- * Copyright 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2024, 2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -13,9 +14,10 @@ import io.element.android.features.messages.impl.actionlist.anActionListState
 import io.element.android.features.messages.impl.actionlist.model.TimelineItemAction
 import io.element.android.features.messages.impl.fixtures.aTimelineItemsFactoryCreator
 import io.element.android.features.messages.impl.link.aLinkState
-import io.element.android.features.messages.impl.pinned.PinnedEventsTimelineProvider
+import io.element.android.features.messages.impl.pinned.DefaultPinnedEventsTimelineProvider
 import io.element.android.features.messages.impl.timeline.model.TimelineItem
 import io.element.android.features.messages.impl.timeline.protection.aTimelineProtectionState
+import io.element.android.features.messages.test.timeline.FakeHtmlConverterProvider
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarDispatcher
 import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.core.EventId
@@ -300,7 +302,7 @@ class PinnedMessagesListPresenterTest {
         analyticsService: AnalyticsService = FakeAnalyticsService(),
         featureFlagService: FakeFeatureFlagService = FakeFeatureFlagService(),
     ): PinnedMessagesListPresenter {
-        val timelineProvider = PinnedEventsTimelineProvider(
+        val timelineProvider = DefaultPinnedEventsTimelineProvider(
             room = room,
             syncService = syncService,
             dispatchers = testCoroutineDispatchers(),
@@ -318,6 +320,7 @@ class PinnedMessagesListPresenterTest {
             analyticsService = analyticsService,
             featureFlagService = featureFlagService,
             sessionCoroutineScope = this,
+            htmlConverterProvider = FakeHtmlConverterProvider(),
         )
     }
 }

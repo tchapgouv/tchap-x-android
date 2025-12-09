@@ -1,7 +1,8 @@
 /*
+ * Copyright (c) 2025 Element Creations Ltd.
  * Copyright 2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -20,9 +21,9 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
 import io.element.android.libraries.accountselect.api.AccountSelectEntryPoint
+import io.element.android.libraries.architecture.callback
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
-import io.element.android.libraries.matrix.api.core.SessionId
 
 @ContributesNode(AppScope::class)
 @AssistedInject
@@ -32,15 +33,7 @@ class AccountSelectNode(
     private val featureFlagService: FeatureFlagService,
     private val presenter: AccountSelectPresenter,
 ) : Node(buildContext, plugins = plugins) {
-    private val callbacks = plugins.filterIsInstance<AccountSelectEntryPoint.Callback>()
-
-    private fun onDismiss() {
-        callbacks.forEach { it.onCancel() }
-    }
-
-    private fun onSelectAccount(sessionId: SessionId) {
-        callbacks.forEach { it.onSelectAccount(sessionId) }
-    }
+    private val callback: AccountSelectEntryPoint.Callback = callback()
 
     @Composable
     override fun View(modifier: Modifier) {
@@ -52,8 +45,8 @@ class AccountSelectNode(
 
         AccountSelectView(
             state = state,
-            onDismiss = ::onDismiss,
-            onSelectAccount = ::onSelectAccount,
+            onDismiss = callback::onCancel,
+            onSelectAccount = callback::onAccountSelected,
             modifier = modifier,
             showMatrixId = showMatrixId,
         )

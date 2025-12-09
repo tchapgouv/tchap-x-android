@@ -1,7 +1,8 @@
 /*
- * Copyright 2023, 2024 New Vector Ltd.
+ * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright 2023-2025 New Vector Ltd.
  *
- * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial
+ * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
  */
 
@@ -28,6 +29,10 @@ open class DeveloperSettingsStateProvider : PreviewParameterProvider<DeveloperSe
                     baseUrl = "https://call.element.ahoy",
                 )
             ),
+            aDeveloperSettingsState(
+                isEnterpriseBuild = true,
+                showColorPicker = true,
+            ),
         )
 }
 
@@ -35,6 +40,8 @@ fun aDeveloperSettingsState(
     clearCacheAction: AsyncAction<Unit> = AsyncAction.Uninitialized,
     customElementCallBaseUrlState: CustomElementCallBaseUrlState = aCustomElementCallBaseUrlState(),
     traceLogPacks: List<TraceLogPack> = emptyList(),
+    isEnterpriseBuild: Boolean = false,
+    showColorPicker: Boolean = false,
     eventSink: (DeveloperSettingsEvents) -> Unit = {},
 ) = DeveloperSettingsState(
     features = aFeatureUiModelList(),
@@ -44,6 +51,8 @@ fun aDeveloperSettingsState(
     customElementCallBaseUrlState = customElementCallBaseUrlState,
     tracingLogLevel = AsyncData.Success(LogLevelItem.INFO),
     tracingLogPacks = traceLogPacks.toImmutableList(),
+    isEnterpriseBuild = isEnterpriseBuild,
+    showColorPicker = showColorPicker,
     eventSink = eventSink,
 )
 
