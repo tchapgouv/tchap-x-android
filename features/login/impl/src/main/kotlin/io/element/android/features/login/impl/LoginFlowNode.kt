@@ -162,7 +162,7 @@ class LoginFlowNode(
                         callback.navigateToBugReport()
                     }
 
-                    override fun onLoginHintNeeded() {
+                    override fun navigateToLoginHint() {
                         backstack.push(NavTarget.LoginHint(isAccountCreation = false))
                     }
 
@@ -199,7 +199,7 @@ class LoginFlowNode(
                         backstack.push(NavTarget.CreateAccount(url))
                     }
 
-                    override fun onLoginHintNeeded() {
+                    override fun navigateToLoginHint() {
                         backstack.push(NavTarget.LoginHint(isAccountCreation = false))
                     }
 
@@ -225,7 +225,7 @@ class LoginFlowNode(
                         backstack.push(NavTarget.CreateAccount(url))
                     }
 
-                    override fun onLoginHintNeeded() {
+                    override fun navigateToLoginHint() {
                         backstack.push(NavTarget.LoginHint(isAccountCreation = navTarget.isAccountCreation))
                     }
 
@@ -278,19 +278,19 @@ class LoginFlowNode(
                 )
 
                 val callback = object : LoginHintNode.Callback {
-                    override fun onLoginHintNeeded() {
-                        backstack.push(NavTarget.LoginHint(isAccountCreation = navTarget.isAccountCreation))
-                    }
-
-                    override fun onOidcDetails(oidcDetails: OidcDetails) {
+                    override fun navigateToOidc(oidcDetails: OidcDetails) {
                         navigateToMas(oidcDetails)
                     }
 
-                    override fun onCreateAccountContinue(url: String) {
+                    override fun navigateToCreateAccount(url: String) {
                         backstack.push(NavTarget.CreateAccount(url))
                     }
 
-                    override fun onLoginPasswordNeeded() {
+                    override fun navigateToLoginHint() {
+                        backstack.push(NavTarget.LoginHint(isAccountCreation = navTarget.isAccountCreation))
+                    }
+
+                    override fun navigateToLoginPassword() {
                         backstack.push(NavTarget.LoginPassword)
                     }
                 }

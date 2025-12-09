@@ -38,6 +38,7 @@ sealed class ChangeServerError : Exception() {
                     is AuthenticationException.SlidingSyncVersion -> SlidingSyncAlert
                     is AuthenticationException.InvalidServerName,
                     is AuthenticationException.ServerUnreachable -> InvalidServer
+                    is AuthenticationException.NoHomeserverAvailable -> InvalidServer
                     // AccountAlreadyLoggedIn error should not happen at this point
                     is AuthenticationException.AccountAlreadyLoggedIn -> Error(messageStr = error.message)
                     is AuthenticationException.Generic -> Error(messageStr = error.message)

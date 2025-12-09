@@ -115,8 +115,6 @@ class RustMatrixAuthenticationService(
         return passphrase
     }
 
-    override fun getHomeserverDetails(): StateFlow<MatrixHomeServerDetails?> = currentHomeserver
-
     override suspend fun getHomeserverFromLoginHint(defaultHomeserver: String, loginHint: String): Result<String> =
         withContext(coroutineDispatchers.io) {
             runCatchingExceptions {

@@ -30,13 +30,14 @@ import androidx.compose.ui.platform.LocalContext
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.plugin.Plugin
-import com.bumble.appyx.core.plugin.plugins
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
+import io.element.android.features.login.impl.screens.chooseaccountprovider.ChooseAccountProviderNode.Callback
 import io.element.android.features.login.impl.util.openLearnMorePage
 import io.element.android.libraries.architecture.NodeInputs
+import io.element.android.libraries.architecture.callback
 import io.element.android.libraries.architecture.inputs
 import io.element.android.libraries.matrix.api.auth.OidcDetails
 
@@ -47,6 +48,15 @@ class LoginHintNode(
     @Assisted plugins: List<Plugin>,
     presenterFactory: LoginHintPresenter.Factory,
 ) : Node(buildContext, plugins = plugins) {
+    interface Callback : Plugin {
+        fun navigateToLoginHint()
+        fun navigateToLoginPassword()
+        fun navigateToOidc(oidcDetails: OidcDetails)
+        fun navigateToCreateAccount(url: String)
+    }
+
+    private val callback: Callback = callback()
+
     data class Inputs(
         val isAccountCreation: Boolean,
     ) : NodeInputs
@@ -58,29 +68,6 @@ class LoginHintNode(
         )
     )
 
-    interface Callback : Plugin {
-        fun onLoginHintNeeded()
-        fun onLoginPasswordNeeded()
-        fun onOidcDetails(oidcDetails: OidcDetails)
-        fun onCreateAccountContinue(url: String)
-    }
-
-    private fun onOidcDetails(data: OidcDetails) {
-        plugins<Callback>().forEach { it.onOidcDetails(data) }
-    }
-
-    private fun onLoginHintNeeded() {
-        plugins<Callback>().forEach { it.onLoginHintNeeded() }
-    }
-
-    private fun onLoginPasswordNeeded() {
-        plugins<Callback>().forEach { it.onLoginPasswordNeeded() }
-    }
-
-    private fun onCreateAccountContinue(url: String) {
-        plugins<Callback>().forEach { it.onCreateAccountContinue(url) }
-    }
-
     @Composable
     override fun View(modifier: Modifier) {
         val state = presenter.present()
@@ -89,11 +76,11 @@ class LoginHintNode(
             state = state,
             modifier = modifier,
             onBackClick = ::navigateUp,
-            onOidcDetails = ::onOidcDetails,
-            onNeedLoginHint = ::onLoginHintNeeded,
-            onNeedLoginPassword = ::onLoginPasswordNeeded,
+            onOidcDetails = callback::navigateToOidc,
+            onNeedLoginHint = callback::navigateToLoginHint,
+            onNeedLoginPassword = callback::navigateToLoginPassword,
             onLearnMoreClick = { openLearnMorePage(context) },
-            onCreateAccountContinue = ::onCreateAccountContinue,
+            onCreateAccountContinue = callback::navigateToCreateAccount,
         )
     }
 }
