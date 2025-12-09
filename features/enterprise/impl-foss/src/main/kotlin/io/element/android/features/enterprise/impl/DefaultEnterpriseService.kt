@@ -22,7 +22,6 @@ import io.element.android.libraries.matrix.api.core.SessionId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlin.random.Random
-import kotlin.random.nextInt
 
 @ContributesBinding(AppScope::class)
 class DefaultEnterpriseService(
@@ -38,11 +37,11 @@ class DefaultEnterpriseService(
     override fun getNextRandomHomeserver(): String {
         val homeservers = homeserverConfiguration.defaultHomeserverList
 
-        selectedHomeserver = if (selectedHomeserver == -1) {
-            Random.nextInt(homeservers.indices)
-        } else {
-                (selectedHomeserver + 1) % homeservers.size
+        selectedHomeserver = when (selectedHomeserver) {
+            -1 -> Random.nextInt(homeservers.size)
+            else -> (selectedHomeserver + 1) % homeservers.size
         }
+
         return homeservers[selectedHomeserver]
     }
 
