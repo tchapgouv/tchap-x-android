@@ -23,6 +23,8 @@ interface MatrixAuthenticationService {
      */
     suspend fun restoreSession(sessionId: SessionId): Result<MatrixClient>
 
+    suspend fun getHomeserverFromLoginHint(defaultHomeserver: String, loginHint: String): Result<String>
+
     /**
      * Set the homeserver to use for authentication, and return its details.
      */

@@ -20,6 +20,7 @@ import io.element.android.libraries.matrix.test.A_SESSION_ID
 import io.element.android.libraries.matrix.test.A_USER_NAME
 import io.element.android.libraries.matrix.test.auth.FakeMatrixAuthenticationService
 import io.element.android.libraries.matrix.test.auth.aMatrixHomeServerDetails
+import io.element.android.libraries.matrix.test.core.aBuildMeta
 import io.element.android.tests.testutils.WarmUpRule
 import io.element.android.tests.testutils.test
 import kotlinx.coroutines.test.runTest
@@ -145,5 +146,6 @@ class LoginPasswordPresenterTest {
     ): LoginPasswordPresenter = LoginPasswordPresenter(
         authenticationService = authenticationService,
         accountProviderDataSource = accountProviderDataSource,
+        buildMeta = aBuildMeta(),
     )
 }

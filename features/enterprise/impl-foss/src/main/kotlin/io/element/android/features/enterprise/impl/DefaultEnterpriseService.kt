@@ -11,20 +11,37 @@ package io.element.android.features.enterprise.impl
 import androidx.compose.ui.graphics.Color
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
+import fr.gouv.tchap.android.features.enterprise.api.HomeserverConfiguration
 import io.element.android.compound.colors.SemanticColorsLightDark
 import io.element.android.features.enterprise.api.BugReportUrl
 import io.element.android.features.enterprise.api.EnterpriseService
 import io.element.android.libraries.matrix.api.core.SessionId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlin.random.Random
 
 @ContributesBinding(AppScope::class)
-class DefaultEnterpriseService : EnterpriseService {
+class DefaultEnterpriseService(
+    private val homeserverConfiguration: HomeserverConfiguration
+) : EnterpriseService {
     override val isEnterpriseBuild = false
+    override var selectedHomeserver: Int = -1
 
     override suspend fun isEnterpriseUser(sessionId: SessionId) = false
 
-    override fun defaultHomeserverList(): List<String> = listOf("matrix.agent.dinum.tchap.gouv.fr")
+    override fun defaultHomeserverList(): List<String> = homeserverConfiguration.defaultHomeserverList
+
+    override fun getNextRandomHomeserver(): String {
+        val homeservers = homeserverConfiguration.defaultHomeserverList
+
+        selectedHomeserver = when (selectedHomeserver) {
+            -1 -> Random.nextInt(homeservers.size)
+            else -> (selectedHomeserver + 1) % homeservers.size
+        }
+
+        return homeservers[selectedHomeserver]
+    }
+
     override suspend fun isAllowedToConnectToHomeserver(homeserverUrl: String) = true
 
     override suspend fun overrideBrandColor(sessionId: SessionId?, brandColor: String?) = Unit

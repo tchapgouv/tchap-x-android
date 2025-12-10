@@ -33,6 +33,7 @@ fun LoginModeView(
     onClearError: () -> Unit,
     onLearnMoreClick: () -> Unit,
     onOidcDetails: (OidcDetails) -> Unit,
+    onNeedLoginHint: () -> Unit,
     onNeedLoginPassword: () -> Unit,
     onCreateAccountContinue: (url: String) -> Unit
 ) {
@@ -101,6 +102,12 @@ fun LoginModeView(
                         onSubmit = onClearError,
                     )
                 }
+                is AuthenticationException.NoHomeserverAvailable -> {
+                    ErrorDialog(
+                        content = stringResource(R.string.tchap_error_no_homeserver_available),
+                        onSubmit = onClearError,
+                    )
+                }
                 is AuthenticationException.AccountAlreadyLoggedIn -> {
                     ErrorDialog(
                         content = stringResource(CommonStrings.error_account_already_logged_in, error.userId),
@@ -118,6 +125,7 @@ fun LoginModeView(
         is AsyncData.Loading -> Unit // The Continue button shows the loading state
         is AsyncData.Success -> {
             when (val loginModeData = loginMode.data) {
+                LoginMode.LoginHint -> onNeedLoginHint()
                 is LoginMode.Oidc -> onOidcDetails(loginModeData.oidcDetails)
                 LoginMode.PasswordLogin -> onNeedLoginPassword()
                 is LoginMode.AccountCreation -> onCreateAccountContinue(loginModeData.url)
@@ -139,6 +147,7 @@ internal fun LoginModeViewPreview(@PreviewParameter(LoginModeViewErrorProvider::
             onLearnMoreClick = {},
             onOidcDetails = {},
             onNeedLoginPassword = {},
+            onNeedLoginHint = {},
             onCreateAccountContinue = {}
         )
     }

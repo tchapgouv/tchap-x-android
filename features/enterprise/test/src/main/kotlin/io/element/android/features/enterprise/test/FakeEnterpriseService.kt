@@ -29,6 +29,7 @@ class FakeEnterpriseService(
     private val overrideBrandColorResult: (SessionId?, String?) -> Unit = { _, _ -> lambdaError() },
     private val firebasePushGatewayResult: () -> String? = { lambdaError() },
     private val unifiedPushDefaultPushGatewayResult: () -> String? = { lambdaError() },
+    override var selectedHomeserver: Int,
 ) : EnterpriseService {
     private val brandColorState = MutableStateFlow(initialBrandColor)
     private val semanticColorsState = MutableStateFlow(initialSemanticColors)
@@ -39,6 +40,10 @@ class FakeEnterpriseService(
 
     override fun defaultHomeserverList(): List<String> {
         return defaultHomeserverListResult()
+    }
+
+    override fun getNextRandomHomeserver(): String {
+        return defaultHomeserverListResult()[selectedHomeserver]
     }
 
     override suspend fun isAllowedToConnectToHomeserver(homeserverUrl: String): Boolean = simulateLongTask {

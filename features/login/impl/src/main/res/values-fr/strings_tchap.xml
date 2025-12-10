@@ -25,7 +25,10 @@
 <resources>
     <!-- tchap settings -->
     <string name="tchap_screen_account_provider_signin_title">"Se connecter à %1$s"</string>
+    <string name="tchap_screen_account_provider_create_account_title">"Créer un compte sur %1$s"</string>
     <string name="tchap_screen_login_subtitle">"La messagerie instantanée du secteur public."</string>
+    <string name="tchap_screen_login_hint_label">"Adresse mail professionnelle"</string>
+    <string name="tchap_error_no_homeserver_available">"Impossible de déterminer à quel serveur est rattaché votre compte."</string>
     <string name="tchap_screen_onboarding_sign_in_to">"Se connecter"</string>
     <string name="tchap_screen_onboarding_welcome_message">"La messagerie instantanée du secteur public."</string>
     <string name="tchap_screen_onboarding_welcome_title">"Bienvenue dans %1$s"</string>

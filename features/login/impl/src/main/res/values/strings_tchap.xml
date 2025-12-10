@@ -25,7 +25,10 @@
 <resources>
     <!-- tchap settings -->
     <string name="tchap_screen_account_provider_signin_title">"Sign in to %1$s"</string>
+    <string name="tchap_screen_account_provider_create_account_title">"Sign up on %1$s"</string>
     <string name="tchap_screen_login_subtitle">"Instant messaging of public sector."</string>
+    <string name="tchap_screen_login_hint_label">"Professional email address"</string>
+    <string name="tchap_error_no_homeserver_available">"Unable to determine which server your account is attached to."</string>
     <string name="tchap_screen_onboarding_sign_in_to">"Sign in"</string>
     <string name="tchap_screen_onboarding_welcome_message">"Instant messaging of public sector."</string>
     <string name="tchap_screen_onboarding_welcome_title">"Welcome to %1$s"</string>

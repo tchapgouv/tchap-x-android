@@ -64,6 +64,7 @@ fun OnBoardingView(
     onSignIn: (mustChooseAccountProvider: Boolean) -> Unit,
     onCreateAccount: () -> Unit,
     onOidcDetails: (OidcDetails) -> Unit,
+    onNeedLoginHint: () -> Unit,
     onNeedLoginPassword: () -> Unit,
     onLearnMoreClick: () -> Unit,
     onCreateAccountContinue: (url: String) -> Unit,
@@ -78,6 +79,7 @@ fun OnBoardingView(
             },
             onLearnMoreClick = onLearnMoreClick,
             onOidcDetails = onOidcDetails,
+            onNeedLoginHint = onNeedLoginHint,
             onNeedLoginPassword = onNeedLoginPassword,
             onCreateAccountContinue = onCreateAccountContinue,
         )
@@ -316,6 +318,7 @@ internal fun OnBoardingViewPreview(
         onCreateAccount = {},
         onReportProblem = {},
         onOidcDetails = {},
+        onNeedLoginHint = {},
         onNeedLoginPassword = {},
         onLearnMoreClick = {},
         onCreateAccountContinue = {},

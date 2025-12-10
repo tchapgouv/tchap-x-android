@@ -14,6 +14,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import dev.zacsweers.metro.Inject
+import io.element.android.features.enterprise.api.EnterpriseService
+import io.element.android.features.login.impl.accountprovider.AccountProvider
+import io.element.android.features.login.impl.accountprovider.AccountProviderDataSource
 import io.element.android.features.login.impl.error.ChangeServerError
 import io.element.android.features.login.impl.screens.chooseaccountprovider.ChooseAccountProviderPresenter
 import io.element.android.features.login.impl.screens.confirmaccountprovider.ConfirmAccountProviderPresenter
@@ -22,10 +25,13 @@ import io.element.android.features.login.impl.screens.onboarding.OnBoardingPrese
 import io.element.android.features.login.impl.web.WebClientUrlForAuthenticationRetriever
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.runCatchingUpdatingState
+import io.element.android.libraries.matrix.api.auth.AuthenticationException
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
 import io.element.android.libraries.matrix.api.auth.OidcPrompt
 import io.element.android.libraries.oidc.api.OidcAction
 import io.element.android.libraries.oidc.api.OidcActionFlow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * This class is responsible for managing the login flow, including handling OIDC actions and
@@ -38,6 +44,7 @@ class LoginHelper(
     private val oidcActionFlow: OidcActionFlow,
     private val authenticationService: MatrixAuthenticationService,
     private val webClientUrlForAuthenticationRetriever: WebClientUrlForAuthenticationRetriever,
+    private val enterpriseService: EnterpriseService,
 ) {
     private val loginModeState: MutableState<AsyncData<LoginMode>> = mutableStateOf(AsyncData.Uninitialized)
 
@@ -57,6 +64,33 @@ class LoginHelper(
         loginModeState.value = AsyncData.Uninitialized
     }
 
+    fun getHomeserverFromLoginHint(
+        coroutineScope: CoroutineScope,
+        isAccountCreation: Boolean,
+        accountProviderDataSource: AccountProviderDataSource,
+        loginHint: String
+    ) = coroutineScope.launch {
+        loginModeState.value = AsyncData.Loading()
+
+        val homeservers = enterpriseService.defaultHomeserverList()
+
+        val homeServerFromLoginHint = homeservers.indices.firstNotNullOfOrNull {
+            val defaultHomeserver = enterpriseService.getNextRandomHomeserver()
+            authenticationService.getHomeserverFromLoginHint(defaultHomeserver, loginHint).getOrNull()
+        }
+
+        if (homeServerFromLoginHint != null) {
+            accountProviderDataSource.setAccountProvider(AccountProvider(url = homeServerFromLoginHint))
+            submit(
+                isAccountCreation = isAccountCreation,
+                homeserverUrl = homeServerFromLoginHint,
+                loginHint = loginHint,
+            )
+        } else {
+            loginModeState.value = AsyncData.Failure(AuthenticationException.NoHomeserverAvailable("Failed to resolve the account's homeserver"))
+        }
+    }
+
     suspend fun submit(
         isAccountCreation: Boolean,
         homeserverUrl: String,
@@ -65,11 +99,16 @@ class LoginHelper(
         suspend {
             authenticationService.setHomeserver(homeserverUrl).map { matrixHomeServerDetails ->
                 if (matrixHomeServerDetails.supportsOidcLogin) {
-                    // Retrieve the details right now
-                    val oidcPrompt = if (isAccountCreation) OidcPrompt.Create else OidcPrompt.Login
-                    LoginMode.Oidc(
-                        authenticationService.getOidcUrl(prompt = oidcPrompt, loginHint = loginHint).getOrThrow()
-                    )
+                    // Tchap - Show LoginHintView when loginHint is null
+                    if (loginHint == null) {
+                        LoginMode.LoginHint
+                    } else {
+                        // Retrieve the details right now
+                        val oidcPrompt = if (isAccountCreation) OidcPrompt.Create else OidcPrompt.Login
+                        LoginMode.Oidc(
+                            authenticationService.getOidcUrl(prompt = oidcPrompt, loginHint = loginHint).getOrThrow()
+                        )
+                    }
                 } else if (isAccountCreation) {
                     val url = webClientUrlForAuthenticationRetriever.retrieve(homeserverUrl)
                     LoginMode.AccountCreation(url)

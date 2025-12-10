@@ -39,6 +39,7 @@ class OnBoardingNode(
         fun navigateToSignInFlow(mustChooseAccountProvider: Boolean)
         fun navigateToQrCode()
         fun navigateToBugReport()
+        fun navigateToLoginHint()
         fun navigateToLoginPassword()
         fun navigateToOidc(oidcDetails: OidcDetails)
         fun navigateToCreateAccount(url: String)
@@ -69,6 +70,7 @@ class OnBoardingNode(
             onSignInWithQrCode = callback::navigateToQrCode,
             onReportProblem = callback::navigateToBugReport,
             onOidcDetails = callback::navigateToOidc,
+            onNeedLoginHint = callback::navigateToLoginHint,
             onNeedLoginPassword = callback::navigateToLoginPassword,
             onLearnMoreClick = { openLearnMorePage(context) },
             onCreateAccountContinue = callback::navigateToCreateAccount,
