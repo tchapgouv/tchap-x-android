@@ -164,7 +164,7 @@ fun SelectedItem(
                     imageVector = CompoundIcons.Close(),
                     // Note: keep the context description for the test
                     contentDescription = stringResource(id = CommonStrings.action_remove),
-                    tint = ElementTheme.iconOnSolidBlue,
+                    tint = ElementTheme.iconOnSolidBlueTchap,
                     modifier = Modifier.padding(2.dp)
                 )
             }

@@ -78,7 +78,11 @@ object ElementTheme {
         @ReadOnlyComposable
         get() = LocalCompoundColors.current.isLight
 
-    val iconOnSolidBlue: Color
+    /**
+     * Tchap specific
+     * Returns the icon color when the background is blue Tchap (light color icon regardless of light or dark theme).
+     */
+    val iconOnSolidBlueTchap: Color
         @Composable
         @ReadOnlyComposable
         get() = when (isLightTheme) {
