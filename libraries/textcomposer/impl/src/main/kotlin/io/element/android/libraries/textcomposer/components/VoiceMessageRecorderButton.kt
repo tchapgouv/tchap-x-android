@@ -97,7 +97,7 @@ private fun StopButton(
         resourceId = CommonDrawables.ic_stop,
         // Note: accessibility is managed in TextComposer.
         contentDescription = null,
-        tint = ElementTheme.colors.iconOnSolidPrimary,
+        tint = ElementTheme.iconOnSolidBlueTchap,
     )
 }
 
