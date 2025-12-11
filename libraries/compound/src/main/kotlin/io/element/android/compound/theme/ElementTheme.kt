@@ -77,6 +77,14 @@ object ElementTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalCompoundColors.current.isLight
+
+    val iconOnSolidBlue: Color
+        @Composable
+        @ReadOnlyComposable
+        get() = when (isLightTheme) {
+            true -> colors.iconOnSolidPrimary
+            false -> colors.iconPrimary
+    }
 }
 
 // Global variables (application level)
