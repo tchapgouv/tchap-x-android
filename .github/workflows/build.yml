@@ -99,7 +99,7 @@ jobs:
         if: ${{ matrix.variant == 'nightly' }}
         run: ./gradlew compileGplayTchapWithpinningNightlySources -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
       # Tchap Specific - Auto build nightly
-      - name: Assemble nightly APKs
+      - name: Assemble Tchap X nightly APKs
         if: ${{ matrix.variant == 'nightly' }}
         env:
           ELEMENT_ANDROID_MAPTILER_API_KEY: ${{ secrets.MAPTILER_KEY }}
@@ -111,11 +111,30 @@ jobs:
           ELEMENT_CALL_POSTHOG_API_KEY: ${{ secrets.ELEMENT_CALL_POSTHOG_API_KEY }}
           ELEMENT_CALL_RAGESHAKE_URL: ${{ secrets.ELEMENT_CALL_RAGESHAKE_URL }}
         run: ./gradlew :app:assembleGplayTchapWithpinningNightly -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
-      - name: Upload nightly APKs
+      - name: Upload Tchap X nightly APKs
         if: ${{ matrix.variant == 'nightly' }}
         uses: actions/upload-artifact@v4
         with:
           name: Tchap.X.beta-nightly
           path: |
             app/build/outputs/apk/gplayTchapWithpinning/nightly/app-gplay-tchap-withpinning-arm64-v8a-nightly.apk
+      - name: Assemble Btchap X nightly APKs
+        if: ${{ matrix.variant == 'nightly' }}
+        env:
+          ELEMENT_ANDROID_MAPTILER_API_KEY: ${{ secrets.MAPTILER_KEY }}
+          ELEMENT_ANDROID_MAPTILER_LIGHT_MAP_ID: ${{ secrets.MAPTILER_LIGHT_MAP_ID }}
+          ELEMENT_ANDROID_MAPTILER_DARK_MAP_ID: ${{ secrets.MAPTILER_DARK_MAP_ID }}
+          ELEMENT_ANDROID_SENTRY_DSN: ${{ secrets.ELEMENT_ANDROID_SENTRY_DSN }}
+          ELEMENT_CALL_SENTRY_DSN: ${{ secrets.ELEMENT_CALL_SENTRY_DSN }}
+          ELEMENT_CALL_POSTHOG_API_HOST: ${{ secrets.ELEMENT_CALL_POSTHOG_API_HOST }}
+          ELEMENT_CALL_POSTHOG_API_KEY: ${{ secrets.ELEMENT_CALL_POSTHOG_API_KEY }}
+          ELEMENT_CALL_RAGESHAKE_URL: ${{ secrets.ELEMENT_CALL_RAGESHAKE_URL }}
+        run: ./gradlew :app:assembleGplaybTchapWithpinningNightly -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
+      - name: Upload Btchap X nightly APKs
+        if: ${{ matrix.variant == 'nightly' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Btchap.X.beta-nightly
+          path: |
+            app/build/outputs/apk/gplayBtchapWithpinning/nightly/app-gplay-btchap-withpinning-arm64-v8a-nightly.apk
       # end Tchap Specific
