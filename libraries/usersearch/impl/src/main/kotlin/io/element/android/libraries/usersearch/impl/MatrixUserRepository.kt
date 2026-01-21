@@ -51,7 +51,7 @@ class MatrixUserRepository(
         val results = dataSource
             .search(query, MAXIMUM_SEARCH_RESULTS)
             .filter { !client.isMe(it.userId) }
-            .map { UserSearchResult(it) }
+            .map { UserSearchResult(it, isUnresolved = it.userId.value.contains("tchap-email-invitation")) }
             .toMutableList()
 
         // If the query is another user's MXID and the result doesn't contain that user ID, query the profile information explicitly

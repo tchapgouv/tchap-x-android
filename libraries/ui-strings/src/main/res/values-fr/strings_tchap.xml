@@ -28,4 +28,5 @@
     <string name="tchap_common_legals">"Mentions légales"</string>
     <string name="tchap_common_terms_of_use">"Conditions Générales d'Utilisation"</string>
     <string name="tchap_error_multiple_accounts">"Tchap ne peut pas gérer plusieurs comptes simultanément. Veuillez déconnecter tous les autres comptes."</string>
+    <string name="tchap_common_invite_by_email">"Ce contact sera invité à rejoindre Tchap."</string>
 </resources>

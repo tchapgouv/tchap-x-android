@@ -104,7 +104,7 @@ object TchapPatterns {
 
         return if (this.isExternalTchapUser()) {
             // Handle external Tchap user case: replace single hyphen with '@'.
-            if (identifier.indexOf('-') == lastHyphenIndex) {
+            if (!this.contains("tchap-email-invitation") && identifier.indexOf('-') == lastHyphenIndex) {
                 identifier.replaceRange(lastHyphenIndex..lastHyphenIndex, "@")
             } else {
                 identifier

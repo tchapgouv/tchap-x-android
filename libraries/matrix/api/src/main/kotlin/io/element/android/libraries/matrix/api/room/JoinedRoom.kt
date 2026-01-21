@@ -62,6 +62,10 @@ interface JoinedRoom : BaseRoom {
 
     suspend fun inviteUserById(id: UserId): Result<Unit>
 
+    suspend fun inviteUserByEmail(email: String): Result<Unit>
+
+    suspend fun inviteUsersByEmail(emails: List<String>): Result<Unit>
+
     suspend fun updateAvatar(mimeType: String, data: ByteArray): Result<Unit>
 
     suspend fun removeAvatar(): Result<Unit>

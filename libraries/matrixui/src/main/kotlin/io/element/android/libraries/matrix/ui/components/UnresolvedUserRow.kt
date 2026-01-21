@@ -78,11 +78,17 @@ fun UnresolvedUserRow(
                     modifier = Modifier
                         .size(18.dp)
                         .align(Alignment.Top)
-                        .padding(2.dp),
+                        .padding(start = 2.dp, end = 2.dp, bottom = 2.dp),
                     tint = if (enabled) ElementTheme.colors.iconCriticalPrimary else ElementTheme.colors.iconDisabled,
                 )
                 Text(
-                    text = stringResource(CommonStrings.common_invite_unknown_profile),
+                    text = stringResource(
+                        if (id.contains("tchap-email-invitation")) {
+                            CommonStrings.tchap_common_invite_by_email
+                        } else {
+                            CommonStrings.common_invite_unknown_profile
+                        }
+                    ),
                     color = if (enabled) ElementTheme.colors.textSecondary else ElementTheme.colors.textDisabled,
                     style = ElementTheme.typography.fontBodySmRegular.copy(lineHeight = 16.sp),
                 )

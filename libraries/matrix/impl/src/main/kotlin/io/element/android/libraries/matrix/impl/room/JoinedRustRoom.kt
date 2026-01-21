@@ -296,6 +296,18 @@ class JoinedRustRoom(
         }
     }
 
+    override suspend fun inviteUserByEmail(email: String): Result<Unit> = withContext(roomDispatcher) {
+        runCatchingExceptions {
+            innerRoom.inviteUserByEmail(email)
+        }
+    }
+
+    override suspend fun inviteUsersByEmail(emails: List<String>): Result<Unit> = withContext(roomDispatcher) {
+        runCatchingExceptions {
+            innerRoom.inviteUsersByEmail(emails)
+        }
+    }
+
     override suspend fun updateAvatar(mimeType: String, data: ByteArray): Result<Unit> = withContext(roomDispatcher) {
         runCatchingExceptions {
             innerRoom.uploadAvatar(mimeType, data, null)

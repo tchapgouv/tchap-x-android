@@ -134,8 +134,17 @@ class DefaultInvitePeoplePresenter(
                 }
                 is InvitePeopleEvents.SendInvites -> {
                     showOpenRoomToExternalsDialog = false // TCHAP external user
-                    room.dataOrNull()?.let {
-                        sessionCoroutineScope.sendInvites(it, selectedUsers.value, sendInvitesAction)
+                    room.dataOrNull()?.let { room ->
+                        val (emailInvites, userInvites) = selectedUsers.value.partition {
+                            it.userId.value.contains("tchap-email-invitation")
+                        }
+
+                        if (userInvites.isNotEmpty()) {
+                            sessionCoroutineScope.sendInvites(room, userInvites, sendInvitesAction)
+                        }
+                        if (emailInvites.isNotEmpty()) {
+                            sessionCoroutineScope.sendTchapEmailInvites(room, emailInvites, sendInvitesAction)
+                        }
                     }
                 }
                 is InvitePeopleEvents.CloseSearch -> {
@@ -207,6 +216,27 @@ class DefaultInvitePeoplePresenter(
                 .any { it.isFailure }
 
             if (anyInviteFailed) {
+                appErrorStateService.showError(
+                    titleRes = CommonStrings.common_unable_to_invite_title,
+                    bodyRes = CommonStrings.common_unable_to_invite_message,
+                )
+            }
+
+            Result.success(Unit)
+        }
+    }
+
+    private fun CoroutineScope.sendTchapEmailInvites(
+        room: JoinedRoom,
+        emailToInvite: List<MatrixUser>,
+        sendInvitesAction: MutableState<AsyncAction<Unit>>,
+    ) = launch {
+        sendInvitesAction.runUpdatingState {
+            val anyInviteFailed = room.inviteUsersByEmail(
+                emailToInvite.map { it.displayName!! }
+            )
+
+            if (anyInviteFailed.isFailure) {
                 appErrorStateService.showError(
                     titleRes = CommonStrings.common_unable_to_invite_title,
                     bodyRes = CommonStrings.common_unable_to_invite_message,
