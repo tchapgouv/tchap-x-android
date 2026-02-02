@@ -33,7 +33,7 @@ fun aEditUserProfileState(
     saveButtonEnabled: Boolean = true,
     saveAction: AsyncAction<Unit> = AsyncAction.Uninitialized,
     cameraPermissionState: PermissionsState = aPermissionsState(showDialog = false),
-    eventSink: (EditUserProfileEvents) -> Unit = {},
+    eventSink: (EditUserProfileEvent) -> Unit = {},
 ) = EditUserProfileState(
     showMatrixId = false,
     userId = userId,

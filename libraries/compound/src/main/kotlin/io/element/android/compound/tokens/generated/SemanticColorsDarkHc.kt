@@ -38,7 +38,10 @@ val compoundColorsHcDark = SemanticColors(
     bgActionTertiaryRest = DarkHcColorTokens.colorThemeBg,
     bgActionTertiarySelected = DarkHcColorTokens.colorGray400,
     bgBadgeAccent = DarkHcColorTokens.colorAlphaGreen500,
+<<<<<<< HEAD
     bgBadgeExternal = DarkHcColorTokens.colorOrange400,
+=======
+>>>>>>> main-element
     bgBadgeDefault = DarkHcColorTokens.colorAlphaGray500,
     bgBadgeInfo = DarkHcColorTokens.colorAlphaBlue500,
     bgCanvasDefault = DarkHcColorTokens.colorThemeBg,
@@ -90,7 +93,7 @@ val compoundColorsHcDark = SemanticColors(
     iconAccentTertiary = DarkHcColorTokens.colorBlue600,
     iconCriticalPrimary = DarkHcColorTokens.colorRed800,
     iconDisabled = DarkHcColorTokens.colorGray700,
-    iconInfoPrimary = DarkHcColorTokens.colorBlue900,
+    iconInfoPrimary = DarkHcColorTokens.colorBlue1100,
     iconOnSolidPrimary = DarkHcColorTokens.colorThemeBg,
     iconPrimary = DarkHcColorTokens.colorGray1400,
     iconPrimaryAlpha = DarkHcColorTokens.colorAlphaGray1400,
@@ -116,8 +119,13 @@ val compoundColorsHcDark = SemanticColors(
     textDecorative6 = DarkHcColorTokens.colorOrange1000,
     textDisabled = DarkHcColorTokens.colorGray800,
     textInfoPrimary = DarkHcColorTokens.colorBlue1100,
+<<<<<<< HEAD
     textLinkExternal = DarkHcColorTokens.colorBlue1000,
     textOnSolidPrimary = DarkHcColorTokens.colorGray1400,
+=======
+    textLinkExternal = DarkHcColorTokens.colorBlue1100,
+    textOnSolidPrimary = DarkHcColorTokens.colorThemeBg,
+>>>>>>> main-element
     textPrimary = DarkHcColorTokens.colorGray1400,
     textSecondary = DarkHcColorTokens.colorGray900,
     textSuccessPrimary = DarkHcColorTokens.colorGreen1000,

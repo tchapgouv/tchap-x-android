@@ -24,6 +24,7 @@ import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomInfo
 import io.element.android.libraries.matrix.api.room.RoomMembersState
 import io.element.android.libraries.matrix.api.room.RoomNotificationSettingsState
+import io.element.android.libraries.matrix.api.room.SendQueueUpdate
 import io.element.android.libraries.matrix.api.room.history.RoomHistoryVisibility
 import io.element.android.libraries.matrix.api.room.join.JoinRule
 import io.element.android.libraries.matrix.api.room.knock.KnockRequest
@@ -40,6 +41,7 @@ import io.element.android.tests.testutils.simulateLongTask
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.test.TestScope
@@ -86,6 +88,8 @@ class FakeJoinedRoom(
     private val setSendQueueEnabledResult: (Boolean) -> Unit = { _: Boolean -> },
     private val setAccessRuleResult: (RoomAccessRules) -> Result<Unit> = { lambdaError() },
 ) : JoinedRoom, BaseRoom by baseRoom {
+    private val sendQueueUpdates = MutableSharedFlow<SendQueueUpdate>(extraBufferCapacity = 10)
+
     fun givenRoomMembersState(state: RoomMembersState) {
         baseRoom.givenRoomMembersState(state)
     }
@@ -222,8 +226,13 @@ class FakeJoinedRoom(
         withdrawVerificationAndResendResult(userIds, sendHandle)
     }
 
+<<<<<<< HEAD
     override suspend fun setAccessRule(rule: RoomAccessRules): Result<Unit> = simulateLongTask {
         setAccessRuleResult(rule)
+=======
+    override fun subscribeToSendQueueUpdates(): Flow<SendQueueUpdate> {
+        return sendQueueUpdates
+>>>>>>> main-element
     }
 
     private suspend fun simulateSendMediaProgress(progressCallback: ProgressCallback?) {
@@ -235,5 +244,9 @@ class FakeJoinedRoom(
 
     fun emitSyncUpdate() {
         (syncUpdateFlow as MutableStateFlow).value = syncUpdateFlow.value + 1
+    }
+
+    suspend fun givenSendQueueUpdate(sendQueueUpdate: SendQueueUpdate) {
+        sendQueueUpdates.emit(sendQueueUpdate)
     }
 }

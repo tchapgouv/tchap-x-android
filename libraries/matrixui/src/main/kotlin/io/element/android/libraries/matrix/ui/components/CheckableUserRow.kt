@@ -11,8 +11,9 @@ package io.element.android.libraries.matrix.ui.components
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
@@ -20,11 +21,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+<<<<<<< HEAD
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.libraries.designsystem.atomic.atoms.SelectedIndicatorAtom
+=======
+>>>>>>> main-element
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.preview.ElementThemedPreview
+import io.element.android.libraries.designsystem.theme.components.Checkbox
 import io.element.android.libraries.designsystem.theme.components.HorizontalDivider
 import io.element.android.libraries.matrix.ui.model.getAvatarData
 
@@ -65,11 +70,12 @@ fun CheckableUserRow(
                 )
             }
         }
-        SelectedIndicatorAtom(
-            modifier = Modifier.padding(end = 24.dp),
+        Checkbox(
+            onCheckedChange = onCheckedChange,
             checked = checked,
             enabled = enabled,
         )
+        Spacer(modifier = Modifier.width(4.dp))
     }
 }
 

@@ -19,7 +19,9 @@ import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.RoomMembersState
 import io.element.android.libraries.matrix.api.room.powerlevels.RoomPowerLevels
+import io.element.android.libraries.matrix.api.room.toMatrixUser
 import io.element.android.libraries.matrix.api.user.MatrixUser
+import io.element.android.libraries.matrix.test.A_SESSION_ID
 import io.element.android.libraries.matrix.test.A_USER_ID
 import io.element.android.libraries.matrix.test.A_USER_ID_2
 import io.element.android.libraries.matrix.test.A_USER_ID_3
@@ -28,11 +30,13 @@ import io.element.android.libraries.matrix.test.room.FakeBaseRoom
 import io.element.android.libraries.matrix.test.room.FakeJoinedRoom
 import io.element.android.libraries.matrix.test.room.aRoomInfo
 import io.element.android.libraries.matrix.test.room.aRoomMember
+import io.element.android.libraries.matrix.test.room.anAlice
 import io.element.android.libraries.matrix.test.room.defaultRoomPowerLevelValues
 import io.element.android.libraries.previewutils.room.aRoomMemberList
 import io.element.android.services.analytics.test.FakeAnalyticsService
 import io.element.android.tests.testutils.test
 import io.element.android.tests.testutils.testCoroutineDispatchers
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
@@ -65,7 +69,7 @@ class ChangeRolesPresenterTest {
         }
         val presenter = createChangeRolesPresenter(room = room)
         presenter.test {
-            skipItems(1)
+            skipItems(2)
             assertThat(awaitItem().searchResults).isInstanceOf(SearchBarResultState.Results::class.java)
         }
     }
@@ -163,13 +167,13 @@ class ChangeRolesPresenterTest {
     }
 
     @Test
-    fun `present - when modifying admins, creators are displayed too`() = runTest {
+    fun `present - when modifying admins, creators are displayed too - privilegedCreatorRole is true`() = runTest {
         val room = FakeJoinedRoom().apply {
             val creatorUserId = UserId("@creator:matrix.org")
             val memberList = aRoomMemberList()
                 .plus(aRoomMember(displayName = "CREATOR", role = RoomMember.Role.Owner(isCreator = true), userId = creatorUserId))
                 .toImmutableList()
-            givenRoomInfo(aRoomInfo(roomCreators = listOf(creatorUserId)))
+            givenRoomInfo(aRoomInfo(roomCreators = listOf(creatorUserId), privilegedCreatorRole = true))
             givenRoomMembersState(RoomMembersState.Ready(memberList))
         }
         val presenter = createChangeRolesPresenter(room = room)
@@ -192,6 +196,7 @@ class ChangeRolesPresenterTest {
         }
         val presenter = createChangeRolesPresenter(room = room)
         presenter.test {
+            skipItems(1)
             val initialState = awaitItem()
 
             initialState.eventSink(ChangeRolesEvent.ToggleSearchActive)
@@ -209,6 +214,7 @@ class ChangeRolesPresenterTest {
         }
         val presenter = createChangeRolesPresenter(room = room)
         presenter.test {
+            skipItems(1)
             val initialState = awaitItem()
             val initialResults = (awaitItem().searchResults as? SearchBarResultState.Results)?.results
             assertThat(initialResults?.members).hasSize(8)
@@ -233,7 +239,7 @@ class ChangeRolesPresenterTest {
         }
         val presenter = createChangeRolesPresenter(room = room)
         presenter.test {
-            skipItems(1)
+            skipItems(2)
             val initialResults = (awaitItem().searchResults as? SearchBarResultState.Results)?.results
             assertThat(initialResults?.members).hasSize(8)
             assertThat(initialResults?.moderators).hasSize(1)
@@ -252,44 +258,48 @@ class ChangeRolesPresenterTest {
 
     @Test
     fun `present - UserSelectionToggle adds and removes users from the selected user list`() = runTest {
+        val roomMemberList = aRoomMemberList()
         val room = FakeJoinedRoom().apply {
-            givenRoomMembersState(RoomMembersState.Ready(aRoomMemberList()))
-            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsWithRole(RoomMember.Role.Admin)))
+            givenRoomMembersState(RoomMembersState.Ready(roomMemberList))
+            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsFromRoomMemberList(roomMemberList)))
         }
         val presenter = createChangeRolesPresenter(room = room)
+        val userMember = roomMemberList.first { it.role == RoomMember.Role.User }
         presenter.test {
             skipItems(1)
             val initialState = awaitItem()
             assertThat(initialState.selectedUsers).hasSize(1)
 
-            initialState.eventSink(ChangeRolesEvent.UserSelectionToggled(MatrixUser(A_USER_ID_2)))
+            initialState.eventSink(ChangeRolesEvent.UserSelectionToggled(userMember.toMatrixUser()))
             assertThat(awaitItem().selectedUsers).hasSize(2)
 
-            initialState.eventSink(ChangeRolesEvent.UserSelectionToggled(MatrixUser(A_USER_ID_2)))
+            initialState.eventSink(ChangeRolesEvent.UserSelectionToggled(userMember.toMatrixUser()))
             assertThat(awaitItem().selectedUsers).hasSize(1)
         }
     }
 
     @Test
     fun `present - hasPendingChanges is true when the initial selected users don't match the new ones`() = runTest {
+        val roomMemberList = aRoomMemberList()
         val room = FakeJoinedRoom().apply {
-            givenRoomMembersState(RoomMembersState.Ready(aRoomMemberList()))
-            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsWithRole(RoomMember.Role.Admin)))
+            givenRoomMembersState(RoomMembersState.Ready(roomMemberList))
+            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsFromRoomMemberList(roomMemberList)))
         }
         val presenter = createChangeRolesPresenter(room = room)
+        val userMember = roomMemberList.first { it.role == RoomMember.Role.User }
         presenter.test {
             skipItems(1)
             val initialState = awaitItem()
             assertThat(initialState.hasPendingChanges).isFalse()
             assertThat(initialState.selectedUsers).hasSize(1)
 
-            initialState.eventSink(ChangeRolesEvent.UserSelectionToggled(MatrixUser(A_USER_ID_2)))
+            initialState.eventSink(ChangeRolesEvent.UserSelectionToggled(userMember.toMatrixUser()))
             with(awaitItem()) {
                 assertThat(selectedUsers).hasSize(2)
                 assertThat(hasPendingChanges).isTrue()
             }
 
-            initialState.eventSink(ChangeRolesEvent.UserSelectionToggled(MatrixUser(A_USER_ID_2)))
+            initialState.eventSink(ChangeRolesEvent.UserSelectionToggled(userMember.toMatrixUser()))
             with(awaitItem()) {
                 assertThat(selectedUsers).hasSize(1)
                 assertThat(hasPendingChanges).isFalse()
@@ -299,9 +309,10 @@ class ChangeRolesPresenterTest {
 
     @Test
     fun `present - Exit will display success false if no pending changes`() = runTest {
+        val roomMemberList = aRoomMemberList()
         val room = FakeJoinedRoom().apply {
-            givenRoomMembersState(RoomMembersState.Ready(aRoomMemberList()))
-            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsWithRole(RoomMember.Role.Admin)))
+            givenRoomMembersState(RoomMembersState.Ready(roomMemberList))
+            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsFromRoomMemberList(roomMemberList)))
         }
         val presenter = createChangeRolesPresenter(room = room)
         presenter.test {
@@ -317,9 +328,10 @@ class ChangeRolesPresenterTest {
 
     @Test
     fun `present - CloseDialog will remove exit confirmation`() = runTest {
+        val roomMemberList = aRoomMemberList()
         val room = FakeJoinedRoom().apply {
-            givenRoomMembersState(RoomMembersState.Ready(aRoomMemberList()))
-            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsWithRole(RoomMember.Role.Admin)))
+            givenRoomMembersState(RoomMembersState.Ready(roomMemberList))
+            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsFromRoomMemberList(roomMemberList)))
         }
         val presenter = createChangeRolesPresenter(room = room)
         presenter.test {
@@ -341,9 +353,10 @@ class ChangeRolesPresenterTest {
 
     @Test
     fun `present - Exit will display a confirmation dialog if there are pending changes, calling it again will actually exit`() = runTest {
+        val roomMemberList = aRoomMemberList()
         val room = FakeJoinedRoom().apply {
-            givenRoomMembersState(RoomMembersState.Ready(aRoomMemberList()))
-            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsWithRole(RoomMember.Role.Admin)))
+            givenRoomMembersState(RoomMembersState.Ready(roomMemberList))
+            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsFromRoomMemberList(roomMemberList)))
         }
         val presenter = createChangeRolesPresenter(room = room)
         presenter.test {
@@ -367,12 +380,13 @@ class ChangeRolesPresenterTest {
 
     @Test
     fun `present - Save will display a confirmation when adding admins`() = runTest {
+        val roomMemberList = aRoomMemberList()
         val room = FakeJoinedRoom(
             updateUserRoleResult = { Result.success(Unit) },
             baseRoom = FakeBaseRoom(updateMembersResult = { Result.success(Unit) }),
         ).apply {
-            givenRoomMembersState(RoomMembersState.Ready(aRoomMemberList()))
-            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsWithRole(RoomMember.Role.Admin)))
+            givenRoomMembersState(RoomMembersState.Ready(roomMemberList))
+            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsFromRoomMemberList(roomMemberList)))
         }
         val presenter = createChangeRolesPresenter(role = RoomMember.Role.Admin, room = room)
         presenter.test {
@@ -391,9 +405,10 @@ class ChangeRolesPresenterTest {
 
     @Test
     fun `present - CloseDialog will remove the confirmation dialog`() = runTest {
+        val roomMemberList = aRoomMemberList()
         val room = FakeJoinedRoom().apply {
-            givenRoomMembersState(RoomMembersState.Ready(aRoomMemberList()))
-            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsWithRole(RoomMember.Role.Admin)))
+            givenRoomMembersState(RoomMembersState.Ready(roomMemberList))
+            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsFromRoomMemberList(roomMemberList)))
         }
         val presenter = createChangeRolesPresenter(role = RoomMember.Role.Admin, room = room)
         presenter.test {
@@ -415,25 +430,27 @@ class ChangeRolesPresenterTest {
     @Test
     fun `present - Save will just save the data for moderators`() = runTest {
         val analyticsService = FakeAnalyticsService()
+        val roomMemberList = aRoomMemberList()
         val room = FakeJoinedRoom(
             updateUserRoleResult = { Result.success(Unit) },
             baseRoom = FakeBaseRoom(updateMembersResult = { Result.success(Unit) }),
         ).apply {
-            givenRoomMembersState(RoomMembersState.Ready(aRoomMemberList()))
-            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsWithRole(RoomMember.Role.Moderator)))
+            givenRoomMembersState(RoomMembersState.Ready(roomMemberList))
+            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsFromRoomMemberList(roomMemberList)))
         }
         val presenter = createChangeRolesPresenter(
             role = RoomMember.Role.Moderator,
             room = room,
             analyticsService = analyticsService
         )
+        val userMember = roomMemberList.first { it.role == RoomMember.Role.User }
         presenter.test {
-            skipItems(1)
+            skipItems(2)
             val initialState = awaitItem()
-            assertThat(initialState.selectedUsers).isEmpty()
-            initialState.eventSink(ChangeRolesEvent.UserSelectionToggled(MatrixUser(A_USER_ID_2)))
+            assertThat(initialState.selectedUsers).hasSize(1)
+            initialState.eventSink(ChangeRolesEvent.UserSelectionToggled(userMember.toMatrixUser()))
             awaitItem().also {
-                assertThat(it.selectedUsers).hasSize(1)
+                assertThat(it.selectedUsers).hasSize(2)
                 it.eventSink(ChangeRolesEvent.Save)
             }
             assertThat(awaitItem().savingState).isInstanceOf(AsyncAction.Loading::class.java)
@@ -480,17 +497,14 @@ class ChangeRolesPresenterTest {
     @Test
     fun `present - Save will just save the changes if the current user is a room creator and the selected users are not`() = runTest {
         val analyticsService = FakeAnalyticsService()
+        val alice = anAlice()
+        val me = aRoomMember(displayName = "CREATOR", role = RoomMember.Role.Owner(isCreator = true), userId = A_SESSION_ID)
         val room = FakeJoinedRoom(
             updateUserRoleResult = { Result.success(Unit) },
             baseRoom = FakeBaseRoom(updateMembersResult = { Result.success(Unit) }),
         ).apply {
-            givenRoomMembersState(RoomMembersState.Ready(aRoomMemberList()))
-            givenRoomInfo(
-                aRoomInfo(
-                    roomCreators = listOf(sessionId),
-                    roomPowerLevels = roomPowerLevelsWithRole(role = RoomMember.Role.Admin, userId = A_USER_ID_2)
-                )
-            )
+            val roomMemberList = persistentListOf(alice, me)
+            givenRoomMembersState(RoomMembersState.Ready(roomMemberList))
         }
         val presenter = createChangeRolesPresenter(
             role = RoomMember.Role.Admin,
@@ -501,7 +515,7 @@ class ChangeRolesPresenterTest {
             skipItems(2)
             val initialState = awaitItem()
             assertThat(initialState.selectedUsers).hasSize(2)
-            initialState.eventSink(ChangeRolesEvent.UserSelectionToggled(MatrixUser(A_USER_ID_2)))
+            initialState.eventSink(ChangeRolesEvent.UserSelectionToggled(alice.toMatrixUser()))
             awaitItem().also {
                 assertThat(it.selectedUsers).hasSize(1)
                 it.eventSink(ChangeRolesEvent.Save)
@@ -515,20 +529,22 @@ class ChangeRolesPresenterTest {
 
     @Test
     fun `present - Save can handle failures and CloseDialog clears them`() = runTest {
+        val roomMemberList = aRoomMemberList()
         val room = FakeJoinedRoom(
             updateUserRoleResult = { Result.failure(IllegalStateException("Failed")) }
         ).apply {
-            givenRoomMembersState(RoomMembersState.Ready(aRoomMemberList()))
-            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsWithRole(role = RoomMember.Role.Moderator, userId = A_USER_ID)))
+            givenRoomMembersState(RoomMembersState.Ready(roomMemberList))
+            givenRoomInfo(aRoomInfo(roomPowerLevels = roomPowerLevelsFromRoomMemberList(roomMemberList)))
         }
         val presenter = createChangeRolesPresenter(role = RoomMember.Role.Moderator, room = room)
+        val userMember = roomMemberList.first { it.role == RoomMember.Role.User }
         presenter.test {
-            skipItems(1)
+            skipItems(2)
             val initialState = awaitItem()
-            assertThat(initialState.selectedUsers).isEmpty()
-            initialState.eventSink(ChangeRolesEvent.UserSelectionToggled(MatrixUser(A_USER_ID_2)))
+            assertThat(initialState.selectedUsers).hasSize(1)
+            initialState.eventSink(ChangeRolesEvent.UserSelectionToggled(userMember.toMatrixUser()))
             awaitItem().also {
-                assertThat(it.selectedUsers).hasSize(1)
+                assertThat(it.selectedUsers).hasSize(2)
                 it.eventSink(ChangeRolesEvent.Save)
             }
             val loadingState = awaitItem()
@@ -552,13 +568,12 @@ class ChangeRolesPresenterTest {
         }
     }
 
-    private fun roomPowerLevelsWithRole(
-        role: RoomMember.Role,
-        userId: UserId = A_USER_ID,
+    private fun roomPowerLevelsFromRoomMemberList(
+        roomMemberList: List<RoomMember>,
     ): RoomPowerLevels {
         return RoomPowerLevels(
             values = defaultRoomPowerLevelValues(),
-            users = persistentMapOf(userId to role.powerLevel)
+            users = roomMemberList.associate { it.userId to it.role.powerLevel }.toImmutableMap()
         )
     }
 

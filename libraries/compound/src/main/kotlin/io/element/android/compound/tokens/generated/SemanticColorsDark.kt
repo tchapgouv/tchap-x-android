@@ -37,10 +37,16 @@ val compoundColorsDark = SemanticColors(
     bgActionTertiaryHovered = DarkColorTokens.colorGray300,
     bgActionTertiaryRest = DarkColorTokens.colorThemeBg,
     bgActionTertiarySelected = DarkColorTokens.colorGray400,
+<<<<<<< HEAD
     bgBadgeAccent = DarkColorTokens.colorGreen400,
     bgBadgeDefault = DarkColorTokens.colorGray400,
     bgBadgeExternal = DarkColorTokens.colorOrange400,
     bgBadgeInfo = DarkColorTokens.colorBlue400,
+=======
+    bgBadgeAccent = DarkColorTokens.colorAlphaGreen500,
+    bgBadgeDefault = DarkColorTokens.colorAlphaGray500,
+    bgBadgeInfo = DarkColorTokens.colorAlphaBlue500,
+>>>>>>> main-element
     bgCanvasDefault = DarkColorTokens.colorThemeBg,
     bgCanvasDefaultLevel1 = DarkColorTokens.colorGray200,
     bgCanvasDisabled = DarkColorTokens.colorGray200,
@@ -90,7 +96,7 @@ val compoundColorsDark = SemanticColors(
     iconAccentTertiary = DarkColorTokens.colorBlue600,
     iconCriticalPrimary = DarkColorTokens.colorRed800,
     iconDisabled = DarkColorTokens.colorGray700,
-    iconInfoPrimary = DarkColorTokens.colorBlue900,
+    iconInfoPrimary = DarkColorTokens.colorBlue1100,
     iconOnSolidPrimary = DarkColorTokens.colorThemeBg,
     iconPrimary = DarkColorTokens.colorGray1400,
     iconPrimaryAlpha = DarkColorTokens.colorAlphaGray1400,
@@ -116,8 +122,13 @@ val compoundColorsDark = SemanticColors(
     textDecorative6 = DarkColorTokens.colorOrange1000,
     textDisabled = DarkColorTokens.colorGray800,
     textInfoPrimary = DarkColorTokens.colorBlue1100,
+<<<<<<< HEAD
     textLinkExternal = DarkColorTokens.colorBlue900,
     textOnSolidPrimary = DarkColorTokens.colorGray1400,
+=======
+    textLinkExternal = DarkColorTokens.colorBlue1100,
+    textOnSolidPrimary = DarkColorTokens.colorThemeBg,
+>>>>>>> main-element
     textPrimary = DarkColorTokens.colorGray1400,
     textSecondary = DarkColorTokens.colorGray900,
     textSuccessPrimary = DarkColorTokens.colorGreen1000,

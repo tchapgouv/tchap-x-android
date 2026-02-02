@@ -57,6 +57,7 @@ import io.element.android.libraries.designsystem.components.list.ListItemContent
 import io.element.android.libraries.designsystem.components.preferences.PreferenceCategory
 import io.element.android.libraries.designsystem.components.preferences.PreferenceSwitch
 import io.element.android.libraries.designsystem.modifiers.niceClickable
+import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.ElementPreviewDark
 import io.element.android.libraries.designsystem.preview.ElementPreviewLight
 import io.element.android.libraries.designsystem.preview.PreviewWithLargeHeight
@@ -403,7 +404,7 @@ private fun RoomHeaderSection(
                 }.toImmutableList(),
                 isTombstoned = isTombstoned,
             ),
-            contentDescription = avatarUrl?.let { stringResource(CommonStrings.a11y_room_avatar) },
+            contentDescription = stringResource(CommonStrings.a11y_room_avatar),
             modifier = Modifier
                 .clickable(
                     enabled = avatarUrl != null,
@@ -713,6 +714,7 @@ private fun DebugInfoSection(
 ) {
     val context = LocalContext.current
     PreferenceCategory(showTopDivider = true) {
+        val toastMessage = stringResource(CommonStrings.common_copied_to_clipboard)
         ListItem(
             headlineContent = {
                 Text("Internal room ID")
@@ -728,8 +730,8 @@ private fun DebugInfoSection(
             trailingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Copy())),
             onClick = {
                 context.copyToClipboard(
-                    roomId.value,
-                    context.getString(CommonStrings.common_copied_to_clipboard)
+                    text = roomId.value,
+                    toastMessage = toastMessage,
                 )
             },
         )
@@ -758,6 +760,14 @@ internal fun RoomDetailsPreview(@PreviewParameter(RoomDetailsStateProvider::clas
 @Composable
 internal fun RoomDetailsDarkPreview(@PreviewParameter(RoomDetailsStateProvider::class) state: RoomDetailsState) =
     ElementPreviewDark { ContentToPreview(state) }
+
+@PreviewWithLargeHeight
+@Composable
+internal fun RoomDetailsA11yPreview() = ElementPreview {
+    ContentToPreview(
+        state = aRoomDetailsState(displayAdminSettings = true)
+    )
+}
 
 @ExcludeFromCoverage
 @Composable

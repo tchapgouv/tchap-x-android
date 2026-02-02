@@ -666,6 +666,7 @@ class RoomListPresenterTest {
             notificationSettingsService = client.notificationSettingsService,
             sessionCoroutineScope = backgroundScope,
             dateTimeObserver = FakeDateTimeObserver(),
+            analyticsService = FakeAnalyticsService(),
         ),
         searchPresenter = searchPresenter,
         sessionPreferencesStore = sessionPreferencesStore,

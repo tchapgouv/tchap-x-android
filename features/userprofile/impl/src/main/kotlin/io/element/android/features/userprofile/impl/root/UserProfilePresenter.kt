@@ -38,6 +38,8 @@ import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.UserId
+import io.element.android.libraries.matrix.api.room.powerlevels.canCall
+import io.element.android.libraries.matrix.api.room.powerlevels.use
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -61,7 +63,7 @@ class UserProfilePresenter(
 
     @Composable
     private fun getDmRoomId(): State<RoomId?> {
-        return produceState<RoomId?>(initialValue = null) {
+        return produceState(initialValue = null) {
             value = client.findDM(userId).getOrNull()
         }
     }
@@ -71,7 +73,6 @@ class UserProfilePresenter(
         val isElementCallAvailable by produceState(initialValue = false, roomId) {
             value = sessionEnterpriseService.isElementCallAvailable()
         }
-
         return produceState(initialValue = false, isElementCallAvailable, roomId) {
             value = when {
                 isElementCallAvailable.not() -> false
@@ -80,7 +81,7 @@ class UserProfilePresenter(
                     roomId
                         ?.let { client.getRoom(it) }
                         ?.use { room ->
-                            room.canUserJoinCall(client.sessionId).getOrNull()
+                            room.roomPermissions().use(false) { perms -> perms.canCall() }
                         }
                         .orFalse()
             }

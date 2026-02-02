@@ -81,7 +81,11 @@ private fun SpaceAnnouncementHeader(
         showBetaLabel = true,
         subTitle = stringResource(id = R.string.screen_space_announcement_subtitle),
         iconStyle = BigIcon.Style.Default(
+<<<<<<< HEAD
             vectorIcon = CompoundIcons.Space(),
+=======
+            vectorIcon = CompoundIcons.SpaceSolid(),
+>>>>>>> main-element
             usePrimaryTint = true,
         ),
     )

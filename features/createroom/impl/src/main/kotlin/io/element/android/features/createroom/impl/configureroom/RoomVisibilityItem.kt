@@ -8,6 +8,7 @@
 
 package io.element.android.features.createroom.impl.configureroom
 
+<<<<<<< HEAD
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import io.element.android.features.createroom.impl.R
@@ -36,4 +37,10 @@ enum class RoomVisibilityItem(
         title = R.string.screen_create_room_public_option_title,
         description = R.string.tchap_screen_create_room_public_option_description,
     )
+=======
+enum class RoomVisibilityItem {
+    Public,
+    AskToJoin,
+    Private
+>>>>>>> main-element
 }

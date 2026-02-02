@@ -21,25 +21,24 @@ import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
-import io.element.android.libraries.core.data.tryOrNull
 import io.element.android.libraries.core.extensions.flatMap
 import io.element.android.libraries.core.extensions.runCatchingExceptions
+<<<<<<< HEAD
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClientProvider
+=======
+import io.element.android.libraries.core.meta.BuildMeta
+>>>>>>> main-element
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
 import io.element.android.libraries.matrix.api.core.SessionId
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
-import kotlin.time.Duration.Companion.seconds
 
 @AssistedInject
 class CreateAccountPresenter(
     @Assisted private val url: String,
     private val authenticationService: MatrixAuthenticationService,
-    private val clientProvider: MatrixClientProvider,
     private val messageParser: MessageParser,
     private val featureFlagService: FeatureFlagService,
 ) : Presenter<CreateAccountState> {
@@ -87,12 +86,6 @@ class CreateAccountPresenter(
         }.flatMap { externalSession ->
             authenticationService.importCreatedSession(externalSession)
         }.onSuccess { sessionId ->
-            tryOrNull {
-                // Wait until the session is verified
-                val client = clientProvider.getOrRestore(sessionId).getOrThrow()
-                val sessionVerificationService = client.sessionVerificationService
-                withTimeout(10.seconds) { sessionVerificationService.sessionVerifiedStatus.first { it.isVerified() } }
-            }
             loggedInState.value = AsyncAction.Success(sessionId)
         }.onFailure { failure ->
             loggedInState.value = AsyncAction.Failure(failure)
