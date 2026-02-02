@@ -226,13 +226,12 @@ class FakeJoinedRoom(
         withdrawVerificationAndResendResult(userIds, sendHandle)
     }
 
-<<<<<<< HEAD
     override suspend fun setAccessRule(rule: RoomAccessRules): Result<Unit> = simulateLongTask {
         setAccessRuleResult(rule)
-=======
+    }
+
     override fun subscribeToSendQueueUpdates(): Flow<SendQueueUpdate> {
         return sendQueueUpdates
->>>>>>> main-element
     }
 
     private suspend fun simulateSendMediaProgress(progressCallback: ProgressCallback?) {

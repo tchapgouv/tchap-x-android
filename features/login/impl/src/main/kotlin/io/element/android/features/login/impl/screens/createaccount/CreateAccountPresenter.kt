@@ -23,13 +23,8 @@ import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.extensions.flatMap
 import io.element.android.libraries.core.extensions.runCatchingExceptions
-<<<<<<< HEAD
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
-import io.element.android.libraries.matrix.api.MatrixClientProvider
-=======
-import io.element.android.libraries.core.meta.BuildMeta
->>>>>>> main-element
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
 import io.element.android.libraries.matrix.api.core.SessionId
 import kotlinx.coroutines.CoroutineScope

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright (c) 2026 Element Creations Ltd.
  *
  * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
@@ -37,16 +37,10 @@ val compoundColorsLight = SemanticColors(
     bgActionTertiaryHovered = LightColorTokens.colorGray300,
     bgActionTertiaryRest = LightColorTokens.colorThemeBg,
     bgActionTertiarySelected = LightColorTokens.colorGray400,
-<<<<<<< HEAD
     bgBadgeAccent = LightColorTokens.colorGreen400,
     bgBadgeDefault = LightColorTokens.colorGray400,
     bgBadgeExternal = LightColorTokens.colorOrange400,
     bgBadgeInfo = LightColorTokens.colorBlue400,
-=======
-    bgBadgeAccent = LightColorTokens.colorAlphaGreen400,
-    bgBadgeDefault = LightColorTokens.colorAlphaGray400,
-    bgBadgeInfo = LightColorTokens.colorAlphaBlue400,
->>>>>>> main-element
     bgCanvasDefault = LightColorTokens.colorThemeBg,
     bgCanvasDefaultLevel1 = LightColorTokens.colorThemeBg,
     bgCanvasDisabled = LightColorTokens.colorGray200,
@@ -94,9 +88,13 @@ val compoundColorsLight = SemanticColors(
     gradientSubtleStop6 = LightColorTokens.colorTransparent,
     iconAccentPrimary = LightColorTokens.colorBlue1400,
     iconAccentTertiary = LightColorTokens.colorBlue900,
+    iconBadgeAccent = LightColorTokens.colorGreen1200,
+    iconBadgeDefault = LightColorTokens.colorGray1200,
+    iconBadgeExternal = LightColorTokens.colorOrange1200,
+    iconBadgeInfo = LightColorTokens.colorBlue1200,
     iconCriticalPrimary = LightColorTokens.colorRed900,
     iconDisabled = LightColorTokens.colorGray700,
-    iconInfoPrimary = LightColorTokens.colorBlue1100,
+    iconInfoPrimary = LightColorTokens.colorBlue900,
     iconOnSolidPrimary = LightColorTokens.colorThemeBg,
     iconPrimary = LightColorTokens.colorGray1400,
     iconPrimaryAlpha = LightColorTokens.colorAlphaGray1400,
@@ -122,11 +120,7 @@ val compoundColorsLight = SemanticColors(
     textDecorative6 = LightColorTokens.colorOrange1000,
     textDisabled = LightColorTokens.colorGray800,
     textInfoPrimary = LightColorTokens.colorBlue1100,
-<<<<<<< HEAD
     textLinkExternal = LightColorTokens.colorBlue1000,
-=======
-    textLinkExternal = LightColorTokens.colorBlue1100,
->>>>>>> main-element
     textOnSolidPrimary = LightColorTokens.colorThemeBg,
     textPrimary = LightColorTokens.colorGray1400,
     textSecondary = LightColorTokens.colorGray900,

@@ -60,17 +60,6 @@ private fun StopButton(
             .background(
                 color = ElementTheme.colors.bgActionPrimaryRest,
                 shape = CircleShape,
-<<<<<<< HEAD:libraries/textcomposer/impl/src/main/kotlin/io/element/android/libraries/textcomposer/components/VoiceMessageRecorderButton.kt
-            )
-    )
-    Icon(
-        modifier = Modifier.size(24.dp),
-        resourceId = CommonDrawables.ic_stop,
-        // Note: accessibility is managed in TextComposer.
-        contentDescription = null,
-        tint = ElementTheme.iconOnSolidBlueTchap,
-    )
-=======
             ),
         contentAlignment = Alignment.Center,
     ) {
@@ -79,10 +68,9 @@ private fun StopButton(
             resourceId = CommonDrawables.ic_stop,
             // Note: accessibility is managed in TextComposer.
             contentDescription = null,
-            tint = ElementTheme.colors.iconOnSolidPrimary,
+            tint = ElementTheme.iconOnSolidBlueTchap,
         )
     }
->>>>>>> main-element:libraries/textcomposer/impl/src/main/kotlin/io/element/android/libraries/textcomposer/components/VoiceMessageRecorderButtonIcon.kt
 }
 
 @PreviewsDayNight

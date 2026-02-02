@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright (c) 2026 Element Creations Ltd.
  *
  * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
@@ -37,16 +37,10 @@ val compoundColorsDark = SemanticColors(
     bgActionTertiaryHovered = DarkColorTokens.colorGray300,
     bgActionTertiaryRest = DarkColorTokens.colorThemeBg,
     bgActionTertiarySelected = DarkColorTokens.colorGray400,
-<<<<<<< HEAD
     bgBadgeAccent = DarkColorTokens.colorGreen400,
     bgBadgeDefault = DarkColorTokens.colorGray400,
     bgBadgeExternal = DarkColorTokens.colorOrange400,
     bgBadgeInfo = DarkColorTokens.colorBlue400,
-=======
-    bgBadgeAccent = DarkColorTokens.colorAlphaGreen500,
-    bgBadgeDefault = DarkColorTokens.colorAlphaGray500,
-    bgBadgeInfo = DarkColorTokens.colorAlphaBlue500,
->>>>>>> main-element
     bgCanvasDefault = DarkColorTokens.colorThemeBg,
     bgCanvasDefaultLevel1 = DarkColorTokens.colorGray200,
     bgCanvasDisabled = DarkColorTokens.colorGray200,
@@ -94,9 +88,13 @@ val compoundColorsDark = SemanticColors(
     gradientSubtleStop6 = DarkColorTokens.colorTransparent,
     iconAccentPrimary = DarkColorTokens.colorBlue1400,
     iconAccentTertiary = DarkColorTokens.colorBlue600,
+    iconBadgeAccent = DarkColorTokens.colorGreen1200,
+    iconBadgeDefault = DarkColorTokens.colorGray1200,
+    iconBadgeExternal = DarkColorTokens.colorOrange1200,
+    iconBadgeInfo = DarkColorTokens.colorBlue1200,
     iconCriticalPrimary = DarkColorTokens.colorRed800,
     iconDisabled = DarkColorTokens.colorGray700,
-    iconInfoPrimary = DarkColorTokens.colorBlue1100,
+    iconInfoPrimary = DarkColorTokens.colorBlue900,
     iconOnSolidPrimary = DarkColorTokens.colorThemeBg,
     iconPrimary = DarkColorTokens.colorGray1400,
     iconPrimaryAlpha = DarkColorTokens.colorAlphaGray1400,
@@ -122,13 +120,8 @@ val compoundColorsDark = SemanticColors(
     textDecorative6 = DarkColorTokens.colorOrange1000,
     textDisabled = DarkColorTokens.colorGray800,
     textInfoPrimary = DarkColorTokens.colorBlue1100,
-<<<<<<< HEAD
     textLinkExternal = DarkColorTokens.colorBlue900,
     textOnSolidPrimary = DarkColorTokens.colorGray1400,
-=======
-    textLinkExternal = DarkColorTokens.colorBlue1100,
-    textOnSolidPrimary = DarkColorTokens.colorThemeBg,
->>>>>>> main-element
     textPrimary = DarkColorTokens.colorGray1400,
     textSecondary = DarkColorTokens.colorGray900,
     textSuccessPrimary = DarkColorTokens.colorGreen1000,

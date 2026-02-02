@@ -3,13 +3,9 @@
 
 [versions]
 # Project
-<<<<<<< HEAD
 # Tchap TODO : Upgrade gradle plugin (https://github.com/tchapgouv/tchap-x-android/issues/110)
-#android_gradle_plugin = "8.13.1"
+# android_gradle_plugin = "8.13.2"
 android_gradle_plugin = "8.11.1"
-=======
-android_gradle_plugin = "8.13.2"
->>>>>>> main-element
 # When updateing this, please also update the version in the file ./idea/kotlinc.xml
 kotlin = "2.3.0"
 kotlinpoet = "2.2.0"

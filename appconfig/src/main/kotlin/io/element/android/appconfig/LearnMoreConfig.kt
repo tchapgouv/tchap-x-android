@@ -13,9 +13,6 @@ object LearnMoreConfig {
     const val DEVICE_VERIFICATION_URL: String = "https://element.io/help#encryption-device-verification"
     const val SECURE_BACKUP_URL: String = "https://element.io/help#encryption5"
     const val IDENTITY_CHANGE_URL: String = "https://element.io/help#encryption18"
-<<<<<<< HEAD
     const val FAQ_URL: String = "https://aide.tchap.numerique.gouv.fr"
-=======
     const val HISTORY_VISIBLE_URL: String = "https://element.io/en/help#e2ee-history-sharing"
->>>>>>> main-element
 }

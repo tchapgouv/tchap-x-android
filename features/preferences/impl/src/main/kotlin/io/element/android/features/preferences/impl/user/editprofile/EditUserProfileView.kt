@@ -112,21 +112,12 @@ fun EditUserProfileView(
                     type = type
                 )
             }
+
             AvatarPickerView(
                 state = avatarPickerState,
                 onClick = ::onAvatarClick,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
             )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // TCHAP show displayName as Text instead of TextField
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = state.displayName,
-                style = ElementTheme.typography.fontBodyLgRegular,
-                textAlign = TextAlign.Center,
-            )
-<<<<<<< HEAD
             // TCHAP hide the Matrix Id depending of showMatrixId feature flag
             if (state.showMatrixId) {
                 Spacer(modifier = Modifier.height(16.dp))
@@ -137,16 +128,21 @@ fun EditUserProfileView(
                     textAlign = TextAlign.Center,
                 )
             }
-=======
             Spacer(modifier = Modifier.height(40.dp))
-            TextField(
-                label = stringResource(R.string.screen_edit_profile_display_name),
-                value = state.displayName,
-                placeholder = stringResource(CommonStrings.common_room_name_placeholder),
-                singleLine = true,
-                onValueChange = { state.eventSink(EditUserProfileEvent.UpdateDisplayName(it)) },
+//            TextField(
+//                label = stringResource(R.string.screen_edit_profile_display_name),
+//                value = state.displayName,
+//                placeholder = stringResource(CommonStrings.common_room_name_placeholder),
+//                singleLine = true,
+//                onValueChange = { state.eventSink(EditUserProfileEvent.UpdateDisplayName(it)) },
+//            )
+            // TCHAP show displayName as Text instead of TextField
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = state.displayName,
+                style = ElementTheme.typography.fontBodyLgRegular,
+                textAlign = TextAlign.Center,
             )
->>>>>>> main-element
         }
 
         AvatarActionBottomSheet(

@@ -57,21 +57,6 @@ internal fun SendButtonIcon(
     ) {
         Icon(
             modifier = Modifier
-<<<<<<< HEAD:libraries/textcomposer/impl/src/main/kotlin/io/element/android/libraries/textcomposer/components/SendButton.kt
-                .clip(CircleShape)
-                .size(36.dp)
-                .buttonBackgroundModifier(canSendMessage)
-        ) {
-            Icon(
-                modifier = Modifier
-                    .padding(start = iconStartPadding)
-                    .align(Alignment.Center),
-                imageVector = iconVector,
-                // Note: accessibility is managed in TextComposer.
-                contentDescription = null,
-                tint = if (canSendMessage) {
-                    ElementTheme.iconOnSolidBlueTchap
-=======
                 .padding(start = iconStartPadding)
                 .align(Alignment.Center),
             imageVector = iconVector,
@@ -80,7 +65,6 @@ internal fun SendButtonIcon(
             tint = if (canSendMessage) {
                 if (ElementTheme.colors.isLight) {
                     ElementTheme.colors.iconOnSolidPrimary
->>>>>>> main-element:libraries/textcomposer/impl/src/main/kotlin/io/element/android/libraries/textcomposer/components/SendButtonIcon.kt
                 } else {
                     ElementTheme.colors.iconPrimary
                 }

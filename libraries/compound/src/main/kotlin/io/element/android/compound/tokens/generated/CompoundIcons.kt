@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright (c) 2026 Element Creations Ltd.
  *
  * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
@@ -24,6 +24,9 @@ import kotlinx.collections.immutable.persistentListOf
 object CompoundIcons {
     @Composable fun Admin(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_admin)
+    }
+    @Composable fun AdvancedSettings(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_advanced_settings)
     }
     @Composable fun ArrowDown(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_arrow_down)
@@ -63,6 +66,9 @@ object CompoundIcons {
     }
     @Composable fun Bold(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_bold)
+    }
+    @Composable fun Bug(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_bug)
     }
     @Composable fun Calendar(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_calendar)
@@ -307,12 +313,9 @@ object CompoundIcons {
     @Composable fun LeftPanelClose(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_left_panel_close)
     }
-<<<<<<< HEAD
-=======
     @Composable fun LeftPanelOpen(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_left_panel_open)
     }
->>>>>>> main-element
     @Composable fun Link(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_link)
     }
@@ -481,6 +484,12 @@ object CompoundIcons {
     @Composable fun Room(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_room)
     }
+    @Composable fun RotateLeft(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_rotate_left)
+    }
+    @Composable fun RotateRight(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_rotate_right)
+    }
     @Composable fun Search(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_search)
     }
@@ -562,6 +571,12 @@ object CompoundIcons {
     @Composable fun Time(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_time)
     }
+    @Composable fun Translate(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_translate)
+    }
+    @Composable fun Tree(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_tree)
+    }
     @Composable fun Underline(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_underline)
     }
@@ -610,6 +625,9 @@ object CompoundIcons {
     @Composable fun VideoCallOffSolid(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_video_call_off_solid)
     }
+    @Composable fun VideoCallOutgoingSolid(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_video_call_outgoing_solid)
+    }
     @Composable fun VideoCallSolid(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_video_call_solid)
     }
@@ -621,6 +639,15 @@ object CompoundIcons {
     }
     @Composable fun VoiceCall(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_voice_call)
+    }
+    @Composable fun VoiceCallDeclinedSolid(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_voice_call_declined_solid)
+    }
+    @Composable fun VoiceCallMissedSolid(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_voice_call_missed_solid)
+    }
+    @Composable fun VoiceCallOutgoingSolid(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_voice_call_outgoing_solid)
     }
     @Composable fun VoiceCallSolid(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_voice_call_solid)
@@ -646,9 +673,16 @@ object CompoundIcons {
     @Composable fun Windows(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_windows)
     }
+    @Composable fun ZoomIn(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_zoom_in)
+    }
+    @Composable fun ZoomOut(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_zoom_out)
+    }
 
     val all @Composable get() = persistentListOf<ImageVector>(
         Admin(),
+        AdvancedSettings(),
         ArrowDown(),
         ArrowLeft(),
         ArrowRight(),
@@ -662,6 +696,7 @@ object CompoundIcons {
         BackspaceSolid(),
         Block(),
         Bold(),
+        Bug(),
         Calendar(),
         Chart(),
         Chat(),
@@ -743,10 +778,7 @@ object CompoundIcons {
         Labs(),
         Leave(),
         LeftPanelClose(),
-<<<<<<< HEAD
-=======
         LeftPanelOpen(),
->>>>>>> main-element
         Link(),
         Linux(),
         ListBulleted(),
@@ -803,6 +835,8 @@ object CompoundIcons {
         Reply(),
         Restart(),
         Room(),
+        RotateLeft(),
+        RotateRight(),
         Search(),
         Send(),
         SendSolid(),
@@ -830,6 +864,8 @@ object CompoundIcons {
         Threads(),
         ThreadsSolid(),
         Time(),
+        Translate(),
+        Tree(),
         Underline(),
         Unknown(),
         UnknownSolid(),
@@ -846,10 +882,14 @@ object CompoundIcons {
         VideoCallMissedSolid(),
         VideoCallOff(),
         VideoCallOffSolid(),
+        VideoCallOutgoingSolid(),
         VideoCallSolid(),
         VisibilityOff(),
         VisibilityOn(),
         VoiceCall(),
+        VoiceCallDeclinedSolid(),
+        VoiceCallMissedSolid(),
+        VoiceCallOutgoingSolid(),
         VoiceCallSolid(),
         VolumeOff(),
         VolumeOffSolid(),
@@ -858,10 +898,13 @@ object CompoundIcons {
         Warning(),
         WebBrowser(),
         Windows(),
+        ZoomIn(),
+        ZoomOut(),
     )
 
     val allResIds get() = persistentListOf(
         R.drawable.ic_compound_admin,
+        R.drawable.ic_compound_advanced_settings,
         R.drawable.ic_compound_arrow_down,
         R.drawable.ic_compound_arrow_left,
         R.drawable.ic_compound_arrow_right,
@@ -875,6 +918,7 @@ object CompoundIcons {
         R.drawable.ic_compound_backspace_solid,
         R.drawable.ic_compound_block,
         R.drawable.ic_compound_bold,
+        R.drawable.ic_compound_bug,
         R.drawable.ic_compound_calendar,
         R.drawable.ic_compound_chart,
         R.drawable.ic_compound_chat,
@@ -956,10 +1000,7 @@ object CompoundIcons {
         R.drawable.ic_compound_labs,
         R.drawable.ic_compound_leave,
         R.drawable.ic_compound_left_panel_close,
-<<<<<<< HEAD
-=======
         R.drawable.ic_compound_left_panel_open,
->>>>>>> main-element
         R.drawable.ic_compound_link,
         R.drawable.ic_compound_linux,
         R.drawable.ic_compound_list_bulleted,
@@ -1016,6 +1057,8 @@ object CompoundIcons {
         R.drawable.ic_compound_reply,
         R.drawable.ic_compound_restart,
         R.drawable.ic_compound_room,
+        R.drawable.ic_compound_rotate_left,
+        R.drawable.ic_compound_rotate_right,
         R.drawable.ic_compound_search,
         R.drawable.ic_compound_send,
         R.drawable.ic_compound_send_solid,
@@ -1043,6 +1086,8 @@ object CompoundIcons {
         R.drawable.ic_compound_threads,
         R.drawable.ic_compound_threads_solid,
         R.drawable.ic_compound_time,
+        R.drawable.ic_compound_translate,
+        R.drawable.ic_compound_tree,
         R.drawable.ic_compound_underline,
         R.drawable.ic_compound_unknown,
         R.drawable.ic_compound_unknown_solid,
@@ -1059,10 +1104,14 @@ object CompoundIcons {
         R.drawable.ic_compound_video_call_missed_solid,
         R.drawable.ic_compound_video_call_off,
         R.drawable.ic_compound_video_call_off_solid,
+        R.drawable.ic_compound_video_call_outgoing_solid,
         R.drawable.ic_compound_video_call_solid,
         R.drawable.ic_compound_visibility_off,
         R.drawable.ic_compound_visibility_on,
         R.drawable.ic_compound_voice_call,
+        R.drawable.ic_compound_voice_call_declined_solid,
+        R.drawable.ic_compound_voice_call_missed_solid,
+        R.drawable.ic_compound_voice_call_outgoing_solid,
         R.drawable.ic_compound_voice_call_solid,
         R.drawable.ic_compound_volume_off,
         R.drawable.ic_compound_volume_off_solid,
@@ -1071,5 +1120,7 @@ object CompoundIcons {
         R.drawable.ic_compound_warning,
         R.drawable.ic_compound_web_browser,
         R.drawable.ic_compound_windows,
+        R.drawable.ic_compound_zoom_in,
+        R.drawable.ic_compound_zoom_out,
     )
 }

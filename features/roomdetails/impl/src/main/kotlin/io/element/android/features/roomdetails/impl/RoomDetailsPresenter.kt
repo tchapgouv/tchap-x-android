@@ -95,8 +95,6 @@ class RoomDetailsPresenter(
 
         val isDm = roomInfo.isDm
         val membersState by room.membersStateFlow.collectAsState()
-<<<<<<< HEAD
-        val canInvite by getCanInvite(membersState)
 
         // TCHAP external user
         val isOpenToExternalUsers by remember { derivedStateOf { roomInfo.isOpenToExternalUsers } }
@@ -105,9 +103,7 @@ class RoomDetailsPresenter(
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
-=======
         val permissions by getPermissions()
->>>>>>> main-element
         val canonicalAlias by remember { derivedStateOf { roomInfo.canonicalAlias } }
         val isEncrypted by remember { derivedStateOf { roomInfo.isEncrypted == true } }
         val dmMember by room.getDirectRoomMember(membersState)

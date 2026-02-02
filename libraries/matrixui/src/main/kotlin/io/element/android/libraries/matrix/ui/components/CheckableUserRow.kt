@@ -21,11 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-<<<<<<< HEAD
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
-import io.element.android.libraries.designsystem.atomic.atoms.SelectedIndicatorAtom
-=======
->>>>>>> main-element
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.preview.ElementThemedPreview

@@ -37,11 +37,8 @@ import io.element.android.libraries.matrix.impl.keys.PassphraseGenerator
 import io.element.android.libraries.matrix.impl.mapper.toSessionData
 import io.element.android.libraries.matrix.impl.paths.SessionPaths
 import io.element.android.libraries.matrix.impl.paths.SessionPathsFactory
-<<<<<<< HEAD
 import io.element.android.libraries.network.useragent.UserAgentProvider
-=======
 import io.element.android.libraries.matrix.impl.toSession
->>>>>>> main-element
 import io.element.android.libraries.sessionstorage.api.LoginType
 import io.element.android.libraries.sessionstorage.api.SessionStore
 import kotlinx.coroutines.CancellationException
@@ -58,11 +55,8 @@ import org.matrix.rustcomponents.sdk.QrLoginProgressListener
 import org.matrix.rustcomponents.sdk.tchapGetInstance
 import timber.log.Timber
 import uniffi.matrix_sdk.OAuthAuthorizationData
-<<<<<<< HEAD
 import uniffi.matrix_sdk_tchap.TchapGetInstanceConfig
-=======
 import kotlin.time.Duration.Companion.seconds
->>>>>>> main-element
 
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)

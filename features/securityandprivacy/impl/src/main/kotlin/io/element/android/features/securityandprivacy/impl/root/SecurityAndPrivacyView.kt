@@ -243,16 +243,10 @@ private fun RoomAccessSection(
                 supportingContent = {
                     Text(text = state.spaceMemberDescription())
                 },
-<<<<<<< HEAD
-                trailingContent = ListItemContent.RadioButton(selected = edited == SecurityAndPrivacyRoomAccess.SpaceMember, enabled = false),
-                leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Space())),
-                enabled = false,
-=======
                 trailingContent = ListItemContent.RadioButton(selected = state.editedSettings.roomAccess is SecurityAndPrivacyRoomAccess.SpaceMember),
                 leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Space())),
                 onClick = ::onSpaceMemberAccessClick,
                 enabled = state.isSpaceMemberSelectable,
->>>>>>> main-element
             )
         }
         if (state.showAskToJoinOption) {

@@ -174,7 +174,6 @@ class ConfigureRoomPresenter(
         suspend {
             val accessRules = RoomAccessRules.RESTRICTED
             val avatarUrl = config.avatarUri?.let { uploadAvatar(it.toUri()) }
-<<<<<<< HEAD
             val params = when (config.roomVisibility) {
                 is RoomVisibilityState.Public -> {
                     CreateRoomParameters(
@@ -188,7 +187,8 @@ class ConfigureRoomPresenter(
                         preset = RoomPreset.PUBLIC_CHAT,
                         invite = config.invites.map { it.userId },
                         avatar = avatarUrl,
-                        roomAliasName = config.roomVisibility.roomAddress()
+                        roomAliasName = config.roomVisibility.roomAddress(),
+                        isSpace = isSpace,
                     )
                 }
                 is RoomVisibilityState.Private -> {
@@ -203,6 +203,7 @@ class ConfigureRoomPresenter(
                         preset = RoomPreset.PRIVATE_CHAT,
                         invite = config.invites.map { it.userId },
                         avatar = avatarUrl,
+                        isSpace = isSpace,
                     )
                 }
                 // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
@@ -219,35 +220,6 @@ class ConfigureRoomPresenter(
 //                        avatar = avatarUrl,
 //                    )
 //                }
-=======
-            val params = if (config.roomVisibility is RoomVisibilityState.Public) {
-                CreateRoomParameters(
-                    name = config.roomName,
-                    topic = config.topic,
-                    isEncrypted = false,
-                    isDirect = false,
-                    visibility = RoomVisibility.Public,
-                    joinRuleOverride = config.roomVisibility.roomAccess.toJoinRule(),
-                    preset = RoomPreset.PUBLIC_CHAT,
-                    invite = config.invites.map { it.userId },
-                    avatar = avatarUrl,
-                    roomAliasName = config.roomVisibility.roomAddress(),
-                    isSpace = isSpace,
-                )
-            } else {
-                CreateRoomParameters(
-                    name = config.roomName,
-                    topic = config.topic,
-                    isEncrypted = config.roomVisibility is RoomVisibilityState.Private,
-                    isDirect = false,
-                    visibility = RoomVisibility.Private,
-                    historyVisibilityOverride = RoomHistoryVisibility.Invited,
-                    preset = RoomPreset.PRIVATE_CHAT,
-                    invite = config.invites.map { it.userId },
-                    avatar = avatarUrl,
-                    isSpace = isSpace,
-                )
->>>>>>> main-element
             }
             matrixClient.createRoom(params)
                 .onFailure { failure ->

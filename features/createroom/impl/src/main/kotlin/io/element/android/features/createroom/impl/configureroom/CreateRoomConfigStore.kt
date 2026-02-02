@@ -72,13 +72,9 @@ class CreateRoomConfigStore(
             config.copy(
                 roomVisibility = when (visibility) {
                     RoomVisibilityItem.Private -> RoomVisibilityState.Private
-<<<<<<< HEAD
                     // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
 //                    RoomVisibilityItem.PrivateNotEncrypted -> RoomVisibilityState.PrivateNotEncrypted // TCHAP room type
-                    RoomVisibilityItem.Public -> {
-=======
                     RoomVisibilityItem.Public, RoomVisibilityItem.AskToJoin -> {
->>>>>>> main-element
                         val roomAliasName = roomAliasHelper.roomAliasNameFromRoomDisplayName(config.roomName.orEmpty())
                         RoomVisibilityState.Public(
                             roomAddress = RoomAddress.AutoFilled(roomAliasName),

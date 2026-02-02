@@ -134,22 +134,12 @@ class RustMatrixClientFactory(
         passphrase: String?,
         slidingSyncType: ClientBuilderSlidingSync,
     ): ClientBuilder {
-<<<<<<< HEAD
         var builder = clientBuilderProvider.provide()
-            .sqliteStore(
-                SqliteStoreBuilder(
-                    dataPath = sessionPaths.fileDirectory.absolutePath,
-                    cachePath = sessionPaths.cacheDirectory.absolutePath,
-                ).passphrase(passphrase)
-            )
-=======
-        return clientBuilderProvider.provide()
             .run {
                 sqliteStoreBuilderProvider.provide(sessionPaths)
                     .passphrase(passphrase)
                     .setupClientBuilder(this)
             }
->>>>>>> main-element
             .setSessionDelegate(sessionDelegate)
             .userAgent(userAgentProvider.provide())
             .addRootCertificates(userCertificatesProvider.provides())

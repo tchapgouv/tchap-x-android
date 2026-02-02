@@ -122,16 +122,12 @@ fun ConfigureRoomView(
             RoomVisibilityAndAccessOptions(
                 selected = when (state.config.roomVisibility) {
                     is RoomVisibilityState.Private -> RoomVisibilityItem.Private
-<<<<<<< HEAD
                     // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
 //                    is RoomVisibilityState.PrivateNotEncrypted -> RoomVisibilityItem.PrivateNotEncrypted // TCHAP room type
-                    is RoomVisibilityState.Public -> RoomVisibilityItem.Public
-=======
                     is RoomVisibilityState.Public -> when (state.config.roomVisibility.roomAccess) {
                         RoomAccess.Knocking -> RoomVisibilityItem.AskToJoin
                         RoomAccess.Anyone -> RoomVisibilityItem.Public
                     }
->>>>>>> main-element
                 },
                 isKnockingEnabled = state.isKnockFeatureEnabled,
                 onOptionClick = {
@@ -291,11 +287,7 @@ private fun RoomVisibilityAndAccessOptions(
     modifier: Modifier = Modifier,
 ) {
     ConfigureRoomOptions(
-<<<<<<< HEAD
         title = stringResource(R.string.tchap_screen_create_room_room_access_encryption_section_title),
-=======
-        title = stringResource(R.string.screen_create_room_room_access_section_title),
->>>>>>> main-element
         modifier = modifier,
     ) {
         RoomVisibilityItem.entries.forEach { item ->
@@ -312,22 +304,18 @@ private fun RoomVisibilityAndAccessOptions(
                             RoomVisibilityItem.Public -> CompoundDrawables.ic_compound_public
                             RoomVisibilityItem.AskToJoin -> CompoundDrawables.ic_compound_user_add
                             RoomVisibilityItem.Private -> CompoundDrawables.ic_compound_lock
+//                            RoomVisibilityItem.PrivateNotEncrypted -> CompoundDrawables.ic_compound_lock_off
                         },
                         tint = if (isSelected) ElementTheme.colors.iconPrimary else ElementTheme.colors.iconSecondary,
                         backgroundTint = Color.Transparent,
                     )
                 },
-<<<<<<< HEAD
-                headlineContent = { Text(text = stringResource(item.title)) },
-                supportingContent = {
-                    val content = stringResource(id = item.description)
-                    Text(text = content)
-=======
                 headlineContent = {
                     val title = when (item) {
                         RoomVisibilityItem.Public -> stringResource(R.string.screen_create_room_public_option_title)
                         RoomVisibilityItem.AskToJoin -> stringResource(R.string.screen_create_room_room_access_section_knocking_option_title)
                         RoomVisibilityItem.Private -> stringResource(R.string.screen_create_room_private_option_title)
+//                        RoomVisibilityItem.PrivateNotEncrypted -> stringResource(R.string.screen_create_room_private_option_title)
                     }
                     Text(text = title)
                 },
@@ -337,9 +325,9 @@ private fun RoomVisibilityAndAccessOptions(
                         RoomVisibilityItem.Public -> stringResource(R.string.screen_create_room_public_option_short_description)
                         RoomVisibilityItem.AskToJoin -> stringResource(R.string.screen_create_room_room_access_section_knocking_option_description)
                         RoomVisibilityItem.Private -> stringResource(R.string.screen_create_room_private_option_description)
+//                        RoomVisibilityItem.PrivateNotEncrypted -> stringResource(R.string.tchap_screen_create_room_private_not_encrypted_option_description)
                     }
                     Text(text = description)
->>>>>>> main-element
                 },
                 trailingContent = ListItemContent.RadioButton(selected = isSelected),
                 onClick = { onOptionClick(item) },

@@ -28,12 +28,9 @@ import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runUpdatingState
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
-<<<<<<< HEAD
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
-=======
 import io.element.android.libraries.core.coroutine.mapState
->>>>>>> main-element
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomMember
@@ -149,13 +146,8 @@ class RoomMemberModerationPresenter(
         }
 
         return InternalRoomMemberModerationState(
-<<<<<<< HEAD
             showMatrixId = showMatrixId,
-            canKick = canKick.value,
-            canBan = canBan.value,
-=======
             permissions = permissions,
->>>>>>> main-element
             selectedUser = selectedUser,
             actions = moderationActions.value,
             kickUserAsyncAction = kickUserAsyncAction.value,

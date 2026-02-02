@@ -84,13 +84,8 @@ fun anAlice() = MatrixUser(
 )
 
 fun aRoomMembersModerationState(
-<<<<<<< HEAD
     showMatrixId: Boolean = false,
-    canKick: Boolean = false,
-    canBan: Boolean = false,
-=======
     permissions: RoomMemberModerationPermissions = RoomMemberModerationPermissions.DEFAULT,
->>>>>>> main-element
     selectedUser: MatrixUser? = null,
     actions: List<ModerationActionState> = emptyList(),
     kickUserAsyncAction: AsyncAction<Unit> = AsyncAction.Uninitialized,
@@ -98,13 +93,8 @@ fun aRoomMembersModerationState(
     unbanUserAsyncAction: AsyncAction<Unit> = AsyncAction.Uninitialized,
     eventSink: (RoomMemberModerationEvents) -> Unit = {},
 ) = InternalRoomMemberModerationState(
-<<<<<<< HEAD
     showMatrixId = showMatrixId,
-    canKick = canKick,
-    canBan = canBan,
-=======
     permissions = permissions,
->>>>>>> main-element
     selectedUser = selectedUser,
     actions = actions.toImmutableList(),
     kickUserAsyncAction = kickUserAsyncAction,
