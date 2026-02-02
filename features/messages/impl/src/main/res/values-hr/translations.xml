@@ -42,7 +42,7 @@
   <string name="screen_room_timeline_add_reaction">"Dodaj reakciju"</string>
   <string name="screen_room_timeline_beginning_of_room">"Ovo je početak sobe %1$s."</string>
   <string name="screen_room_timeline_beginning_of_room_no_name">"Ovo je početak ovog razgovora."</string>
-  <string name="screen_room_timeline_legacy_call">"Nepodržani poziv. Pitajte pozivatelja može li se služiti novom aplikacijom Element X."</string>
+  <string name="screen_room_timeline_legacy_call">"Nepodržani poziv. Pitajte pozivatelja može li se služiti novom aplikacijom %1$s."</string>
   <string name="screen_room_timeline_less_reactions">"Prikaži manje"</string>
   <string name="screen_room_timeline_message_copied">"Poruka je kopirana"</string>
   <string name="screen_room_timeline_no_permission_to_post">"Nemate dopuštenje za objavljivanje u ovoj sobi"</string>
