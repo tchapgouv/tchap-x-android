@@ -26,7 +26,8 @@ enum class FeatureFlags(
         key = "feature.roomdirectorysearch",
         title = "Room directory search",
         description = "Allow user to search for public rooms in their homeserver",
-        defaultValue = { false },
+        // TCHAP enable Room directory search by default
+        defaultValue = { true },
         isFinished = false,
     ),
     ShowBlockedUsersDetails(
