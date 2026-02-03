@@ -182,8 +182,11 @@ private fun ButtonInternal(
     }
 
     val shape = when (style) {
+        // TCHAP : Filled & Outlined buttons are square
+//        ButtonStyle.Filled,
+//        ButtonStyle.Outlined -> RoundedCornerShape(percent = 50)
         ButtonStyle.Filled,
-        ButtonStyle.Outlined -> RoundedCornerShape(percent = 50)
+        ButtonStyle.Outlined -> RoundedCornerShape(size = 4.dp)
         ButtonStyle.Text -> RectangleShape
     }
 
