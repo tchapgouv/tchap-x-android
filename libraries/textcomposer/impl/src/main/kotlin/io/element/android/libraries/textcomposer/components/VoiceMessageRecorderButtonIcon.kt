@@ -68,6 +68,8 @@ private fun StopButton(
             resourceId = CommonDrawables.ic_stop,
             // Note: accessibility is managed in TextComposer.
             contentDescription = null,
+            // TCHAP theme : color used when background is blue Tchap
+//            tint = ElementTheme.colors.iconOnSolidPrimary,
             tint = ElementTheme.iconOnSolidBlueTchap,
         )
     }

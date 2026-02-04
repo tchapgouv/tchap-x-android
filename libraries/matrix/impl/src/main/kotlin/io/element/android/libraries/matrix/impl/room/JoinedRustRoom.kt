@@ -524,6 +524,7 @@ class JoinedRustRoom(
         )
     }
 
+    // TCHAP access rule
     override suspend fun setAccessRule(rule: RoomAccessRules): Result<Unit> = withContext(roomDispatcher) {
         runCatchingExceptions {
             innerRoom.setAccessRule(

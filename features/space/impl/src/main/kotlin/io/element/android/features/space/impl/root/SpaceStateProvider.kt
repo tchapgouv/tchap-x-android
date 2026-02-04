@@ -136,6 +136,7 @@ private fun aSpaceInfo(
         successorRoom = null,
         roomVersion = "11",
         privilegedCreatorRole = false,
+        // TCHAP external user
         isOpenToExternalUsers = false,
     )
 }

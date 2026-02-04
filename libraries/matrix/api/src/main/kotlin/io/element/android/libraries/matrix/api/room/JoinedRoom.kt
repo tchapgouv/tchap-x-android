@@ -68,6 +68,7 @@ interface JoinedRoom : BaseRoom {
 
     suspend fun updateRoomNotificationSettings(): Result<Unit>
 
+    // TCHAP access rule
     suspend fun setAccessRule(rule: RoomAccessRules): Result<Unit>
 
     /**

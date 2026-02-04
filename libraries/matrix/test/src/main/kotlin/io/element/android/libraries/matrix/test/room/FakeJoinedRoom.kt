@@ -226,6 +226,7 @@ class FakeJoinedRoom(
         withdrawVerificationAndResendResult(userIds, sendHandle)
     }
 
+    // TCHAP access rule
     override suspend fun setAccessRule(rule: RoomAccessRules): Result<Unit> = simulateLongTask {
         setAccessRuleResult(rule)
     }
