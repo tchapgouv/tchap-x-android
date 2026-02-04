@@ -24,6 +24,7 @@
 
 package fr.gouv.tchap.libraries.tchaputils
 
+import org.matrix.rustcomponents.sdk.TchapConstants
 import java.util.Locale
 
 object TchapPatterns {
@@ -104,7 +105,7 @@ object TchapPatterns {
 
         return if (this.isExternalTchapUser()) {
             // Handle external Tchap user case: replace single hyphen with '@'.
-            if (!this.contains("tchap-email-invitation") && identifier.indexOf('-') == lastHyphenIndex) {
+            if (!this.contains(inviteByEmailSuffixMarker()) && identifier.indexOf('-') == lastHyphenIndex) {
                 identifier.replaceRange(lastHyphenIndex..lastHyphenIndex, "@")
             } else {
                 identifier
@@ -194,4 +195,11 @@ object TchapPatterns {
         if (!EMAIL_REGEX.matches(identifier)) return identifier
         return identifier.replace('@', '-')
     }
+
+    /**
+     * Get the invite by email suffix marker from the rust sdk.
+     *
+     * @return The invite by email suffix marker.
+     */
+    fun inviteByEmailSuffixMarker() = TchapConstants().inviteByEmailSuffixMarker()
 }

@@ -9,6 +9,7 @@
 package io.element.android.libraries.usersearch.impl
 
 import dev.zacsweers.metro.ContributesBinding
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns
 import io.element.android.libraries.di.SessionScope
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.MatrixPatterns
@@ -51,7 +52,9 @@ class MatrixUserRepository(
         val results = dataSource
             .search(query, MAXIMUM_SEARCH_RESULTS)
             .filter { !client.isMe(it.userId) }
-            .map { UserSearchResult(it, isUnresolved = it.userId.value.contains("tchap-email-invitation")) }
+            // TCHAP invite-by-email : mark search results isUnresolved when corresponding to an user to invite by email
+            // (show an UnresolvedUserRow instead of a UserRow)
+            .map { UserSearchResult(it, isUnresolved = it.userId.value.contains(TchapPatterns.inviteByEmailSuffixMarker())) }
             .toMutableList()
 
         // If the query is another user's MXID and the result doesn't contain that user ID, query the profile information explicitly

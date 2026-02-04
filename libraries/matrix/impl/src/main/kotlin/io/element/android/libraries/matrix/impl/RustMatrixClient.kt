@@ -8,6 +8,7 @@
 
 package io.element.android.libraries.matrix.impl
 
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.libraries.androidutils.file.getSizeOfFiles
 import io.element.android.libraries.core.bool.orFalse
@@ -373,9 +374,12 @@ class RustMatrixClient(
 
     override suspend fun createRoom(createRoomParams: CreateRoomParameters): Result<RoomId> = withContext(sessionDispatcher) {
         runCatchingExceptions {
+            // TCHAP invite-by-email
             var isTchapInvite = false
             var isTchapInviteExternal = false
-            if (createRoomParams.accessRules === RoomAccessRules.DIRECT && createRoomParams.invite?.get(0)?.value?.contains("tchap-email-invitation") == true) {
+            if (createRoomParams.accessRules === RoomAccessRules.DIRECT &&
+                createRoomParams.invite?.get(0)?.value?.contains(TchapPatterns.inviteByEmailSuffixMarker()) == true) {
+                // isTchapInvite = true when room is DM & first invite userId contains inviteByEmailSuffixMarker
                 isTchapInvite = true
                 isTchapInviteExternal = createRoomParams.invite?.get(0)?.toString()?.isExternalTchapUser() == true
             }
@@ -384,6 +388,7 @@ class RustMatrixClient(
                     RoomAccessRules.DIRECT -> AccessRule.DIRECT
                     RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
                     RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
+                    // TCHAP access rule - Default room is UNRESTRICTED
                     else -> AccessRule.UNRESTRICTED
                 },
                 name = createRoomParams.name,

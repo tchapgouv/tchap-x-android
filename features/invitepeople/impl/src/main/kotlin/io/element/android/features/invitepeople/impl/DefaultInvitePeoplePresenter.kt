@@ -23,6 +23,7 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesBinding
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.features.invitepeople.api.InvitePeopleEvents
 import io.element.android.features.invitepeople.api.InvitePeoplePresenter
@@ -134,9 +135,12 @@ class DefaultInvitePeoplePresenter(
                 }
                 is InvitePeopleEvents.SendInvites -> {
                     showOpenRoomToExternalsDialog = false // TCHAP external user
+                    // TCHAP invite-by-email : call sendInvites or sendTchapEmailInvites depending if the user need to be invited by email to create an account
+//                    room.dataOrNull()?.let {
+//                        sessionCoroutineScope.sendInvites(it, selectedUsers.value, sendInvitesAction)
                     room.dataOrNull()?.let { room ->
                         val (emailInvites, userInvites) = selectedUsers.value.partition {
-                            it.userId.value.contains("tchap-email-invitation")
+                            it.userId.value.contains(TchapPatterns.inviteByEmailSuffixMarker())
                         }
 
                         if (userInvites.isNotEmpty()) {
@@ -226,6 +230,7 @@ class DefaultInvitePeoplePresenter(
         }
     }
 
+    // TCHAP invite-by-email : send an invite by email to create a Tchap account for all email in emailToInvite
     private fun CoroutineScope.sendTchapEmailInvites(
         room: JoinedRoom,
         emailToInvite: List<MatrixUser>,
