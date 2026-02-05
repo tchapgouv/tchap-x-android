@@ -26,10 +26,12 @@ import io.element.android.libraries.matrix.impl.paths.SessionPaths
 import io.element.android.libraries.matrix.impl.paths.getSessionPaths
 import io.element.android.libraries.matrix.impl.proxy.ProxyProvider
 import io.element.android.libraries.matrix.impl.room.TimelineEventTypeFilterFactory
+import io.element.android.libraries.matrix.impl.storage.SqliteStoreBuilderProvider
 import io.element.android.libraries.matrix.impl.util.anonymizedTokens
 import io.element.android.libraries.network.useragent.UserAgentProvider
 import io.element.android.libraries.sessionstorage.api.SessionData
 import io.element.android.libraries.sessionstorage.api.SessionStore
+import io.element.android.libraries.workmanager.api.WorkManagerScheduler
 import io.element.android.services.analytics.api.AnalyticsService
 import io.element.android.services.toolbox.api.systemclock.SystemClock
 import kotlinx.coroutines.CoroutineScope
@@ -40,7 +42,6 @@ import org.matrix.rustcomponents.sdk.RequestConfig
 import org.matrix.rustcomponents.sdk.Session
 import org.matrix.rustcomponents.sdk.SlidingSyncVersion
 import org.matrix.rustcomponents.sdk.SlidingSyncVersionBuilder
-import org.matrix.rustcomponents.sdk.SqliteStoreBuilder
 import org.matrix.rustcomponents.sdk.use
 import timber.log.Timber
 import uniffi.matrix_sdk_base.MediaRetentionPolicy
@@ -67,6 +68,8 @@ class RustMatrixClientFactory(
     private val featureFlagService: FeatureFlagService,
     private val timelineEventTypeFilterFactory: TimelineEventTypeFilterFactory,
     private val clientBuilderProvider: ClientBuilderProvider,
+    private val sqliteStoreBuilderProvider: SqliteStoreBuilderProvider,
+    private val workManagerScheduler: WorkManagerScheduler,
 ) {
     private val sessionDelegate = RustClientSessionDelegate(sessionStore, appCoroutineScope, coroutineDispatchers)
 
@@ -83,9 +86,9 @@ class RustMatrixClientFactory(
         client.setMediaRetentionPolicy(
             MediaRetentionPolicy(
                 // Make this 500MB instead of 400MB
-                maxCacheSize = 500.megaBytes.to(ByteUnit.BYTES).toULong(),
+                maxCacheSize = 500.megaBytes.into(ByteUnit.BYTES).toULong(),
                 // This is the default value, but let's make it explicit
-                maxFileSize = 20.megaBytes.to(ByteUnit.BYTES).toULong(),
+                maxFileSize = 20.megaBytes.into(ByteUnit.BYTES).toULong(),
                 // Use 30 days instead of 60
                 lastAccessExpiry = 30.days.toJavaDuration(),
                 // This is the default value, but let's make it explicit
@@ -120,6 +123,7 @@ class RustMatrixClientFactory(
             timelineEventTypeFilterFactory = timelineEventTypeFilterFactory,
             featureFlagService = featureFlagService,
             analyticsService = analyticsService,
+            workManagerScheduler = workManagerScheduler,
         ).also {
             Timber.tag(it.toString()).d("Creating Client with access token '$anonymizedAccessToken' and refresh token '$anonymizedRefreshToken'")
         }
@@ -131,12 +135,11 @@ class RustMatrixClientFactory(
         slidingSyncType: ClientBuilderSlidingSync,
     ): ClientBuilder {
         var builder = clientBuilderProvider.provide()
-            .sqliteStore(
-                SqliteStoreBuilder(
-                    dataPath = sessionPaths.fileDirectory.absolutePath,
-                    cachePath = sessionPaths.cacheDirectory.absolutePath,
-                ).passphrase(passphrase)
-            )
+            .run {
+                sqliteStoreBuilderProvider.provide(sessionPaths)
+                    .passphrase(passphrase)
+                    .setupClientBuilder(this)
+            }
             .setSessionDelegate(sessionDelegate)
             .userAgent(userAgentProvider.provide())
             .addRootCertificates(userCertificatesProvider.provides())
@@ -220,7 +223,7 @@ sealed interface ClientBuilderSlidingSync {
     data object Native : ClientBuilderSlidingSync
 }
 
-private fun SessionData.toSession() = Session(
+fun SessionData.toSession() = Session(
     accessToken = accessToken,
     refreshToken = refreshToken,
     userId = userId,

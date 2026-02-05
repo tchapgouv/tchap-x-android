@@ -74,11 +74,11 @@ class CreateRoomConfigStore(
                     RoomVisibilityItem.Private -> RoomVisibilityState.Private
                     // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
 //                    RoomVisibilityItem.PrivateNotEncrypted -> RoomVisibilityState.PrivateNotEncrypted // TCHAP room type
-                    RoomVisibilityItem.Public -> {
+                    RoomVisibilityItem.Public, RoomVisibilityItem.AskToJoin -> {
                         val roomAliasName = roomAliasHelper.roomAliasNameFromRoomDisplayName(config.roomName.orEmpty())
                         RoomVisibilityState.Public(
                             roomAddress = RoomAddress.AutoFilled(roomAliasName),
-                            roomAccess = RoomAccess.Anyone,
+                            roomAccess = if (visibility == RoomVisibilityItem.AskToJoin) RoomAccess.Knocking else RoomAccess.Anyone,
                         )
                     }
                 }
@@ -113,6 +113,12 @@ class CreateRoomConfigStore(
                     else -> config.roomVisibility
                 }
             )
+        }
+    }
+
+    fun setIsSpace(isSpace: Boolean) {
+        createRoomConfigFlow.getAndUpdate { config ->
+            config.copy(isSpace = isSpace)
         }
     }
 

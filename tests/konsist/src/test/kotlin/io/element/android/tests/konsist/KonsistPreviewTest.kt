@@ -48,7 +48,7 @@ class KonsistPreviewTest {
                     " and should be internal."
             ) {
                 val testedView = it.name.removeSuffix("A11yPreview")
-                it.text.contains("$testedView(") &&
+                (it.text.contains("$testedView(") || it.text.contains("ContentToPreview(")) &&
                     it.hasAllAnnotationsOf(PreviewsDayNight::class).not() &&
                     it.text.contains("ElementPreview") &&
                     it.hasInternalModifier
@@ -80,6 +80,9 @@ class KonsistPreviewTest {
     private val previewNameExceptions = listOf(
         "AsyncIndicatorFailurePreview",
         "AsyncIndicatorLoadingPreview",
+        "AvatarPickerSizesPreview",
+        "AvatarPickerViewPreview",
+        "AvatarPickerViewRtlPreview",
         "BackgroundVerticalGradientDisabledPreview",
         "BackgroundVerticalGradientPreview",
         "ColorAliasesPreview",
@@ -87,6 +90,7 @@ class KonsistPreviewTest {
         "GradientFloatingActionButtonCircleShapePreview",
         "HeaderFooterPageScrollablePreview",
         "HomeTopBarMultiAccountPreview",
+        "HomeTopBarSpacesPreview",
         "HomeTopBarWithIndicatorPreview",
         "IconsOtherPreview",
         "MarkdownTextComposerEditPreview",
@@ -99,6 +103,7 @@ class KonsistPreviewTest {
         "MessageComposerViewVoicePreview",
         "MessagesReactionButtonAddPreview",
         "MessagesReactionButtonExtraPreview",
+        "MessagesViewWithHistoryVisiblePreview",
         "MessagesViewWithIdentityChangePreview",
         "PendingMemberRowWithLongNamePreview",
         "PinUnlockViewInAppPreview",

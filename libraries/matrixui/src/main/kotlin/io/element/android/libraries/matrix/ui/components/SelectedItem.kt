@@ -164,6 +164,8 @@ fun SelectedItem(
                     imageVector = CompoundIcons.Close(),
                     // Note: keep the context description for the test
                     contentDescription = stringResource(id = CommonStrings.action_remove),
+                    // TCHAP theme : color used when background is blue Tchap
+//                    tint = ElementTheme.colors.iconOnSolidPrimary,
                     tint = ElementTheme.iconOnSolidBlueTchap,
                     modifier = Modifier.padding(2.dp)
                 )

@@ -146,6 +146,7 @@ class PreferencesFlowNode(
                         backstack.push(NavTarget.About)
                     }
 
+                    // TCHAP - Add FAQ_URL in Preferences
                     override fun onOpenFAQ(activity: Activity, darkTheme: Boolean) {
                         activity.openUrlInChromeCustomTab(
                             null,
@@ -172,6 +173,10 @@ class PreferencesFlowNode(
 
                     override fun navigateToLabs() {
                         backstack.push(NavTarget.Labs)
+                    }
+
+                    override fun navigateToLinkNewDevice() {
+                        callback.navigateToLinkNewDevice()
                     }
 
                     override fun navigateToUserProfile(matrixUser: MatrixUser) {

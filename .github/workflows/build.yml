@@ -47,6 +47,7 @@ jobs:
           ELEMENT_ANDROID_MAPTILER_LIGHT_MAP_ID: ${{ secrets.MAPTILER_LIGHT_MAP_ID }}
           ELEMENT_ANDROID_MAPTILER_DARK_MAP_ID: ${{ secrets.MAPTILER_DARK_MAP_ID }}
           ELEMENT_ANDROID_SENTRY_DSN: ${{ secrets.ELEMENT_ANDROID_SENTRY_DSN }}
+          ELEMENT_SDK_SENTRY_DSN: ${{ secrets.ELEMENT_SDK_SENTRY_DSN }}
           ELEMENT_CALL_SENTRY_DSN: ${{ secrets.ELEMENT_CALL_SENTRY_DSN }}
           ELEMENT_CALL_POSTHOG_API_HOST: ${{ secrets.ELEMENT_CALL_POSTHOG_API_HOST }}
           ELEMENT_CALL_POSTHOG_API_KEY: ${{ secrets.ELEMENT_CALL_POSTHOG_API_KEY }}
@@ -54,7 +55,7 @@ jobs:
         run: ./gradlew :app:assembleGplayTchapWithpinningDebug app:assembleFDroidTchapWithpinningDebug -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
       - name: Upload debug APKs
         if: ${{ matrix.variant == 'debug' }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: elementx-debug
           path: |
@@ -62,7 +63,7 @@ jobs:
             app/build/outputs/apk/fdroidTchapWithpinning/debug/*-universal-debug.apk
       - name: Upload x86_64 APK for Maestro
         if: ${{ matrix.variant == 'debug' }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: elementx-apk-maestro
           path: |
@@ -105,7 +106,7 @@ jobs:
           ELEMENT_ANDROID_MAPTILER_API_KEY: ${{ secrets.MAPTILER_KEY }}
           ELEMENT_ANDROID_MAPTILER_LIGHT_MAP_ID: ${{ secrets.MAPTILER_LIGHT_MAP_ID }}
           ELEMENT_ANDROID_MAPTILER_DARK_MAP_ID: ${{ secrets.MAPTILER_DARK_MAP_ID }}
-          ELEMENT_ANDROID_SENTRY_DSN: ${{ secrets.ELEMENT_ANDROID_SENTRY_DSN }}
+          ELEMENT_SDK_SENTRY_DSN: ${{ secrets.ELEMENT_SDK_SENTRY_DSN }}
           ELEMENT_CALL_SENTRY_DSN: ${{ secrets.ELEMENT_CALL_SENTRY_DSN }}
           ELEMENT_CALL_POSTHOG_API_HOST: ${{ secrets.ELEMENT_CALL_POSTHOG_API_HOST }}
           ELEMENT_CALL_POSTHOG_API_KEY: ${{ secrets.ELEMENT_CALL_POSTHOG_API_KEY }}
@@ -113,7 +114,7 @@ jobs:
         run: ./gradlew :app:assembleGplayTchapWithpinningNightly -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
       - name: Upload Tchap X nightly APKs
         if: ${{ matrix.variant == 'nightly' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: Tchap.X.beta-nightly
           path: |
@@ -124,7 +125,7 @@ jobs:
           ELEMENT_ANDROID_MAPTILER_API_KEY: ${{ secrets.MAPTILER_KEY }}
           ELEMENT_ANDROID_MAPTILER_LIGHT_MAP_ID: ${{ secrets.MAPTILER_LIGHT_MAP_ID }}
           ELEMENT_ANDROID_MAPTILER_DARK_MAP_ID: ${{ secrets.MAPTILER_DARK_MAP_ID }}
-          ELEMENT_ANDROID_SENTRY_DSN: ${{ secrets.ELEMENT_ANDROID_SENTRY_DSN }}
+          ELEMENT_SDK_SENTRY_DSN: ${{ secrets.ELEMENT_SDK_SENTRY_DSN }}
           ELEMENT_CALL_SENTRY_DSN: ${{ secrets.ELEMENT_CALL_SENTRY_DSN }}
           ELEMENT_CALL_POSTHOG_API_HOST: ${{ secrets.ELEMENT_CALL_POSTHOG_API_HOST }}
           ELEMENT_CALL_POSTHOG_API_KEY: ${{ secrets.ELEMENT_CALL_POSTHOG_API_KEY }}
@@ -132,7 +133,7 @@ jobs:
         run: ./gradlew :app:assembleGplaybTchapWithpinningNightly -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
       - name: Upload Btchap X nightly APKs
         if: ${{ matrix.variant == 'nightly' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: Btchap.X.beta-nightly
           path: |

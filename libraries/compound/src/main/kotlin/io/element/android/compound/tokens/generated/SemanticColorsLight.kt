@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright (c) 2026 Element Creations Ltd.
  *
  * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
@@ -88,6 +88,10 @@ val compoundColorsLight = SemanticColors(
     gradientSubtleStop6 = LightColorTokens.colorTransparent,
     iconAccentPrimary = LightColorTokens.colorBlue1400,
     iconAccentTertiary = LightColorTokens.colorBlue900,
+    iconBadgeAccent = LightColorTokens.colorGreen1200,
+    iconBadgeDefault = LightColorTokens.colorGray1200,
+    iconBadgeExternal = LightColorTokens.colorOrange1200,
+    iconBadgeInfo = LightColorTokens.colorBlue1200,
     iconCriticalPrimary = LightColorTokens.colorRed900,
     iconDisabled = LightColorTokens.colorGray700,
     iconInfoPrimary = LightColorTokens.colorBlue900,

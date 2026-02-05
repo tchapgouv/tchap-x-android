@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright (c) 2026 Element Creations Ltd.
  *
  * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
@@ -53,7 +53,7 @@ data class SemanticColors(
     val bgBadgeAccent: Color,
     /** Badge default background colour */
     val bgBadgeDefault: Color,
-    /** Badge external background colour */
+    /** Badge default background colour */
     val bgBadgeExternal: Color,
     /** Badge info background colour */
     val bgBadgeInfo: Color,
@@ -151,6 +151,14 @@ data class SemanticColors(
     val iconAccentPrimary: Color,
     /** Lowest contrast accessible accent icons. */
     val iconAccentTertiary: Color,
+    /** Badge accent text colour */
+    val iconBadgeAccent: Color,
+    /** Badge info text colour */
+    val iconBadgeDefault: Color,
+    /** Badge info text colour */
+    val iconBadgeExternal: Color,
+    /** Badge info text colour */
+    val iconBadgeInfo: Color,
     /** High-contrast icon for critical state. State: Rest. */
     val iconCriticalPrimary: Color,
     /** Use for icons in disabled elements. There's no minimum contrast requirement. */
@@ -183,9 +191,9 @@ data class SemanticColors(
     val textActionPrimary: Color,
     /** Badge accent text colour */
     val textBadgeAccent: Color,
-    /** Badge default text colour */
+    /** Badge info text colour */
     val textBadgeDefault: Color,
-    /** Badge external text colour */
+    /** Badge info text colour */
     val textBadgeExternal: Color,
     /** Badge info text colour */
     val textBadgeInfo: Color,

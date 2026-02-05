@@ -27,6 +27,7 @@ import io.element.android.libraries.matrix.api.room.CreateTimelineParams
 import io.element.android.libraries.matrix.api.room.IntentionalMention
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomNotificationSettingsState
+import io.element.android.libraries.matrix.api.room.SendQueueUpdate
 import io.element.android.libraries.matrix.api.room.history.RoomHistoryVisibility
 import io.element.android.libraries.matrix.api.room.join.JoinRule
 import io.element.android.libraries.matrix.api.room.knock.KnockRequest
@@ -67,6 +68,8 @@ import org.matrix.rustcomponents.sdk.DateDividerMode
 import org.matrix.rustcomponents.sdk.IdentityStatusChangeListener
 import org.matrix.rustcomponents.sdk.KnockRequestsListener
 import org.matrix.rustcomponents.sdk.RoomMessageEventMessageType
+import org.matrix.rustcomponents.sdk.RoomSendQueueUpdate
+import org.matrix.rustcomponents.sdk.SendQueueListener
 import org.matrix.rustcomponents.sdk.TimelineConfiguration
 import org.matrix.rustcomponents.sdk.TimelineFilter
 import org.matrix.rustcomponents.sdk.TimelineFocus
@@ -399,10 +402,12 @@ class JoinedRustRoom(
                 invite = roomPowerLevelsValues.invite,
                 kick = roomPowerLevelsValues.kick,
                 redact = roomPowerLevelsValues.redactEvents,
-                eventsDefault = roomPowerLevelsValues.sendEvents,
+                stateDefault = roomPowerLevelsValues.stateDefault,
+                eventsDefault = roomPowerLevelsValues.eventsDefault,
                 roomName = roomPowerLevelsValues.roomName,
                 roomAvatar = roomPowerLevelsValues.roomAvatar,
                 roomTopic = roomPowerLevelsValues.roomTopic,
+                spaceChild = roomPowerLevelsValues.spaceChild,
             )
             innerRoom.applyPowerLevelChanges(changes)
         }
@@ -486,6 +491,16 @@ class JoinedRustRoom(
         }
     }
 
+    override fun subscribeToSendQueueUpdates(): Flow<SendQueueUpdate> {
+        return mxCallbackFlow {
+            innerRoom.subscribeToSendQueueUpdates(object : SendQueueListener {
+                override fun onUpdate(update: RoomSendQueueUpdate) {
+                    trySend(update.map())
+                }
+            })
+        }
+    }
+
     override fun close() = destroy()
 
     override fun destroy() {
@@ -509,6 +524,7 @@ class JoinedRustRoom(
         )
     }
 
+    // TCHAP access rule
     override suspend fun setAccessRule(rule: RoomAccessRules): Result<Unit> = withContext(roomDispatcher) {
         runCatchingExceptions {
             innerRoom.setAccessRule(

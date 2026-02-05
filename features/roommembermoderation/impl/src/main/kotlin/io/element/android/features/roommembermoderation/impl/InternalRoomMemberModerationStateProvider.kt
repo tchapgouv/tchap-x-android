@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.element.android.features.roommembermoderation.api.ModerationAction
 import io.element.android.features.roommembermoderation.api.ModerationActionState
 import io.element.android.features.roommembermoderation.api.RoomMemberModerationEvents
+import io.element.android.features.roommembermoderation.api.RoomMemberModerationPermissions
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.user.MatrixUser
@@ -84,8 +85,7 @@ fun anAlice() = MatrixUser(
 
 fun aRoomMembersModerationState(
     showMatrixId: Boolean = false,
-    canKick: Boolean = false,
-    canBan: Boolean = false,
+    permissions: RoomMemberModerationPermissions = RoomMemberModerationPermissions.DEFAULT,
     selectedUser: MatrixUser? = null,
     actions: List<ModerationActionState> = emptyList(),
     kickUserAsyncAction: AsyncAction<Unit> = AsyncAction.Uninitialized,
@@ -94,8 +94,7 @@ fun aRoomMembersModerationState(
     eventSink: (RoomMemberModerationEvents) -> Unit = {},
 ) = InternalRoomMemberModerationState(
     showMatrixId = showMatrixId,
-    canKick = canKick,
-    canBan = canBan,
+    permissions = permissions,
     selectedUser = selectedUser,
     actions = actions.toImmutableList(),
     kickUserAsyncAction = kickUserAsyncAction,

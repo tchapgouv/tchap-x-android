@@ -37,7 +37,7 @@ dependencies {
     implementation(projects.libraries.tchaputils)
     implementation(projects.libraries.testtags)
     implementation(libs.coil.compose)
-    implementation(libs.jsoup)
+    implementation(libs.matrix.richtexteditor)
     implementation(projects.libraries.previewutils)
 
     testCommonDependencies(libs, true)

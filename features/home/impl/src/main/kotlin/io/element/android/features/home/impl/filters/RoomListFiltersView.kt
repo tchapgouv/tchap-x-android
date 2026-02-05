@@ -156,6 +156,8 @@ private fun RoomListClearFiltersButton(
                 .align(Alignment.Center)
                 .size(16.dp),
             imageVector = CompoundIcons.Close(),
+            // TCHAP theme : color used when background is blue Tchap
+//            tint = ElementTheme.colors.iconOnSolidPrimary,
             tint = ElementTheme.iconOnSolidBlueTchap,
             contentDescription = stringResource(id = R.string.screen_roomlist_clear_filters),
         )

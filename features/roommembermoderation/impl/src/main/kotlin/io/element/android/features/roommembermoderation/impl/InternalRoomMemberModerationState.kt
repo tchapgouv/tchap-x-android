@@ -10,6 +10,7 @@ package io.element.android.features.roommembermoderation.impl
 
 import io.element.android.features.roommembermoderation.api.ModerationActionState
 import io.element.android.features.roommembermoderation.api.RoomMemberModerationEvents
+import io.element.android.features.roommembermoderation.api.RoomMemberModerationPermissions
 import io.element.android.features.roommembermoderation.api.RoomMemberModerationState
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.matrix.api.user.MatrixUser
@@ -17,8 +18,7 @@ import kotlinx.collections.immutable.ImmutableList
 
 data class InternalRoomMemberModerationState(
     val showMatrixId: Boolean,
-    override val canKick: Boolean,
-    override val canBan: Boolean,
+    override val permissions: RoomMemberModerationPermissions,
     val selectedUser: MatrixUser?,
     val actions: ImmutableList<ModerationActionState>,
     val kickUserAsyncAction: AsyncAction<Unit>,

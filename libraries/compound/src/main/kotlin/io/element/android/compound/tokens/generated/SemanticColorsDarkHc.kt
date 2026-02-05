@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Element Creations Ltd.
+ * Copyright (c) 2026 Element Creations Ltd.
  *
  * SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
  * Please see LICENSE files in the repository root for full details.
@@ -38,8 +38,8 @@ val compoundColorsHcDark = SemanticColors(
     bgActionTertiaryRest = DarkHcColorTokens.colorThemeBg,
     bgActionTertiarySelected = DarkHcColorTokens.colorGray400,
     bgBadgeAccent = DarkHcColorTokens.colorAlphaGreen500,
-    bgBadgeExternal = DarkHcColorTokens.colorOrange400,
     bgBadgeDefault = DarkHcColorTokens.colorAlphaGray500,
+    bgBadgeExternal = DarkHcColorTokens.colorOrange500,
     bgBadgeInfo = DarkHcColorTokens.colorAlphaBlue500,
     bgCanvasDefault = DarkHcColorTokens.colorThemeBg,
     bgCanvasDefaultLevel1 = DarkHcColorTokens.colorGray300,
@@ -88,6 +88,10 @@ val compoundColorsHcDark = SemanticColors(
     gradientSubtleStop6 = DarkHcColorTokens.colorTransparent,
     iconAccentPrimary = DarkHcColorTokens.colorBlue1400,
     iconAccentTertiary = DarkHcColorTokens.colorBlue600,
+    iconBadgeAccent = DarkHcColorTokens.colorGreen1100,
+    iconBadgeDefault = DarkHcColorTokens.colorGray1100,
+    iconBadgeExternal = DarkHcColorTokens.colorOrange1100,
+    iconBadgeInfo = DarkHcColorTokens.colorBlue1100,
     iconCriticalPrimary = DarkHcColorTokens.colorRed800,
     iconDisabled = DarkHcColorTokens.colorGray700,
     iconInfoPrimary = DarkHcColorTokens.colorBlue900,
@@ -104,8 +108,8 @@ val compoundColorsHcDark = SemanticColors(
     textActionAccent = DarkHcColorTokens.colorBlue600,
     textActionPrimary = DarkHcColorTokens.colorGray1400,
     textBadgeAccent = DarkHcColorTokens.colorGreen1100,
-    textBadgeDefault = DarkHcColorTokens.colorGray1200,
-    textBadgeExternal = DarkHcColorTokens.colorOrange1200,
+    textBadgeDefault = DarkHcColorTokens.colorGray1100,
+    textBadgeExternal = DarkHcColorTokens.colorOrange1100,
     textBadgeInfo = DarkHcColorTokens.colorBlue1100,
     textCriticalPrimary = DarkHcColorTokens.colorRed800,
     textDecorative1 = DarkHcColorTokens.colorGreen1000,

@@ -68,6 +68,7 @@ interface JoinedRoom : BaseRoom {
 
     suspend fun updateRoomNotificationSettings(): Result<Unit>
 
+    // TCHAP access rule
     suspend fun setAccessRule(rule: RoomAccessRules): Result<Unit>
 
     /**
@@ -180,4 +181,9 @@ interface JoinedRoom : BaseRoom {
      *
      */
     suspend fun withdrawVerificationAndResend(userIds: List<UserId>, sendHandle: SendHandle): Result<Unit>
+
+    /**
+     * Subscribe to a [Flow] of [SendQueueUpdate] related to this room.
+     */
+    fun subscribeToSendQueueUpdates(): Flow<SendQueueUpdate>
 }
