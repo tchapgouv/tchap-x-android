@@ -20,6 +20,8 @@ import com.bumble.appyx.navmodel.backstack.operation.newRoot
 import com.bumble.appyx.navmodel.backstack.operation.replace
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
+import fr.gouv.tchap.android.features.ftue.impl.welcome.WelcomeView
+import fr.gouv.tchap.android.features.ftue.impl.welcome.WelcomeViewNode
 import io.element.android.annotations.ContributesNode
 import io.element.android.features.analytics.api.AnalyticsEntryPoint
 import io.element.android.features.ftue.impl.notifications.NotificationsOptInNode
@@ -31,6 +33,8 @@ import io.element.android.features.lockscreen.api.LockScreenEntryPoint
 import io.element.android.libraries.architecture.BackstackView
 import io.element.android.libraries.architecture.BaseFlowNode
 import io.element.android.libraries.architecture.createNode
+import io.element.android.libraries.designsystem.preview.ElementPreview
+import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.di.SessionScope
 import io.element.android.libraries.ui.common.nodes.emptyNode
 import kotlinx.coroutines.flow.filterIsInstance
@@ -69,6 +73,10 @@ class FtueFlowNode(
 
         @Parcelize
         data object LockScreenSetup : NavTarget
+
+        // TCHAP : Welcome view
+        @Parcelize
+        data object WelcomeView : NavTarget
     }
 
     override fun onBuilt() {
@@ -93,6 +101,18 @@ class FtueFlowNode(
                     }
                 }
                 createNode<FtueSessionVerificationFlowNode>(buildContext, listOf(callback))
+            }
+            // TCHAP : Welcome view
+            NavTarget.WelcomeView -> {
+                val callback = object : WelcomeViewNode.Callback {
+                    override fun onWelcomeViewCLickBack() {
+                        defaultFtueService.updateFtueStep()
+                    }
+                    override fun onWelcomeViewClickStart() {
+                        defaultFtueService.onClickStartWelcomeScreen()
+                    }
+                }
+                createNode<WelcomeViewNode>(buildContext, listOf(callback))
             }
             NavTarget.NotificationsOptIn -> {
                 val callback = object : NotificationsOptInNode.Callback {
@@ -129,6 +149,10 @@ class FtueFlowNode(
             FtueStep.SessionVerification -> {
                 backstack.newRoot(NavTarget.SessionVerification)
             }
+            // TCHAP : Welcome view
+            FtueStep.WelcomeView -> {
+                backstack.newRoot(NavTarget.WelcomeView)
+            }
             FtueStep.NotificationsOptIn -> {
                 backstack.newRoot(NavTarget.NotificationsOptIn)
             }
@@ -144,5 +168,17 @@ class FtueFlowNode(
     @Composable
     override fun View(modifier: Modifier) {
         BackstackView()
+    }
+}
+
+// TCHAP : Create WelcomeViewPreview here, as paparazzi don't search previews in others packages
+@PreviewsDayNight
+@Composable
+internal fun WelcomeViewPreview() {
+    ElementPreview {
+        WelcomeView(
+            onBack = {},
+            onStart = {},
+        )
     }
 }
