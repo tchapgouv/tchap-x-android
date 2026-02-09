@@ -62,6 +62,12 @@ interface JoinedRoom : BaseRoom {
 
     suspend fun inviteUserById(id: UserId): Result<Unit>
 
+    // TCHAP invite-by-email : send an invite by email to create a Tchap account for the given email
+    suspend fun inviteUserByEmail(email: String): Result<Unit>
+
+    // TCHAP invite-by-email : send an invite by email to create a Tchap account for all emails
+    suspend fun inviteUsersByEmail(emails: List<String>): Result<Unit>
+
     suspend fun updateAvatar(mimeType: String, data: ByteArray): Result<Unit>
 
     suspend fun removeAvatar(): Result<Unit>

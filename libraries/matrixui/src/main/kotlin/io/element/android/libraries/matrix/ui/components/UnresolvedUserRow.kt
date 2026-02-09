@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.toUserDisplayName
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
@@ -78,11 +79,21 @@ fun UnresolvedUserRow(
                     modifier = Modifier
                         .size(18.dp)
                         .align(Alignment.Top)
-                        .padding(2.dp),
+                        // TCHAP invite-by-email : fix to have the icon really centered
+//                        .padding(2.dp),
+                        .padding(start = 2.dp, end = 2.dp, bottom = 2.dp),
                     tint = if (enabled) ElementTheme.colors.iconCriticalPrimary else ElementTheme.colors.iconDisabled,
                 )
                 Text(
-                    text = stringResource(CommonStrings.common_invite_unknown_profile),
+                    // TCHAP invite-by-email : show specific text when row corresponding to an user to invite by email
+//                    text = stringResource(CommonStrings.common_invite_unknown_profile),
+                    text = stringResource(
+                        if (id.contains(TchapPatterns.inviteByEmailSuffixMarker())) {
+                            CommonStrings.tchap_common_invite_by_email
+                        } else {
+                            CommonStrings.common_invite_unknown_profile
+                        }
+                    ),
                     color = if (enabled) ElementTheme.colors.textSecondary else ElementTheme.colors.textDisabled,
                     style = ElementTheme.typography.fontBodySmRegular.copy(lineHeight = 16.sp),
                 )

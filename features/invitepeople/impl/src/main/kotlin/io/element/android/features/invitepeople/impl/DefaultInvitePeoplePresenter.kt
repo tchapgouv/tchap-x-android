@@ -23,6 +23,7 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesBinding
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.features.invitepeople.api.InvitePeopleEvents
 import io.element.android.features.invitepeople.api.InvitePeoplePresenter
@@ -134,8 +135,20 @@ class DefaultInvitePeoplePresenter(
                 }
                 is InvitePeopleEvents.SendInvites -> {
                     showOpenRoomToExternalsDialog = false // TCHAP external user
-                    room.dataOrNull()?.let {
-                        sessionCoroutineScope.sendInvites(it, selectedUsers.value, sendInvitesAction)
+                    // TCHAP invite-by-email : call sendInvites or sendTchapEmailInvites depending if the user need to be invited by email to create an account
+//                    room.dataOrNull()?.let {
+//                        sessionCoroutineScope.sendInvites(it, selectedUsers.value, sendInvitesAction)
+                    room.dataOrNull()?.let { room ->
+                        val (emailInvites, userInvites) = selectedUsers.value.partition {
+                            it.userId.value.contains(TchapPatterns.inviteByEmailSuffixMarker())
+                        }
+
+                        if (userInvites.isNotEmpty()) {
+                            sessionCoroutineScope.sendInvites(room, userInvites, sendInvitesAction)
+                        }
+                        if (emailInvites.isNotEmpty()) {
+                            sessionCoroutineScope.sendTchapEmailInvites(room, emailInvites, sendInvitesAction)
+                        }
                     }
                 }
                 is InvitePeopleEvents.CloseSearch -> {
@@ -207,6 +220,28 @@ class DefaultInvitePeoplePresenter(
                 .any { it.isFailure }
 
             if (anyInviteFailed) {
+                appErrorStateService.showError(
+                    titleRes = CommonStrings.common_unable_to_invite_title,
+                    bodyRes = CommonStrings.common_unable_to_invite_message,
+                )
+            }
+
+            Result.success(Unit)
+        }
+    }
+
+    // TCHAP invite-by-email : send an invite by email to create a Tchap account for all email in emailToInvite
+    private fun CoroutineScope.sendTchapEmailInvites(
+        room: JoinedRoom,
+        emailToInvite: List<MatrixUser>,
+        sendInvitesAction: MutableState<AsyncAction<Unit>>,
+    ) = launch {
+        sendInvitesAction.runUpdatingState {
+            val anyInviteFailed = room.inviteUsersByEmail(
+                emailToInvite.map { it.displayName!! }
+            )
+
+            if (anyInviteFailed.isFailure) {
                 appErrorStateService.showError(
                     titleRes = CommonStrings.common_unable_to_invite_title,
                     bodyRes = CommonStrings.common_unable_to_invite_message,

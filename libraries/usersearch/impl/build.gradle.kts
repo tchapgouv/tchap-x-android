@@ -25,6 +25,7 @@ dependencies {
     implementation(projects.libraries.di)
     implementation(projects.libraries.matrixui)
     implementation(projects.libraries.matrix.api)
+    implementation(projects.libraries.tchaputils)
     api(projects.libraries.usersearch.api)
     implementation(libs.kotlinx.collections.immutable)
 

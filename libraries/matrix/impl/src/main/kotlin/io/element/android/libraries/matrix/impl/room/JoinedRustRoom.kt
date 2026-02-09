@@ -296,6 +296,20 @@ class JoinedRustRoom(
         }
     }
 
+    // TCHAP invite-by-email : send an invite by email to create a Tchap account for the given email
+    override suspend fun inviteUserByEmail(email: String): Result<Unit> = withContext(roomDispatcher) {
+        runCatchingExceptions {
+            innerRoom.inviteUserByEmail(email)
+        }
+    }
+
+    // TCHAP invite-by-email : send an invite by email to create a Tchap account for all emails
+    override suspend fun inviteUsersByEmail(emails: List<String>): Result<Unit> = withContext(roomDispatcher) {
+        runCatchingExceptions {
+            innerRoom.inviteUsersByEmail(emails)
+        }
+    }
+
     override suspend fun updateAvatar(mimeType: String, data: ByteArray): Result<Unit> = withContext(roomDispatcher) {
         runCatchingExceptions {
             innerRoom.uploadAvatar(mimeType, data, null)

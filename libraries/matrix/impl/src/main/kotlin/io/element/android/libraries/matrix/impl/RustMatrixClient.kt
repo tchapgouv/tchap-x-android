@@ -8,6 +8,8 @@
 
 package io.element.android.libraries.matrix.impl
 
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.libraries.androidutils.file.getSizeOfFiles
 import io.element.android.libraries.core.bool.orFalse
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
@@ -372,12 +374,22 @@ class RustMatrixClient(
 
     override suspend fun createRoom(createRoomParams: CreateRoomParameters): Result<RoomId> = withContext(sessionDispatcher) {
         runCatchingExceptions {
+            // TCHAP invite-by-email
+            var isTchapInvite = false
+            var isTchapInviteExternal = false
+            if (createRoomParams.accessRules === RoomAccessRules.DIRECT &&
+                createRoomParams.invite?.get(0)?.value?.contains(TchapPatterns.inviteByEmailSuffixMarker()) == true) {
+                // isTchapInvite = true when room is DM & first invite userId contains inviteByEmailSuffixMarker
+                isTchapInvite = true
+                isTchapInviteExternal = createRoomParams.invite?.get(0)?.toString()?.isExternalTchapUser() == true
+            }
             val rustParams = RustCreateRoomParameters(
                 accessRuleOverride = when (createRoomParams.accessRules) {
                     RoomAccessRules.DIRECT -> AccessRule.DIRECT
                     RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
                     RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
-                    else -> null
+                    // TCHAP access rule - Default room is UNRESTRICTED
+                    else -> AccessRule.UNRESTRICTED
                 },
                 name = createRoomParams.name,
                 topic = createRoomParams.topic,
@@ -404,7 +416,13 @@ class RustMatrixClient(
                 canonicalAlias = createRoomParams.roomAliasName.getOrNull(),
                 isSpace = createRoomParams.isSpace,
             )
-            val roomId = RoomId(innerClient.createRoom(rustParams, isFederated = true)) // TODO fix the federated value
+//            val roomId = RoomId(innerClient.createRoom(rustParams, isFederated = true)) // TODO fix the federated value
+            val roomId = RoomId(innerClient.createRoom(
+                rustParams,
+                isFederated = true,
+                isTchapInvite = isTchapInvite,
+                isTchapInviteExternal = isTchapInviteExternal
+            ))
             // Wait to receive the room back from the sync but do not returns failure if it fails.
             try {
                 awaitRoom(roomId, 30.seconds, CurrentUserMembership.JOINED)
@@ -417,6 +435,7 @@ class RustMatrixClient(
 
     override suspend fun createDM(userId: UserId): Result<RoomId> {
         val createRoomParams = CreateRoomParameters(
+            accessRules = RoomAccessRules.DIRECT, // Tchap: make accessRules `direct` for Direct room.
             name = null,
             isEncrypted = true,
             isDirect = true,

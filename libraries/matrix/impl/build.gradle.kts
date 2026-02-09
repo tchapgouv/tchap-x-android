@@ -48,6 +48,7 @@ dependencies {
     implementation(projects.libraries.network)
     implementation(projects.libraries.preferences.api)
     implementation(projects.libraries.workmanager.api)
+    implementation(projects.libraries.tchaputils)
     implementation(projects.services.analytics.api)
     implementation(projects.services.toolbox.api)
     api(projects.libraries.matrix.api)
