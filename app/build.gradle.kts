@@ -110,6 +110,8 @@ android {
     buildTypes {
         val oidcRedirectSchemeBase = BuildTimeConfig.METADATA_HOST_REVERSED ?: "io.element.android"
         getByName("debug") {
+            // TCHAP : app_name defined in target flavorDimensions bellow
+//            resValue("string", "app_name", "$baseAppName dbg")
             resValue(
                 "string",
                 "login_redirect_scheme",
@@ -120,6 +122,8 @@ android {
         }
 
         getByName("release") {
+            // TCHAP : app_name defined in target flavorDimensions bellow
+//            resValue("string", "app_name", baseAppName)
             resValue(
                 "string",
                 "login_redirect_scheme",
@@ -156,6 +160,8 @@ android {
             initWith(release)
             applicationIdSuffix = ".nightly"
             versionNameSuffix = "-nightly"
+            // TCHAP : app_name defined in target flavorDimensions bellow
+//            resValue("string", "app_name", "$baseAppName nightly")
             resValue(
                 "string",
                 "login_redirect_scheme",
