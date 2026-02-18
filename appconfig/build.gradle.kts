@@ -25,7 +25,8 @@ android {
             value = if (isEnterpriseBuild) {
                 BuildTimeConfig.URL_POLICY ?: ""
             } else {
-                "https://element.io/cookie-policy"
+                // TCHAP : Use defined URL in BuildTimeConfig
+                BuildTimeConfig.URL_POLICY ?: "https://element.io/cookie-policy"
             },
         )
         buildConfigFieldStr(
