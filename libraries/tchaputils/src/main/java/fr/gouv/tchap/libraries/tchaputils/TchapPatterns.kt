@@ -201,5 +201,13 @@ object TchapPatterns {
      *
      * @return The invite by email suffix marker.
      */
-    fun inviteByEmailSuffixMarker() = TchapConstants().inviteByEmailSuffixMarker()
+    fun inviteByEmailSuffixMarker(): String {
+        val suffix = try {
+            TchapConstants().inviteByEmailSuffixMarker()
+        } catch (_: Error) {
+            // Allow previews to render without SDK
+            "tchap-email-invitation"
+        }
+        return suffix
+    }
 }
