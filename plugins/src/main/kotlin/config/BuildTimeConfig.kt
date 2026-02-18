@@ -24,7 +24,10 @@ object BuildTimeConfig {
     val URL_WEBSITE: String? = null
     val URL_LOGO: String? = null
     val URL_COPYRIGHT: String? = null
-    val URL_POLICY: String? = null
+
+    // TCHAP : specific URL
+    const val URL_POLICY = "https://tchap.numerique.gouv.fr/politique-de-confidentialite"
+
     val SERVICES_MAPTILER_APIKEY: String? = null
     val SERVICES_POSTHOG_HOST: String? = null
     val SERVICES_POSTHOG_APIKEY: String? = null
