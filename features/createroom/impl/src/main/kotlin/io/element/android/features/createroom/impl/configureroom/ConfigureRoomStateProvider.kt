@@ -111,4 +111,6 @@ fun aConfigureRoomState(
     homeserverName = homeserverName,
     roomAddressValidity = roomAddressValidity,
     eventSink = eventSink,
+    // TCHAP - PrivateNotEncrypted room feature flag
+    isPrivateNotEncryptedRoomsActive = true
 )

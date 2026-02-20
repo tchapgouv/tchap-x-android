@@ -132,6 +132,8 @@ fun ConfigureRoomView(
                     focusManager.clearFocus()
                     state.eventSink(ConfigureRoomEvents.RoomVisibilityChanged(it))
                 },
+                // TCHAP - PrivateNotEncrypted room feature flag
+                isPrivateNotEncryptedRoomsActive = state.isPrivateNotEncryptedRoomsActive
             )
 
             // TCHAP : Disable room address customization
@@ -283,6 +285,8 @@ private fun RoomVisibilityAndAccessOptions(
     selected: RoomVisibilityItem,
     isKnockingEnabled: Boolean,
     onOptionClick: (RoomVisibilityItem) -> Unit,
+    // TCHAP - PrivateNotEncrypted room feature flag
+    isPrivateNotEncryptedRoomsActive: Boolean,
     modifier: Modifier = Modifier,
 ) {
     ConfigureRoomOptions(
@@ -293,6 +297,11 @@ private fun RoomVisibilityAndAccessOptions(
     ) {
         RoomVisibilityItem.entries.forEach { item ->
             if (item == RoomVisibilityItem.AskToJoin && !isKnockingEnabled) {
+                return@forEach
+            }
+
+            // TCHAP - PrivateNotEncrypted room feature flag
+            if (item == RoomVisibilityItem.PrivateNotEncrypted && !isPrivateNotEncryptedRoomsActive) {
                 return@forEach
             }
 

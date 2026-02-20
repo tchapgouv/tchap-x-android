@@ -106,6 +106,11 @@ class ConfigureRoomPresenter(
             }
         }
 
+        // TCHAP - PrivateNotEncrypted room feature flag
+        val isPrivateNotEncryptedRoomsActive by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.PrivateNotEncryptedRooms)
+        }.collectAsState(initial = false)
+
         LaunchedEffect(cameraPermissionState.permissionGranted) {
             if (cameraPermissionState.permissionGranted && pendingPermissionRequest) {
                 pendingPermissionRequest = false
@@ -164,6 +169,8 @@ class ConfigureRoomPresenter(
             homeserverName = homeserverName,
             roomAddressValidity = roomAddressValidity.value,
             eventSink = ::handleEvent,
+            // TCHAP - PrivateNotEncrypted room feature flag
+            isPrivateNotEncryptedRoomsActive = isPrivateNotEncryptedRoomsActive
         )
     }
 

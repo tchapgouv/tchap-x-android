@@ -23,7 +23,9 @@ data class ConfigureRoomState(
     val cameraPermissionState: PermissionsState,
     val roomAddressValidity: RoomAddressValidity,
     val homeserverName: String,
-    val eventSink: (ConfigureRoomEvents) -> Unit
+    val eventSink: (ConfigureRoomEvents) -> Unit,
+    // TCHAP - PrivateNotEncrypted room feature flag
+    val isPrivateNotEncryptedRoomsActive: Boolean,
 ) {
     val isValid: Boolean = config.roomName?.isNotEmpty() == true &&
         (config.roomVisibility is RoomVisibilityState.Private ||
