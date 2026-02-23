@@ -46,6 +46,9 @@ class DefaultFtueService(
 ) : FtueService {
     private val userNeedsToConfirmSessionVerificationSuccess = MutableStateFlow(false)
 
+    // TCHAP : Welcome view
+    private val welcomeScreenViewed = MutableStateFlow(false)
+
     val ftueStepStateFlow = MutableStateFlow<InternalFtueState>(InternalFtueState.Unknown)
 
     override val state = ftueStepStateFlow
@@ -93,7 +96,14 @@ class DefaultFtueService(
             } else {
                 getNextStep(FtueStep.SessionVerification)
             }
-            FtueStep.SessionVerification -> if (shouldAskNotificationPermissions()) {
+            // TCHAP : Welcome view
+//            FtueStep.SessionVerification -> if (shouldAskNotificationPermissions()) {
+            FtueStep.SessionVerification -> if (shouldAskNotificationPermissions() && !welcomeScreenViewed.value) {
+                FtueStep.WelcomeView
+            } else {
+                getNextStep(FtueStep.WelcomeView)
+            }
+            FtueStep.WelcomeView -> if (shouldAskNotificationPermissions()) {
                 FtueStep.NotificationsOptIn
             } else {
                 getNextStep(FtueStep.NotificationsOptIn)
@@ -145,6 +155,12 @@ class DefaultFtueService(
     fun onUserCompletedSessionVerification() {
         userNeedsToConfirmSessionVerificationSuccess.value = false
     }
+
+    // TCHAP : Welcome view
+    fun onClickStartWelcomeScreen() {
+        welcomeScreenViewed.value = true
+        this.updateFtueStep()
+    }
 }
 
 sealed interface FtueStep {
@@ -153,4 +169,7 @@ sealed interface FtueStep {
     data object NotificationsOptIn : FtueStep
     data object AnalyticsOptIn : FtueStep
     data object LockscreenSetup : FtueStep
+
+    // TCHAP : Welcome view
+    data object WelcomeView : FtueStep
 }

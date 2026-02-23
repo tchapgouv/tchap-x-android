@@ -34,7 +34,6 @@ import io.element.android.features.ftue.impl.R
 import io.element.android.libraries.designsystem.atomic.molecules.ButtonColumnMolecule
 import io.element.android.libraries.designsystem.atomic.molecules.IconTitleSubtitleMolecule
 import io.element.android.libraries.designsystem.atomic.pages.HeaderFooterPage
-import io.element.android.libraries.designsystem.background.OnboardingBackground
 import io.element.android.libraries.designsystem.components.BigIcon
 import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
@@ -59,7 +58,8 @@ fun NotificationsOptInView(
         modifier = modifier
             .statusBarsPadding()
             .fillMaxSize(),
-        background = { OnboardingBackground() },
+        // TCHAP : disable onboarding background
+//        background = { OnboardingBackground() },
         header = { NotificationsOptInHeader(modifier = Modifier.padding(top = 60.dp, bottom = 28.dp)) },
         footer = { NotificationsOptInFooter(state) },
     ) {
