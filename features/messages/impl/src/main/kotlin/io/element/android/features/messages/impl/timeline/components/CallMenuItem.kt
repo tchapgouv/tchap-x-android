@@ -87,7 +87,7 @@ private fun OnGoingCallMenuItem(
         Button(
             onClick = onJoinCallClick,
             colors = ButtonDefaults.buttonColors(
-                contentColor = ElementTheme.colors.bgCanvasDefault,
+                contentColor = ElementTheme.iconOnSolidBlueTchap, // TCHAP : Call icon have blue tchap background
                 containerColor = ElementTheme.colors.iconAccentTertiary
             ),
             contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
