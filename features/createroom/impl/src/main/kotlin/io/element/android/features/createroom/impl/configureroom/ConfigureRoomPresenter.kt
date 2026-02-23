@@ -106,6 +106,11 @@ class ConfigureRoomPresenter(
             }
         }
 
+        // TCHAP - PrivateNotEncrypted room feature flag
+        val isPrivateNotEncryptedRoomsActive by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.PrivateNotEncryptedRooms)
+        }.collectAsState(initial = false)
+
         LaunchedEffect(cameraPermissionState.permissionGranted) {
             if (cameraPermissionState.permissionGranted && pendingPermissionRequest) {
                 pendingPermissionRequest = false
@@ -164,6 +169,8 @@ class ConfigureRoomPresenter(
             homeserverName = homeserverName,
             roomAddressValidity = roomAddressValidity.value,
             eventSink = ::handleEvent,
+            // TCHAP - PrivateNotEncrypted room feature flag
+            isPrivateNotEncryptedRoomsActive = isPrivateNotEncryptedRoomsActive
         )
     }
 
@@ -206,20 +213,22 @@ class ConfigureRoomPresenter(
                         isSpace = isSpace,
                     )
                 }
-                // TCHAP - Disable PrivateNotEncrypted room, waiting for back implementation
-//                is RoomVisibilityState.PrivateNotEncrypted -> { // TCHAP room type
-//                    CreateRoomParameters(
-//                        accessRules = accessRules,
-//                        name = config.roomName,
-//                        topic = config.topic,
-//                        isEncrypted = false,
-//                        isDirect = false,
-//                        visibility = RoomVisibility.Private,
-//                        preset = RoomPreset.PRIVATE_CHAT,
-//                        invite = config.invites.map { it.userId },
-//                        avatar = avatarUrl,
-//                    )
-//                }
+                // TCHAP - Enable PrivateNotEncrypted room
+                is RoomVisibilityState.PrivateNotEncrypted -> { // TCHAP room type
+                    CreateRoomParameters(
+                        accessRules = accessRules,
+                        name = config.roomName,
+                        topic = config.topic,
+                        isEncrypted = false,
+                        isDirect = false,
+                        visibility = RoomVisibility.Private,
+                        historyVisibilityOverride = RoomHistoryVisibility.Invited,
+                        preset = RoomPreset.PRIVATE_CHAT,
+                        invite = config.invites.map { it.userId },
+                        avatar = avatarUrl,
+                        isSpace = isSpace,
+                    )
+                }
             }
             matrixClient.createRoom(params)
                 .onFailure { failure ->

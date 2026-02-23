@@ -150,4 +150,12 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
+
+    // TCHAP - PrivateNotEncrypted room feature flag
+    PrivateNotEncryptedRooms(
+        key = "feature.private_not_encrypted_rooms",
+        title = "Active Private Not Encrypted rooms",
+        defaultValue = { false },
+        isFinished = false,
+    ),
 }
