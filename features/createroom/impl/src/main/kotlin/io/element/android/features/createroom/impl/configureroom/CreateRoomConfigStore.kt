@@ -115,6 +115,13 @@ class CreateRoomConfigStore(
         }
     }
 
+    // TCHAP : Add toggle to enable/disable public room federation
+    fun setIsPublicRoomLimited(isPublicRoomLimited: Boolean) {
+        createRoomConfigFlow.getAndUpdate { config ->
+            config.copy(isPublicRoomLimited = isPublicRoomLimited)
+        }
+    }
+
     fun clearCachedData() {
         cachedAvatarUri = null
     }

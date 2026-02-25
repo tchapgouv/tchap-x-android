@@ -27,6 +27,7 @@ package fr.gouv.tchap.libraries.tchaputils
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.getUserDomain
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.getUserName
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.toHomeserverDisplayName
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.toHomeserverDisplayNameFromMatrixId
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.toUserDisplayName
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -61,8 +62,13 @@ class TchapPatternsTest {
     }
 
     @Test
+    fun `given a display name of a homeserver from a homeserver URL`() {
+        assertEquals("A", "a.tchap.gouv.fr".toHomeserverDisplayName())
+    }
+
+    @Test
     fun `given a display name of a homeserver mentioned in a matrix identifier`() {
-        assertEquals("A", "@jean-philippe.martin-modernisation.fr:a.tchap.gouv.fr".toHomeserverDisplayName())
+        assertEquals("A", "@jean-philippe.martin-modernisation.fr:a.tchap.gouv.fr".toHomeserverDisplayNameFromMatrixId())
     }
 
     @Test

@@ -34,4 +34,6 @@
     <string name="tchap_screen_create_room_public_option_description">"• Not encrypted messages
 • Accessible from rooms directory
 • Not accessible to external guests"</string>
+    <string name="tchap_screen_create_room_public_federation_limited_title">"Limited to my domain"</string>
+    <string name="tchap_screen_create_room_public_federation_limited_description">"Visible only to members of \"%1$s\""</string>
 </resources>

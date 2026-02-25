@@ -20,4 +20,6 @@ data class CreateRoomConfig(
     val invites: ImmutableList<MatrixUser> = persistentListOf(),
     val visibilityState: RoomVisibilityState = RoomVisibilityState.Private(JoinRuleItem.PrivateVisibility.Private),
     val parentSpace: SpaceRoom? = null,
+    // TCHAP : Add toggle to enable/disable public room federation
+    val isPublicRoomLimited: Boolean = false,
 )

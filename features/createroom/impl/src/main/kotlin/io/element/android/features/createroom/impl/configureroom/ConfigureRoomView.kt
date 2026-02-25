@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.toHomeserverDisplayName
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.createroom.impl.R
@@ -121,7 +122,8 @@ fun ConfigureRoomView(
                 onTopicChange = { state.eventSink(ConfigureRoomEvents.TopicChanged(it)) },
             )
             Spacer(modifier = Modifier.height(16.dp))
-            if (!state.isSpace && state.spaces.isNotEmpty()) {
+            // TCHAP: Disable parent space selection when no parent space has been pre-selected
+            if (!state.isSpace && state.spaces.isNotEmpty() && state.config.parentSpace != null) {
                 SelectParentSpaceOptions(
                     spaces = state.spaces,
                     selectedSpace = state.config.parentSpace,
@@ -151,6 +153,29 @@ fun ConfigureRoomView(
 //                    supportingText = stringResource(R.string.screen_create_room_room_address_section_footer),
 //                )
 //            }
+
+            // TCHAP : Add toggle to enable/disable public room federation
+            if (!isSpace && state.config.visibilityState is RoomVisibilityState.Public) {
+                ListItem(
+                    headlineContent = {
+                        Text(text = stringResource(R.string.tchap_screen_create_room_public_federation_limited_title))
+                    },
+                    supportingContent = {
+                        Text(
+                            text = stringResource(
+                                R.string.tchap_screen_create_room_public_federation_limited_description,
+                                state.homeserverName.toHomeserverDisplayName()
+                            )
+                        )
+                    },
+                    trailingContent = ListItemContent.Switch(
+                        checked = state.config.isPublicRoomLimited,
+                    ),
+                    onClick = {
+                        state.eventSink(ConfigureRoomEvents.PublicRoomLimitedToFederation(!state.config.isPublicRoomLimited))
+                    },
+                )
+            }
         }
     }
 

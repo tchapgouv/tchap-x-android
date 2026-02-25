@@ -41,6 +41,26 @@ object TchapPatterns {
     fun String.toHomeserverName() = this.substringAfter(":", "")
 
     /**
+     * Get the Tchap display name of the homeserver from the homeserver URL.
+     * The homeserver URL is only the URL. For use with full MatrixId (user id, room id...), use instead toHomeserverDisplayNameFromMatrixId().
+     * The returned name is capitalized.
+     * The Tchap HS display name is the component mentioned before the suffix "tchap.gouv.fr"
+     * For example in case of "name1.tchap.gouv.fr", this will return "Name1".
+     * in case of "agent.name2.tchap.gouv.fr", this will return "Name2".
+     *
+     * @return the Tchap display name of the homeserver.
+     */
+    fun String.toHomeserverDisplayName(): String {
+        var homeserverName = this
+        if (homeserverName.contains("tchap.gouv.fr")) {
+            homeserverName.split('.').let {
+                if (it.size >= 4) homeserverName = it[it.size - 4]
+            }
+        }
+        return homeserverName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+    }
+
+    /**
      * Get the Tchap display name of the homeserver mentioned in a matrix identifier.
      * The identifier type may be any matrix identifier type: user id, room id, ...
      * The returned name is capitalized.
@@ -48,16 +68,10 @@ object TchapPatterns {
      * For example in case of "@jean-philippe.martin-modernisation.fr:name1.tchap.gouv.fr", this will return "Name1".
      * in case of "@jean-philippe.martin-modernisation.fr:agent.name2.tchap.gouv.fr", this will return "Name2".
      *
-     * @return the Tchap display name of the homeserver.
+     * @return the Tchap display name of the homeserver from a Matrix Identifier.
      */
-    fun String.toHomeserverDisplayName(): String {
-        var homeserverName = this.toHomeserverName()
-        if (homeserverName.contains("tchap.gouv.fr")) {
-            homeserverName.split('.').let {
-                if (it.size >= 4) homeserverName = it[it.size - 4]
-            }
-        }
-        return homeserverName.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+    fun String.toHomeserverDisplayNameFromMatrixId(): String {
+        return this.toHomeserverName().toHomeserverDisplayName()
     }
 
     /**

@@ -398,6 +398,7 @@ class RustMatrixClient(
                 name = createRoomParams.name,
                 topic = createRoomParams.topic,
                 isEncrypted = createRoomParams.isEncrypted,
+                isRoomFederated = createRoomParams.isRoomFederated,
                 isDirect = createRoomParams.isDirect,
                 visibility = createRoomParams.visibility.map(),
                 preset = when (createRoomParams.preset) {
@@ -420,12 +421,7 @@ class RustMatrixClient(
                 canonicalAlias = createRoomParams.roomAliasName.getOrNull(),
                 isSpace = createRoomParams.isSpace,
             )
-//            val roomId = RoomId(innerClient.createRoom(rustParams, isFederated = true)) // TODO fix the federated value
-            val roomId = RoomId(innerClient.createRoom(
-                rustParams,
-                isTchapInvite = isTchapInvite,
-                isTchapInviteExternal = isTchapInviteExternal
-            ))
+            val roomId = RoomId(innerClient.createRoom(rustParams, isTchapInvite, isTchapInviteExternal))
             // Wait to receive the room back from the sync but do not returns failure if it fails.
             try {
                 awaitRoom(roomId, 30.seconds, CurrentUserMembership.JOINED)
