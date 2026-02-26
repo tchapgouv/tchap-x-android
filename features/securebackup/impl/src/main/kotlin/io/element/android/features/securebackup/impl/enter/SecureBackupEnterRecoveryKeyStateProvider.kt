@@ -9,6 +9,7 @@
 package io.element.android.features.securebackup.impl.enter
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import io.element.android.features.logout.api.direct.aDirectLogoutState
 import io.element.android.features.securebackup.impl.setup.views.RecoveryKeyUserStory
 import io.element.android.features.securebackup.impl.setup.views.RecoveryKeyViewState
 import io.element.android.features.securebackup.impl.setup.views.aFormattedRecoveryKey
@@ -41,4 +42,6 @@ fun aSecureBackupEnterRecoveryKeyState(
     isSubmitEnabled = isSubmitEnabled,
     submitAction = submitAction,
     eventSink = eventSink,
+    // TCHAP - Verify device with recovery key : add signout topbar button
+    directLogoutState = aDirectLogoutState(),
 )

@@ -2,7 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="screen_identity_confirmation_cannot_confirm">"Confirmation impossible ?"</string>
   <string name="screen_identity_confirmation_create_new_recovery_key">"Créer un nouveau code de vérification"</string><!-- Tchap: Custom string -->
-  <string name="screen_identity_confirmation_subtitle">"Vérifier cette session pour configurer votre messagerie sécurisée."</string>
+  <string name="screen_identity_confirmation_subtitle">"Choisissez une méthode pour vérifier votre appareil et accéder à votre compte Tchap."</string><!-- Tchap: Custom string -->
   <string name="screen_identity_confirmation_title">"Confirmez votre identité"</string>
   <string name="screen_identity_confirmation_use_another_device">"Utiliser une autre session"</string>
   <string name="screen_identity_confirmation_use_recovery_key">"Utiliser le code de vérification"</string><!-- Tchap: Custom string -->
