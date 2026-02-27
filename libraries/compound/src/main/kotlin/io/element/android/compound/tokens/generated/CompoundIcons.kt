@@ -547,6 +547,12 @@ object CompoundIcons {
     @Composable fun Sticker(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_sticker)
     }
+    @Composable fun Stop(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_stop)
+    }
+    @Composable fun StopSolid(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_stop_solid)
+    }
     @Composable fun Strikethrough(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_strikethrough)
     }
@@ -561,6 +567,9 @@ object CompoundIcons {
     }
     @Composable fun TextFormatting(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_text_formatting)
+    }
+    @Composable fun Theme(): ImageVector {
+        return ImageVector.vectorResource(R.drawable.ic_compound_theme)
     }
     @Composable fun Threads(): ImageVector {
         return ImageVector.vectorResource(R.drawable.ic_compound_threads)
@@ -856,11 +865,14 @@ object CompoundIcons {
         Spotlight(),
         SpotlightView(),
         Sticker(),
+        Stop(),
+        StopSolid(),
         Strikethrough(),
         SwitchCameraSolid(),
         TakePhoto(),
         TakePhotoSolid(),
         TextFormatting(),
+        Theme(),
         Threads(),
         ThreadsSolid(),
         Time(),
@@ -1078,11 +1090,14 @@ object CompoundIcons {
         R.drawable.ic_compound_spotlight,
         R.drawable.ic_compound_spotlight_view,
         R.drawable.ic_compound_sticker,
+        R.drawable.ic_compound_stop,
+        R.drawable.ic_compound_stop_solid,
         R.drawable.ic_compound_strikethrough,
         R.drawable.ic_compound_switch_camera_solid,
         R.drawable.ic_compound_take_photo,
         R.drawable.ic_compound_take_photo_solid,
         R.drawable.ic_compound_text_formatting,
+        R.drawable.ic_compound_theme,
         R.drawable.ic_compound_threads,
         R.drawable.ic_compound_threads_solid,
         R.drawable.ic_compound_time,
