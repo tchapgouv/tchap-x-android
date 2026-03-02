@@ -61,21 +61,13 @@ class RoomListSearchPresenterTest {
 
     @Test
     fun `present - query search changes`() = runTest {
-<<<<<<< HEAD
-        val roomListService = FakeRoomListService()
         val buildMeta = aBuildMeta()
-        val presenter = createRoomListSearchPresenter(buildMeta, roomListService)
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
-=======
         val roomList = FakeDynamicRoomList()
         val roomListService = FakeRoomListService(
             createRoomListLambda = { roomList }
         )
-        val presenter = createRoomListSearchPresenter(roomListService)
+        val presenter = createRoomListSearchPresenter(buildMeta, roomListService)
         presenter.test {
->>>>>>> main-element
             awaitItem().let { state ->
                 assertThat(
                     roomList.currentFilter.value
@@ -106,21 +98,13 @@ class RoomListSearchPresenterTest {
 
     @Test
     fun `present - room list changes`() = runTest {
-<<<<<<< HEAD
-        val roomListService = FakeRoomListService()
         val buildMeta = aBuildMeta()
-        val presenter = createRoomListSearchPresenter(buildMeta, roomListService)
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
-=======
         val roomList = FakeDynamicRoomList()
         val roomListService = FakeRoomListService(
             createRoomListLambda = { roomList }
         )
-        val presenter = createRoomListSearchPresenter(roomListService)
+        val presenter = createRoomListSearchPresenter(buildMeta, roomListService)
         presenter.test {
->>>>>>> main-element
             awaitItem().let { state ->
                 assertThat(state.results).isEmpty()
             }
@@ -139,12 +123,13 @@ class RoomListSearchPresenterTest {
 
     @Test
     fun `present - UpdateVisibleRange triggers pagination when near end`() = runTest {
+        val buildMeta = aBuildMeta()
         val loadMoreLambda = lambdaRecorder<Unit> { }
         val roomList = FakeDynamicRoomList(loadMoreLambda = loadMoreLambda)
         val roomListService = FakeRoomListService(
             createRoomListLambda = { roomList }
         )
-        val presenter = createRoomListSearchPresenter(roomListService)
+        val presenter = createRoomListSearchPresenter(buildMeta, roomListService)
         presenter.test {
             val initialState = awaitItem()
             // Post some rooms to simulate loaded content
@@ -167,17 +152,7 @@ fun TestScope.createRoomListSearchPresenter(
     roomListService: RoomListService = FakeRoomListService(),
 ): RoomListSearchPresenter {
     return RoomListSearchPresenter(
-<<<<<<< HEAD
         buildMeta = buildMeta,
-        dataSource = RoomListSearchDataSource(
-            roomListService = roomListService,
-            roomSummaryFactory = aRoomListRoomSummaryFactory(
-                dateFormatter = FakeDateFormatter(),
-                roomLatestEventFormatter = FakeRoomLatestEventFormatter(),
-            ),
-            coroutineDispatchers = testCoroutineDispatchers(),
-        ),
-=======
         dataSourceFactory = object : RoomListSearchDataSource.Factory {
             override fun create(coroutineScope: CoroutineScope): RoomListSearchDataSource {
                 return RoomListSearchDataSource(
@@ -191,6 +166,5 @@ fun TestScope.createRoomListSearchPresenter(
                 )
             }
         }
->>>>>>> main-element
     )
 }

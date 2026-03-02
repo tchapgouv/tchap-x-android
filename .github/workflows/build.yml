@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        variant: [debug, release, nightly]
+        variant: [debug, release, nightly, nightly-btchap]
       fail-fast: false
     # Allow all jobs on develop. Just one per PR.
     concurrency:
@@ -73,23 +73,8 @@ jobs:
         with:
           name: elementx-debug
           path: |
-<<<<<<< HEAD
             app/build/outputs/apk/gplayTchapWithpinning/debug/*-universal-debug.apk
             app/build/outputs/apk/fdroidTchapWithpinning/debug/*-universal-debug.apk
-      - name: Upload x86_64 APK for Maestro
-        if: ${{ matrix.variant == 'debug' }}
-        uses: actions/upload-artifact@v6
-        with:
-          name: elementx-apk-maestro
-          path: |
-            app/build/outputs/apk/gplayTchapWithpinning/debug/app-gplay-tchap-withpinning-x86_64-debug.apk
-          retention-days: 5
-          overwrite: true
-          if-no-files-found: error
-=======
-            app/build/outputs/apk/gplay/debug/*-universal-debug.apk
-            app/build/outputs/apk/fdroid/debug/*-universal-debug.apk
->>>>>>> main-element
       - uses: rnkdsh/action-upload-diawi@4e1421305be7cfc510d05f47850262eeaf345108 # v1.5.12
         id: diawi
         # Do not fail the whole build if Diawi upload fails
@@ -115,10 +100,10 @@ jobs:
       - name: Compile release sources
         if: ${{ matrix.variant == 'release' }}
         run: ./gradlew bundleGplayTchapWithpinningRelease -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
-      - name: Compile nightly sources
-        if: ${{ matrix.variant == 'nightly' }}
-        run: ./gradlew compileGplayTchapWithpinningNightlySources -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
-      # Tchap Specific - Auto build nightly
+      # Tchap Specific - Auto build nightly tchap & btchap (disable compile nightly)
+#      - name: Compile nightly sources
+#        if: ${{ matrix.variant == 'nightly' }}
+#        run: ./gradlew compileGplayTchapWithpinningNightlySources -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
       - name: Assemble Tchap X nightly APKs
         if: ${{ matrix.variant == 'nightly' }}
         env:
@@ -139,7 +124,7 @@ jobs:
           path: |
             app/build/outputs/apk/gplayTchapWithpinning/nightly/app-gplay-tchap-withpinning-arm64-v8a-nightly.apk
       - name: Assemble Btchap X nightly APKs
-        if: ${{ matrix.variant == 'nightly' }}
+        if: ${{ matrix.variant == 'nightly-btchap' }}
         env:
           ELEMENT_ANDROID_MAPTILER_API_KEY: ${{ secrets.MAPTILER_KEY }}
           ELEMENT_ANDROID_MAPTILER_LIGHT_MAP_ID: ${{ secrets.MAPTILER_LIGHT_MAP_ID }}
@@ -151,7 +136,7 @@ jobs:
           ELEMENT_CALL_RAGESHAKE_URL: ${{ secrets.ELEMENT_CALL_RAGESHAKE_URL }}
         run: ./gradlew :app:assembleGplaybTchapWithpinningNightly -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
       - name: Upload Btchap X nightly APKs
-        if: ${{ matrix.variant == 'nightly' }}
+        if: ${{ matrix.variant == 'nightly-btchap' }}
         uses: actions/upload-artifact@v6
         with:
           name: Btchap.X.beta-nightly

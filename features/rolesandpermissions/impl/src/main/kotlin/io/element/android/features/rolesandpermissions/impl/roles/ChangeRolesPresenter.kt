@@ -118,12 +118,8 @@ class ChangeRolesPresenter(
         val query = queryState.text.toString()
         LaunchedEffect(query, roomMemberState) {
             val results = dataSource
-<<<<<<< HEAD
-                .search(query.orEmpty())
-                .filter { it.userId.toString().isExternalTchapUser().not() }
-=======
                 .search(query)
->>>>>>> main-element
+                .filter { it.userId.toString().isExternalTchapUser().not() }
                 .groupedByRole()
 
             searchResults = if (results.isEmpty()) {

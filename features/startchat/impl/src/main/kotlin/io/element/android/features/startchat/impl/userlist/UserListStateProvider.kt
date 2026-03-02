@@ -70,12 +70,8 @@ fun aUserListState(
     recentDirectRooms: List<RecentDirectRoom> = emptyList(),
     eventSink: (UserListEvents) -> Unit = {},
 ) = UserListState(
-<<<<<<< HEAD
     showMatrixId = false,
-    searchQuery = searchQuery,
-=======
     searchQuery = TextFieldState(initialText = searchQuery),
->>>>>>> main-element
     isSearchActive = isSearchActive,
     searchResults = searchResults,
     selectedUsers = selectedUsers.toImmutableList(),

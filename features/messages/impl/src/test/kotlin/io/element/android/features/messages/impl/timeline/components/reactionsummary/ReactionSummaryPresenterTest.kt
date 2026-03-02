@@ -10,12 +10,12 @@ package io.element.android.features.messages.impl.timeline.components.reactionsu
 
 import com.google.common.truth.Truth.assertThat
 import io.element.android.features.messages.impl.timeline.model.anAggregatedReaction
+import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.room.RoomMembersState
 import io.element.android.libraries.matrix.test.AN_AVATAR_URL
 import io.element.android.libraries.matrix.test.AN_EVENT_ID
 import io.element.android.libraries.matrix.test.A_USER_ID
 import io.element.android.libraries.matrix.test.A_USER_NAME
-import io.element.android.libraries.matrix.test.core.aBuildMeta
 import io.element.android.libraries.matrix.test.room.FakeBaseRoom
 import io.element.android.libraries.matrix.test.room.aRoomMember
 import io.element.android.tests.testutils.WarmUpRule
@@ -31,16 +31,12 @@ class ReactionSummaryPresenterTest {
 
     private val aggregatedReaction = anAggregatedReaction(userId = A_USER_ID, key = "👍", isHighlighted = true)
     private val roomMember = aRoomMember(userId = A_USER_ID, avatarUrl = AN_AVATAR_URL, displayName = A_USER_NAME)
-<<<<<<< HEAD
-    private val summaryEvent = ReactionSummaryEvents.ShowReactionSummary(AN_EVENT_ID, listOf(aggregatedReaction), aggregatedReaction.key)
-    private val buildMeta = aBuildMeta()
-=======
     private val summaryEvent = ReactionSummaryEvent.ShowReactionSummary(AN_EVENT_ID, listOf(aggregatedReaction), aggregatedReaction.key)
->>>>>>> main-element
+    private val featureFlagService = FakeFeatureFlagService()
     private val room = FakeBaseRoom().apply {
         givenRoomMembersState(RoomMembersState.Ready(persistentListOf(roomMember)))
     }
-    private val presenter = ReactionSummaryPresenter(buildMeta, room)
+    private val presenter = ReactionSummaryPresenter(featureFlagService, room)
 
     @Test
     fun `present - handle showing and hiding the reaction summary`() = runTest {

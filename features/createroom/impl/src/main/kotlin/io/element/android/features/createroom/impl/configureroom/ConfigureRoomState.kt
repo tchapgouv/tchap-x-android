@@ -24,23 +24,14 @@ data class ConfigureRoomState(
     val cameraPermissionState: PermissionsState,
     val roomAddressValidity: RoomAddressValidity,
     val homeserverName: String,
-<<<<<<< HEAD
-    val eventSink: (ConfigureRoomEvents) -> Unit,
-    // TCHAP - PrivateNotEncrypted room feature flag
-    val isPrivateNotEncryptedRoomsActive: Boolean,
-) {
-    val isValid: Boolean = config.roomName?.isNotEmpty() == true &&
-        (config.roomVisibility is RoomVisibilityState.Private ||
-            // TCHAP - Enable PrivateNotEncrypted room
-            config.roomVisibility is RoomVisibilityState.PrivateNotEncrypted || // TCHAP room type
-            roomAddressValidity == RoomAddressValidity.Valid)
-=======
     val availableJoinRules: ImmutableList<JoinRuleItem>,
     val spaces: ImmutableList<SpaceRoom>,
     val eventSink: (ConfigureRoomEvents) -> Unit
 ) {
     val isValid: Boolean = config.roomName?.isNotEmpty() == true &&
-        (config.visibilityState is RoomVisibilityState.Private || roomAddressValidity == RoomAddressValidity.Valid) &&
+        (config.visibilityState is RoomVisibilityState.Private ||
+            // TCHAP - Enable PrivateNotEncrypted room
+            config.visibilityState is RoomVisibilityState.PrivateNotEncrypted || // TCHAP room type
+            roomAddressValidity == RoomAddressValidity.Valid) &&
         config.visibilityState.joinRuleItem in availableJoinRules
->>>>>>> main-element
 }

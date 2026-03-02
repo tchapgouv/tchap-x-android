@@ -136,6 +136,7 @@ private fun InvitePeopleContentView(
                                 avatarData = invitableUser.matrixUser.getAvatarData(AvatarSize.UserListItem),
                                 name = invitableUser.matrixUser.getBestName(),
                                 subtext = invitableUser.matrixUser.userId.value,
+                                isExternalTchapUser = invitableUser.matrixUser.userId.value.isExternalTchapUser(),
                             ),
                         )
                         if (index < state.suggestions.lastIndex) {
@@ -151,12 +152,8 @@ private fun InvitePeopleContentView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InvitePeopleSearchBar(
-<<<<<<< HEAD
     showMatrixId: Boolean,
-    query: String,
-=======
     queryState: TextFieldState,
->>>>>>> main-element
     state: SearchBarResultState<ImmutableList<InvitableUser>>,
     showLoader: Boolean,
     selectedUsers: ImmutableList<MatrixUser>,

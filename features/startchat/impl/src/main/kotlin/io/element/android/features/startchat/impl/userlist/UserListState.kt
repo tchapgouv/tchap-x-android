@@ -16,12 +16,8 @@ import io.element.android.libraries.usersearch.api.UserSearchResult
 import kotlinx.collections.immutable.ImmutableList
 
 data class UserListState(
-<<<<<<< HEAD
     val showMatrixId: Boolean,
-    val searchQuery: String,
-=======
     val searchQuery: TextFieldState,
->>>>>>> main-element
     val searchResults: SearchBarResultState<ImmutableList<UserSearchResult>>,
     val showSearchLoader: Boolean,
     val selectedUsers: ImmutableList<MatrixUser>,

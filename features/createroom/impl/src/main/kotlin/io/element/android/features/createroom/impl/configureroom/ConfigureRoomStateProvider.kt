@@ -155,6 +155,4 @@ fun aConfigureRoomState(
     availableJoinRules = availableVisibilityOptions.toImmutableList(),
     spaces = spaces.toImmutableList(),
     eventSink = eventSink,
-    // TCHAP - PrivateNotEncrypted room feature flag
-    isPrivateNotEncryptedRoomsActive = true
 )

@@ -136,12 +136,9 @@ private fun aSpaceInfo(
         successorRoom = null,
         roomVersion = "11",
         privilegedCreatorRole = false,
-<<<<<<< HEAD
+        isLowPriority = false,
         // TCHAP external user
         isOpenToExternalUsers = false,
-=======
-        isLowPriority = false,
->>>>>>> main-element
     )
 }
 

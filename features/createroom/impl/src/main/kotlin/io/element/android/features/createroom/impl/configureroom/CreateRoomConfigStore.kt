@@ -71,19 +71,11 @@ class CreateRoomConfigStore(
     fun setJoinRule(joinRule: JoinRuleItem) {
         createRoomConfigFlow.getAndUpdate { config ->
             config.copy(
-<<<<<<< HEAD
-                roomVisibility = when (visibility) {
-                    RoomVisibilityItem.Private -> RoomVisibilityState.Private
-                    // TCHAP - Enable PrivateNotEncrypted room
-                    RoomVisibilityItem.PrivateNotEncrypted -> RoomVisibilityState.PrivateNotEncrypted // TCHAP room type
-                    RoomVisibilityItem.Public, RoomVisibilityItem.AskToJoin -> {
-=======
                 visibilityState = when (joinRule) {
                     is JoinRuleItem.PrivateVisibility -> RoomVisibilityState.Private(
                         joinRuleItem = joinRule
                     )
                     is JoinRuleItem.PublicVisibility -> {
->>>>>>> main-element
                         val roomAliasName = roomAliasHelper.roomAliasNameFromRoomDisplayName(config.roomName.orEmpty())
                         RoomVisibilityState.Public(
                             roomAddress = RoomAddress.AutoFilled(roomAliasName),

@@ -55,7 +55,7 @@ echo "Deleting previous screenshots"
 ./gradlew removeOldSnapshots --stacktrace --warn $GRADLE_ARGS
 
 echo "Record screenshots"
-./gradlew recordPaparazziWithpinningDebug --stacktrace $GRADLE_ARGS
+./gradlew recordPaparazziDebug --stacktrace $GRADLE_ARGS
 
 echo "Deleting previous screenshots"
 ./gradlew removeOldScreenshots --stacktrace --warn $GRADLE_ARGS

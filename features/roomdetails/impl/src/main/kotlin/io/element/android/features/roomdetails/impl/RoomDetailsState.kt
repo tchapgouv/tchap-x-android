@@ -67,11 +67,11 @@ data class RoomDetailsState(
         if (isPublic) {
             add(RoomBadge.PUBLIC)
         }
-<<<<<<< HEAD
         // TCHAP external user
         if (isOpenToExternalUsers) {
             add(RoomBadge.EXTERNAL)
-=======
+        }
+
         if (enableKeyShareOnInvite && isEncrypted) {
             when (roomHistoryVisibility) {
                 RoomHistoryVisibility.Invited, RoomHistoryVisibility.Joined -> add(RoomBadge.SHARED_HISTORY_HIDDEN)
@@ -79,7 +79,6 @@ data class RoomDetailsState(
                 RoomHistoryVisibility.WorldReadable -> add(RoomBadge.SHARED_HISTORY_WORLD_READABLE)
                 else -> {}
             }
->>>>>>> main-element
         }
     }.toImmutableList()
 }

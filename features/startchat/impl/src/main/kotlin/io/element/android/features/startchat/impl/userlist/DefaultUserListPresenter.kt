@@ -74,14 +74,12 @@ class DefaultUserListPresenter(
         }
         var showSearchLoader by remember { mutableStateOf(false) }
 
-<<<<<<< HEAD
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
-=======
         val searchQuery = queryState.text.toString()
->>>>>>> main-element
+
         LaunchedEffect(searchQuery) {
             searchResults = SearchBarResultState.Initial()
             showSearchLoader = false
@@ -104,12 +102,8 @@ class DefaultUserListPresenter(
         }
 
         return UserListState(
-<<<<<<< HEAD
             showMatrixId = showMatrixId,
-            searchQuery = searchQuery,
-=======
             searchQuery = queryState,
->>>>>>> main-element
             searchResults = searchResults,
             selectedUsers = selectedUsers.toImmutableList(),
             isSearchActive = isSearchActive,

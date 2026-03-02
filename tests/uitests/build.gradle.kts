@@ -19,16 +19,8 @@ android {
     // Keep it as short as possible
     namespace = "ui"
 
-    flavorDimensions += listOf("pinning")
-    productFlavors {
-        create("withpinning") {
-            dimension = "pinning"
-            missingDimensionStrategy("target", "tchap")
-        }
-        create("withoutpinning") {
-            dimension = "pinning"
-            missingDimensionStrategy("target", "tchap")
-        }
+    defaultConfig {
+        missingDimensionStrategy("target", "tchap")
     }
 }
 
