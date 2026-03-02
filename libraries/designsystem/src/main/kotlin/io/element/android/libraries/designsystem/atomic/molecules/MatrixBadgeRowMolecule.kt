@@ -9,8 +9,14 @@
 package io.element.android.libraries.designsystem.atomic.molecules
 
 import androidx.compose.foundation.layout.Arrangement
+<<<<<<< HEAD
 import androidx.compose.foundation.layout.Row
+=======
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.padding
+>>>>>>> main-element
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.element.android.libraries.designsystem.atomic.atoms.MatrixBadgeAtom
@@ -21,9 +27,17 @@ fun MatrixBadgeRowMolecule(
     data: ImmutableList<MatrixBadgeAtom.MatrixBadgeData>,
     modifier: Modifier = Modifier,
 ) {
+<<<<<<< HEAD
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
+=======
+    FlowRow(
+        modifier = modifier
+            .padding(start = 16.dp, end = 16.dp, top = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+>>>>>>> main-element
     ) {
         for (badge in data) {
             MatrixBadgeAtom.View(badge)

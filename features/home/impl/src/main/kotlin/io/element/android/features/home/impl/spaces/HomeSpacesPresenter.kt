@@ -36,7 +36,7 @@ class HomeSpacesPresenter(
         val canCreateSpaces by featureFlagsService.isFeatureEnabledFlow(FeatureFlags.CreateSpaces).collectAsState(false)
         val hideInvitesAvatar by client.rememberHideInvitesAvatar()
         val spaceRooms by remember {
-            client.spaceService.spaceRoomsFlow.map { it.toImmutableList() }
+            client.spaceService.topLevelSpacesFlow.map { it.toImmutableList() }
         }.collectAsState(persistentListOf())
 
         val seenSpaceInvites by remember {
@@ -53,6 +53,8 @@ class HomeSpacesPresenter(
             seenSpaceInvites = seenSpaceInvites,
             hideInvitesAvatar = hideInvitesAvatar,
             canCreateSpaces = canCreateSpaces,
+            // TODO enable once we can link to the screen to explore public spaces
+            canExploreSpaces = false,
             eventSink = ::handleEvent,
         )
     }

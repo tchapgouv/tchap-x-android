@@ -206,6 +206,7 @@
     {
       "name" : ":features:roomdetails:impl",
       "includeRegex" : [
+        "crypto\\.history_sharing\\.room_info_.*",
         "screen_room_details_.*",
         "screen\\.room_details\\..*",
         "screen_room_member_list_.*",
@@ -234,7 +235,8 @@
       "includeRegex" : [
         "screen\\.leave_space\\..*",
         "screen\\.space_settings\\..*",
-        "screen\\.space\\..*"
+        "screen\\.space\\..*",
+        "screen\\.space_add_rooms\\..*"
       ]
     },
     {
@@ -260,6 +262,7 @@
         "screen_room_encrypted.*",
         "screen_room_invite.*",
         "screen\\.room\\.mention.*",
+        "crypto\\.event_authenticity\\..*",
         "screen_room_message.*",
         "screen_room_retry.*",
         "screen_room_timeline.*",

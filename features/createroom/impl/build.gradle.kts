@@ -39,6 +39,7 @@ dependencies {
     implementation(projects.libraries.mediapickers.api)
     implementation(projects.libraries.mediaupload.api)
     implementation(projects.libraries.permissions.api)
+    implementation(projects.libraries.previewutils)
     implementation(projects.libraries.usersearch.impl)
     implementation(projects.libraries.tchaputils)
     implementation(projects.services.analytics.api)

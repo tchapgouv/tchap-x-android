@@ -37,6 +37,11 @@ interface EnterpriseService {
 
     fun bugReportUrlFlow(sessionId: SessionId?): Flow<BugReportUrl>
 
+    /**
+     * Gets Notification Channel to use for the noisy notifications of the provided session.
+     */
+    fun getNoisyNotificationChannelId(sessionId: SessionId): String?
+
     companion object {
         const val ANY_ACCOUNT_PROVIDER = "*"
     }

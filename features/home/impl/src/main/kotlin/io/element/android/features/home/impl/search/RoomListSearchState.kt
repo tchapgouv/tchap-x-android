@@ -17,5 +17,5 @@ data class RoomListSearchState(
     val isSearchActive: Boolean,
     val query: TextFieldState,
     val results: ImmutableList<RoomListRoomSummary>,
-    val eventSink: (RoomListSearchEvents) -> Unit
+    val eventSink: (RoomListSearchEvent) -> Unit
 )

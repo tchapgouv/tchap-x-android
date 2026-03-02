@@ -75,7 +75,7 @@
   <string name="action_copy_link_to_message">"Link zur Nachricht kopieren"</string>
   <string name="action_copy_text">"Text kopieren"</string>
   <string name="action_create">"Erstellen"</string>
-  <string name="action_create_a_room">"Chat erstellen"</string>
+  <string name="action_create_room">"Chat erstellen"</string>
   <string name="action_create_space">"Space erstellen"</string>
   <string name="action_deactivate">"Deaktivieren"</string>
   <string name="action_deactivate_account">"Nutzerkonto deaktivieren"</string>
@@ -93,6 +93,7 @@
   <string name="action_enable">"Aktivieren"</string>
   <string name="action_end_poll">"Umfrage beenden"</string>
   <string name="action_enter_pin">"PIN eingeben"</string>
+  <string name="action_explore_public_spaces">"Erkunde öffentliche Spaces"</string>
   <string name="action_finish">"Fertigstellen"</string>
   <string name="action_forgot_password">"Passwort vergessen?"</string>
   <string name="action_forward">"Weiterleiten"</string>
@@ -293,6 +294,7 @@ Grund: %1$s."</string>
   <string name="common_reason">"Grund"</string>
   <string name="common_recovery_key">"Wiederherstellungsschlüssel"</string>
   <string name="common_refreshing">"Wird erneuert…"</string>
+  <string name="common_removing">"Entferne…"</string>
   <plurals name="common_replies">
     <item quantity="one">"%1$d Antwort"</item>
     <item quantity="other">"%1$d Antworten"</item>
@@ -302,6 +304,7 @@ Grund: %1$s."</string>
   <string name="common_report_a_problem">"Ein Problem melden"</string>
   <string name="common_report_submitted">"Bericht eingereicht"</string>
   <string name="common_rich_text_editor">"Rich-Text-Editor"</string>
+  <string name="common_role">"Rolle"</string>
   <string name="common_room">"Chat"</string>
   <string name="common_room_name">"Chat-Name"</string>
   <string name="common_room_name_placeholder">"z.B. Projektname"</string>
@@ -317,6 +320,10 @@ Grund: %1$s."</string>
   <string name="common_security">"Sicherheit"</string>
   <string name="common_seen_by">"Gesehen von"</string>
   <string name="common_select_account">"Konto auswählen"</string>
+  <plurals name="common_selected_count">
+    <item quantity="one">"%1$d ausgewählt"</item>
+    <item quantity="other">"%1$d ausgewählt"</item>
+  </plurals>
   <string name="common_send_to">"Senden an"</string>
   <string name="common_sending">"Wird gesendet…"</string>
   <string name="common_sending_failed">"Senden fehlgeschlagen"</string>
@@ -327,6 +334,7 @@ Grund: %1$s."</string>
   <string name="common_server_url">"Server-URL"</string>
   <string name="common_settings">"Einstellungen"</string>
   <string name="common_share_space">"Space teilen"</string>
+  <string name="common_shared_history">"Neue Mitglieder sehen den Nachrichtenverlauf"</string>
   <string name="common_shared_location">"Geteilter Standort"</string>
   <string name="common_shared_space">"Gemeinsamer Space"</string>
   <string name="common_signing_out">"Abmelden"</string>
@@ -378,8 +386,10 @@ Grund: %1$s."</string>
   <string name="common_voice_message">"Sprachnachricht"</string>
   <string name="common_waiting">"Warten…"</string>
   <string name="common_waiting_for_decryption_key">"Warte auf diese Nachricht"</string>
+  <string name="common_world_readable_history">"Jeder kann den Nachrichtenverlauf sehen"</string>
   <string name="common_you">"Du"</string>
   <string name="crypto_event_key_forwarded_known_profile_dialog_content">"%1$s (%2$s) hat diese Nachricht geteilt, weil du nicht im Chat warst, als sie verschickt wurde."</string>
+  <string name="crypto_event_key_forwarded_unknown_profile_dialog_content">"Diese Nachricht wurde von %1$s weitergeleitet, da du zum Zeitpunkt des Versands kein Mitglied der Gruppe warst."</string>
   <string name="crypto_history_visible">"Diese Gruppe wurde so konfiguriert, dass neue Mitglieder den vergangenen Nachrichtenverlauf lesen können. %1$s"</string>
   <string name="crypto_identity_change_pin_violation">"%1$s\'s Identität has sich geändert. %2$s"</string>
   <string name="crypto_identity_change_pin_violation_new">"%1$s\'s %2$s Identität hat sich geändert. %3$s"</string>
@@ -425,13 +435,6 @@ Möchtest du wirklich fortfahren?"</string>
   <string name="error_room_address_invalid_symbols">"Einige Zeichen sind nicht erlaubt. Es werden nur Buchstaben, Ziffern und die folgenden Symbole unterstützt: ! $ &amp; ‘ ( ) * + / ; = ? @ [ ] - . _"</string>
   <string name="error_some_messages_have_not_been_sent">"Einige Nachrichten wurden nicht gesendet"</string>
   <string name="error_unknown">"Entschuldigung, es ist ein Fehler aufgetreten"</string>
-  <string name="event_shield_mismatched_sender">"Der Absender des Ereignisses stimmt nicht mit dem Besitzer des Gerätes überein, das es gesendet hat."</string>
-  <string name="event_shield_reason_authenticity_not_guaranteed">"Die Authentizität dieser verschlüsselten Nachricht kann auf diesem Gerät nicht garantiert werden."</string>
-  <string name="event_shield_reason_previously_verified">"Verschlüsselt von einem zuvor verifizierten Nutzer."</string>
-  <string name="event_shield_reason_sent_in_clear">"Unverschlüsselt."</string>
-  <string name="event_shield_reason_unknown_device">"Verschlüsselt von einem unbekannten oder gelöschten Gerät."</string>
-  <string name="event_shield_reason_unsigned_device">"Verschlüsselt durch ein Gerät, das nicht von seinem Besitzer verifiziert wurde."</string>
-  <string name="event_shield_reason_unverified_identity">"Verschlüsselt durch einen nicht verifizierten Nutzer."</string>
   <string name="invite_friends_rich_title">"🔐️ Begleite mich auf %1$s"</string>
   <string name="invite_friends_text">"Hey, sprich mit mir auf %1$s: %2$s"</string>
   <string name="login_initial_device_name_android">"%1$s Android"</string>
@@ -477,7 +480,6 @@ Möchtest du wirklich fortfahren?"</string>
   <string name="screen_share_open_google_maps">"In Google Maps öffnen"</string>
   <string name="screen_share_open_osm_maps">"In OpenStreetMap öffnen"</string>
   <string name="screen_share_this_location_action">"Diesen Standort teilen"</string>
-  <string name="screen_space_add_rooms_room_access_description">"Das Hinzufügen eines Chats hat keinen Einfluss auf die Beitrittsregeln. Um die Regeln zu ändern, gehe zu \"Raum Info\" und dann zu \"Datenschutz und Sicherheit\""</string>
   <string name="screen_space_list_description">"Von dir erstellte oder beigetretene Spaces."</string>
   <string name="screen_space_list_details">"%1$s • %2$s"</string>
   <string name="screen_space_list_empty_state_title">"Erstelle einen Space, um Chats zu organisieren"</string>

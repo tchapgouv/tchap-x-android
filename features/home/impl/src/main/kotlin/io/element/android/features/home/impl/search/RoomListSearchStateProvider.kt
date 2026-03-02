@@ -31,7 +31,7 @@ fun aRoomListSearchState(
     isSearchActive: Boolean = false,
     query: String = "",
     results: ImmutableList<RoomListRoomSummary> = persistentListOf(),
-    eventSink: (RoomListSearchEvents) -> Unit = { },
+    eventSink: (RoomListSearchEvent) -> Unit = { },
 ) = RoomListSearchState(
     showMatrixId = false,
     isSearchActive = isSearchActive,

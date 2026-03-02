@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,6 +37,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import io.element.android.compound.theme.ElementTheme
+import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.createroom.impl.R
 import io.element.android.libraries.architecture.coverage.ExcludeFromCoverage
 import io.element.android.libraries.designsystem.atomic.atoms.RoundedIconAtom
@@ -46,7 +49,6 @@ import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.components.avatar.AvatarType
 import io.element.android.libraries.designsystem.components.button.BackButton
 import io.element.android.libraries.designsystem.components.list.ListItemContent
-import io.element.android.libraries.designsystem.icons.CompoundDrawables
 import io.element.android.libraries.designsystem.modifiers.clearFocusOnTap
 import io.element.android.libraries.designsystem.preview.ElementPreviewDark
 import io.element.android.libraries.designsystem.preview.ElementPreviewLight
@@ -59,11 +61,17 @@ import io.element.android.libraries.designsystem.theme.components.TextButton
 import io.element.android.libraries.designsystem.theme.components.TextField
 import io.element.android.libraries.designsystem.theme.components.TopAppBar
 import io.element.android.libraries.matrix.api.core.RoomId
+import io.element.android.libraries.matrix.api.spaces.SpaceRoom
 import io.element.android.libraries.matrix.ui.components.AvatarActionBottomSheet
 import io.element.android.libraries.matrix.ui.components.AvatarPickerState
 import io.element.android.libraries.matrix.ui.components.AvatarPickerView
 import io.element.android.libraries.permissions.api.PermissionsView
 import io.element.android.libraries.ui.strings.CommonStrings
+<<<<<<< HEAD
+=======
+import kotlinx.collections.immutable.ImmutableList
+import kotlin.jvm.optionals.getOrNull
+>>>>>>> main-element
 
 @Composable
 fun ConfigureRoomView(
@@ -72,7 +80,7 @@ fun ConfigureRoomView(
     onCreateRoomSuccess: (RoomId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isSpace = state.config.isSpace
+    val isSpace = state.isSpace
     val focusManager = LocalFocusManager.current
     val isAvatarActionsSheetVisible = remember { mutableStateOf(false) }
 
@@ -101,7 +109,6 @@ fun ConfigureRoomView(
                 .imePadding()
                 .verticalScroll(rememberScrollState())
                 .consumeWindowInsets(padding),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             RoomNameWithAvatar(
                 isSpace = isSpace,
@@ -111,11 +118,13 @@ fun ConfigureRoomView(
                 onAvatarClick = ::onAvatarClick,
                 onChangeRoomName = { state.eventSink(ConfigureRoomEvents.RoomNameChanged(it)) },
             )
+            Spacer(modifier = Modifier.height(16.dp))
             RoomTopic(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 topic = state.config.topic.orEmpty(),
                 onTopicChange = { state.eventSink(ConfigureRoomEvents.TopicChanged(it)) },
             )
+<<<<<<< HEAD
 
             RoomVisibilityAndAccessOptions(
                 selected = when (state.config.roomVisibility) {
@@ -128,13 +137,28 @@ fun ConfigureRoomView(
                     }
                 },
                 isKnockingEnabled = state.isKnockFeatureEnabled,
+=======
+            Spacer(modifier = Modifier.height(16.dp))
+            if (!state.isSpace && state.spaces.isNotEmpty()) {
+                SelectParentSpaceOptions(
+                    spaces = state.spaces,
+                    selectedSpace = state.config.parentSpace,
+                    onSelectSpace = { state.eventSink(ConfigureRoomEvents.SetParentSpace(it)) },
+                )
+            }
+            RoomJoinRuleOptions(
+                options = state.availableJoinRules,
+                selected = state.config.visibilityState.joinRuleItem,
+                parentSpace = state.config.parentSpace,
+>>>>>>> main-element
                 onOptionClick = {
                     focusManager.clearFocus()
-                    state.eventSink(ConfigureRoomEvents.RoomVisibilityChanged(it))
+                    state.eventSink(ConfigureRoomEvents.JoinRuleChanged(it))
                 },
                 // TCHAP - PrivateNotEncrypted room feature flag
                 isPrivateNotEncryptedRoomsActive = state.isPrivateNotEncryptedRoomsActive
             )
+<<<<<<< HEAD
 
             // TCHAP : Disable room address customization
 //            if (state.config.roomVisibility !is RoomVisibilityState.Private) {
@@ -151,6 +175,20 @@ fun ConfigureRoomView(
 //                    )
 //                }
 //            }
+=======
+            if (state.config.visibilityState !is RoomVisibilityState.Private) {
+                ListSectionHeader(title = stringResource(R.string.screen_create_room_room_address_section_title))
+                RoomAddressField(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    address = state.config.visibilityState.roomAddress().getOrNull().orEmpty(),
+                    homeserverName = state.homeserverName,
+                    addressValidity = state.roomAddressValidity,
+                    onAddressChange = { state.eventSink(ConfigureRoomEvents.RoomAddressChanged(it)) },
+                    label = null,
+                    supportingText = stringResource(R.string.screen_create_room_room_address_section_footer),
+                )
+            }
+>>>>>>> main-element
         }
     }
 
@@ -215,7 +253,9 @@ private fun RoomNameWithAvatar(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            modifier = Modifier.padding(end = 8.dp).size(AvatarSize.EditRoomDetails.dp),
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .size(AvatarSize.EditRoomDetails.dp),
             contentAlignment = Alignment.Center,
         ) {
             val avatarState = remember(avatarUri) {
@@ -267,26 +307,35 @@ private fun RoomTopic(
 }
 
 @Composable
-private fun ConfigureRoomOptions(
+internal fun ConfigureRoomOptions(
     title: String,
     modifier: Modifier = Modifier,
+    hasDivider: Boolean = true,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
         modifier = modifier.selectableGroup()
     ) {
-        ListSectionHeader(title = title)
+        ListSectionHeader(title = title, hasDivider = hasDivider)
         content()
     }
 }
 
 @Composable
+<<<<<<< HEAD
 private fun RoomVisibilityAndAccessOptions(
     selected: RoomVisibilityItem,
     isKnockingEnabled: Boolean,
     onOptionClick: (RoomVisibilityItem) -> Unit,
     // TCHAP - PrivateNotEncrypted room feature flag
     isPrivateNotEncryptedRoomsActive: Boolean,
+=======
+private fun RoomJoinRuleOptions(
+    options: ImmutableList<JoinRuleItem>,
+    selected: JoinRuleItem,
+    onOptionClick: (JoinRuleItem) -> Unit,
+    parentSpace: SpaceRoom?,
+>>>>>>> main-element
     modifier: Modifier = Modifier,
 ) {
     ConfigureRoomOptions(
@@ -295,6 +344,7 @@ private fun RoomVisibilityAndAccessOptions(
         title = stringResource(R.string.tchap_screen_create_room_room_access_encryption_section_title),
         modifier = modifier,
     ) {
+<<<<<<< HEAD
         RoomVisibilityItem.entries.forEach { item ->
             if (item == RoomVisibilityItem.AskToJoin && !isKnockingEnabled) {
                 return@forEach
@@ -305,17 +355,29 @@ private fun RoomVisibilityAndAccessOptions(
                 return@forEach
             }
 
+=======
+        options.forEach { item ->
+>>>>>>> main-element
             val isSelected = item == selected
             ListItem(
                 leadingContent = ListItemContent.Custom {
                     RoundedIconAtom(
                         size = RoundedIconAtomSize.Big,
+<<<<<<< HEAD
                         resourceId = when (item) {
                             RoomVisibilityItem.Public -> CompoundDrawables.ic_compound_public
                             RoomVisibilityItem.AskToJoin -> CompoundDrawables.ic_compound_user_add
                             RoomVisibilityItem.Private -> CompoundDrawables.ic_compound_lock
                             // TCHAP - Enable PrivateNotEncrypted room
                             RoomVisibilityItem.PrivateNotEncrypted -> CompoundDrawables.ic_compound_lock_off
+=======
+                        imageVector = when (item) {
+                            JoinRuleItem.PublicVisibility.Public -> CompoundIcons.Public()
+                            is JoinRuleItem.PrivateVisibility.Restricted -> CompoundIcons.Space()
+                            JoinRuleItem.PublicVisibility.AskToJoin,
+                            is JoinRuleItem.PrivateVisibility.AskToJoinRestricted -> CompoundIcons.UserAdd()
+                            JoinRuleItem.PrivateVisibility.Private -> CompoundIcons.Lock()
+>>>>>>> main-element
                         },
                         tint = if (isSelected) ElementTheme.colors.iconPrimary else ElementTheme.colors.iconSecondary,
                         backgroundTint = Color.Transparent,
@@ -323,22 +385,45 @@ private fun RoomVisibilityAndAccessOptions(
                 },
                 headlineContent = {
                     val title = when (item) {
+<<<<<<< HEAD
                         RoomVisibilityItem.Public -> stringResource(R.string.screen_create_room_public_option_title)
                         RoomVisibilityItem.AskToJoin -> stringResource(R.string.screen_create_room_room_access_section_knocking_option_title)
                         RoomVisibilityItem.Private -> stringResource(R.string.tchap_screen_create_room_private_encrypted_option_title)
                         // TCHAP - Enable PrivateNotEncrypted room
                         RoomVisibilityItem.PrivateNotEncrypted -> stringResource(R.string.tchap_screen_create_room_private_not_encrypted_option_title)
+=======
+                        JoinRuleItem.PublicVisibility.Public -> stringResource(R.string.screen_create_room_room_access_section_public_option_title)
+                        is JoinRuleItem.PrivateVisibility.Restricted -> stringResource(R.string.screen_create_room_room_access_section_restricted_option_title)
+                        JoinRuleItem.PublicVisibility.AskToJoin -> stringResource(R.string.screen_create_room_room_access_section_knocking_option_title)
+                        is JoinRuleItem.PrivateVisibility.AskToJoinRestricted -> stringResource(
+                            R.string.screen_create_room_room_access_section_knocking_restricted_option_title
+                        )
+                        JoinRuleItem.PrivateVisibility.Private -> stringResource(R.string.screen_create_room_room_access_section_private_option_title)
+>>>>>>> main-element
                     }
                     Text(text = title)
                 },
                 supportingContent = {
-                    // TODO handle description of items in a certain space/org
                     val description = when (item) {
+<<<<<<< HEAD
                         RoomVisibilityItem.Public -> stringResource(R.string.tchap_screen_create_room_public_option_description)
                         RoomVisibilityItem.AskToJoin -> stringResource(R.string.screen_create_room_room_access_section_knocking_option_description)
                         RoomVisibilityItem.Private -> stringResource(R.string.tchap_screen_create_room_private_encrypted_option_description)
                         // TCHAP - Enable PrivateNotEncrypted room
                         RoomVisibilityItem.PrivateNotEncrypted -> stringResource(R.string.tchap_screen_create_room_private_not_encrypted_option_description)
+=======
+                        JoinRuleItem.PublicVisibility.Public -> stringResource(R.string.screen_create_room_room_access_section_public_option_description)
+                        is JoinRuleItem.PrivateVisibility.Restricted -> stringResource(
+                            R.string.screen_create_room_room_access_section_restricted_option_description,
+                            parentSpace?.displayName.orEmpty()
+                        )
+                        JoinRuleItem.PublicVisibility.AskToJoin -> stringResource(R.string.screen_create_room_room_access_section_knocking_option_description)
+                        is JoinRuleItem.PrivateVisibility.AskToJoinRestricted -> stringResource(
+                            R.string.screen_create_room_room_access_section_knocking_restricted_option_description,
+                            parentSpace?.displayName.orEmpty()
+                        )
+                        JoinRuleItem.PrivateVisibility.Private -> stringResource(R.string.screen_create_room_room_access_section_private_option_description)
+>>>>>>> main-element
                     }
                     Text(text = description)
                 },

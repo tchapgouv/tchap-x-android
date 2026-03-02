@@ -13,5 +13,5 @@ import io.element.android.features.messages.impl.timeline.model.TimelineItem
 data class ReadReceiptBottomSheetState(
     val showMatrixId: Boolean,
     val selectedEvent: TimelineItem.Event?,
-    val eventSink: (ReadReceiptBottomSheetEvents) -> Unit,
+    val eventSink: (ReadReceiptBottomSheetEvent) -> Unit,
 )

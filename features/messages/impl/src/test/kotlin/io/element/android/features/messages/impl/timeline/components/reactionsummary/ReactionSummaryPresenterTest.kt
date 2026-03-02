@@ -8,9 +8,6 @@
 
 package io.element.android.features.messages.impl.timeline.components.reactionsummary
 
-import app.cash.molecule.RecompositionMode
-import app.cash.molecule.moleculeFlow
-import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import io.element.android.features.messages.impl.timeline.model.anAggregatedReaction
 import io.element.android.libraries.matrix.api.room.RoomMembersState
@@ -22,6 +19,7 @@ import io.element.android.libraries.matrix.test.core.aBuildMeta
 import io.element.android.libraries.matrix.test.room.FakeBaseRoom
 import io.element.android.libraries.matrix.test.room.aRoomMember
 import io.element.android.tests.testutils.WarmUpRule
+import io.element.android.tests.testutils.test
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -33,8 +31,12 @@ class ReactionSummaryPresenterTest {
 
     private val aggregatedReaction = anAggregatedReaction(userId = A_USER_ID, key = "👍", isHighlighted = true)
     private val roomMember = aRoomMember(userId = A_USER_ID, avatarUrl = AN_AVATAR_URL, displayName = A_USER_NAME)
+<<<<<<< HEAD
     private val summaryEvent = ReactionSummaryEvents.ShowReactionSummary(AN_EVENT_ID, listOf(aggregatedReaction), aggregatedReaction.key)
     private val buildMeta = aBuildMeta()
+=======
+    private val summaryEvent = ReactionSummaryEvent.ShowReactionSummary(AN_EVENT_ID, listOf(aggregatedReaction), aggregatedReaction.key)
+>>>>>>> main-element
     private val room = FakeBaseRoom().apply {
         givenRoomMembersState(RoomMembersState.Ready(persistentListOf(roomMember)))
     }
@@ -42,25 +44,21 @@ class ReactionSummaryPresenterTest {
 
     @Test
     fun `present - handle showing and hiding the reaction summary`() = runTest {
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
             assertThat(initialState.target).isNull()
 
             initialState.eventSink(summaryEvent)
             assertThat(awaitItem().target).isNotNull()
 
-            initialState.eventSink(ReactionSummaryEvents.Clear)
+            initialState.eventSink(ReactionSummaryEvent.Clear)
             assertThat(awaitItem().target).isNull()
         }
     }
 
     @Test
     fun `present - handle reaction summary content and avatars populated`() = runTest {
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
+        presenter.test {
             val initialState = awaitItem()
             assertThat(initialState.target).isNull()
 

@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
+import io.element.android.features.messages.impl.SharedHistoryIcon
 import io.element.android.features.messages.impl.timeline.components.CallMenuItem
 import io.element.android.features.roomcall.api.RoomCallState
 import io.element.android.features.roomcall.api.aStandByCallState
@@ -66,6 +67,7 @@ internal fun MessagesViewTopBar(
     heroes: ImmutableList<AvatarData>,
     roomCallState: RoomCallState,
     dmUserIdentityState: IdentityState?,
+    sharedHistoryIcon: SharedHistoryIcon,
     onRoomDetailsClick: () -> Unit,
     onJoinCallClick: () -> Unit,
     onBackClick: () -> Unit,
@@ -111,6 +113,20 @@ internal fun MessagesViewTopBar(
                         )
                     }
                     else -> Unit
+                }
+
+                when (sharedHistoryIcon) {
+                    SharedHistoryIcon.NONE -> Unit
+                    SharedHistoryIcon.SHARED -> Icon(
+                        imageVector = CompoundIcons.History(),
+                        tint = ElementTheme.colors.iconInfoPrimary,
+                        contentDescription = stringResource(CommonStrings.common_shared_history),
+                    )
+                    SharedHistoryIcon.WORLD_READABLE -> Icon(
+                        imageVector = CompoundIcons.UserProfileSolid(),
+                        tint = ElementTheme.colors.iconInfoPrimary,
+                        contentDescription = stringResource(CommonStrings.common_world_readable_history),
+                    )
                 }
             }
         },
@@ -181,6 +197,7 @@ internal fun MessagesViewTopBarPreview() = ElementPreview {
         heroes: ImmutableList<AvatarData> = persistentListOf(),
         roomCallState: RoomCallState = RoomCallState.Unavailable,
         dmUserIdentityState: IdentityState? = null,
+        sharedHistoryIcon: SharedHistoryIcon = SharedHistoryIcon.NONE,
     ) = MessagesViewTopBar(
         roomName = roomName,
         roomAvatar = roomAvatar,
@@ -188,6 +205,7 @@ internal fun MessagesViewTopBarPreview() = ElementPreview {
         heroes = heroes,
         roomCallState = roomCallState,
         dmUserIdentityState = dmUserIdentityState,
+        sharedHistoryIcon = sharedHistoryIcon,
         onRoomDetailsClick = {},
         onJoinCallClick = {},
         onBackClick = {},
@@ -220,6 +238,17 @@ internal fun MessagesViewTopBarPreview() = ElementPreview {
             roomName = "A DM with a very very very long name",
             isTombstoned = true,
             dmUserIdentityState = IdentityState.VerificationViolation
+        )
+        HorizontalDivider()
+        AMessagesViewTopBar(
+            roomName = "A DM with shared history",
+            dmUserIdentityState = IdentityState.Verified,
+            sharedHistoryIcon = SharedHistoryIcon.SHARED,
+        )
+        HorizontalDivider()
+        AMessagesViewTopBar(
+            roomName = "A room with world_readable history",
+            sharedHistoryIcon = SharedHistoryIcon.WORLD_READABLE,
         )
     }
 }

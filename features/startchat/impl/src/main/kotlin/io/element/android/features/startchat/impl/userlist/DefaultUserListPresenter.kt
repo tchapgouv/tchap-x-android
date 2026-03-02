@@ -8,6 +8,7 @@
 
 package io.element.android.features.startchat.impl.userlist
 
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -33,6 +34,10 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
+
+private const val MAX_SUGGESTIONS_COUNT = 5
 
 @AssistedInject
 class DefaultUserListPresenter(
@@ -56,20 +61,27 @@ class DefaultUserListPresenter(
     override fun present(): UserListState {
         var recentDirectRooms by remember { mutableStateOf(emptyList<RecentDirectRoom>()) }
         LaunchedEffect(Unit) {
-            recentDirectRooms = matrixClient.getRecentDirectRooms()
+            recentDirectRooms = matrixClient
+                .getRecentDirectRooms()
+                .take(MAX_SUGGESTIONS_COUNT)
+                .toList()
         }
         var isSearchActive by rememberSaveable { mutableStateOf(false) }
         val selectedUsers by userListDataStore.selectedUsers.collectAsState(emptyList())
-        var searchQuery by rememberSaveable { mutableStateOf("") }
+        val queryState = rememberTextFieldState()
         var searchResults: SearchBarResultState<ImmutableList<UserSearchResult>> by remember {
             mutableStateOf(SearchBarResultState.Initial())
         }
         var showSearchLoader by remember { mutableStateOf(false) }
 
+<<<<<<< HEAD
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
+=======
+        val searchQuery = queryState.text.toString()
+>>>>>>> main-element
         LaunchedEffect(searchQuery) {
             searchResults = SearchBarResultState.Initial()
             showSearchLoader = false
@@ -86,15 +98,18 @@ class DefaultUserListPresenter(
         fun handleEvent(event: UserListEvents) {
             when (event) {
                 is UserListEvents.OnSearchActiveChanged -> isSearchActive = event.active
-                is UserListEvents.UpdateSearchQuery -> searchQuery = event.query
                 is UserListEvents.AddToSelection -> userListDataStore.selectUser(event.matrixUser)
                 is UserListEvents.RemoveFromSelection -> userListDataStore.removeUserFromSelection(event.matrixUser)
             }
         }
 
         return UserListState(
+<<<<<<< HEAD
             showMatrixId = showMatrixId,
             searchQuery = searchQuery,
+=======
+            searchQuery = queryState,
+>>>>>>> main-element
             searchResults = searchResults,
             selectedUsers = selectedUsers.toImmutableList(),
             isSearchActive = isSearchActive,

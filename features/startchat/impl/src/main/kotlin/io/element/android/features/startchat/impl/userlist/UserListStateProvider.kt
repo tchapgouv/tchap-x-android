@@ -8,6 +8,7 @@
 
 package io.element.android.features.startchat.impl.userlist
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
 import io.element.android.libraries.matrix.api.core.RoomId
@@ -69,8 +70,12 @@ fun aUserListState(
     recentDirectRooms: List<RecentDirectRoom> = emptyList(),
     eventSink: (UserListEvents) -> Unit = {},
 ) = UserListState(
+<<<<<<< HEAD
     showMatrixId = false,
     searchQuery = searchQuery,
+=======
+    searchQuery = TextFieldState(initialText = searchQuery),
+>>>>>>> main-element
     isSearchActive = isSearchActive,
     searchResults = searchResults,
     selectedUsers = selectedUsers.toImmutableList(),

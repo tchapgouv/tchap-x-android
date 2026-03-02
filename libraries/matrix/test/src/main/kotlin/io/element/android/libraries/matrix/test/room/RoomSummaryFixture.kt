@@ -78,8 +78,12 @@ fun aRoomSummary(
     latestEvent: LatestEventValue = aRemoteLatestEvent(),
     roomVersion: String? = "11",
     privilegedCreatorRole: Boolean = false,
+<<<<<<< HEAD
     // TCHAP external user
     isOpenToExternalUsers: Boolean = false,
+=======
+    isLowPriority: Boolean = false,
+>>>>>>> main-element
 ) = RoomSummary(
     info = RoomInfo(
         id = roomId,
@@ -117,8 +121,12 @@ fun aRoomSummary(
         historyVisibility = historyVisibility,
         roomVersion = roomVersion,
         privilegedCreatorRole = privilegedCreatorRole,
+<<<<<<< HEAD
         // TCHAP external user
         isOpenToExternalUsers = isOpenToExternalUsers,
+=======
+        isLowPriority = isLowPriority,
+>>>>>>> main-element
     ),
     latestEvent = latestEvent,
 )

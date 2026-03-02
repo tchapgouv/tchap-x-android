@@ -40,6 +40,7 @@ class ReactionSummaryPresenter(
         }
         val targetWithAvatars = populateSenderAvatars(members = membersState.roomMembers().orEmpty().toImmutableList(), summary = target.value)
 
+<<<<<<< HEAD
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
@@ -48,11 +49,16 @@ class ReactionSummaryPresenter(
             when (event) {
                 is ReactionSummaryEvents.ShowReactionSummary -> target.value = ReactionSummaryState.Summary(
                     showMatrixId = showMatrixId,
+=======
+        fun handleEvent(event: ReactionSummaryEvent) {
+            when (event) {
+                is ReactionSummaryEvent.ShowReactionSummary -> target.value = ReactionSummaryState.Summary(
+>>>>>>> main-element
                     reactions = event.reactions.toImmutableList(),
                     selectedKey = event.selectedKey,
                     selectedEventId = event.eventId
                 )
-                ReactionSummaryEvents.Clear -> target.value = null
+                ReactionSummaryEvent.Clear -> target.value = null
             }
         }
         return ReactionSummaryState(

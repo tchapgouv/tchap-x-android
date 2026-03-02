@@ -78,6 +78,7 @@ data class RoomInfo(
     val successorRoom: SuccessorRoom?,
     val roomVersion: String?,
     val privilegedCreatorRole: Boolean,
+    val isLowPriority: Boolean,
 ) {
     val aliases: List<RoomAlias>
         get() = listOfNotNull(canonicalAlias) + alternativeAliases

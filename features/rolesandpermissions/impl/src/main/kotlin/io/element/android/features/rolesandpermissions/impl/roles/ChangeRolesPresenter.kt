@@ -8,6 +8,7 @@
 
 package io.element.android.features.rolesandpermissions.impl.roles
 
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -47,12 +48,17 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.time.Duration.Companion.seconds
 
 @AssistedInject
 class ChangeRolesPresenter(
@@ -72,7 +78,7 @@ class ChangeRolesPresenter(
 
     @Composable
     override fun present(): ChangeRolesState {
-        var query by rememberSaveable { mutableStateOf<String?>(null) }
+        val queryState = rememberTextFieldState()
         var searchActive by rememberSaveable { mutableStateOf(false) }
         var searchResults by remember {
             mutableStateOf<SearchBarResultState<MembersByRole>>(SearchBarResultState.Initial())
@@ -109,10 +115,15 @@ class ChangeRolesPresenter(
         val roomMemberState by room.membersStateFlow.collectAsState()
 
         // Update search results for every query change
+        val query = queryState.text.toString()
         LaunchedEffect(query, roomMemberState) {
             val results = dataSource
+<<<<<<< HEAD
                 .search(query.orEmpty())
                 .filter { it.userId.toString().isExternalTchapUser().not() }
+=======
+                .search(query)
+>>>>>>> main-element
                 .groupedByRole()
 
             searchResults = if (results.isEmpty()) {
@@ -144,9 +155,6 @@ class ChangeRolesPresenter(
             when (event) {
                 is ChangeRolesEvent.ToggleSearchActive -> {
                     searchActive = !searchActive
-                }
-                is ChangeRolesEvent.QueryChanged -> {
-                    query = event.query
                 }
                 is ChangeRolesEvent.UserSelectionToggled -> {
                     val newList = selectedUsers.value.toMutableList()
@@ -198,7 +206,7 @@ class ChangeRolesPresenter(
         return ChangeRolesState(
             showMatrixId = showMatrixId,
             role = role,
-            query = query,
+            searchQuery = queryState,
             isSearchActive = searchActive,
             searchResults = searchResults,
             selectedUsers = selectedUsers.value,
@@ -231,7 +239,19 @@ class ChangeRolesPresenter(
                     add(UserRoleChange(selectedUser.userId, RoomMember.Role.User))
                 }
             }
-            room.updateUsersRoles(changes).map { true }
+            room.updateUsersRoles(changes).map {
+                // Wait for the changes to take effect or a timeout
+                withTimeoutOrNull(10.seconds) {
+                    room.roomInfoFlow
+                        .map { it.roomPowerLevels }
+                        .filterNotNull()
+                        .takeWhile { powerLevels ->
+                            changes.any { powerLevels.powerLevelOf(it.userId) != it.powerLevel }
+                        }
+                        .collect()
+                }
+                true
+            }
         }
     }
 

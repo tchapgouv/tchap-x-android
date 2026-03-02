@@ -8,6 +8,7 @@
 
 package io.element.android.features.invitepeople.impl
 
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import app.cash.turbine.ReceiveTurbine
 import com.google.common.truth.Truth.assertThat
 import io.element.android.features.invitepeople.api.InvitePeopleEvents
@@ -19,6 +20,7 @@ import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.UserId
+import io.element.android.libraries.matrix.api.room.CurrentUserMembership
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomMembersState
 import io.element.android.libraries.matrix.api.room.RoomMembershipState
@@ -28,7 +30,9 @@ import io.element.android.libraries.matrix.test.A_ROOM_ID
 import io.element.android.libraries.matrix.test.A_USER_ID
 import io.element.android.libraries.matrix.test.A_USER_ID_2
 import io.element.android.libraries.matrix.test.FakeMatrixClient
+import io.element.android.libraries.matrix.test.room.FakeBaseRoom
 import io.element.android.libraries.matrix.test.room.FakeJoinedRoom
+import io.element.android.libraries.matrix.test.room.aRoomInfo
 import io.element.android.libraries.matrix.test.room.aRoomMember
 import io.element.android.libraries.matrix.test.room.aRoomMemberList
 import io.element.android.libraries.matrix.ui.components.aMatrixUser
@@ -67,31 +71,34 @@ internal class DefaultInvitePeoplePresenterTest {
             assertThat(initialState.searchResults).isInstanceOf(SearchBarResultState.Initial::class.java)
             assertThat(initialState.isSearchActive).isFalse()
             assertThat(initialState.canInvite).isFalse()
-            assertThat(initialState.searchQuery).isEmpty()
+            assertThat(initialState.searchQuery.text.toString()).isEmpty()
 
-            skipItems(1)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
     fun `present - updates search active state`() = runTest {
-        val presenter = createDefaultInvitePeoplePresenter()
+        val presenter = createDefaultInvitePeoplePresenter(
+            coroutineDispatchers = testCoroutineDispatchers(useUnconfinedTestDispatcher = true)
+        )
         presenter.test {
             val initialState = awaitItem()
             skipItems(1)
 
             initialState.eventSink(DefaultInvitePeopleEvents.OnSearchActiveChanged(true))
 
-            val resultState = awaitItem()
+            val resultState = awaitItemAsDefault()
             assertThat(resultState.isSearchActive).isTrue()
-            resultState.eventSink(DefaultInvitePeopleEvents.UpdateSearchQuery("some query"))
-            assertThat(awaitItemAsDefault().searchQuery).isEqualTo("some query")
+            resultState.searchQuery.setTextAndPlaceCursorAtEnd("some query")
+            assertThat(awaitItemAsDefault().searchQuery.text.toString()).isEqualTo("some query")
             resultState.eventSink(InvitePeopleEvents.CloseSearch)
-            skipItems(1)
+            skipItems(2)
             awaitItemAsDefault().also {
                 assertThat(it.isSearchActive).isFalse()
-                assertThat(it.searchQuery).isEmpty()
+                assertThat(it.searchQuery.text.toString()).isEmpty()
             }
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
@@ -103,8 +110,8 @@ internal class DefaultInvitePeoplePresenterTest {
             coroutineDispatchers = testCoroutineDispatchers(useUnconfinedTestDispatcher = true)
         )
         presenter.test {
-            val initialState = awaitItem()
-            initialState.eventSink(DefaultInvitePeopleEvents.UpdateSearchQuery("some query"))
+            val initialState = awaitItemAsDefault()
+            initialState.searchQuery.setTextAndPlaceCursorAtEnd("some query")
             assertThat(repository.providedQuery).isEqualTo("some query")
             repository.emitState(UserSearchResultState(results = emptyList(), isSearching = true))
             skipItems(3)
@@ -128,10 +135,10 @@ internal class DefaultInvitePeoplePresenterTest {
             coroutineDispatchers = testCoroutineDispatchers(useUnconfinedTestDispatcher = true)
         )
         presenter.test {
-            val initialState = awaitItem()
+            val initialState = awaitItemAsDefault()
             skipItems(1)
 
-            initialState.eventSink(DefaultInvitePeopleEvents.UpdateSearchQuery("some query"))
+            initialState.searchQuery.setTextAndPlaceCursorAtEnd("some query")
             skipItems(1)
 
             assertThat(repository.providedQuery).isEqualTo("some query")
@@ -181,10 +188,10 @@ internal class DefaultInvitePeoplePresenterTest {
             coroutineDispatchers = coroutineDispatchers,
         )
         presenter.test {
-            val initialState = awaitItem()
+            val initialState = awaitItemAsDefault()
             skipItems(1)
 
-            initialState.eventSink(DefaultInvitePeopleEvents.UpdateSearchQuery("some query"))
+            initialState.searchQuery.setTextAndPlaceCursorAtEnd("some query")
             skipItems(1)
 
             assertThat(repository.providedQuery).isEqualTo("some query")
@@ -241,10 +248,10 @@ internal class DefaultInvitePeoplePresenterTest {
         )
 
         presenter.test {
-            val initialState = awaitItem()
+            val initialState = awaitItemAsDefault()
             skipItems(1)
 
-            initialState.eventSink(DefaultInvitePeopleEvents.UpdateSearchQuery("some query"))
+            initialState.searchQuery.setTextAndPlaceCursorAtEnd("some query")
             skipItems(1)
 
             assertThat(repository.providedQuery).isEqualTo("some query")
@@ -277,7 +284,7 @@ internal class DefaultInvitePeoplePresenterTest {
         val repository = FakeUserRepository()
         val presenter = createDefaultInvitePeoplePresenter(
             userRepository = repository,
-            coroutineDispatchers = testCoroutineDispatchers()
+            coroutineDispatchers = testCoroutineDispatchers(useUnconfinedTestDispatcher = true)
         )
         presenter.test {
             val initialState = awaitItem()
@@ -308,14 +315,14 @@ internal class DefaultInvitePeoplePresenterTest {
             coroutineDispatchers = testCoroutineDispatchers(useUnconfinedTestDispatcher = true)
         )
         presenter.test {
-            val initialState = awaitItem()
+            val initialState = awaitItemAsDefault()
             skipItems(1)
 
             val selectedUser = aMatrixUser()
 
             initialState.eventSink(DefaultInvitePeopleEvents.ToggleUser(selectedUser))
 
-            initialState.eventSink(DefaultInvitePeopleEvents.UpdateSearchQuery("some query"))
+            initialState.searchQuery.setTextAndPlaceCursorAtEnd("some query")
             skipItems(1)
 
             assertThat(repository.providedQuery).isEqualTo("some query")
@@ -346,13 +353,13 @@ internal class DefaultInvitePeoplePresenterTest {
             coroutineDispatchers = testCoroutineDispatchers(useUnconfinedTestDispatcher = true)
         )
         presenter.test {
-            val initialState = awaitItem()
+            val initialState = awaitItemAsDefault()
             skipItems(1)
 
             val selectedUser = aMatrixUser()
 
             // Given a query is made
-            initialState.eventSink(DefaultInvitePeopleEvents.UpdateSearchQuery("some query"))
+            initialState.searchQuery.setTextAndPlaceCursorAtEnd("some query")
             skipItems(1)
 
             assertThat(repository.providedQuery).isEqualTo("some query")
@@ -518,6 +525,85 @@ internal class DefaultInvitePeoplePresenterTest {
             assertThat(initialState.room.isLoading()).isTrue()
             val finalState = awaitItemAsDefault()
             assertThat(finalState.room.errorOrNull()?.message).isEqualTo("Room not found")
+        }
+    }
+
+    @Test
+    fun `present - suggestions are loaded from recent direct rooms`() = runTest {
+        val dmRoomId = RoomId("!dm_room:server.org")
+        val otherUserId = UserId("@frank:server.org")
+        val matrixClient = FakeMatrixClient(sessionId = A_USER_ID).apply {
+            // Track the DM room as recently visited
+            trackRecentlyVisitedRoom(dmRoomId)
+            // Set up a DM room with the other user
+            givenGetRoomResult(
+                dmRoomId,
+                FakeBaseRoom(
+                    sessionId = A_USER_ID,
+                    roomId = dmRoomId,
+                    initialRoomInfo = aRoomInfo(
+                        id = dmRoomId,
+                        isDirect = true,
+                        activeMembersCount = 2,
+                        currentUserMembership = CurrentUserMembership.JOINED,
+                    ),
+                    getDirectRoomMemberResult = { aRoomMember(userId = otherUserId, displayName = "Frank") }
+                )
+            )
+        }
+        val presenter = createDefaultInvitePeoplePresenter(
+            matrixClient = matrixClient,
+            // Use empty room members so the suggestion doesn't get filtered
+            roomMembersState = RoomMembersState.Ready(persistentListOf()),
+            coroutineDispatchers = testCoroutineDispatchers(useUnconfinedTestDispatcher = true),
+        )
+        presenter.test {
+            skipItems(2)
+            val state = awaitItemAsDefault()
+            assertThat(state.suggestions).hasSize(1)
+            assertThat(state.suggestions.first().matrixUser.userId).isEqualTo(otherUserId)
+            assertThat(state.suggestions.first().isSelected).isFalse()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `present - suggestions filters out existing room members`() = runTest {
+        val dmRoomId = RoomId("!dm_room:server.org")
+        val alreadyJoinedUserId = UserId("@frank:server.org")
+        val matrixClient = FakeMatrixClient(sessionId = A_USER_ID).apply {
+            trackRecentlyVisitedRoom(dmRoomId)
+            givenGetRoomResult(
+                dmRoomId,
+                FakeBaseRoom(
+                    sessionId = A_USER_ID,
+                    roomId = dmRoomId,
+                    initialRoomInfo = aRoomInfo(
+                        id = dmRoomId,
+                        isDirect = true,
+                        activeMembersCount = 2,
+                        currentUserMembership = CurrentUserMembership.JOINED,
+                    ),
+                    getDirectRoomMemberResult = { aRoomMember(userId = alreadyJoinedUserId, displayName = "Frank") }
+                )
+            )
+        }
+        // The user in the suggestion is already a member of the target room
+        val presenter = createDefaultInvitePeoplePresenter(
+            matrixClient = matrixClient,
+            roomMembersState = RoomMembersState.Ready(
+                persistentListOf(
+                    aRoomMember(userId = alreadyJoinedUserId, membership = RoomMembershipState.JOIN)
+                )
+            ),
+            coroutineDispatchers = testCoroutineDispatchers(useUnconfinedTestDispatcher = true),
+        )
+        presenter.test {
+            skipItems(1)
+            // The suggestion should be filtered out because the user is already a room member
+            val state = awaitItemAsDefault()
+            assertThat(state.suggestions).isEmpty()
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
