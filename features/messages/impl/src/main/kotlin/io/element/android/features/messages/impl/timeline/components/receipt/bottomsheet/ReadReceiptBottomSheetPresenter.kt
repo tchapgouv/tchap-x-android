@@ -28,15 +28,11 @@ class ReadReceiptBottomSheetPresenter constructor(
     override fun present(): ReadReceiptBottomSheetState {
         var selectedEvent: TimelineItem.Event? by remember { mutableStateOf(null) }
 
-<<<<<<< HEAD
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
-        fun handleEvent(event: ReadReceiptBottomSheetEvents) {
-=======
         fun handleEvent(event: ReadReceiptBottomSheetEvent) {
->>>>>>> main-element
             @Suppress("LiftReturnOrAssignment")
             when (event) {
                 is ReadReceiptBottomSheetEvent.EventSelected -> {

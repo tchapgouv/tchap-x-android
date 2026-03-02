@@ -8,6 +8,9 @@
 
 package io.element.android.features.home.impl.search
 
+import app.cash.molecule.RecompositionMode
+import app.cash.molecule.moleculeFlow
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import io.element.android.features.home.impl.datasource.aRoomListRoomSummaryFactory
 import io.element.android.libraries.core.meta.BuildMeta
@@ -61,21 +64,13 @@ class RoomListSearchPresenterTest {
 
     @Test
     fun `present - query search changes`() = runTest {
-<<<<<<< HEAD
-        val roomListService = FakeRoomListService()
         val buildMeta = aBuildMeta()
-        val presenter = createRoomListSearchPresenter(buildMeta, roomListService)
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
-=======
         val roomList = FakeDynamicRoomList()
         val roomListService = FakeRoomListService(
             createRoomListLambda = { roomList }
         )
         val presenter = createRoomListSearchPresenter(roomListService)
         presenter.test {
->>>>>>> main-element
             awaitItem().let { state ->
                 assertThat(
                     roomList.currentFilter.value
@@ -106,21 +101,13 @@ class RoomListSearchPresenterTest {
 
     @Test
     fun `present - room list changes`() = runTest {
-<<<<<<< HEAD
-        val roomListService = FakeRoomListService()
         val buildMeta = aBuildMeta()
-        val presenter = createRoomListSearchPresenter(buildMeta, roomListService)
-        moleculeFlow(RecompositionMode.Immediate) {
-            presenter.present()
-        }.test {
-=======
         val roomList = FakeDynamicRoomList()
         val roomListService = FakeRoomListService(
             createRoomListLambda = { roomList }
         )
         val presenter = createRoomListSearchPresenter(roomListService)
         presenter.test {
->>>>>>> main-element
             awaitItem().let { state ->
                 assertThat(state.results).isEmpty()
             }
@@ -167,17 +154,7 @@ fun TestScope.createRoomListSearchPresenter(
     roomListService: RoomListService = FakeRoomListService(),
 ): RoomListSearchPresenter {
     return RoomListSearchPresenter(
-<<<<<<< HEAD
         buildMeta = buildMeta,
-        dataSource = RoomListSearchDataSource(
-            roomListService = roomListService,
-            roomSummaryFactory = aRoomListRoomSummaryFactory(
-                dateFormatter = FakeDateFormatter(),
-                roomLatestEventFormatter = FakeRoomLatestEventFormatter(),
-            ),
-            coroutineDispatchers = testCoroutineDispatchers(),
-        ),
-=======
         dataSourceFactory = object : RoomListSearchDataSource.Factory {
             override fun create(coroutineScope: CoroutineScope): RoomListSearchDataSource {
                 return RoomListSearchDataSource(
@@ -191,6 +168,5 @@ fun TestScope.createRoomListSearchPresenter(
                 )
             }
         }
->>>>>>> main-element
     )
 }

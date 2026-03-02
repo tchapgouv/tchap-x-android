@@ -374,7 +374,6 @@ class RustMatrixClient(
 
     override suspend fun createRoom(createRoomParams: CreateRoomParameters): Result<RoomId> = withContext(sessionDispatcher) {
         runCatchingExceptions {
-<<<<<<< HEAD
             // TCHAP invite-by-email
             var isTchapInvite = false
             var isTchapInviteExternal = false
@@ -384,11 +383,10 @@ class RustMatrixClient(
                 isTchapInvite = true
                 isTchapInviteExternal = createRoomParams.invite?.get(0)?.toString()?.isExternalTchapUser() == true
             }
-=======
+
             val hasPublicAccess = createRoomParams.preset == RoomPreset.PUBLIC_CHAT || createRoomParams.joinRuleOverride == JoinRule.Public
             val powerLevels = defaultRoomCreationPowerLevels(isSpace = createRoomParams.isSpace, isPublic = hasPublicAccess)
 
->>>>>>> main-element
             val rustParams = RustCreateRoomParameters(
                 accessRuleOverride = when (createRoomParams.accessRules) {
                     RoomAccessRules.DIRECT -> AccessRule.DIRECT
@@ -425,7 +423,6 @@ class RustMatrixClient(
 //            val roomId = RoomId(innerClient.createRoom(rustParams, isFederated = true)) // TODO fix the federated value
             val roomId = RoomId(innerClient.createRoom(
                 rustParams,
-                isFederated = true,
                 isTchapInvite = isTchapInvite,
                 isTchapInviteExternal = isTchapInviteExternal
             ))

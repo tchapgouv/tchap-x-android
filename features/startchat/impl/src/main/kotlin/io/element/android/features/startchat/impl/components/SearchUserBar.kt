@@ -41,14 +41,9 @@ import kotlinx.collections.immutable.ImmutableList
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchUserBar(
-<<<<<<< HEAD
     showMatrixId: Boolean,
-    query: String,
-    state: SearchBarResultState<ImmutableList<UserSearchResult>>,
-=======
     queryState: TextFieldState,
     resultState: SearchBarResultState<ImmutableList<UserSearchResult>>,
->>>>>>> main-element
     showLoader: Boolean,
     selectedUsers: ImmutableList<MatrixUser>,
     active: Boolean,

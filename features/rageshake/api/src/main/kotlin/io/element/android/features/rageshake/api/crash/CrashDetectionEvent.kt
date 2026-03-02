@@ -8,18 +8,7 @@
 
 package io.element.android.features.rageshake.api.crash
 
-<<<<<<< HEAD:features/createroom/impl/src/main/kotlin/io/element/android/features/createroom/impl/configureroom/RoomVisibilityItem.kt
-enum class RoomVisibilityItem {
-    Private,
-
-    // TCHAP - Enable PrivateNotEncrypted room
-    PrivateNotEncrypted,
-
-    Public,
-    AskToJoin,
-=======
 sealed interface CrashDetectionEvent {
     data object ResetAllCrashData : CrashDetectionEvent
     data object ResetAppHasCrashed : CrashDetectionEvent
->>>>>>> main-element:features/rageshake/api/src/main/kotlin/io/element/android/features/rageshake/api/crash/CrashDetectionEvent.kt
 }

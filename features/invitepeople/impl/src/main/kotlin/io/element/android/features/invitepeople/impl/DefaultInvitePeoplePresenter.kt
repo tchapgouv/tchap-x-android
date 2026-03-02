@@ -13,11 +13,8 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-<<<<<<< HEAD
 import androidx.compose.runtime.collectAsState
-=======
 import androidx.compose.runtime.derivedStateOf
->>>>>>> main-element
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -100,11 +97,10 @@ class DefaultInvitePeoplePresenter(
         var showOpenRoomToExternalsDialog by rememberSaveable { mutableStateOf(false) } // TCHAP external user
         val sendInvitesAction = remember { mutableStateOf<AsyncAction<Unit>>(AsyncAction.Uninitialized) }
 
-<<<<<<< HEAD
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
-=======
+
         val recentDirectRooms by produceState(emptyList(), roomMembers.value) {
             if (roomMembers.value.isSuccess()) {
                 val activeMemberIds = roomMembers.value.dataOrNull().orEmpty()
@@ -132,7 +128,6 @@ class DefaultInvitePeoplePresenter(
                 }.toImmutableList()
             }
         }
->>>>>>> main-element
 
         val room by produceState(if (joinedRoom != null) AsyncData.Success(joinedRoom) else AsyncData.Loading()) {
             if (joinedRoom == null) {

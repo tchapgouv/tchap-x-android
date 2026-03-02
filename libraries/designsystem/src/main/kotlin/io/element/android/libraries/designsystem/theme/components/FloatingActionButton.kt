@@ -35,15 +35,10 @@ fun FloatingActionButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     shape: Shape = FloatingActionButtonDefaults.shape,
-<<<<<<< HEAD
-    containerColor: Color = ElementTheme.colors.textActionAccent,
+    containerColor: Color = ElementTheme.colors.bgAccentRest,
     // TCHAP theme : color used when background is blue Tchap
 //    contentColor: Color = ElementTheme.colors.iconOnSolidPrimary,
     contentColor: Color = ElementTheme.iconOnSolidBlueTchap,
-=======
-    containerColor: Color = ElementTheme.colors.bgAccentRest,
-    contentColor: Color = ElementTheme.colors.iconOnSolidPrimary,
->>>>>>> main-element
     elevation: FloatingActionButtonElevation = FloatingActionButtonDefaults.elevation(),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable () -> Unit,

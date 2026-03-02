@@ -15,7 +15,7 @@ sealed interface RoomVisibilityState {
     data class Private(override val joinRuleItem: JoinRuleItem.PrivateVisibility) : RoomVisibilityState
 
     // TCHAP - Enable PrivateNotEncrypted room
-    data object PrivateNotEncrypted : RoomVisibilityState // TCHAP room type
+    data class PrivateNotEncrypted(override val joinRuleItem: JoinRuleItem.PrivateVisibility) : RoomVisibilityState
 
     data class Public(
         val roomAddress: RoomAddress,

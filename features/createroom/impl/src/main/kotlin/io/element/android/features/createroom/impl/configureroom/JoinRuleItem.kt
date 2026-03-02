@@ -20,6 +20,10 @@ import kotlinx.collections.immutable.persistentListOf
 sealed interface JoinRuleItem {
     sealed interface PrivateVisibility : JoinRuleItem {
         data object Private : PrivateVisibility
+
+        // TCHAP - Enable PrivateNotEncrypted room
+        data object PrivateNotEncrypted : PrivateVisibility
+
         data class Restricted(val parentSpaceId: RoomId) : PrivateVisibility
         data class AskToJoinRestricted(val parentSpaceId: RoomId) : PrivateVisibility
     }
@@ -38,6 +42,7 @@ sealed interface JoinRuleItem {
      */
     fun toJoinRule(): JoinRule = when (this) {
         PrivateVisibility.Private -> JoinRule.Invite
+        PrivateVisibility.PrivateNotEncrypted -> JoinRule.Invite
         is PrivateVisibility.Restricted -> JoinRule.Restricted(persistentListOf(AllowRule.RoomMembership(parentSpaceId)))
         is PrivateVisibility.AskToJoinRestricted -> JoinRule.KnockRestricted(persistentListOf(AllowRule.RoomMembership(parentSpaceId)))
         PublicVisibility.Public -> JoinRule.Public

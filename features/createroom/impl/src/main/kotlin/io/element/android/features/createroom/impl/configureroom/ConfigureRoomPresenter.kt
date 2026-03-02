@@ -113,12 +113,11 @@ class ConfigureRoomPresenter(
             }
         }
 
-<<<<<<< HEAD
         // TCHAP - PrivateNotEncrypted room feature flag
         val isPrivateNotEncryptedRoomsActive by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.PrivateNotEncryptedRooms)
         }.collectAsState(initial = false)
-=======
+
         var spaces by remember { mutableStateOf<ImmutableList<SpaceRoom>>(persistentListOf()) }
         LaunchedEffect(canAddRoomToSpace) {
             spaces = if (canAddRoomToSpace) {
@@ -131,7 +130,6 @@ class ConfigureRoomPresenter(
                 dataStore.setParentSpace(parentSpace = parentSpace, updateVisibility = true)
             }
         }
->>>>>>> main-element
 
         LaunchedEffect(cameraPermissionState.permissionGranted) {
             if (cameraPermissionState.permissionGranted && pendingPermissionRequest) {
@@ -157,18 +155,22 @@ class ConfigureRoomPresenter(
         // 2. If it has a parent space.
         // 3. If knocking is enabled.
         val parentSpace = createRoomConfig.parentSpace
-        val availableJoinRules = remember(parentSpace, isSpace, isKnockFeatureEnabled) {
+        val availableJoinRules = remember(parentSpace, isSpace, isKnockFeatureEnabled, isPrivateNotEncryptedRoomsActive) {
             when {
                 isSpace && parentSpace != null -> TODO("Adding a space to a parent space is not supported yet! How did you get here?")
                 parentSpace == null || parentSpace.joinRule == JoinRule.Public -> listOfNotNull(
                     JoinRuleItem.PublicVisibility.Public,
                     JoinRuleItem.PublicVisibility.AskToJoin.takeIf { !isSpace && isKnockFeatureEnabled },
                     JoinRuleItem.PrivateVisibility.Private,
+                    // TCHAP - Enable PrivateNotEncrypted room
+                    JoinRuleItem.PrivateVisibility.PrivateNotEncrypted.takeIf { isPrivateNotEncryptedRoomsActive },
                 ).toImmutableList()
                 else -> listOfNotNull(
                     JoinRuleItem.PrivateVisibility.Restricted(parentSpace.roomId),
                     JoinRuleItem.PrivateVisibility.AskToJoinRestricted(parentSpace.roomId).takeIf { isKnockFeatureEnabled },
                     JoinRuleItem.PrivateVisibility.Private,
+                    // TCHAP - Enable PrivateNotEncrypted room
+                    JoinRuleItem.PrivateVisibility.PrivateNotEncrypted.takeIf { isPrivateNotEncryptedRoomsActive },
                 ).toImmutableList()
             }
         }
@@ -238,8 +240,6 @@ class ConfigureRoomPresenter(
             spaces = spaces,
             isSpace = isSpace,
             eventSink = ::handleEvent,
-            // TCHAP - PrivateNotEncrypted room feature flag
-            isPrivateNotEncryptedRoomsActive = isPrivateNotEncryptedRoomsActive
         )
     }
 
@@ -250,28 +250,15 @@ class ConfigureRoomPresenter(
         suspend {
             val accessRules = RoomAccessRules.RESTRICTED
             val avatarUrl = config.avatarUri?.let { uploadAvatar(it.toUri()) }
-<<<<<<< HEAD
-            val params = when (config.roomVisibility) {
-                is RoomVisibilityState.Public -> {
-                    CreateRoomParameters(
-                        accessRules = accessRules,
-=======
             val params = when (config.visibilityState) {
                 is RoomVisibilityState.Public -> {
                     CreateRoomParameters(
->>>>>>> main-element
+                        accessRules = accessRules,
                         name = config.roomName,
                         topic = config.topic,
                         isEncrypted = false,
                         isDirect = false,
                         visibility = RoomVisibility.Public,
-<<<<<<< HEAD
-                        joinRuleOverride = config.roomVisibility.roomAccess.toJoinRule(),
-                        preset = RoomPreset.PUBLIC_CHAT,
-                        invite = config.invites.map { it.userId },
-                        avatar = avatarUrl,
-                        roomAliasName = config.roomVisibility.roomAddress(),
-=======
                         joinRuleOverride = config.visibilityState.joinRuleItem.toJoinRule()
                             // No need to specify the public join rule override, since the preset is already PUBLIC_CHAT
                             .takeIf { it != JoinRule.Public },
@@ -279,23 +266,21 @@ class ConfigureRoomPresenter(
                         invite = config.invites.map { it.userId },
                         avatar = avatarUrl,
                         roomAliasName = config.visibilityState.roomAddress(),
->>>>>>> main-element
                         isSpace = isSpace,
                     )
                 }
                 is RoomVisibilityState.Private -> {
                     CreateRoomParameters(
-<<<<<<< HEAD
                         accessRules = accessRules,
-=======
->>>>>>> main-element
                         name = config.roomName,
                         topic = config.topic,
                         isEncrypted = true,
                         isDirect = false,
                         visibility = RoomVisibility.Private,
                         historyVisibilityOverride = RoomHistoryVisibility.Invited,
-<<<<<<< HEAD
+                        joinRuleOverride = config.visibilityState.joinRuleItem.toJoinRule()
+                            // No need to specify the Invite join rule override, since the preset is already PRIVATE_CHAT
+                            .takeIf { it != JoinRule.Invite },
                         preset = RoomPreset.PRIVATE_CHAT,
                         invite = config.invites.map { it.userId },
                         avatar = avatarUrl,
@@ -312,11 +297,9 @@ class ConfigureRoomPresenter(
                         isDirect = false,
                         visibility = RoomVisibility.Private,
                         historyVisibilityOverride = RoomHistoryVisibility.Invited,
-=======
                         joinRuleOverride = config.visibilityState.joinRuleItem.toJoinRule()
                             // No need to specify the Invite join rule override, since the preset is already PRIVATE_CHAT
                             .takeIf { it != JoinRule.Invite },
->>>>>>> main-element
                         preset = RoomPreset.PRIVATE_CHAT,
                         invite = config.invites.map { it.userId },
                         avatar = avatarUrl,

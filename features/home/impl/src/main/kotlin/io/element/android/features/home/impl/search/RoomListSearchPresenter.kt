@@ -26,12 +26,8 @@ import kotlinx.coroutines.launch
 
 @Inject
 class RoomListSearchPresenter(
-<<<<<<< HEAD
     private val buildMeta: BuildMeta,
-    private val dataSource: RoomListSearchDataSource,
-=======
     private val dataSourceFactory: RoomListSearchDataSource.Factory,
->>>>>>> main-element
 ) : Presenter<RoomListSearchState> {
     @Composable
     override fun present(): RoomListSearchState {
