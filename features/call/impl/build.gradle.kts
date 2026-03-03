@@ -60,16 +60,6 @@ android {
                 ?: ""
         )
     }
-
-    flavorDimensions += listOf("pinning")
-    productFlavors {
-        create("withpinning") {
-            dimension = "pinning"
-        }
-        create("withoutpinning") {
-            dimension = "pinning"
-        }
-    }
 }
 
 setupDependencyInjection()
