@@ -56,7 +56,7 @@ class FakeMatrixAuthenticationService(
     }
 
     override suspend fun getHomeserverFromLoginHint(defaultHomeserver: String, loginHint: String): Result<String> {
-        return homeserver.value?.url?.let { Result.success(it) }!!
+        return defaultHomeserver.let { Result.success(it) }
     }
 
     override suspend fun login(username: String, password: String): Result<SessionId> = simulateLongTask {

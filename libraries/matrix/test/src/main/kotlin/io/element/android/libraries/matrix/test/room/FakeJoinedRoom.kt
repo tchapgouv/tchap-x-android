@@ -119,6 +119,14 @@ class FakeJoinedRoom(
         inviteUserResult(id)
     }
 
+    override suspend fun inviteUserByEmail(email: String): Result<Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun inviteUsersByEmail(emails: List<String>): Result<Unit> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun updateAvatar(mimeType: String, data: ByteArray): Result<Unit> = simulateLongTask {
         simulateSendMediaProgress(null)
         updateAvatarResult(mimeType, data)
