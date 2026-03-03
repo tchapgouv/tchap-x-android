@@ -8,9 +8,6 @@
 
 package io.element.android.features.home.impl.search
 
-import app.cash.molecule.RecompositionMode
-import app.cash.molecule.moleculeFlow
-import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import io.element.android.features.home.impl.datasource.aRoomListRoomSummaryFactory
 import io.element.android.libraries.core.meta.BuildMeta
@@ -69,7 +66,7 @@ class RoomListSearchPresenterTest {
         val roomListService = FakeRoomListService(
             createRoomListLambda = { roomList }
         )
-        val presenter = createRoomListSearchPresenter(roomListService)
+        val presenter = createRoomListSearchPresenter(buildMeta, roomListService)
         presenter.test {
             awaitItem().let { state ->
                 assertThat(
@@ -106,7 +103,7 @@ class RoomListSearchPresenterTest {
         val roomListService = FakeRoomListService(
             createRoomListLambda = { roomList }
         )
-        val presenter = createRoomListSearchPresenter(roomListService)
+        val presenter = createRoomListSearchPresenter(buildMeta, roomListService)
         presenter.test {
             awaitItem().let { state ->
                 assertThat(state.results).isEmpty()
@@ -126,12 +123,13 @@ class RoomListSearchPresenterTest {
 
     @Test
     fun `present - UpdateVisibleRange triggers pagination when near end`() = runTest {
+        val buildMeta = aBuildMeta()
         val loadMoreLambda = lambdaRecorder<Unit> { }
         val roomList = FakeDynamicRoomList(loadMoreLambda = loadMoreLambda)
         val roomListService = FakeRoomListService(
             createRoomListLambda = { roomList }
         )
-        val presenter = createRoomListSearchPresenter(roomListService)
+        val presenter = createRoomListSearchPresenter(buildMeta, roomListService)
         presenter.test {
             val initialState = awaitItem()
             // Post some rooms to simulate loaded content

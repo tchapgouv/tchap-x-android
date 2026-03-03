@@ -326,7 +326,9 @@ private fun RoomJoinRuleOptions(
                         )
                         JoinRuleItem.PrivateVisibility.Private -> stringResource(R.string.tchap_screen_create_room_private_encrypted_option_title)
                         // TCHAP - Enable PrivateNotEncrypted room
-                        JoinRuleItem.PrivateVisibility.PrivateNotEncrypted -> stringResource(R.string.tchap_screen_create_room_private_not_encrypted_option_title)
+                        JoinRuleItem.PrivateVisibility.PrivateNotEncrypted -> stringResource(
+                            R.string.tchap_screen_create_room_private_not_encrypted_option_title
+                        )
                     }
                     Text(text = title)
                 },
@@ -344,7 +346,9 @@ private fun RoomJoinRuleOptions(
                         )
                         JoinRuleItem.PrivateVisibility.Private -> stringResource(R.string.tchap_screen_create_room_private_encrypted_option_description)
                         // TCHAP - Enable PrivateNotEncrypted room
-                        JoinRuleItem.PrivateVisibility.PrivateNotEncrypted -> stringResource(R.string.tchap_screen_create_room_private_not_encrypted_option_description)
+                        JoinRuleItem.PrivateVisibility.PrivateNotEncrypted -> stringResource(
+                            R.string.tchap_screen_create_room_private_not_encrypted_option_description
+                        )
                     }
                     Text(text = description)
                 },
