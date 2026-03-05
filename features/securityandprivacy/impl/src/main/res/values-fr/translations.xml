@@ -46,5 +46,5 @@ Vous pouvez choisir de publier votre salon dans l’annuaire des salons publics 
   <string name="screen_security_and_privacy_room_publishing_section_header">"Publication du salon"</string>
   <string name="screen_security_and_privacy_room_visibility_section_footer">"Les adresses permettent de trouver et d’accéder aux salons et aux espaces. Elles facilitent également leur partage avec d’autres personnes."</string>
   <string name="screen_security_and_privacy_room_visibility_section_header">"Visibilité"</string>
-  <string name="screen_security_and_privacy_title">"Sécurité &amp; confidentialité"</string>
+  <string name="screen_security_and_privacy_title">"Accès à l'historique"</string><!-- Tchap: Custom string -->
 </resources>

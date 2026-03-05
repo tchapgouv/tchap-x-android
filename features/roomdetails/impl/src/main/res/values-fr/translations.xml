@@ -67,7 +67,7 @@
   <string name="screen_room_details_requests_to_join_title">"Demandes en attente"</string>
   <string name="screen_room_details_roles_and_permissions">"Rôles &amp; autorisations"</string>
   <string name="screen_room_details_room_name_label">"Nom"</string>
-  <string name="screen_room_details_security_and_privacy_title">"Sécurité &amp; confidentialité"</string>
+  <string name="screen_room_details_security_and_privacy_title">"Accès à l'historique"</string><!-- Tchap: Custom string -->
   <string name="screen_room_details_security_title">"Sécurité"</string>
   <string name="screen_room_details_share_room_title">"Partager le salon"</string>
   <string name="screen_room_details_title">"Informations du salon"</string>
@@ -170,5 +170,5 @@ Vous pouvez choisir de publier votre salon dans l’annuaire des salons publics 
   <string name="screen_security_and_privacy_room_publishing_section_header">"Publication du salon"</string>
   <string name="screen_security_and_privacy_room_visibility_section_footer">"Les adresses permettent de trouver et d’accéder aux salons et aux espaces. Elles facilitent également leur partage avec d’autres personnes."</string>
   <string name="screen_security_and_privacy_room_visibility_section_header">"Visibilité"</string>
-  <string name="screen_security_and_privacy_title">"Sécurité &amp; confidentialité"</string>
+  <string name="screen_security_and_privacy_title">"Accès à l'historique"</string><!-- Tchap: Custom string -->
 </resources>

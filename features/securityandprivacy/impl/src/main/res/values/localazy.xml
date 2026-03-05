@@ -46,5 +46,5 @@ You can choose to publish your room in your homeserver public room directory."</
   <string name="screen_security_and_privacy_room_publishing_section_header">"Room publishing"</string>
   <string name="screen_security_and_privacy_room_visibility_section_footer">"Addresses are a way to find and access rooms and spaces. This also ensures you can easily share them with others."</string>
   <string name="screen_security_and_privacy_room_visibility_section_header">"Visibility"</string>
-  <string name="screen_security_and_privacy_title">"Security &amp; privacy"</string>
+  <string name="screen_security_and_privacy_title">"Access to history"</string><!-- Tchap: Custom string -->
 </resources>
