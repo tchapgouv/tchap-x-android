@@ -135,6 +135,7 @@ fun RoomDetailsView(
             when (state.roomType) {
                 RoomDetailsType.Room -> {
                     RoomHeaderSection(
+                        showMatrixId = state.showMatrixId,
                         avatarUrl = state.roomAvatarUrl,
                         roomId = state.roomId,
                         roomName = state.roomName,
@@ -381,6 +382,7 @@ private fun MainActionsSection(
 
 @Composable
 private fun RoomHeaderSection(
+    showMatrixId: Boolean,
     avatarUrl: String?,
     roomId: RoomId,
     roomName: String,
@@ -416,7 +418,8 @@ private fun RoomHeaderSection(
         )
         TitleAndSubtitle(
             title = roomName,
-            subtitle = roomAlias?.value,
+            // TCHAP hide the Matrix Id depending of showMatrixId feature flag
+            subtitle = roomAlias?.value.takeIf { showMatrixId },
             onSubtitleClick = onSubtitleClick,
         )
     }

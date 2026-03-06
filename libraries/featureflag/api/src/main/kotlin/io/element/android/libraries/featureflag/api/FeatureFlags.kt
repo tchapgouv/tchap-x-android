@@ -133,7 +133,7 @@ enum class FeatureFlags(
         key = "feature.showMatrixId",
         title = "Show Matrix ID",
         defaultValue = { false },
-        isFinished = true,
+        isFinished = false,
     ),
     SyncNotificationsWithWorkManager(
         key = "feature.sync_notifications_with_workmanager",
