@@ -309,7 +309,13 @@ internal enum class ButtonStyle {
         )
         Outlined -> ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
-            contentColor = getPrimaryColor(destructive),
+            // TCHAP : customize secondary button text color
+//            contentColor = getPrimaryColor(destructive),
+            contentColor = if (destructive) {
+                ElementTheme.colors.textCriticalPrimary
+            } else {
+                if (LocalContentColor.current.isSpecified) LocalContentColor.current else ElementTheme.colors.textSecondary
+            },
             disabledContainerColor = Color.Transparent,
             disabledContentColor = getDisabledContentColor(destructive),
         )
