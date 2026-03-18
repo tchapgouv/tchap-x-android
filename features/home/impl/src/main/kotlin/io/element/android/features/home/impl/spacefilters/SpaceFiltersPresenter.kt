@@ -46,9 +46,13 @@ class SpaceFiltersPresenter(
 
         var selectionMode by remember { mutableStateOf<SelectionMode>(SelectionMode.Unselected) }
 
+        // TCHAP : Space default action is now conversation filtering (add automatic Reselect Last filter)
+        var lastSelectedMode by remember { mutableStateOf<SelectionMode>(selectionMode) }
+
         fun handleUnselectedEvent(event: SpaceFiltersEvent.Unselected) {
             when (event) {
                 SpaceFiltersEvent.Unselected.ShowFilters -> {
+                    lastSelectedMode = selectionMode
                     selectionMode = SelectionMode.Selecting
                 }
             }
@@ -58,6 +62,10 @@ class SpaceFiltersPresenter(
             when (event) {
                 SpaceFiltersEvent.Selecting.Cancel -> {
                     selectionMode = SelectionMode.Unselected
+                }
+                // TCHAP : Space default action is now conversation filtering (add automatic Reselect Last filter)
+                SpaceFiltersEvent.Selecting.ReselectLast -> {
+                    selectionMode = lastSelectedMode
                 }
                 is SpaceFiltersEvent.Selecting.SelectFilter -> {
                     selectionMode = SelectionMode.Selected(event.spaceFilter)
@@ -69,6 +77,11 @@ class SpaceFiltersPresenter(
             when (event) {
                 SpaceFiltersEvent.Selected.ClearSelection -> {
                     selectionMode = SelectionMode.Unselected
+                }
+                // TCHAP : Space default action is now conversation filtering (add ShowFilters action when state is Selected)
+                SpaceFiltersEvent.Selected.ShowFilters -> {
+                    lastSelectedMode = selectionMode
+                    selectionMode = SelectionMode.Selecting
                 }
             }
         }

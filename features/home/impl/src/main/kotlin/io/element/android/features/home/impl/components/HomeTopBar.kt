@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
@@ -41,11 +40,9 @@ import io.element.android.appconfig.RoomListConfig
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.home.impl.HomeNavigationBarItem
-import io.element.android.features.home.impl.R
 import io.element.android.features.home.impl.filters.RoomListFiltersState
 import io.element.android.features.home.impl.filters.RoomListFiltersView
 import io.element.android.features.home.impl.filters.aRoomListFiltersState
-import io.element.android.features.home.impl.spacefilters.SpaceFiltersEvent
 import io.element.android.features.home.impl.spacefilters.SpaceFiltersState
 import io.element.android.features.home.impl.spacefilters.aSelectedSpaceFiltersState
 import io.element.android.features.home.impl.spacefilters.anUnselectedSpaceFiltersState
@@ -137,7 +134,8 @@ fun HomeTopBar(
                         onToggleSearch = onToggleSearch,
                         onMenuActionClick = onMenuActionClick,
                         canReportBug = canReportBug,
-                        spaceFiltersState = spaceFiltersState,
+                        // TCHAP : Space default action is now conversation filtering (disable filter button in HomeTopBar)
+//                        spaceFiltersState = spaceFiltersState,
                     )
                 }
             },
@@ -163,7 +161,8 @@ private fun RoomListMenuItems(
     onToggleSearch: () -> Unit,
     onMenuActionClick: (RoomListMenuAction) -> Unit,
     canReportBug: Boolean,
-    spaceFiltersState: SpaceFiltersState,
+    // TCHAP : Space default action is now conversation filtering (disable filter button in HomeTopBar)
+//    spaceFiltersState: SpaceFiltersState,
 ) {
     IconButton(
         onClick = onToggleSearch,
@@ -173,7 +172,8 @@ private fun RoomListMenuItems(
             contentDescription = stringResource(CommonStrings.action_search),
         )
     }
-    SpaceFilterButton(spaceFiltersState = spaceFiltersState)
+    // TCHAP : Space default action is now conversation filtering (disable filter button in HomeTopBar)
+//    SpaceFilterButton(spaceFiltersState = spaceFiltersState)
     if (RoomListConfig.HAS_DROP_DOWN_MENU) {
         var showMenu by remember { mutableStateOf(false) }
         IconButton(
@@ -224,6 +224,8 @@ private fun RoomListMenuItems(
     }
 }
 
+/*
+// TCHAP : Space default action is now conversation filtering (disable filter button in HomeTopBar)
 @Composable
 private fun SpaceFilterButton(
     spaceFiltersState: SpaceFiltersState,
@@ -255,6 +257,7 @@ private fun SpaceFilterButton(
         )
     }
 }
+*/
 
 @Composable
 private fun NavigationIcon(

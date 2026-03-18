@@ -8,7 +8,9 @@
 
 package io.element.android.features.createroom.impl.configureroom
 
+import android.app.Activity
 import android.os.Parcelable
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.bumble.appyx.core.lifecycle.subscribe
@@ -19,6 +21,9 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import im.vector.app.features.analytics.plan.MobileScreen
 import io.element.android.annotations.ContributesNode
+import io.element.android.appconfig.LearnMoreConfig
+import io.element.android.compound.theme.ElementTheme
+import io.element.android.libraries.androidutils.browser.openUrlInChromeCustomTab
 import io.element.android.libraries.architecture.NodeInputs
 import io.element.android.libraries.architecture.callback
 import io.element.android.libraries.architecture.inputs
@@ -59,13 +64,22 @@ class ConfigureRoomNode(
 
     private val callback: Callback = callback()
 
+    // TCHAP : Add header Learn More link in space creation
+    private fun onClickLearnMore(activity: Activity, darkTheme: Boolean) {
+        activity.openUrlInChromeCustomTab(null, darkTheme, LearnMoreConfig.HOW_TO_CREATE_SPACE)
+    }
+
     @Composable
     override fun View(modifier: Modifier) {
+        val activity = requireNotNull(LocalActivity.current)
+        val isDark = ElementTheme.isLightTheme.not()
         val state = presenter.present()
         ConfigureRoomView(
             state = state,
             modifier = modifier,
             onBackClick = this::navigateUp,
+            // TCHAP : Add header Learn More link in space creation
+            onClickLearnMore = { onClickLearnMore(activity, isDark) },
             onCreateRoomSuccess = callback::onCreateRoomSuccess,
         )
     }

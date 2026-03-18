@@ -33,7 +33,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.toHomeserverDisplayName
@@ -43,6 +45,7 @@ import io.element.android.features.createroom.impl.R
 import io.element.android.libraries.architecture.coverage.ExcludeFromCoverage
 import io.element.android.libraries.designsystem.atomic.atoms.RoundedIconAtom
 import io.element.android.libraries.designsystem.atomic.atoms.RoundedIconAtomSize
+import io.element.android.libraries.designsystem.components.ClickableLinkText
 import io.element.android.libraries.designsystem.components.async.AsyncActionView
 import io.element.android.libraries.designsystem.components.async.AsyncActionViewDefaults
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
@@ -74,6 +77,8 @@ import kotlinx.collections.immutable.ImmutableList
 fun ConfigureRoomView(
     state: ConfigureRoomState,
     onBackClick: () -> Unit,
+    // TCHAP : Add header Learn More link in space creation
+    onClickLearnMore: () -> Unit,
     onCreateRoomSuccess: (RoomId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -107,6 +112,25 @@ fun ConfigureRoomView(
                 .verticalScroll(rememberScrollState())
                 .consumeWindowInsets(padding),
         ) {
+            // TCHAP : Add header description in space creation
+            if (isSpace) {
+                Text(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    text = stringResource(R.string.tchap_screen_create_space_header_description),
+                    color = ElementTheme.colors.textSecondary,
+                    style = ElementTheme.typography.fontBodyMdRegular,
+                )
+                ClickableLinkText(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    annotatedString = AnnotatedString(stringResource(CommonStrings.action_learn_more)),
+                    color = ElementTheme.colors.textSecondary,
+                    style = ElementTheme.typography.fontBodyMdRegular.copy(
+                        textDecoration = TextDecoration.Underline,
+                    ),
+                    onClick = onClickLearnMore
+                )
+                Spacer(modifier = Modifier.height(26.dp))
+            }
             RoomNameWithAvatar(
                 isSpace = isSpace,
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -120,25 +144,31 @@ fun ConfigureRoomView(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 topic = state.config.topic.orEmpty(),
                 onTopicChange = { state.eventSink(ConfigureRoomEvents.TopicChanged(it)) },
+                // TCHAP : specific values when isSpace
+                isSpace = isSpace,
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            // TCHAP: Disable parent space selection when no parent space has been pre-selected
-            if (!state.isSpace && state.spaces.isNotEmpty() && state.config.parentSpace != null) {
-                SelectParentSpaceOptions(
-                    spaces = state.spaces,
-                    selectedSpace = state.config.parentSpace,
-                    onSelectSpace = { state.eventSink(ConfigureRoomEvents.SetParentSpace(it)) },
+            // TCHAP : Disable RoomJoinRuleOptions in space creation
+            if (!isSpace) {
+                Spacer(modifier = Modifier.height(16.dp))
+                // TCHAP : Disable parent space selection when no parent space has been pre-selected
+//                if (!state.isSpace && state.spaces.isNotEmpty()) {
+                if (state.spaces.isNotEmpty() && state.config.parentSpace != null) {
+                    SelectParentSpaceOptions(
+                        spaces = state.spaces,
+                        selectedSpace = state.config.parentSpace,
+                        onSelectSpace = { state.eventSink(ConfigureRoomEvents.SetParentSpace(it)) },
+                    )
+                }
+                RoomJoinRuleOptions(
+                    options = state.availableJoinRules,
+                    selected = state.config.visibilityState.joinRuleItem,
+                    parentSpace = state.config.parentSpace,
+                    onOptionClick = {
+                        focusManager.clearFocus()
+                        state.eventSink(ConfigureRoomEvents.JoinRuleChanged(it))
+                    },
                 )
             }
-            RoomJoinRuleOptions(
-                options = state.availableJoinRules,
-                selected = state.config.visibilityState.joinRuleItem,
-                parentSpace = state.config.parentSpace,
-                onOptionClick = {
-                    focusManager.clearFocus()
-                    state.eventSink(ConfigureRoomEvents.JoinRuleChanged(it))
-                },
-            )
 
             // TCHAP : Disable room address customization
 //            if (state.config.visibilityState !is RoomVisibilityState.Private) {
@@ -279,13 +309,17 @@ private fun RoomTopic(
     topic: String,
     onTopicChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    // TCHAP : specific values when isSpace
+    isSpace: Boolean,
 ) {
     TextField(
         modifier = modifier,
         label = stringResource(R.string.screen_create_room_topic_label),
         value = topic,
         onValueChange = onTopicChange,
-        maxLines = 3,
+        // TCHAP : specific values when isSpace
+        minLines = if (isSpace) 8 else 1,
+        maxLines = if (isSpace) 8 else 3,
         placeholder = stringResource(R.string.screen_create_room_topic_placeholder),
         keyboardOptions = KeyboardOptions(
             capitalization = KeyboardCapitalization.Sentences,
@@ -400,6 +434,8 @@ private fun ContentToPreview(state: ConfigureRoomState) {
     ConfigureRoomView(
         state = state,
         onBackClick = {},
+        // TCHAP : Add header Learn More link in space creation
+        onClickLearnMore = {},
         onCreateRoomSuccess = {},
     )
 }

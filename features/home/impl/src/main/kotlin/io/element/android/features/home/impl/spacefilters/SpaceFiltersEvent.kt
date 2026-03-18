@@ -18,11 +18,17 @@ sealed interface SpaceFiltersEvent {
     // Only valid in Selecting state
     sealed interface Selecting : SpaceFiltersEvent {
         data object Cancel : Selecting
+
+        // TCHAP : Space default action is now conversation filtering (add automatic Reselect Last filter)
+        data object ReselectLast : Selecting
         data class SelectFilter(val spaceFilter: SpaceServiceFilter) : Selecting
     }
 
     // Only valid in Selected state
     sealed interface Selected : SpaceFiltersEvent {
         data object ClearSelection : Selected
+
+        // TCHAP : Space default action is now conversation filtering (add ShowFilters action when state is Selected)
+        data object ShowFilters : Selected
     }
 }
