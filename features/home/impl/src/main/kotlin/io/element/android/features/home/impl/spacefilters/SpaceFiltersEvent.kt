@@ -13,6 +13,7 @@ sealed interface SpaceFiltersEvent {
     // Only valid in Unselected state
     sealed interface Unselected : SpaceFiltersEvent {
         data object ShowFilters : Unselected
+        data class SelectFilter(val spaceFilter: SpaceServiceFilter) : Unselected
     }
 
     // Only valid in Selecting state

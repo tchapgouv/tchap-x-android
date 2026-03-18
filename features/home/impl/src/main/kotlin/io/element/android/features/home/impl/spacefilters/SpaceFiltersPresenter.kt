@@ -51,6 +51,9 @@ class SpaceFiltersPresenter(
                 SpaceFiltersEvent.Unselected.ShowFilters -> {
                     selectionMode = SelectionMode.Selecting
                 }
+                is SpaceFiltersEvent.Unselected.SelectFilter -> {
+                    selectionMode = SelectionMode.Selected(event.spaceFilter)
+                }
             }
         }
 
@@ -76,6 +79,7 @@ class SpaceFiltersPresenter(
         return when (val mode = selectionMode) {
             SelectionMode.Unselected -> SpaceFiltersState.Unselected(
                 eventSink = ::handleUnselectedEvent,
+                availableFilters = availableFilters,
             )
             SelectionMode.Selecting -> {
                 val searchQuery = rememberTextFieldState()

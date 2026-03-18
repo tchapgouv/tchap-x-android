@@ -36,4 +36,6 @@
 • Non accessible aux invités externes"</string>
     <string name="tchap_screen_create_room_public_federation_limited_title">"Limité à mon domaine"</string>
     <string name="tchap_screen_create_room_public_federation_limited_description">"Visible uniquement aux membres de \"%1$s\""</string>
+    <string name="tchap_screen_create_space_header_description">"Un espace est un dossier privé dans lequel vous pouvez organiser vos conversations par thèmes.
+En savoir plus."</string>
 </resources>

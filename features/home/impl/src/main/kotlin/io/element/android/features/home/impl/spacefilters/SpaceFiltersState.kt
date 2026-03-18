@@ -20,6 +20,7 @@ sealed interface SpaceFiltersState {
 
     data class Unselected(
         val eventSink: (SpaceFiltersEvent.Unselected) -> Unit,
+        val availableFilters: ImmutableList<SpaceServiceFilter>,
     ) : SpaceFiltersState
 
     data class Selecting(

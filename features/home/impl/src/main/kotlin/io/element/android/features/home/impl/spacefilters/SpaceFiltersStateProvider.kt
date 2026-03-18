@@ -27,8 +27,29 @@ fun aDisabledSpaceFiltersState() = SpaceFiltersState.Disabled
 
 fun anUnselectedSpaceFiltersState(
     eventSink: (SpaceFiltersEvent.Unselected) -> Unit = {},
+    availableFilters: List<SpaceServiceFilter> = listOf(
+        aSpaceServiceFilter(
+            displayName = "Work",
+            canonicalAlias = RoomAlias("#work:example.com"),
+        ),
+        aSpaceServiceFilter(
+            displayName = "Personal",
+            roomId = RoomId("!personal:example.com"),
+        ),
+        aSpaceServiceFilter(
+            displayName = "Projects",
+            roomId = RoomId("!projects:example.com"),
+            canonicalAlias = RoomAlias("#projects:example.com"),
+            level = 1,
+        ),
+        aSpaceServiceFilter(
+            displayName = "Gaming",
+            roomId = RoomId("!gaming:example.com"),
+        ),
+    ),
 ) = SpaceFiltersState.Unselected(
     eventSink = eventSink,
+    availableFilters = availableFilters.toImmutableList(),
 )
 
 fun aSelectingSpaceFiltersState(

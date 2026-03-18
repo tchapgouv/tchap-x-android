@@ -305,7 +305,14 @@ private fun HomeScaffold(
                         state = state.homeSpacesState,
                         lazyListState = spacesLazyListState,
                         onSpaceClick = { spaceId ->
-                            onRoomClick(spaceId)
+//                            onRoomClick(spaceId)
+                            if (roomListState.spaceFiltersState is SpaceFiltersState.Unselected) {
+                                val spaceFilter = roomListState.spaceFiltersState.availableFilters.find { it.spaceRoom.roomId == spaceId };
+                                if (spaceFilter != null) {
+                                    roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Unselected.SelectFilter(spaceFilter))
+                                    state.eventSink(HomeEvent.SelectHomeNavigationBarItem(HomeNavigationBarItem.Chats))
+                                }
+                            }
                         },
                         onCreateSpaceClick = onCreateSpaceClick,
                         // TODO use actual callbacks for this
