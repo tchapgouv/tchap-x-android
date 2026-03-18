@@ -209,6 +209,8 @@ class ConfigureRoomPresenter(
                 is ConfigureRoomEvents.RoomAddressChanged -> dataStore.setRoomAddress(event.roomAddress)
                 // TCHAP : Add toggle to enable/disable public room federation
                 is ConfigureRoomEvents.PublicRoomLimitedToFederation -> dataStore.setIsPublicRoomLimited(event.isPublicRoomLimited)
+                // TCHAP : Room access link feature - Add toggle to enable/disable access via link
+                is ConfigureRoomEvents.RoomAccessViaLinkChanged -> dataStore.setIsAccessViaLinkEnabled(event.isAccessViaLinkEnabled)
                 is ConfigureRoomEvents.CreateRoom -> createRoom(createRoomConfig)
                 is ConfigureRoomEvents.HandleAvatarAction -> {
                     when (event.action) {
@@ -330,6 +332,16 @@ class ConfigureRoomPresenter(
                 } ?: error("Did not receive created room power levels for room $roomId, needed for adding it to a space")
 
                 matrixClient.spaceService.addChildToSpace(spaceId = config.parentSpace.roomId, childId = roomId).getOrThrow()
+            }
+
+            // TCHAP : Room access link feature - Update JoinRule to Public after creation
+            if (config.isAccessViaLinkEnabled && !isSpace && config.visibilityState.joinRuleItem.toJoinRule() !is JoinRule.Public) {
+                // Wait until we receive the joined room, as it's needed to update the JoinRule parameter
+                withTimeoutOrNull(30.seconds) {
+                    matrixClient.getJoinedRoom(roomId)
+                } ?: error("Did not receive created JoinedRoom for room $roomId, needed for update the JoinRule parameter")
+
+                matrixClient.getJoinedRoom(roomId)?.updateJoinRule(JoinRule.Public)
             }
 
             roomId

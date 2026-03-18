@@ -122,6 +122,13 @@ class CreateRoomConfigStore(
         }
     }
 
+    // TCHAP : Room access link feature - Add toggle to enable/disable access via link
+    fun setIsAccessViaLinkEnabled(isAccessViaLinkEnabled: Boolean) {
+        createRoomConfigFlow.getAndUpdate { config ->
+            config.copy(isAccessViaLinkEnabled = isAccessViaLinkEnabled)
+        }
+    }
+
     fun clearCachedData() {
         cachedAvatarUri = null
     }

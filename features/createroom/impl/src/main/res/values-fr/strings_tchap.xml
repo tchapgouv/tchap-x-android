@@ -36,4 +36,6 @@
 • Non accessible aux invités externes"</string>
     <string name="tchap_screen_create_room_public_federation_limited_title">"Limité à mon domaine"</string>
     <string name="tchap_screen_create_room_public_federation_limited_description">"Visible uniquement aux membres de \"%1$s\""</string>
+    <string name="tchap_screen_create_room_access_via_link_title">"Accès par lien"</string>
+    <string name="tchap_screen_create_room_access_via_link_description">"Les agents pourront rejoindre ce salon et inviter d'autres agents via ce lien."</string>
 </resources>

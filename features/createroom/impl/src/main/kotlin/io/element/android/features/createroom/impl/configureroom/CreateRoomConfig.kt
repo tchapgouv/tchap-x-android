@@ -22,4 +22,6 @@ data class CreateRoomConfig(
     val parentSpace: SpaceRoom? = null,
     // TCHAP : Add toggle to enable/disable public room federation
     val isPublicRoomLimited: Boolean = false,
+    // TCHAP : Room access link feature - Add toggle to enable/disable access via link
+    val isAccessViaLinkEnabled: Boolean = false,
 )

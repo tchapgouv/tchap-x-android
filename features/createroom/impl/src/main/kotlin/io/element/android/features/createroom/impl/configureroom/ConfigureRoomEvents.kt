@@ -23,4 +23,7 @@ sealed interface ConfigureRoomEvents {
 
     // TCHAP : Add toggle to enable/disable public room federation
     data class PublicRoomLimitedToFederation(val isPublicRoomLimited: Boolean) : ConfigureRoomEvents
+
+    // TCHAP : Room access link feature - Add toggle to enable/disable access via link
+    data class RoomAccessViaLinkChanged(val isAccessViaLinkEnabled: Boolean) : ConfigureRoomEvents
 }

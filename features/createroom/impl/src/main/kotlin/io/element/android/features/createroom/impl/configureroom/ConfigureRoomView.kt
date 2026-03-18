@@ -154,6 +154,25 @@ fun ConfigureRoomView(
 //                )
 //            }
 
+            // TCHAP : Room access link feature - Add toggle to enable/disable access via link
+            if (!isSpace) {
+                ListItem(
+                    headlineContent = {
+                        Text(text = stringResource(R.string.tchap_screen_create_room_access_via_link_title))
+                    },
+                    supportingContent = {
+                        Text(text = stringResource(R.string.tchap_screen_create_room_access_via_link_description))
+                    },
+                    trailingContent = ListItemContent.Switch(
+                        checked = state.config.visibilityState is RoomVisibilityState.Public || state.config.isAccessViaLinkEnabled,
+                        enabled = state.config.visibilityState !is RoomVisibilityState.Public,
+                    ),
+                    onClick = {
+                        state.eventSink(ConfigureRoomEvents.RoomAccessViaLinkChanged(!state.config.isAccessViaLinkEnabled))
+                    },
+                )
+            }
+
             // TCHAP : Add toggle to enable/disable public room federation
             if (!isSpace && state.config.visibilityState is RoomVisibilityState.Public) {
                 ListItem(

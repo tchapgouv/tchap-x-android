@@ -36,4 +36,6 @@
 • Not accessible to external guests"</string>
     <string name="tchap_screen_create_room_public_federation_limited_title">"Limited to my domain"</string>
     <string name="tchap_screen_create_room_public_federation_limited_description">"Visible only to members of \"%1$s\""</string>
+    <string name="tchap_screen_create_room_access_via_link_title">"Access via link"</string>
+    <string name="tchap_screen_create_room_access_via_link_description">"Agents will be able to join this room and invite other agents via this link."</string>
 </resources>
