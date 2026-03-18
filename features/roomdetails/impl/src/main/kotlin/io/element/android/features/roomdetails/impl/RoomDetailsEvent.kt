@@ -14,4 +14,9 @@ sealed interface RoomDetailsEvent {
     data object UnmuteNotification : RoomDetailsEvent
     data class CopyToClipboard(val text: String) : RoomDetailsEvent
     data class SetFavorite(val isFavorite: Boolean) : RoomDetailsEvent
+
+    // TCHAP : Room access link feature
+    data object DismissLinkAccessDialog : RoomDetailsEvent
+    data object OnLinkAccessToggle : RoomDetailsEvent
+    data object CopyRoomPermalinkToClipboard : RoomDetailsEvent
 }

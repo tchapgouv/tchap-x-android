@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -53,6 +54,7 @@ import io.element.android.libraries.designsystem.components.avatar.AvatarType
 import io.element.android.libraries.designsystem.components.avatar.DmAvatars
 import io.element.android.libraries.designsystem.components.button.BackButton
 import io.element.android.libraries.designsystem.components.button.MainActionButton
+import io.element.android.libraries.designsystem.components.dialogs.ConfirmationDialog
 import io.element.android.libraries.designsystem.components.list.ListItemContent
 import io.element.android.libraries.designsystem.components.preferences.PreferenceCategory
 import io.element.android.libraries.designsystem.components.preferences.PreferenceSwitch
@@ -61,6 +63,7 @@ import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.ElementPreviewDark
 import io.element.android.libraries.designsystem.preview.ElementPreviewLight
 import io.element.android.libraries.designsystem.preview.PreviewWithLargeHeight
+import io.element.android.libraries.designsystem.theme.components.ButtonSize
 import io.element.android.libraries.designsystem.theme.components.CircularProgressIndicator
 import io.element.android.libraries.designsystem.theme.components.DropdownMenu
 import io.element.android.libraries.designsystem.theme.components.DropdownMenuItem
@@ -69,6 +72,7 @@ import io.element.android.libraries.designsystem.theme.components.IconButton
 import io.element.android.libraries.designsystem.theme.components.IconSource
 import io.element.android.libraries.designsystem.theme.components.ListItem
 import io.element.android.libraries.designsystem.theme.components.ListItemStyle
+import io.element.android.libraries.designsystem.theme.components.OutlinedButton
 import io.element.android.libraries.designsystem.theme.components.Scaffold
 import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.designsystem.theme.components.TopAppBar
@@ -113,6 +117,19 @@ fun RoomDetailsView(
     leaveRoomView: @Composable () -> Unit,
 ) {
     val snackbarHostState = rememberSnackbarHostState(snackbarMessage = state.snackbarMessage)
+
+    // TCHAP : Room access link feature
+    if (state.isLinkAccessEnableConfirmDialogVisible) {
+        ConfirmationDialog(
+            title = stringResource(R.string.tchap_screen_room_details_access_via_link_confirm_dialog_title),
+            content = stringResource(R.string.tchap_screen_room_details_access_via_link_confirm_dialog_description),
+            onSubmitClick = { state.eventSink(RoomDetailsEvent.OnLinkAccessToggle) },
+            onDismiss = { state.eventSink(RoomDetailsEvent.DismissLinkAccessDialog) },
+            submitText = stringResource(CommonStrings.action_ok),
+            cancelText = stringResource(CommonStrings.action_cancel),
+        )
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -232,6 +249,15 @@ fun RoomDetailsView(
                             headlineContent = { Text(stringResource(R.string.screen_room_details_roles_and_permissions)) },
                             leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Admin())),
                             onClick = openAdminSettings,
+                        )
+                    }
+                    // TCHAP : Room access link feature
+                    if (state.canShowSecurityAndPrivacy) {
+                        AccessByLinkItem(
+                            canDisableAccessLink = !state.isPublic,
+                            isLinkAccessEnabled = state.isLinkAccessEnabled,
+                            onLinkAccessToggle = { state.eventSink(RoomDetailsEvent.OnLinkAccessToggle) },
+                            onCopyRoomAccessLink = { state.eventSink(RoomDetailsEvent.CopyRoomPermalinkToClipboard) },
                         )
                     }
                 }
@@ -778,6 +804,38 @@ private fun DebugInfoSection(
             leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Info())),
         )
     }
+}
+
+// TCHAP : Room access link feature
+@Composable
+private fun AccessByLinkItem(
+    canDisableAccessLink: Boolean,
+    isLinkAccessEnabled: Boolean,
+    onLinkAccessToggle: () -> Unit,
+    onCopyRoomAccessLink: () -> Unit,
+) {
+    ListItem(
+        onClick = onLinkAccessToggle.takeIf { canDisableAccessLink }?.let { { onLinkAccessToggle() } },
+        headlineContent = { Text(stringResource(R.string.tchap_screen_room_details_access_via_link_title)) },
+        supportingContent = {
+            Column {
+                Text(stringResource(R.string.tchap_screen_room_details_access_via_link_description))
+                if (isLinkAccessEnabled) {
+                    OutlinedButton(
+                        modifier = Modifier.defaultMinSize(160.dp),
+                        size = ButtonSize.Small,
+                        text = stringResource(CommonStrings.action_copy_link),
+                        onClick = onCopyRoomAccessLink,
+                    )
+                }
+            }
+        },
+        leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Link())),
+        trailingContent = ListItemContent.Switch(
+            checked = isLinkAccessEnabled,
+            enabled = canDisableAccessLink,
+        )
+    )
 }
 
 @PreviewWithLargeHeight
