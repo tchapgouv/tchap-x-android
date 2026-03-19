@@ -17,13 +17,10 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.progressSemantics
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -32,23 +29,18 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.compound.theme.ElementTheme
-import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.securityandprivacy.impl.R
 import io.element.android.libraries.architecture.AsyncAction
-import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.coverage.ExcludeFromCoverage
 import io.element.android.libraries.designsystem.components.async.AsyncActionView
 import io.element.android.libraries.designsystem.components.async.AsyncActionViewDefaults
 import io.element.android.libraries.designsystem.components.button.BackButton
-import io.element.android.libraries.designsystem.components.dialogs.ConfirmationDialog
 import io.element.android.libraries.designsystem.components.dialogs.SaveChangesDialog
 import io.element.android.libraries.designsystem.components.list.ListItemContent
 import io.element.android.libraries.designsystem.preview.ElementPreviewDark
 import io.element.android.libraries.designsystem.preview.ElementPreviewLight
 import io.element.android.libraries.designsystem.preview.PreviewWithLargeHeight
 import io.element.android.libraries.designsystem.text.stringWithLink
-import io.element.android.libraries.designsystem.theme.components.CircularProgressIndicator
-import io.element.android.libraries.designsystem.theme.components.IconSource
 import io.element.android.libraries.designsystem.theme.components.ListItem
 import io.element.android.libraries.designsystem.theme.components.Scaffold
 import io.element.android.libraries.designsystem.theme.components.Text
@@ -88,35 +80,36 @@ fun SecurityAndPrivacyView(
                 .consumeWindowInsets(padding),
             verticalArrangement = Arrangement.spacedBy(32.dp),
         ) {
-            if (state.showRoomAccessSection) {
-                RoomAccessSection(
-                    state = state,
-                    modifier = Modifier.padding(top = 24.dp),
-                )
-            }
-            if (state.showRoomVisibilitySections) {
-                RoomVisibilitySection(state.homeserverName)
-                RoomAddressSection(
-                    roomAddress = state.editedSettings.address,
-                    homeserverName = state.homeserverName,
-                    onRoomAddressClick = { state.eventSink(SecurityAndPrivacyEvent.EditRoomAddress) },
-                    isVisibleInRoomDirectory = state.editedSettings.isVisibleInRoomDirectory,
-                    onVisibilityChange = {
-                        state.eventSink(SecurityAndPrivacyEvent.ToggleRoomVisibility)
-                    },
-                )
-            }
-            if (state.showEncryptionSection) {
-                EncryptionSection(
-                    isRoomEncrypted = state.editedSettings.isEncrypted,
-                    // encryption can't be disabled once enabled
-                    canToggleEncryption = !state.savedSettings.isEncrypted,
-                    onToggleEncryption = { state.eventSink(SecurityAndPrivacyEvent.ToggleEncryptionState) },
-                    showConfirmation = state.showEnableEncryptionConfirmation,
-                    onDismissConfirmation = { state.eventSink(SecurityAndPrivacyEvent.CancelEnableEncryption) },
-                    onConfirmEncryption = { state.eventSink(SecurityAndPrivacyEvent.ConfirmEnableEncryption) },
-                )
-            }
+            // TCHAP - Disable room security and privacy options
+//            if (state.showRoomAccessSection) {
+//                RoomAccessSection(
+//                    state = state,
+//                    modifier = Modifier.padding(top = 24.dp),
+//                )
+//            }
+//            if (state.showRoomVisibilitySections) {
+//                RoomVisibilitySection(state.homeserverName)
+//                RoomAddressSection(
+//                    roomAddress = state.editedSettings.address,
+//                    homeserverName = state.homeserverName,
+//                    onRoomAddressClick = { state.eventSink(SecurityAndPrivacyEvent.EditRoomAddress) },
+//                    isVisibleInRoomDirectory = state.editedSettings.isVisibleInRoomDirectory,
+//                    onVisibilityChange = {
+//                        state.eventSink(SecurityAndPrivacyEvent.ToggleRoomVisibility)
+//                    },
+//                )
+//            }
+//            if (state.showEncryptionSection) {
+//                EncryptionSection(
+//                    isRoomEncrypted = state.editedSettings.isEncrypted,
+//                    // encryption can't be disabled once enabled
+//                    canToggleEncryption = !state.savedSettings.isEncrypted,
+//                    onToggleEncryption = { state.eventSink(SecurityAndPrivacyEvent.ToggleEncryptionState) },
+//                    showConfirmation = state.showEnableEncryptionConfirmation,
+//                    onDismissConfirmation = { state.eventSink(SecurityAndPrivacyEvent.CancelEnableEncryption) },
+//                    onConfirmEncryption = { state.eventSink(SecurityAndPrivacyEvent.ConfirmEnableEncryption) },
+//                )
+//            }
             if (state.showHistoryVisibilitySection) {
                 HistoryVisibilitySection(
                     editedOption = state.editedSettings.historyVisibility,
@@ -203,6 +196,9 @@ private fun SecurityAndPrivacySection(
     }
 }
 
+// TCHAP - Disable room security and privacy options
+
+/*
 @Composable
 private fun RoomAccessSection(
     state: SecurityAndPrivacyState,
@@ -402,6 +398,7 @@ private fun EncryptionSection(
         )
     }
 }
+*/
 
 @Composable
 private fun HistoryVisibilitySection(
