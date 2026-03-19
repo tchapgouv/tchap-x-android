@@ -73,6 +73,7 @@ internal fun UserProfileMainActionsSectionPreview() = ElementPreview {
     UserProfileMainActionsSection(
         isCurrentUser = false,
         canCall = true,
+        canDm = true,
         onShareUser = { },
         onStartDM = { },
         onCall = { }

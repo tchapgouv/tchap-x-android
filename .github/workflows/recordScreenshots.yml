@@ -14,6 +14,11 @@ env:
 
 jobs:
   record:
+    permissions:
+      # Need write permissions on PRs to remove the label "Record-Screenshots"
+      pull-requests: write
+      # Tchap : Write permissions on "contents" are required to send the screenshot commit (Element seems to be using secrets instead).
+      contents: write
     name: Record screenshots on branch ${{ github.event.pull_request.head.ref || github.ref_name }}
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'Record-Screenshots'

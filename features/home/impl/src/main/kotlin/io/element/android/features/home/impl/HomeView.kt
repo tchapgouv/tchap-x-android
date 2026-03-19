@@ -21,12 +21,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-<<<<<<< HEAD
-import androidx.compose.material3.LocalContentColor
-=======
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FabPosition
->>>>>>> main-element
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -316,26 +312,6 @@ private fun HomeScaffold(
                 }
             }
         },
-<<<<<<< HEAD
-        floatingActionButton = {
-            if (state.displayActions && !currentUserIsExternal) {
-                FloatingActionButton(
-                    onClick = onStartChatClick,
-                ) {
-                    Icon(
-                        imageVector = CompoundIcons.Plus(),
-                        contentDescription = stringResource(id = R.string.screen_roomlist_a11y_create_message),
-                        // TCHAP - Icon is still white (on blue background) in Dark theme
-                        tint = when (ElementTheme.isLightTheme) {
-                            true -> LocalContentColor.current
-                            false -> ElementTheme.colors.iconPrimary
-                        }
-                    )
-                }
-            }
-        },
-=======
->>>>>>> main-element
         snackbarHost = { SnackbarHost(snackbarHostState) },
     )
 }
