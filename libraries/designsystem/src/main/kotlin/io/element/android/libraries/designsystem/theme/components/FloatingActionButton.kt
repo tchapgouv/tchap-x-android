@@ -27,12 +27,15 @@ import io.element.android.libraries.designsystem.preview.PreviewGroup
 import io.element.android.libraries.testtags.TestTags
 import io.element.android.libraries.testtags.testTag
 
+/**
+ * Ref: https://www.figma.com/design/G1xy0HDZKJf5TCRFmKb5d5/Compound-Android-Components?node-id=2027-2043
+ */
 @Composable
 fun FloatingActionButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     shape: Shape = FloatingActionButtonDefaults.shape,
-    containerColor: Color = ElementTheme.colors.textActionAccent,
+    containerColor: Color = ElementTheme.colors.bgAccentRest,
     // TCHAP theme : color used when background is blue Tchap
 //    contentColor: Color = ElementTheme.colors.iconOnSolidPrimary,
     contentColor: Color = ElementTheme.iconOnSolidBlueTchap,

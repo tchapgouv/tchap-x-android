@@ -1,3 +1,4 @@
+import extension.buildConfigFieldStr
 import extension.setupDependencyInjection
 import extension.testCommonDependencies
 
@@ -21,6 +22,30 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
+        }
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    buildTypes {
+        val elementClassicPackageKey = "elementClassicPackage"
+        val elementClassicPackage = "im.vector.app"
+        val elementClassicPackageDebug = "$elementClassicPackage.debug"
+        val elementClassicPackageNightly = "$elementClassicPackage.nightly"
+        getByName("release") {
+            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackage
+            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackage)
+        }
+        getByName("debug") {
+            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackageDebug
+            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackageDebug)
+        }
+        register("nightly") {
+            matchingFallbacks += listOf("release")
+            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackageNightly
+            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackageNightly)
         }
     }
 }
@@ -61,4 +86,6 @@ dependencies {
     testImplementation(projects.libraries.permissions.test)
     testImplementation(projects.libraries.sessionStorage.test)
     testImplementation(projects.libraries.wellknown.test)
+    testImplementation(libs.androidx.camera.camera2)
+    testImplementation(libs.androidx.camera.lifecycle)
 }

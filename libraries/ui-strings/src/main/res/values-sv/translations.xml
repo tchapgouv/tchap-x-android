@@ -72,7 +72,7 @@
   <string name="action_copy_link_to_message">"Kopiera länk till meddelande"</string>
   <string name="action_copy_text">"Kopiera text"</string>
   <string name="action_create">"Skapa"</string>
-  <string name="action_create_a_room">"Skapa ett rum"</string>
+  <string name="action_create_room">"Skapa rum"</string>
   <string name="action_deactivate">"Inaktivera"</string>
   <string name="action_deactivate_account">"Inaktivera konto"</string>
   <string name="action_decline">"Neka"</string>
@@ -392,13 +392,6 @@ Anledning:%1$s."</string>
   <string name="error_room_address_invalid_symbols">"Vissa tecken är inte tillåtna. Endast bokstäver, siffror och följande symboler stöds ! $ &amp; ‘ ( ) * + / ; = ? @ [ ] - . _"</string>
   <string name="error_some_messages_have_not_been_sent">"Vissa meddelanden har inte skickats"</string>
   <string name="error_unknown">"Tyvärr, ett fel uppstod"</string>
-  <string name="event_shield_mismatched_sender">"Avsändaren av händelsen matchar inte ägaren av den enhet som skickade den."</string>
-  <string name="event_shield_reason_authenticity_not_guaranteed">"Detta krypterade meddelandes äkthet kan inte garanteras på den här enheten."</string>
-  <string name="event_shield_reason_previously_verified">"Krypterat av en tidigare verifierad användare."</string>
-  <string name="event_shield_reason_sent_in_clear">"Inte krypterad."</string>
-  <string name="event_shield_reason_unknown_device">"Krypterad av en okänd eller raderad enhet."</string>
-  <string name="event_shield_reason_unsigned_device">"Krypterad av en enhet som inte verifierats av ägaren."</string>
-  <string name="event_shield_reason_unverified_identity">"Krypterad av en overifierad användare."</string>
   <string name="invite_friends_rich_title">"🔐️ Häng med mig på %1$s"</string>
   <string name="invite_friends_text">"Hallå, prata med mig på %1$s: %2$s"</string>
   <string name="login_initial_device_name_android">"%1$s Android"</string>

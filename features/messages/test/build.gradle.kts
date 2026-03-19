@@ -12,21 +12,12 @@ plugins {
 
 android {
     namespace = "io.element.android.features.messages.test"
-
-    flavorDimensions += listOf("pinning")
-    productFlavors {
-        create("withpinning") {
-            dimension = "pinning"
-        }
-        create("withoutpinning") {
-            dimension = "pinning"
-        }
-    }
 }
 
 dependencies {
     api(projects.features.messages.impl)
     implementation(projects.libraries.matrix.test)
+    implementation(projects.libraries.audio.test)
     implementation(projects.libraries.mediaplayer.test)
     implementation(projects.libraries.mediaupload.test)
     implementation(projects.libraries.mediaviewer.api)

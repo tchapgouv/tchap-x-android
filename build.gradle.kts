@@ -46,7 +46,7 @@ allprojects {
         config.from(files("$rootDir/tools/detekt/detekt.yml"))
     }
     dependencies {
-        detektPlugins("io.nlopez.compose.rules:detekt:0.5.3")
+        detektPlugins("io.nlopez.compose.rules:detekt:0.5.6")
         detektPlugins(project(":tests:detekt-rules"))
     }
 
@@ -192,9 +192,9 @@ subprojects {
             snapshotsDir.deleteRecursively()
         }
     }
-    tasks.findByName("recordPaparazziWithpinning")?.dependsOn(removeOldScreenshotsTask)
-    tasks.findByName("recordPaparazziWithpinningDebug")?.dependsOn(removeOldScreenshotsTask)
-    tasks.findByName("recordPaparazziWithpinningRelease")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordPaparazzi")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordPaparazziDebug")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordPaparazziRelease")?.dependsOn(removeOldScreenshotsTask)
 }
 
 // Make sure to delete old snapshot before recording new ones

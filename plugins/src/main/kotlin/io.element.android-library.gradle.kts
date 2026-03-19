@@ -22,6 +22,11 @@ plugins {
 
 android {
     androidConfig(project)
+
+    defaultConfig {
+        missingDimensionStrategy("pinning", "withpinning")
+    }
+
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
     }

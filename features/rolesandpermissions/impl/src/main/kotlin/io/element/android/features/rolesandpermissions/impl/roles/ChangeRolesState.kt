@@ -8,6 +8,7 @@
 
 package io.element.android.features.rolesandpermissions.impl.roles
 
+import androidx.compose.foundation.text.input.TextFieldState
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
 import io.element.android.libraries.matrix.api.core.UserId
@@ -20,7 +21,7 @@ import kotlinx.collections.immutable.toImmutableList
 data class ChangeRolesState(
     val showMatrixId: Boolean,
     val role: RoomMember.Role,
-    val query: String?,
+    val searchQuery: TextFieldState,
     val isSearchActive: Boolean,
     val searchResults: SearchBarResultState<MembersByRole>,
     val selectedUsers: ImmutableList<MatrixUser>,

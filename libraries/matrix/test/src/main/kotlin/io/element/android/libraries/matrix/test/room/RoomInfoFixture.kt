@@ -68,6 +68,7 @@ fun aRoomInfo(
     historyVisibility: RoomHistoryVisibility = RoomHistoryVisibility.Joined,
     roomVersion: String? = "11",
     privilegedCreatorRole: Boolean = false,
+    isLowPriority: Boolean = false,
     // TCHAP external user
     isOpenToExternalUsers: Boolean = false,
 ) = RoomInfo(
@@ -106,6 +107,7 @@ fun aRoomInfo(
     historyVisibility = historyVisibility,
     roomVersion = roomVersion,
     privilegedCreatorRole = privilegedCreatorRole,
+    isLowPriority = isLowPriority,
     // TCHAP external user
     isOpenToExternalUsers = isOpenToExternalUsers,
 )

@@ -15,7 +15,7 @@ import de.bwi.messenger.features.messages.impl.timeline.components.event.BwiTime
 import de.bwi.messenger.features.messages.impl.timeline.components.event.BwiTimelineItemImageView
 import de.bwi.messenger.features.messages.impl.timeline.components.event.BwiTimelineItemVideoView
 import de.bwi.messenger.features.messages.impl.timeline.components.event.BwiTimelineItemVoiceView
-import io.element.android.features.messages.impl.timeline.TimelineEvents
+import io.element.android.features.messages.impl.timeline.TimelineEvent
 import io.element.android.features.messages.impl.timeline.components.layout.ContentAvoidingLayoutData
 import io.element.android.features.messages.impl.timeline.di.LocalTimelineItemPresenterFactories
 import io.element.android.features.messages.impl.timeline.di.rememberPresenter
@@ -48,7 +48,7 @@ fun TimelineItemEventContentView(
     onShowContentClick: () -> Unit,
     onLinkClick: (Link) -> Unit,
     onLinkLongClick: (Link) -> Unit,
-    eventSink: (TimelineEvents.EventFromTimelineItem) -> Unit,
+    eventSink: (TimelineEvent.TimelineItemEvent) -> Unit,
     modifier: Modifier = Modifier,
     onContentLayoutChange: (ContentAvoidingLayoutData) -> Unit = {},
 ) {

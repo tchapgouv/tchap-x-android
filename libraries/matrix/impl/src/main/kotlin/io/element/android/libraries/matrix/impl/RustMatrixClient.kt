@@ -42,6 +42,7 @@ import io.element.android.libraries.matrix.api.room.RoomInfo
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.RoomMembershipObserver
 import io.element.android.libraries.matrix.api.room.alias.ResolvedRoomAlias
+import io.element.android.libraries.matrix.api.room.history.RoomHistoryVisibility
 import io.element.android.libraries.matrix.api.room.join.JoinRule
 import io.element.android.libraries.matrix.api.roomdirectory.RoomVisibility
 import io.element.android.libraries.matrix.api.roomlist.RoomListService
@@ -68,7 +69,7 @@ import io.element.android.libraries.matrix.impl.room.RoomContentForwarder
 import io.element.android.libraries.matrix.impl.room.RoomInfoMapper
 import io.element.android.libraries.matrix.impl.room.RoomSyncSubscriber
 import io.element.android.libraries.matrix.impl.room.RustRoomFactory
-import io.element.android.libraries.matrix.impl.room.TimelineEventTypeFilterFactory
+import io.element.android.libraries.matrix.impl.room.TimelineEventFilterFactory
 import io.element.android.libraries.matrix.impl.room.history.map
 import io.element.android.libraries.matrix.impl.room.join.map
 import io.element.android.libraries.matrix.impl.room.preview.RoomPreviewInfoMapper
@@ -144,7 +145,7 @@ class RustMatrixClient(
     dispatchers: CoroutineDispatchers,
     baseCacheDirectory: File,
     clock: SystemClock,
-    timelineEventTypeFilterFactory: TimelineEventTypeFilterFactory,
+    timelineEventFilterFactory: TimelineEventFilterFactory,
     private val featureFlagService: FeatureFlagService,
     private val analyticsService: AnalyticsService,
     private val workManagerScheduler: WorkManagerScheduler,
@@ -196,7 +197,6 @@ class RustMatrixClient(
         sessionDispatcher = sessionDispatcher,
         roomListFactory = RoomListFactory(
             innerRoomListService = innerRoomListService,
-            sessionCoroutineScope = sessionCoroutineScope,
             analyticsService = analyticsService,
         ),
         roomSyncSubscriber = roomSyncSubscriber,
@@ -229,7 +229,7 @@ class RustMatrixClient(
         systemClock = clock,
         roomContentForwarder = RoomContentForwarder(innerRoomListService),
         roomSyncSubscriber = roomSyncSubscriber,
-        timelineEventTypeFilterFactory = timelineEventTypeFilterFactory,
+        timelineEventFilterFactory = timelineEventFilterFactory,
         roomMembershipObserver = roomMembershipObserver,
         roomInfoMapper = roomInfoMapper,
         featureFlagService = featureFlagService,
@@ -383,6 +383,10 @@ class RustMatrixClient(
                 isTchapInvite = true
                 isTchapInviteExternal = createRoomParams.invite?.get(0)?.toString()?.isExternalTchapUser() == true
             }
+
+            val hasPublicAccess = createRoomParams.preset == RoomPreset.PUBLIC_CHAT || createRoomParams.joinRuleOverride == JoinRule.Public
+            val powerLevels = defaultRoomCreationPowerLevels(isSpace = createRoomParams.isSpace, isPublic = hasPublicAccess)
+
             val rustParams = RustCreateRoomParameters(
                 accessRuleOverride = when (createRoomParams.accessRules) {
                     RoomAccessRules.DIRECT -> AccessRule.DIRECT
@@ -403,12 +407,12 @@ class RustMatrixClient(
                 },
                 invite = createRoomParams.invite?.map { it.value },
                 avatar = createRoomParams.avatar,
-                powerLevelContentOverride = defaultRoomCreationPowerLevels.copy(
+                powerLevelContentOverride = powerLevels.copy(
                     invite = if (createRoomParams.joinRuleOverride == JoinRule.Knock) {
                         // override the invite power level so it's the same as kick.
                         RoomMember.Role.Moderator.powerLevel.toInt()
                     } else {
-                        null
+                        powerLevels.invite
                     }
                 ),
                 joinRuleOverride = createRoomParams.joinRuleOverride?.map(),
@@ -419,7 +423,6 @@ class RustMatrixClient(
 //            val roomId = RoomId(innerClient.createRoom(rustParams, isFederated = true)) // TODO fix the federated value
             val roomId = RoomId(innerClient.createRoom(
                 rustParams,
-                isFederated = true,
                 isTchapInvite = isTchapInvite,
                 isTchapInviteExternal = isTchapInviteExternal
             ))
@@ -441,6 +444,7 @@ class RustMatrixClient(
             isDirect = true,
             visibility = RoomVisibility.Private,
             preset = RoomPreset.TRUSTED_PRIVATE_CHAT,
+            historyVisibilityOverride = RoomHistoryVisibility.Invited,
             invite = listOf(userId),
         )
         return createRoom(createRoomParams)
@@ -860,18 +864,23 @@ class RustMatrixClient(
     }
 }
 
-private val defaultRoomCreationPowerLevels = PowerLevels(
+private fun defaultRoomCreationPowerLevels(isPublic: Boolean, isSpace: Boolean) = PowerLevels(
     usersDefault = null,
-    eventsDefault = null,
+    // Only admins should be able to send events in general
+    eventsDefault = if (isSpace) 100 else null,
     stateDefault = null,
     ban = null,
     kick = null,
     redact = null,
-    invite = null,
+    invite = if (isPublic) 0 else 50,
     notifications = null,
     users = mapOf(),
-    events = mapOf(
-        "m.call.member" to 0,
-        "org.matrix.msc3401.call.member" to 0,
-    )
+    events = if (!isSpace) {
+        mapOf(
+            "m.call.member" to 0,
+            "org.matrix.msc3401.call.member" to 0,
+        )
+    } else {
+        mapOf()
+    }
 )

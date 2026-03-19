@@ -80,23 +80,23 @@ class HomePresenter(
         val showAvatarIndicator by indicatorService.showRoomListTopBarIndicator()
         val directLogoutState = logoutPresenter.present()
 
-        fun handleEvent(event: HomeEvents) {
+        fun handleEvent(event: HomeEvent) {
             when (event) {
-                is HomeEvents.SelectHomeNavigationBarItem -> coroutineState.launch {
+                is HomeEvent.SelectHomeNavigationBarItem -> coroutineState.launch {
                     if (event.item == HomeNavigationBarItem.Spaces) {
                         announcementService.showAnnouncement(Announcement.Space)
                     }
                     currentHomeNavigationBarItemOrdinal = event.item.ordinal
                 }
-                is HomeEvents.SwitchToAccount -> coroutineState.launch {
+                is HomeEvent.SwitchToAccount -> coroutineState.launch {
                     sessionStore.setLatestSession(event.sessionId.value)
                 }
             }
         }
 
-        LaunchedEffect(homeSpacesState.spaceRooms.isEmpty()) {
-            // If the last space is left, ensure that the Chat view is rendered.
-            if (homeSpacesState.spaceRooms.isEmpty()) {
+        LaunchedEffect(homeSpacesState.canCreateSpaces, homeSpacesState.spaceRooms.isEmpty()) {
+            // If the flag to create spaces is disabled and the last space is left, ensure that the Chat view is rendered.
+            if (!homeSpacesState.canCreateSpaces && homeSpacesState.spaceRooms.isEmpty()) {
                 currentHomeNavigationBarItemOrdinal = HomeNavigationBarItem.Chats.ordinal
             }
         }

@@ -8,10 +8,13 @@
 
 package io.element.android.features.invitepeople.impl
 
+import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -47,6 +50,7 @@ import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.RoomMembershipState
 import io.element.android.libraries.matrix.api.room.filterMembers
+import io.element.android.libraries.matrix.api.room.recent.getRecentDirectRooms
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.ui.strings.CommonStrings
 import io.element.android.libraries.usersearch.api.UserRepository
@@ -55,10 +59,15 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+private const val MAX_SUGGESTIONS_COUNT = 5
 
 @AssistedInject
 class DefaultInvitePeoplePresenter(
@@ -82,7 +91,7 @@ class DefaultInvitePeoplePresenter(
         val roomMembers = remember { mutableStateOf<AsyncData<ImmutableList<RoomMember>>>(AsyncData.Loading()) }
         val selectedUsers = remember { mutableStateOf<ImmutableList<MatrixUser>>(persistentListOf()) }
         val searchResults = remember { mutableStateOf<SearchBarResultState<ImmutableList<InvitableUser>>>(SearchBarResultState.Initial()) }
-        var searchQuery by rememberSaveable { mutableStateOf("") }
+        val queryState = rememberTextFieldState()
         var searchActive by rememberSaveable { mutableStateOf(false) }
         val showSearchLoader = rememberSaveable { mutableStateOf(false) }
         var showOpenRoomToExternalsDialog by rememberSaveable { mutableStateOf(false) } // TCHAP external user
@@ -91,6 +100,34 @@ class DefaultInvitePeoplePresenter(
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
+
+        val recentDirectRooms by produceState(emptyList(), roomMembers.value) {
+            if (roomMembers.value.isSuccess()) {
+                val activeMemberIds = roomMembers.value.dataOrNull().orEmpty()
+                    .filter { it.membership.isActive() }
+                    .mapTo(mutableSetOf()) { it.userId }
+
+                value = matrixClient.getRecentDirectRooms()
+                    .filterNot { it.matrixUser.userId in activeMemberIds }
+                    .take(MAX_SUGGESTIONS_COUNT)
+                    .toList()
+            }
+        }
+
+        // Convert recent direct rooms to InvitableUser for display
+        val suggestions by remember {
+            derivedStateOf {
+                recentDirectRooms.map { recentDirectRoom ->
+                    InvitableUser(
+                        matrixUser = recentDirectRoom.matrixUser,
+                        isSelected = recentDirectRoom.matrixUser in selectedUsers.value,
+                        isAlreadyJoined = false,
+                        isAlreadyInvited = false,
+                        isUnresolved = false,
+                    )
+                }.toImmutableList()
+            }
+        }
 
         val room by produceState(if (joinedRoom != null) AsyncData.Success(joinedRoom) else AsyncData.Loading()) {
             if (joinedRoom == null) {
@@ -108,6 +145,7 @@ class DefaultInvitePeoplePresenter(
                 fetchMembers(it, roomMembers)
             }
         }
+        val searchQuery = queryState.text.toString()
         LaunchedEffect(searchQuery, roomMembers) {
             performSearch(
                 searchResults = searchResults,
@@ -122,16 +160,15 @@ class DefaultInvitePeoplePresenter(
             when (event) {
                 is DefaultInvitePeopleEvents.OnSearchActiveChanged -> {
                     searchActive = event.active
-                    searchQuery = ""
-                }
-
-                is DefaultInvitePeopleEvents.UpdateSearchQuery -> {
-                    searchQuery = event.query
+                    if (!event.active) {
+                        queryState.clearText()
+                    }
                 }
 
                 is DefaultInvitePeopleEvents.ToggleUser -> {
                     selectedUsers.toggleUser(event.user)
                     searchResults.toggleUser(event.user)
+                    // suggestions will automatically update via derivedStateOf when selectedUsers changes
                 }
                 is InvitePeopleEvents.SendInvites -> {
                     showOpenRoomToExternalsDialog = false // TCHAP external user
@@ -153,7 +190,7 @@ class DefaultInvitePeoplePresenter(
                 }
                 is InvitePeopleEvents.CloseSearch -> {
                     searchActive = false
-                    searchQuery = ""
+                    queryState.clearText()
                 }
                 // TCHAP external user
                 is InvitePeopleEvents.CheckExternalsAndSendInvites -> {
@@ -200,11 +237,12 @@ class DefaultInvitePeoplePresenter(
             showMatrixId = showMatrixId,
             canInvite = selectedUsers.value.isNotEmpty() && !sendInvitesAction.value.isLoading(),
             selectedUsers = selectedUsers.value,
-            searchQuery = searchQuery,
+            searchQuery = queryState,
             isSearchActive = searchActive,
             searchResults = searchResults.value,
             showSearchLoader = showSearchLoader.value,
             sendInvitesAction = sendInvitesAction.value,
+            suggestions = suggestions,
             eventSink = ::handleEvent,
         )
     }

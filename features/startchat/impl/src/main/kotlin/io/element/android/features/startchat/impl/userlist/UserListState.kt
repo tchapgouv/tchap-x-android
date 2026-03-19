@@ -8,6 +8,7 @@
 
 package io.element.android.features.startchat.impl.userlist
 
+import androidx.compose.foundation.text.input.TextFieldState
 import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
 import io.element.android.libraries.matrix.api.room.recent.RecentDirectRoom
 import io.element.android.libraries.matrix.api.user.MatrixUser
@@ -16,7 +17,7 @@ import kotlinx.collections.immutable.ImmutableList
 
 data class UserListState(
     val showMatrixId: Boolean,
-    val searchQuery: String,
+    val searchQuery: TextFieldState,
     val searchResults: SearchBarResultState<ImmutableList<UserSearchResult>>,
     val showSearchLoader: Boolean,
     val selectedUsers: ImmutableList<MatrixUser>,

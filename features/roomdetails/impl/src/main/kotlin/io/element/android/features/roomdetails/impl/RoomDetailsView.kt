@@ -135,6 +135,7 @@ fun RoomDetailsView(
             when (state.roomType) {
                 RoomDetailsType.Room -> {
                     RoomHeaderSection(
+                        showMatrixId = state.showMatrixId,
                         avatarUrl = state.roomAvatarUrl,
                         roomId = state.roomId,
                         roomName = state.roomName,
@@ -381,6 +382,7 @@ private fun MainActionsSection(
 
 @Composable
 private fun RoomHeaderSection(
+    showMatrixId: Boolean,
     avatarUrl: String?,
     roomId: RoomId,
     roomName: String,
@@ -416,7 +418,8 @@ private fun RoomHeaderSection(
         )
         TitleAndSubtitle(
             title = roomName,
-            subtitle = roomAlias?.value,
+            // TCHAP hide the Matrix Id depending of showMatrixId feature flag
+            subtitle = roomAlias?.value.takeIf { showMatrixId },
             onSubtitleClick = onSubtitleClick,
         )
     }
@@ -510,6 +513,27 @@ fun RoomBadge.toMatrixBadgeData(): MatrixBadgeAtom.MatrixBadgeData {
                 type = MatrixBadgeAtom.Type.Neutral,
             )
         }
+        RoomBadge.SHARED_HISTORY_HIDDEN -> {
+            MatrixBadgeAtom.MatrixBadgeData(
+                text = stringResource(R.string.crypto_history_sharing_room_info_hidden_badge_content),
+                icon = CompoundIcons.VisibilityOff(),
+                type = MatrixBadgeAtom.Type.Info
+            )
+        }
+        RoomBadge.SHARED_HISTORY_SHARED -> {
+            MatrixBadgeAtom.MatrixBadgeData(
+                text = stringResource(R.string.crypto_history_sharing_room_info_shared_badge_content),
+                icon = CompoundIcons.History(),
+                type = MatrixBadgeAtom.Type.Info
+            )
+        }
+        RoomBadge.SHARED_HISTORY_WORLD_READABLE -> {
+            MatrixBadgeAtom.MatrixBadgeData(
+                text = stringResource(R.string.crypto_history_sharing_room_info_world_readable_badge_content),
+                icon = CompoundIcons.UserProfileSolid(),
+                type = MatrixBadgeAtom.Type.Info
+            )
+        }
     }
 }
 
@@ -581,9 +605,14 @@ private fun FavoriteItem(
     isFavorite: Boolean,
     onFavoriteChanges: (Boolean) -> Unit,
 ) {
+    val (textResId, icon) = if (isFavorite) {
+        CommonStrings.common_favourited to CompoundIcons.FavouriteSolid()
+    } else {
+        CommonStrings.common_favourite to CompoundIcons.Favourite()
+    }
     PreferenceSwitch(
-        icon = CompoundIcons.Favourite(),
-        title = stringResource(id = CommonStrings.common_favourite),
+        icon = icon,
+        title = stringResource(id = textResId),
         isChecked = isFavorite,
         onCheckedChange = onFavoriteChanges
     )

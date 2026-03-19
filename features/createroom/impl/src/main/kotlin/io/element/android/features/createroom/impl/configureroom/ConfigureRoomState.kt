@@ -10,26 +10,28 @@ package io.element.android.features.createroom.impl.configureroom
 
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.matrix.api.core.RoomId
+import io.element.android.libraries.matrix.api.spaces.SpaceRoom
 import io.element.android.libraries.matrix.ui.media.AvatarAction
 import io.element.android.libraries.matrix.ui.room.address.RoomAddressValidity
 import io.element.android.libraries.permissions.api.PermissionsState
 import kotlinx.collections.immutable.ImmutableList
 
 data class ConfigureRoomState(
-    val isKnockFeatureEnabled: Boolean,
+    val isSpace: Boolean,
     val config: CreateRoomConfig,
     val avatarActions: ImmutableList<AvatarAction>,
     val createRoomAction: AsyncAction<RoomId>,
     val cameraPermissionState: PermissionsState,
     val roomAddressValidity: RoomAddressValidity,
     val homeserverName: String,
-    val eventSink: (ConfigureRoomEvents) -> Unit,
-    // TCHAP - PrivateNotEncrypted room feature flag
-    val isPrivateNotEncryptedRoomsActive: Boolean,
+    val availableJoinRules: ImmutableList<JoinRuleItem>,
+    val spaces: ImmutableList<SpaceRoom>,
+    val eventSink: (ConfigureRoomEvents) -> Unit
 ) {
     val isValid: Boolean = config.roomName?.isNotEmpty() == true &&
-        (config.roomVisibility is RoomVisibilityState.Private ||
+        (config.visibilityState is RoomVisibilityState.Private ||
             // TCHAP - Enable PrivateNotEncrypted room
-            config.roomVisibility is RoomVisibilityState.PrivateNotEncrypted || // TCHAP room type
-            roomAddressValidity == RoomAddressValidity.Valid)
+            config.visibilityState is RoomVisibilityState.PrivateNotEncrypted || // TCHAP room type
+            roomAddressValidity == RoomAddressValidity.Valid) &&
+        config.visibilityState.joinRuleItem in availableJoinRules
 }

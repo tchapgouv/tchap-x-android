@@ -16,16 +16,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import dev.zacsweers.metro.Inject
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.meta.BuildMeta
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
 
 @Inject
 class RoomListSearchPresenter(
     private val buildMeta: BuildMeta,
-    private val dataSource: RoomListSearchDataSource,
+    private val dataSourceFactory: RoomListSearchDataSource.Factory,
 ) : Presenter<RoomListSearchState> {
     @Composable
     override fun present(): RoomListSearchState {
@@ -35,22 +37,24 @@ class RoomListSearchPresenter(
         }
         val searchQuery = rememberTextFieldState()
 
-        LaunchedEffect(isSearchActive) {
-            dataSource.setIsActive(isSearchActive)
-        }
+        val coroutineScope = rememberCoroutineScope()
+        val dataSource = remember { dataSourceFactory.create(coroutineScope) }
 
         LaunchedEffect(searchQuery.text) {
             dataSource.setSearchQuery(searchQuery.text.toString())
         }
 
-        fun handleEvent(event: RoomListSearchEvents) {
+        fun handleEvent(event: RoomListSearchEvent) {
             when (event) {
-                RoomListSearchEvents.ClearQuery -> {
+                RoomListSearchEvent.ClearQuery -> {
                     searchQuery.clearText()
                 }
-                RoomListSearchEvents.ToggleSearchVisibility -> {
+                RoomListSearchEvent.ToggleSearchVisibility -> {
                     isSearchActive = !isSearchActive
                     searchQuery.clearText()
+                }
+                is RoomListSearchEvent.UpdateVisibleRange -> coroutineScope.launch {
+                    dataSource.updateVisibleRange(visibleRange = event.range)
                 }
             }
         }

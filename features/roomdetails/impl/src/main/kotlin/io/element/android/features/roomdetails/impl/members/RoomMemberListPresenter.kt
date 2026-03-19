@@ -8,6 +8,7 @@
 
 package io.element.android.features.roomdetails.impl.members
 
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -16,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import dev.zacsweers.metro.Inject
 import io.element.android.features.roommembermoderation.api.RoomMemberModerationEvents.ShowActionsForUser
@@ -59,7 +59,7 @@ class RoomMemberListPresenter(
 
     @Composable
     override fun present(): RoomMemberListState {
-        var searchQuery by rememberSaveable { mutableStateOf("") }
+        val searchQuery = rememberTextFieldState()
         val membersState by room.membersStateFlow.collectAsState()
         val canInvite by room.permissionsAsState(false) { perms -> perms.canOwnUserInvite() }
         val roomModerationState = roomMembersModerationPresenter.present()
@@ -124,20 +124,19 @@ class RoomMemberListPresenter(
             }
         }
 
-        LaunchedEffect(searchQuery, roomMembers) {
+        LaunchedEffect(searchQuery.text, roomMembers) {
             filteredRoomMembers = roomMembers.map { members ->
                 withContext(coroutineDispatchers.io) {
-                    members.filter(searchQuery)
+                    members.filter(searchQuery.text.toString())
                 }
             }
         }
 
-        fun handleEvent(event: RoomMemberListEvents) {
+        fun handleEvent(event: RoomMemberListEvent) {
             when (event) {
-                is RoomMemberListEvents.UpdateSearchQuery -> searchQuery = event.query
-                is RoomMemberListEvents.RoomMemberSelected ->
+                is RoomMemberListEvent.RoomMemberSelected ->
                     roomModerationState.eventSink(ShowActionsForUser(event.roomMember.toMatrixUser()))
-                is RoomMemberListEvents.ChangeSelectedSection -> selectedSection = event.section
+                is RoomMemberListEvent.ChangeSelectedSection -> selectedSection = event.section
             }
         }
 

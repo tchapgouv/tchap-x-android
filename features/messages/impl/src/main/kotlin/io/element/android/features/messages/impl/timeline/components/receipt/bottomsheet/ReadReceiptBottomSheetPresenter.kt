@@ -32,13 +32,13 @@ class ReadReceiptBottomSheetPresenter constructor(
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
-        fun handleEvent(event: ReadReceiptBottomSheetEvents) {
+        fun handleEvent(event: ReadReceiptBottomSheetEvent) {
             @Suppress("LiftReturnOrAssignment")
             when (event) {
-                is ReadReceiptBottomSheetEvents.EventSelected -> {
+                is ReadReceiptBottomSheetEvent.EventSelected -> {
                     selectedEvent = event.event
                 }
-                ReadReceiptBottomSheetEvents.Dismiss -> {
+                ReadReceiptBottomSheetEvent.Dismiss -> {
                     selectedEvent = null
                 }
             }

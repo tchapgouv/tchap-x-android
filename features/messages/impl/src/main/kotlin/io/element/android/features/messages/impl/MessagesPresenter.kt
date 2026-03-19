@@ -27,10 +27,8 @@ import dev.zacsweers.metro.AssistedInject
 import im.vector.app.features.analytics.plan.PinUnpinAction
 import io.element.android.appconfig.MessageComposerConfig
 import io.element.android.features.messages.api.timeline.HtmlConverterProvider
-import io.element.android.features.messages.impl.actionlist.ActionListEvents
 import io.element.android.features.messages.impl.actionlist.ActionListState
 import io.element.android.features.messages.impl.actionlist.model.TimelineItemAction
-import io.element.android.features.messages.impl.crypto.historyvisible.HistoryVisibleState
 import io.element.android.features.messages.impl.crypto.identity.IdentityChangeState
 import io.element.android.features.messages.impl.link.LinkState
 import io.element.android.features.messages.impl.messagecomposer.MessageComposerEvent
@@ -38,7 +36,7 @@ import io.element.android.features.messages.impl.messagecomposer.MessageComposer
 import io.element.android.features.messages.impl.pinned.banner.PinnedMessagesBannerState
 import io.element.android.features.messages.impl.timeline.MarkAsFullyRead
 import io.element.android.features.messages.impl.timeline.TimelineController
-import io.element.android.features.messages.impl.timeline.TimelineEvents
+import io.element.android.features.messages.impl.timeline.TimelineEvent
 import io.element.android.features.messages.impl.timeline.TimelineState
 import io.element.android.features.messages.impl.timeline.components.customreaction.CustomReactionState
 import io.element.android.features.messages.impl.timeline.components.reactionsummary.ReactionSummaryState
@@ -76,6 +74,7 @@ import io.element.android.libraries.matrix.api.permalink.PermalinkParser
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomInfo
 import io.element.android.libraries.matrix.api.room.RoomMembersState
+import io.element.android.libraries.matrix.api.room.history.RoomHistoryVisibility
 import io.element.android.libraries.matrix.api.room.isDm
 import io.element.android.libraries.matrix.api.room.powerlevels.permissionsAsState
 import io.element.android.libraries.matrix.api.timeline.item.event.EventOrTransactionId
@@ -102,7 +101,6 @@ class MessagesPresenter(
     @Assisted private val timelinePresenter: Presenter<TimelineState>,
     private val timelineProtectionPresenter: Presenter<TimelineProtectionState>,
     private val identityChangeStatePresenter: Presenter<IdentityChangeState>,
-    private val historyVisibleStatePresenter: Presenter<HistoryVisibleState>,
     private val linkPresenter: Presenter<LinkState>,
     @Assisted private val actionListPresenter: Presenter<ActionListState>,
     private val customReactionPresenter: Presenter<CustomReactionState>,
@@ -154,7 +152,6 @@ class MessagesPresenter(
         val timelineState = timelinePresenter.present()
         val timelineProtectionState = timelineProtectionPresenter.present()
         val identityChangeState = identityChangeStatePresenter.present()
-        val historyVisibleState = historyVisibleStatePresenter.present()
         val actionListState = actionListPresenter.present()
         val linkState = linkPresenter.present()
         val customReactionState = customReactionPresenter.present()
@@ -212,6 +209,13 @@ class MessagesPresenter(
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
+        val isKeyShareOnInviteEnabled by featureFlagService.isFeatureEnabledFlow(FeatureFlags.EnableKeyShareOnInvite).collectAsState(initial = false)
+        // The top bar should show a "history" icon if:
+        //   * History sharing is enabled,
+        //   * The room is encrypted, and:
+        //   * The room's history_visibility allows future users to see content.
+        val topBarSharedHistoryIcon = if (isKeyShareOnInviteEnabled) roomInfo.sharedHistoryIcon() else SharedHistoryIcon.NONE
+
         LifecycleResumeEffect(dmRoomMember, roomInfo.isEncrypted) {
             if (roomInfo.isEncrypted == true) {
                 val dmRoomMemberId = dmRoomMember?.userId
@@ -225,9 +229,9 @@ class MessagesPresenter(
             onPauseOrDispose {}
         }
 
-        fun handleEvent(event: MessagesEvents) {
+        fun handleEvent(event: MessagesEvent) {
             when (event) {
-                is MessagesEvents.HandleAction -> {
+                is MessagesEvent.HandleAction -> {
                     localCoroutineScope.handleTimelineAction(
                         action = event.action,
                         targetEvent = event.event,
@@ -237,21 +241,20 @@ class MessagesPresenter(
                         timelineProtectionState = timelineProtectionState,
                     )
                 }
-                is MessagesEvents.ToggleReaction -> {
+                is MessagesEvent.ToggleReaction -> {
                     localCoroutineScope.toggleReaction(event.emoji, event.eventOrTransactionId)
                 }
-                is MessagesEvents.InviteDialogDismissed -> {
+                is MessagesEvent.InviteDialogDismissed -> {
                     hasDismissedInviteDialog = true
 
                     if (event.action == InviteDialogAction.Invite) {
                         localCoroutineScope.reinviteOtherUser(inviteProgress)
                     }
                 }
-                is MessagesEvents.Dismiss -> actionListState.eventSink(ActionListEvents.Clear)
-                is MessagesEvents.OnUserClicked -> {
+                is MessagesEvent.OnUserClicked -> {
                     roomMemberModerationState.eventSink(RoomMemberModerationEvents.ShowActionsForUser(event.user))
                 }
-                is MessagesEvents.MarkAsFullyReadAndExit -> coroutineScope.launch {
+                is MessagesEvent.MarkAsFullyReadAndExit -> coroutineScope.launch {
                     if (!markingAsReadAndExiting.getAndSet(true)) {
                         val latestEventId = room.liveTimeline.getLatestEventId().getOrElse {
                             Timber.w(it, "Failed to get latest event id to mark as fully read")
@@ -286,7 +289,6 @@ class MessagesPresenter(
             timelineState = timelineState,
             timelineProtectionState = timelineProtectionState,
             identityChangeState = identityChangeState,
-            historyVisibleState = historyVisibleState,
             linkState = linkState,
             actionListState = actionListState,
             customReactionState = customReactionState,
@@ -301,9 +303,22 @@ class MessagesPresenter(
             pinnedMessagesBannerState = pinnedMessagesBannerState,
             dmUserVerificationState = dmUserVerificationState,
             roomMemberModerationState = roomMemberModerationState,
+            topBarSharedHistoryIcon = topBarSharedHistoryIcon,
             successorRoom = roomInfo.successorRoom,
             eventSink = ::handleEvent,
         )
+    }
+
+    private fun RoomInfo.sharedHistoryIcon(): SharedHistoryIcon {
+        if (isEncrypted == true) {
+            if (historyVisibility == RoomHistoryVisibility.Shared) {
+                return SharedHistoryIcon.SHARED
+            } else if (historyVisibility == RoomHistoryVisibility.WorldReadable) {
+                return SharedHistoryIcon.WORLD_READABLE
+            }
+        }
+
+        return SharedHistoryIcon.NONE
     }
 
     private fun RoomInfo.avatarData(): AvatarData {
@@ -538,7 +553,7 @@ class MessagesPresenter(
         event: TimelineItem.Event,
         timelineState: TimelineState,
     ) {
-        event.eventId?.let { timelineState.eventSink(TimelineEvents.EndPoll(it)) }
+        event.eventId?.let { timelineState.eventSink(TimelineEvent.EndPoll(it)) }
     }
 
     private suspend fun handleCopyLink(event: TimelineItem.Event) {

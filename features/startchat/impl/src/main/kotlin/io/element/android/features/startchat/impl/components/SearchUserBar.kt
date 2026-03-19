@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.surfaceColorAtElevation
@@ -41,14 +42,13 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 fun SearchUserBar(
     showMatrixId: Boolean,
-    query: String,
-    state: SearchBarResultState<ImmutableList<UserSearchResult>>,
+    queryState: TextFieldState,
+    resultState: SearchBarResultState<ImmutableList<UserSearchResult>>,
     showLoader: Boolean,
     selectedUsers: ImmutableList<MatrixUser>,
     active: Boolean,
     isMultiSelectionEnable: Boolean,
     onActiveChange: (Boolean) -> Unit,
-    onTextChange: (String) -> Unit,
     onUserSelect: (MatrixUser) -> Unit,
     onUserDeselect: (MatrixUser) -> Unit,
     modifier: Modifier = Modifier,
@@ -58,8 +58,7 @@ fun SearchUserBar(
     val columnState = rememberLazyListState()
 
     SearchBar(
-        query = query,
-        onQueryChange = onTextChange,
+        queryState = queryState,
         active = active,
         onActiveChange = onActiveChange,
         modifier = modifier,
@@ -99,7 +98,7 @@ fun SearchUserBar(
                 AsyncLoading()
             }
         },
-        resultState = state,
+        resultState = resultState,
         resultHandler = { users ->
             LazyColumn(state = columnState) {
                 if (isMultiSelectionEnable) {

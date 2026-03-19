@@ -60,7 +60,8 @@ class MatrixUserExtensionsTest {
             userId = A_USER_ID,
             displayName = null,
         )
-        assertThat(matrixUser.getBestName()).isEqualTo(A_USER_ID.value)
+//        assertThat(matrixUser.getBestName()).isEqualTo(A_USER_ID.value)
+        assertThat(matrixUser.getBestName()).isEqualTo(A_USER_ID.extractedDisplayName)
     }
 
     @Test
@@ -69,7 +70,8 @@ class MatrixUserExtensionsTest {
             userId = A_USER_ID,
             displayName = "",
         )
-        assertThat(matrixUser.getBestName()).isEqualTo(A_USER_ID.value)
+//        assertThat(matrixUser.getBestName()).isEqualTo(A_USER_ID.value)
+        assertThat(matrixUser.getBestName()).isEqualTo(A_USER_ID.extractedDisplayName)
     }
 
     @Test

@@ -44,15 +44,15 @@ class ReactionSummaryPresenter(
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
-        fun handleEvent(event: ReactionSummaryEvents) {
+        fun handleEvent(event: ReactionSummaryEvent) {
             when (event) {
-                is ReactionSummaryEvents.ShowReactionSummary -> target.value = ReactionSummaryState.Summary(
+                is ReactionSummaryEvent.ShowReactionSummary -> target.value = ReactionSummaryState.Summary(
                     showMatrixId = showMatrixId,
                     reactions = event.reactions.toImmutableList(),
                     selectedKey = event.selectedKey,
                     selectedEventId = event.eventId
                 )
-                ReactionSummaryEvents.Clear -> target.value = null
+                ReactionSummaryEvent.Clear -> target.value = null
             }
         }
         return ReactionSummaryState(

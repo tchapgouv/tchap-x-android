@@ -144,7 +144,7 @@ class PreferencesRootPresenter(
         return PreferencesRootState(
             showMatrixId = showMatrixId,
             myUser = matrixUser.value,
-            version = versionFormatter.get(),
+            version = remember { versionFormatter.get() },
             deviceId = matrixClient.deviceId,
             isMultiAccountEnabled = isMultiAccountEnabled,
             otherSessions = otherSessions,

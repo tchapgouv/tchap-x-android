@@ -34,11 +34,11 @@ class LeaveSpaceStateProvider : PreviewParameterProvider<LeaveSpaceState> {
                                 displayName = "A long space name that should be truncated",
                                 worldReadable = true,
                             ),
-                            isLastAdmin = true,
+                            isLastOwner = true,
                         ),
                         aSelectableSpaceRoom(
                             spaceRoom = aSpaceRoom(
-                                joinRule = JoinRule.Private,
+                                joinRule = JoinRule.Invite,
                             ),
                             isSelected = false,
                         ),
@@ -52,11 +52,11 @@ class LeaveSpaceStateProvider : PreviewParameterProvider<LeaveSpaceState> {
                             spaceRoom = aSpaceRoom(
                                 worldReadable = true,
                             ),
-                            isLastAdmin = true,
+                            isLastOwner = true,
                         ),
                         aSelectableSpaceRoom(
                             spaceRoom = aSpaceRoom(
-                                joinRule = JoinRule.Private,
+                                joinRule = JoinRule.Invite,
                             ),
                             isSelected = true,
                         ),
@@ -70,7 +70,7 @@ class LeaveSpaceStateProvider : PreviewParameterProvider<LeaveSpaceState> {
                             spaceRoom = aSpaceRoom(
                                 worldReadable = true,
                             ),
-                            isLastAdmin = true,
+                            isLastOwner = true,
                         ),
                     )
                 ),
@@ -82,11 +82,11 @@ class LeaveSpaceStateProvider : PreviewParameterProvider<LeaveSpaceState> {
                             spaceRoom = aSpaceRoom(
                                 worldReadable = true,
                             ),
-                            isLastAdmin = true,
+                            isLastOwner = true,
                         ),
                         aSelectableSpaceRoom(
                             spaceRoom = aSpaceRoom(),
-                            isLastAdmin = true,
+                            isLastOwner = true,
                         ),
                     )
                 ),
@@ -107,19 +107,25 @@ class LeaveSpaceStateProvider : PreviewParameterProvider<LeaveSpaceState> {
                 selectableSpaceRooms = AsyncData.Failure(Exception("An error")),
             ),
             aLeaveSpaceState(
-                isLastAdmin = true,
+                isLastOwner = true,
+            ),
+            aLeaveSpaceState(
+                isLastOwner = true,
+                areCreatorsPrivileged = true,
             ),
         )
 }
 
 fun aLeaveSpaceState(
     spaceName: String? = "Space name",
-    isLastAdmin: Boolean = false,
+    isLastOwner: Boolean = false,
+    areCreatorsPrivileged: Boolean = false,
     selectableSpaceRooms: AsyncData<ImmutableList<SelectableSpaceRoom>> = AsyncData.Uninitialized,
     leaveSpaceAction: AsyncAction<Unit> = AsyncAction.Uninitialized,
 ) = LeaveSpaceState(
     spaceName = spaceName,
-    isLastAdmin = isLastAdmin,
+    needsOwnerChange = isLastOwner,
+    areCreatorsPrivileged = areCreatorsPrivileged,
     selectableSpaceRooms = selectableSpaceRooms,
     leaveSpaceAction = leaveSpaceAction,
     eventSink = { }
@@ -127,10 +133,12 @@ fun aLeaveSpaceState(
 
 fun aSelectableSpaceRoom(
     spaceRoom: SpaceRoom = aSpaceRoom(),
-    isLastAdmin: Boolean = false,
+    isLastOwner: Boolean = false,
+    joinedMembersCount: Int = 2,
     isSelected: Boolean = false,
 ) = SelectableSpaceRoom(
     spaceRoom = spaceRoom,
-    isLastAdmin = isLastAdmin,
+    isLastOwner = isLastOwner,
+    joinedMembersCount = joinedMembersCount,
     isSelected = isSelected,
 )

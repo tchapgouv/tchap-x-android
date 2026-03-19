@@ -8,6 +8,7 @@
 
 package io.element.android.features.invitepeople.impl
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.AsyncData
@@ -101,17 +102,21 @@ private fun aDefaultInvitePeopleState(
     isSearchActive: Boolean = false,
     showSearchLoader: Boolean = false,
     sendInvitesAction: AsyncAction<Unit> = AsyncAction.Uninitialized,
+    suggestions: List<InvitableUser> = aMatrixUserList()
+        .take(5)
+        .map { user -> anInvitableUser(matrixUser = user, isSelected = user in selectedUsers) },
 ): DefaultInvitePeopleState {
     return DefaultInvitePeopleState(
         room = room,
         showMatrixId = false,
         canInvite = canInvite,
-        searchQuery = searchQuery,
+        searchQuery = TextFieldState(initialText = searchQuery),
         searchResults = searchResults,
         selectedUsers = selectedUsers,
         isSearchActive = isSearchActive,
         showSearchLoader = showSearchLoader,
         sendInvitesAction = sendInvitesAction,
+        suggestions = suggestions.toImmutableList(),
         eventSink = {},
     )
 }

@@ -18,13 +18,27 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        variant: [debug, release, nightly]
+        variant: [debug, release, nightly, nightly-btchap]
       fail-fast: false
     # Allow all jobs on develop. Just one per PR.
     concurrency:
       group: ${{ github.ref == 'refs/heads/develop' && format('build-develop-{0}-{1}', matrix.variant, github.sha) || format('build-{0}-{1}', matrix.variant, github.ref)  }}
       cancel-in-progress: true
     steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be
+        with:
+          # This might remove tools that are actually needed, if set to "true" but frees about 6 GB
+          tool-cache: true
+          # All of these default to true, but we should only need the 'android' one (and maybe swap-storage?)
+          android: false
+          dotnet: true
+          haskell: true
+          # This takes way too long to run (~2 minutes) and it saves only ~5.5GB
+          large-packages: false
+          docker-images: true
+          swap-storage: false
+
       - uses: actions/checkout@v6
         with:
           # Ensure we are building the branch and not the branch after being merged on develop
@@ -61,16 +75,6 @@ jobs:
           path: |
             app/build/outputs/apk/gplayTchapWithpinning/debug/*-universal-debug.apk
             app/build/outputs/apk/fdroidTchapWithpinning/debug/*-universal-debug.apk
-      - name: Upload x86_64 APK for Maestro
-        if: ${{ matrix.variant == 'debug' }}
-        uses: actions/upload-artifact@v6
-        with:
-          name: elementx-apk-maestro
-          path: |
-            app/build/outputs/apk/gplayTchapWithpinning/debug/app-gplay-tchap-withpinning-x86_64-debug.apk
-          retention-days: 5
-          overwrite: true
-          if-no-files-found: error
       - uses: rnkdsh/action-upload-diawi@4e1421305be7cfc510d05f47850262eeaf345108 # v1.5.12
         id: diawi
         # Do not fail the whole build if Diawi upload fails
@@ -96,10 +100,10 @@ jobs:
       - name: Compile release sources
         if: ${{ matrix.variant == 'release' }}
         run: ./gradlew bundleGplayTchapWithpinningRelease -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
-      - name: Compile nightly sources
-        if: ${{ matrix.variant == 'nightly' }}
-        run: ./gradlew compileGplayTchapWithpinningNightlySources -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
-      # Tchap Specific - Auto build nightly
+      # Tchap Specific - Auto build nightly tchap & btchap (disable compile nightly)
+#      - name: Compile nightly sources
+#        if: ${{ matrix.variant == 'nightly' }}
+#        run: ./gradlew compileGplayTchapWithpinningNightlySources -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
       - name: Assemble Tchap X nightly APKs
         if: ${{ matrix.variant == 'nightly' }}
         env:
@@ -120,7 +124,7 @@ jobs:
           path: |
             app/build/outputs/apk/gplayTchapWithpinning/nightly/app-gplay-tchap-withpinning-arm64-v8a-nightly.apk
       - name: Assemble Btchap X nightly APKs
-        if: ${{ matrix.variant == 'nightly' }}
+        if: ${{ matrix.variant == 'nightly-btchap' }}
         env:
           ELEMENT_ANDROID_MAPTILER_API_KEY: ${{ secrets.MAPTILER_KEY }}
           ELEMENT_ANDROID_MAPTILER_LIGHT_MAP_ID: ${{ secrets.MAPTILER_LIGHT_MAP_ID }}
@@ -132,7 +136,7 @@ jobs:
           ELEMENT_CALL_RAGESHAKE_URL: ${{ secrets.ELEMENT_CALL_RAGESHAKE_URL }}
         run: ./gradlew :app:assembleGplaybTchapWithpinningNightly -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
       - name: Upload Btchap X nightly APKs
-        if: ${{ matrix.variant == 'nightly' }}
+        if: ${{ matrix.variant == 'nightly-btchap' }}
         uses: actions/upload-artifact@v6
         with:
           name: Btchap.X.beta-nightly

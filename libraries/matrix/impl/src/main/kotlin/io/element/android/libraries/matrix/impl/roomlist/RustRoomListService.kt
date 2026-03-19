@@ -11,9 +11,7 @@ package io.element.android.libraries.matrix.impl.roomlist
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.roomlist.DynamicRoomList
 import io.element.android.libraries.matrix.api.roomlist.RoomList
-import io.element.android.libraries.matrix.api.roomlist.RoomListFilter
 import io.element.android.libraries.matrix.api.roomlist.RoomListService
-import io.element.android.libraries.matrix.api.roomlist.loadAllIncrementally
 import io.element.android.libraries.matrix.impl.room.RoomSyncSubscriber
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -28,24 +26,22 @@ import org.matrix.rustcomponents.sdk.RoomListServiceSyncIndicator
 import timber.log.Timber
 import org.matrix.rustcomponents.sdk.RoomListService as InnerRustRoomListService
 
-private const val DEFAULT_PAGE_SIZE = 20
-
 internal class RustRoomListService(
     private val innerRoomListService: InnerRustRoomListService,
     private val sessionDispatcher: CoroutineDispatcher,
     private val roomListFactory: RoomListFactory,
     private val roomSyncSubscriber: RoomSyncSubscriber,
-    sessionCoroutineScope: CoroutineScope,
+    private val sessionCoroutineScope: CoroutineScope,
 ) : RoomListService {
     override fun createRoomList(
         pageSize: Int,
-        initialFilter: RoomListFilter,
-        source: RoomList.Source
+        source: RoomList.Source,
+        coroutineScope: CoroutineScope,
     ): DynamicRoomList {
         return roomListFactory.createRoomList(
             pageSize = pageSize,
-            initialFilter = initialFilter,
             coroutineContext = sessionDispatcher,
+            coroutineScope = coroutineScope,
         ) {
             when (source) {
                 RoomList.Source.All -> innerRoomListService.allRooms()
@@ -57,15 +53,12 @@ internal class RustRoomListService(
         roomSyncSubscriber.batchSubscribe(roomIds)
     }
 
-    override val allRooms: DynamicRoomList = roomListFactory.createRoomList(
-        pageSize = DEFAULT_PAGE_SIZE,
+    override val allRooms: RoomList = roomListFactory.createRoomList(
+        pageSize = Int.MAX_VALUE,
         coroutineContext = sessionDispatcher,
+        coroutineScope = sessionCoroutineScope,
     ) {
         innerRoomListService.allRooms()
-    }
-
-    init {
-        allRooms.loadAllIncrementally(sessionCoroutineScope)
     }
 
     override val syncIndicator: StateFlow<RoomListService.SyncIndicator> =

@@ -8,6 +8,7 @@
 
 package io.element.android.features.roomdetails.impl.members
 
+import androidx.compose.foundation.text.input.TextFieldState
 import io.element.android.features.roommembermoderation.api.RoomMemberModerationState
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.core.bool.orFalse
@@ -21,11 +22,11 @@ data class RoomMemberListState(
     // Only used to know if we can show the banned section
     private val roomMembers: AsyncData<RoomMembers>,
     val filteredRoomMembers: AsyncData<RoomMembers>,
-    val searchQuery: String,
+    val searchQuery: TextFieldState,
     val canInvite: Boolean,
     val selectedSection: SelectedSection,
     val moderationState: RoomMemberModerationState,
-    val eventSink: (RoomMemberListEvents) -> Unit,
+    val eventSink: (RoomMemberListEvent) -> Unit,
 ) {
     val showBannedSection: Boolean = moderationState.permissions.canBan && roomMembers.dataOrNull()?.banned?.isNotEmpty() == true
 }

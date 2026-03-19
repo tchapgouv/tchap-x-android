@@ -10,14 +10,14 @@ package io.element.android.features.login.impl.screens.createaccount
 
 import com.google.common.truth.Truth.assertThat
 import io.element.android.libraries.architecture.AsyncAction
-import io.element.android.libraries.core.meta.BuildMeta
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
 import io.element.android.libraries.matrix.api.auth.external.ExternalSession
 import io.element.android.libraries.matrix.api.verification.SessionVerifiedStatus
 import io.element.android.libraries.matrix.test.AN_EXCEPTION
 import io.element.android.libraries.matrix.test.A_SESSION_ID
 import io.element.android.libraries.matrix.test.auth.FakeMatrixAuthenticationService
-import io.element.android.libraries.matrix.test.core.aBuildMeta
 import io.element.android.libraries.matrix.test.verification.FakeSessionVerificationService
 import io.element.android.tests.testutils.WarmUpRule
 import io.element.android.tests.testutils.lambda.lambdaRecorder
@@ -114,11 +114,11 @@ class CreateAccountPresenterTest {
         url: String = "aUrl",
         authenticationService: MatrixAuthenticationService = FakeMatrixAuthenticationService(),
         messageParser: MessageParser = FakeMessageParser(),
-        buildMeta: BuildMeta = aBuildMeta(),
+        featureFlagService: FeatureFlagService = FakeFeatureFlagService(),
     ) = CreateAccountPresenter(
         url = url,
         authenticationService = authenticationService,
         messageParser = messageParser,
-        buildMeta = buildMeta,
+        featureFlagService = featureFlagService,
     )
 }
