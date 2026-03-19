@@ -19,6 +19,8 @@ data class CreateRoomParameters(
     val name: String?,
     val topic: String? = null,
     val isEncrypted: Boolean,
+    // TCHAP : Add toggle to enable/disable public room federation
+    val isRoomFederated: Boolean? = null,
     val isDirect: Boolean = false,
     val visibility: RoomVisibility,
     val preset: RoomPreset,

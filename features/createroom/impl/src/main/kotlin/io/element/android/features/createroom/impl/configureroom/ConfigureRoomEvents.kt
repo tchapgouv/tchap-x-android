@@ -20,4 +20,7 @@ sealed interface ConfigureRoomEvents {
     data class HandleAvatarAction(val action: AvatarAction) : ConfigureRoomEvents
     data class SetParentSpace(val space: SpaceRoom?) : ConfigureRoomEvents
     data object CancelCreateRoom : ConfigureRoomEvents
+
+    // TCHAP : Add toggle to enable/disable public room federation
+    data class PublicRoomLimitedToFederation(val isPublicRoomLimited: Boolean) : ConfigureRoomEvents
 }

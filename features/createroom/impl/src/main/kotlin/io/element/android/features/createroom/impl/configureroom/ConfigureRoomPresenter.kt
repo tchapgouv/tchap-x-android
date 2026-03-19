@@ -159,18 +159,18 @@ class ConfigureRoomPresenter(
             when {
                 isSpace && parentSpace != null -> TODO("Adding a space to a parent space is not supported yet! How did you get here?")
                 parentSpace == null || parentSpace.joinRule == JoinRule.Public -> listOfNotNull(
+                    JoinRuleItem.PrivateVisibility.Private,
+                    // TCHAP - Enable PrivateNotEncrypted room
+                    JoinRuleItem.PrivateVisibility.PrivateNotEncrypted.takeIf { isPrivateNotEncryptedRoomsActive },
                     JoinRuleItem.PublicVisibility.Public,
                     JoinRuleItem.PublicVisibility.AskToJoin.takeIf { !isSpace && isKnockFeatureEnabled },
-                    JoinRuleItem.PrivateVisibility.Private,
-                    // TCHAP - Enable PrivateNotEncrypted room
-                    JoinRuleItem.PrivateVisibility.PrivateNotEncrypted.takeIf { isPrivateNotEncryptedRoomsActive },
                 ).toImmutableList()
                 else -> listOfNotNull(
-                    JoinRuleItem.PrivateVisibility.Restricted(parentSpace.roomId),
-                    JoinRuleItem.PrivateVisibility.AskToJoinRestricted(parentSpace.roomId).takeIf { isKnockFeatureEnabled },
                     JoinRuleItem.PrivateVisibility.Private,
                     // TCHAP - Enable PrivateNotEncrypted room
                     JoinRuleItem.PrivateVisibility.PrivateNotEncrypted.takeIf { isPrivateNotEncryptedRoomsActive },
+                    JoinRuleItem.PrivateVisibility.Restricted(parentSpace.roomId),
+                    JoinRuleItem.PrivateVisibility.AskToJoinRestricted(parentSpace.roomId).takeIf { isKnockFeatureEnabled },
                 ).toImmutableList()
             }
         }
@@ -207,6 +207,8 @@ class ConfigureRoomPresenter(
                 is ConfigureRoomEvents.TopicChanged -> dataStore.setTopic(event.topic)
                 is ConfigureRoomEvents.JoinRuleChanged -> dataStore.setJoinRule(event.joinRuleItem)
                 is ConfigureRoomEvents.RoomAddressChanged -> dataStore.setRoomAddress(event.roomAddress)
+                // TCHAP : Add toggle to enable/disable public room federation
+                is ConfigureRoomEvents.PublicRoomLimitedToFederation -> dataStore.setIsPublicRoomLimited(event.isPublicRoomLimited)
                 is ConfigureRoomEvents.CreateRoom -> createRoom(createRoomConfig)
                 is ConfigureRoomEvents.HandleAvatarAction -> {
                     when (event.action) {
@@ -257,6 +259,7 @@ class ConfigureRoomPresenter(
                         name = config.roomName,
                         topic = config.topic,
                         isEncrypted = false,
+                        isRoomFederated = !config.isPublicRoomLimited,
                         isDirect = false,
                         visibility = RoomVisibility.Public,
                         joinRuleOverride = config.visibilityState.joinRuleItem.toJoinRule()

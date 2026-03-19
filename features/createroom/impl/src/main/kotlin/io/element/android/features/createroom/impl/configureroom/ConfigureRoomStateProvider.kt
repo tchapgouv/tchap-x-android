@@ -131,15 +131,17 @@ fun aConfigureRoomState(
     roomAddressValidity: RoomAddressValidity = RoomAddressValidity.Valid,
     availableVisibilityOptions: List<JoinRuleItem> = if (config.parentSpace != null) {
         listOfNotNull(
+            JoinRuleItem.PrivateVisibility.Private,
+            JoinRuleItem.PrivateVisibility.PrivateNotEncrypted,
             JoinRuleItem.PrivateVisibility.Restricted(config.parentSpace.roomId),
             JoinRuleItem.PrivateVisibility.AskToJoinRestricted(config.parentSpace.roomId).takeIf { isKnockFeatureEnabled },
-            JoinRuleItem.PrivateVisibility.Private,
         )
     } else {
         listOfNotNull(
+            JoinRuleItem.PrivateVisibility.Private,
+            JoinRuleItem.PrivateVisibility.PrivateNotEncrypted,
             JoinRuleItem.PublicVisibility.Public,
             JoinRuleItem.PublicVisibility.AskToJoin.takeIf { isKnockFeatureEnabled },
-            JoinRuleItem.PrivateVisibility.Private,
         )
     },
     spaces: List<SpaceRoom> = emptyList(),

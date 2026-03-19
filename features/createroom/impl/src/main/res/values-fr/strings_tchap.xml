@@ -34,4 +34,6 @@
     <string name="tchap_screen_create_room_public_option_description">"• Non‑chiffré
 • Accessible depuis la liste des salons
 • Non accessible aux invités externes"</string>
+    <string name="tchap_screen_create_room_public_federation_limited_title">"Limité à mon domaine"</string>
+    <string name="tchap_screen_create_room_public_federation_limited_description">"Visible uniquement aux membres de \"%1$s\""</string>
 </resources>
