@@ -17,6 +17,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import dev.zacsweers.metro.Inject
+import io.element.android.features.logout.api.direct.DirectLogoutEvents
+import io.element.android.features.logout.api.direct.DirectLogoutState
 import io.element.android.features.securebackup.impl.setup.views.RecoveryKeyUserStory
 import io.element.android.features.securebackup.impl.setup.views.RecoveryKeyViewState
 import io.element.android.features.securebackup.impl.tools.RecoveryKeyTools
@@ -31,6 +33,8 @@ import kotlinx.coroutines.launch
 class SecureBackupEnterRecoveryKeyPresenter(
     private val encryptionService: EncryptionService,
     private val recoveryKeyTools: RecoveryKeyTools,
+    // TCHAP - Verify device with recovery key : add signout topbar button
+    private val directLogoutPresenter: Presenter<DirectLogoutState>,
 ) : Presenter<SecureBackupEnterRecoveryKeyState> {
     @Composable
     override fun present(): SecureBackupEnterRecoveryKeyState {
@@ -44,6 +48,9 @@ class SecureBackupEnterRecoveryKeyPresenter(
         val submitAction: MutableState<AsyncAction<Unit>> = remember {
             mutableStateOf(AsyncAction.Uninitialized)
         }
+
+        // TCHAP - Verify device with recovery key : add signout topbar button
+        val directLogoutState = directLogoutPresenter.present()
 
         fun handleEvent(event: SecureBackupEnterRecoveryKeyEvents) {
             when (event) {
@@ -67,6 +74,8 @@ class SecureBackupEnterRecoveryKeyPresenter(
                 is SecureBackupEnterRecoveryKeyEvents.ChangeRecoveryKeyFieldContentsVisibility -> {
                     displayRecoveryKeyFieldContents = event.visible
                 }
+                // TCHAP - Verify device with recovery key : add signout topbar button
+                SecureBackupEnterRecoveryKeyEvents.SignOut -> directLogoutState.eventSink(DirectLogoutEvents.Logout(ignoreSdkError = false))
             }
         }
 
@@ -80,6 +89,8 @@ class SecureBackupEnterRecoveryKeyPresenter(
             isSubmitEnabled = recoveryKey.isNotEmpty() && submitAction.value.isUninitialized(),
             submitAction = submitAction.value,
             eventSink = ::handleEvent,
+            // TCHAP - Verify device with recovery key : add signout topbar button
+            directLogoutState = directLogoutState,
         )
     }
 

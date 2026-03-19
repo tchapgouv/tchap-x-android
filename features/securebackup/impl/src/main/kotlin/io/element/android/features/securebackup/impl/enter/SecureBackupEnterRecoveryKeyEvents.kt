@@ -13,4 +13,7 @@ sealed interface SecureBackupEnterRecoveryKeyEvents {
     data class ChangeRecoveryKeyFieldContentsVisibility(val visible: Boolean) : SecureBackupEnterRecoveryKeyEvents
     data object Submit : SecureBackupEnterRecoveryKeyEvents
     data object ClearDialog : SecureBackupEnterRecoveryKeyEvents
+
+    // TCHAP - Verify device with recovery key : add signout topbar button
+    data object SignOut : SecureBackupEnterRecoveryKeyEvents
 }

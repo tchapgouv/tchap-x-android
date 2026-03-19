@@ -39,14 +39,14 @@
   <string name="screen_recovery_key_change_success">"Code de vérification modifé"</string><!-- Tchap: Custom string -->
   <string name="screen_recovery_key_change_title">"Changer le code de vérification ?"</string><!-- Tchap: Custom string -->
   <string name="screen_recovery_key_confirm_create_new_recovery_key">"Créer un nouveau code de vérification"</string><!-- Tchap: Custom string -->
-  <string name="screen_recovery_key_confirm_description">"Assurez vous que personne d’autre ne regarde votre écran !"</string>
+  <string name="screen_recovery_key_confirm_description">"Saisissez votre Code de vérification pour accéder à votre compte Tchap."</string><!-- Tchap: Custom string -->
   <string name="screen_recovery_key_confirm_error_content">"Veuillez réessayer pour confirmer l’accès à votre stockage de clés."</string>
   <string name="screen_recovery_key_confirm_error_title">"Code de vérification incorrect"</string><!-- Tchap: Custom string -->
   <string name="screen_recovery_key_confirm_key_description">"Si vous avez un code de vérification ou une phrase de sécurité, cela fonctionnera également."</string><!-- Tchap: Custom string -->
   <string name="screen_recovery_key_confirm_key_placeholder">"Saisissez le code ici…"</string><!-- Tchap: Custom string -->
   <string name="screen_recovery_key_confirm_lost_recovery_key">"Code de vérification perdu ?"</string><!-- Tchap: Custom string -->
   <string name="screen_recovery_key_confirm_success">"Code de vérification confirmé"</string><!-- Tchap: Custom string -->
-  <string name="screen_recovery_key_confirm_title">"Saisissez votre code de vérification"</string><!-- Tchap: Custom string -->
+  <string name="screen_recovery_key_confirm_title">"Confirmez votre identité"</string><!-- Tchap: Custom string -->
   <string name="screen_recovery_key_copied_to_clipboard">"Code de vérification copié"</string><!-- Tchap: Custom string -->
   <string name="screen_recovery_key_generating_key">"Génération…"</string>
   <string name="screen_recovery_key_save_action">"Enregistrer le code"</string><!-- Tchap: Custom string -->

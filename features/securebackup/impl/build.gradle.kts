@@ -37,6 +37,7 @@ dependencies {
     implementation(projects.libraries.oidc.api)
     implementation(projects.libraries.uiStrings)
     implementation(projects.libraries.testtags)
+    implementation(projects.features.logout.api)
     api(libs.statemachine)
     api(projects.features.securebackup.api)
 

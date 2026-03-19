@@ -32,7 +32,6 @@ import io.element.android.libraries.designsystem.atomic.pages.HeaderFooterPage
 import io.element.android.libraries.designsystem.components.BigIcon
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
-import io.element.android.libraries.designsystem.theme.components.Button
 import io.element.android.libraries.designsystem.theme.components.OutlinedButton
 import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.designsystem.theme.components.TextButton
@@ -116,20 +115,20 @@ private fun ChooseSelfVerificationModeButtons(
             }
             is AsyncData.Success -> {
                 if (state.buttonsState.data.canUseAnotherDevice) {
-                    Button(
+                    OutlinedButton(
                         modifier = Modifier.fillMaxWidth(),
                         text = stringResource(R.string.screen_identity_use_another_device),
                         onClick = onUseAnotherDevice,
                     )
                 }
                 if (state.buttonsState.data.canEnterRecoveryKey) {
-                    Button(
+                    OutlinedButton(
                         modifier = Modifier.fillMaxWidth(),
                         text = stringResource(R.string.screen_session_verification_enter_recovery_key),
                         onClick = onUseRecoveryKey,
                     )
                 }
-                OutlinedButton(
+                TextButton(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(R.string.screen_identity_confirmation_cannot_confirm),
                     onClick = onResetKey,

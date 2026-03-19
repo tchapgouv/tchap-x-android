@@ -154,6 +154,9 @@ class FtueSessionVerificationFlowNode(
 
     @Composable
     override fun View(modifier: Modifier) {
+        // TCHAP - Verify device with recovery key : on first render, redirect to EnterRecoveryKey
+        backstack.push(NavTarget.EnterRecoveryKey)
+
         BackstackView()
 
         OpenUrlInTabView(learnMoreUrl)

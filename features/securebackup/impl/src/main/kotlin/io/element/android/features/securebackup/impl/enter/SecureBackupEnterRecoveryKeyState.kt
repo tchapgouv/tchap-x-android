@@ -8,6 +8,7 @@
 
 package io.element.android.features.securebackup.impl.enter
 
+import io.element.android.features.logout.api.direct.DirectLogoutState
 import io.element.android.features.securebackup.impl.setup.views.RecoveryKeyViewState
 import io.element.android.libraries.architecture.AsyncAction
 
@@ -15,5 +16,7 @@ data class SecureBackupEnterRecoveryKeyState(
     val recoveryKeyViewState: RecoveryKeyViewState,
     val isSubmitEnabled: Boolean,
     val submitAction: AsyncAction<Unit>,
-    val eventSink: (SecureBackupEnterRecoveryKeyEvents) -> Unit
+    val eventSink: (SecureBackupEnterRecoveryKeyEvents) -> Unit,
+    // TCHAP - Verify device with recovery key : add signout topbar button
+    val directLogoutState: DirectLogoutState,
 )

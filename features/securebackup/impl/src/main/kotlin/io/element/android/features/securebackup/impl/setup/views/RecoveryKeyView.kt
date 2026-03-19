@@ -263,11 +263,12 @@ private fun RecoveryKeyFooter(state: RecoveryKeyViewState) {
             }
         }
         RecoveryKeyUserStory.Enter -> {
-            Text(
-                text = stringResource(id = R.string.screen_recovery_key_confirm_key_description),
-                color = ElementTheme.colors.textSecondary,
-                style = ElementTheme.typography.fontBodySmRegular,
-            )
+            // TCHAP - Verify device with recovery key : remove textarea description
+//            Text(
+//                text = stringResource(id = R.string.screen_recovery_key_confirm_key_description),
+//                color = ElementTheme.colors.textSecondary,
+//                style = ElementTheme.typography.fontBodySmRegular,
+//            )
         }
     }
 }
