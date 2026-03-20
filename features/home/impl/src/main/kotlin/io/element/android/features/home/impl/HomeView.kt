@@ -215,7 +215,9 @@ private fun HomeScaffold(
             )
         },
         floatingActionButton = {
-            if (state.showNavigationBar) {
+            // TCHAP : Disable navigation bar for external users
+//            if (state.showNavigationBar) {
+            if (state.showNavigationBar && !currentUserIsExternal) {
                 val coroutineScope = rememberCoroutineScope()
                 HomeBottomBar(
                     currentHomeNavigationBarItem = state.currentHomeNavigationBarItem,
