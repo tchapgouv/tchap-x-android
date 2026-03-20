@@ -44,4 +44,5 @@ fun aMessageComposerState(
     resolveMentionDisplay = { _, _ -> TextDisplay.Plain },
     resolveAtRoomMentionDisplay = { TextDisplay.Plain },
     eventSink = eventSink,
+    isAprilFoolShown = true,
 )

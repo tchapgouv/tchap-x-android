@@ -166,6 +166,14 @@ enum class FeatureFlags(
         isFinished = false,
     ),
 
+    // TCHAP - isAprilFoolShown feature flag
+    ShownAprilFoolDialog(
+        key = "feature.isAprilFoolShown",
+        title = "Disable Security Dialog",
+        defaultValue = { false },
+        isFinished = false,
+    ),
+
     ValidateNetworkWhenSchedulingNotificationFetching(
         key = "feature.validate_network_when_scheduling_notification_fetching",
         title = "validate internet connectivity when scheduling notification fetching",

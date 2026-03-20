@@ -45,6 +45,8 @@ import io.element.android.libraries.core.mimetype.MimeTypes
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.permalink.PermalinkBuilder
@@ -125,6 +127,7 @@ class MessageComposerPresenter(
     private val suggestionsProcessor: SuggestionsProcessor,
     private val mediaOptimizationConfigProvider: MediaOptimizationConfigProvider,
     private val notificationConversationService: NotificationConversationService,
+    private val featureFlagService: FeatureFlagService,
 ) : Presenter<MessageComposerState> {
     @AssistedFactory
     interface Factory {
@@ -184,6 +187,10 @@ class MessageComposerPresenter(
         val sendTypingNotifications by remember {
             sessionPreferencesStore.isSendTypingNotificationsEnabled()
         }.collectAsState(initial = true)
+
+        val isAprilFoolShown by remember {
+            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShownAprilFoolDialog)
+        }.collectAsState(initial = false)
 
         LaunchedEffect(cameraPermissionState.permissionGranted) {
             if (cameraPermissionState.permissionGranted) {
@@ -354,6 +361,11 @@ class MessageComposerPresenter(
                     val draft = createDraftFromState(markdownTextEditorState, richTextEditorState)
                     sessionCoroutineScope.updateDraft(draft, isVolatile = false)
                 }
+                MessageComposerEvent.MarkAprilFoolAsShown -> {
+                    localCoroutineScope.launch {
+                        featureFlagService.setFeatureEnabled(FeatureFlags.ShownAprilFoolDialog, true)
+                    }
+                }
             }
         }
 
@@ -385,6 +397,7 @@ class MessageComposerPresenter(
             suggestions = suggestions.toImmutableList(),
             resolveMentionDisplay = resolveMentionDisplay,
             resolveAtRoomMentionDisplay = resolveAtRoomMentionDisplay,
+            isAprilFoolShown = isAprilFoolShown,
             eventSink = ::handleEvent,
         )
     }

@@ -13,7 +13,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -22,6 +26,7 @@ import io.element.android.features.messages.api.timeline.voicemessages.composer.
 import io.element.android.features.messages.api.timeline.voicemessages.composer.VoiceMessageComposerState
 import io.element.android.features.messages.api.timeline.voicemessages.composer.VoiceMessageComposerStateProvider
 import io.element.android.features.messages.api.timeline.voicemessages.composer.aVoiceMessageComposerState
+import io.element.android.libraries.designsystem.components.dialogs.AlertDialog
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.textcomposer.TextComposer
@@ -29,6 +34,10 @@ import io.element.android.libraries.textcomposer.model.Suggestion
 import io.element.android.libraries.textcomposer.model.VoiceMessagePlayerEvent
 import io.element.android.libraries.textcomposer.model.VoiceMessageRecorderEvent
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Month
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
 
 @Composable
 internal fun MessageComposerView(
@@ -37,8 +46,39 @@ internal fun MessageComposerView(
     modifier: Modifier = Modifier,
 ) {
     val view = LocalView.current
+    var showAprilFoolPopup by remember { mutableIntStateOf(0) }
+
     fun sendMessage() {
-        state.eventSink(MessageComposerEvent.SendMessage)
+        val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        val isAprilFool = now.year == 2026 && now.month == Month.APRIL && now.day == 1
+        if (isAprilFool && !state.isAprilFoolShown) {
+            showAprilFoolPopup = 1
+        } else {
+            state.eventSink(MessageComposerEvent.SendMessage)
+        }
+    }
+
+    if (showAprilFoolPopup == 1) {
+        AlertDialog(
+            title = "Mise à jour de sécurité !",
+            content = "Vos messages sont désormais acheminés par notre nouvelle flotte de pigeons voyageurs.\n" +
+                "Le protocole P2P (Pigeon to Pigeon) reste chiffré de bout en bout via la traduction de vos messages en hiéroglyphes égyptiens !\n\n" +
+                "Temps de livraison estimé de votre message : 3 à 5 jours ouvrés.",
+            onDismiss = {
+                showAprilFoolPopup = 2
+            },
+        )
+    }
+    if (showAprilFoolPopup == 2) {
+        AlertDialog(
+            title = "Pigeon d'Avril !!!",
+            content = "Bon début de mois d'Avril à tous•tes !",
+            onDismiss = {
+                showAprilFoolPopup = 0
+                state.eventSink(MessageComposerEvent.MarkAprilFoolAsShown)
+                state.eventSink(MessageComposerEvent.SendMessage)
+            },
+        )
     }
 
     fun sendUri(uri: Uri) {

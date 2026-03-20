@@ -26,5 +26,6 @@ data class MessageComposerState(
     val suggestions: ImmutableList<ResolvedSuggestion>,
     val resolveMentionDisplay: (String, String) -> TextDisplay,
     val resolveAtRoomMentionDisplay: () -> TextDisplay,
+    val isAprilFoolShown: Boolean,
     val eventSink: (MessageComposerEvent) -> Unit,
 )
