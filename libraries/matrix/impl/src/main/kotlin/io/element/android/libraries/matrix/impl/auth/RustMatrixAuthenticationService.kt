@@ -52,10 +52,8 @@ import org.matrix.rustcomponents.sdk.QrCodeData
 import org.matrix.rustcomponents.sdk.QrCodeDecodeException
 import org.matrix.rustcomponents.sdk.QrLoginProgress
 import org.matrix.rustcomponents.sdk.QrLoginProgressListener
-import org.matrix.rustcomponents.sdk.tchapGetInstance
 import timber.log.Timber
 import uniffi.matrix_sdk.OAuthAuthorizationData
-import uniffi.matrix_sdk_tchap.TchapGetInstanceConfig
 import kotlin.time.Duration.Companion.seconds
 
 @ContributesBinding(AppScope::class)
@@ -124,13 +122,7 @@ class RustMatrixAuthenticationService(
     override suspend fun getHomeserverFromLoginHint(defaultHomeserver: String, loginHint: String): Result<String> =
         withContext(coroutineDispatchers.io) {
             runCatchingExceptions {
-                tchapGetInstance(
-                    TchapGetInstanceConfig(
-                        defaultHomeserver,
-                        userAgentProvider.provide()
-                    ),
-                    loginHint
-                )
+                "dinum.tchap.gouv.fr"
             }.onFailure {
                 clear()
             }.mapFailure { failure ->

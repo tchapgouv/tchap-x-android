@@ -24,7 +24,6 @@
 
 package fr.gouv.tchap.libraries.tchaputils
 
-import org.matrix.rustcomponents.sdk.TchapConstants
 import java.util.Locale
 
 object TchapPatterns {
@@ -217,7 +216,7 @@ object TchapPatterns {
      */
     fun inviteByEmailSuffixMarker(): String {
         val suffix = try {
-            TchapConstants().inviteByEmailSuffixMarker()
+            "tchap-email-invitation"
         } catch (_: Error) {
             // Allow previews to render without SDK
             "tchap-email-invitation"

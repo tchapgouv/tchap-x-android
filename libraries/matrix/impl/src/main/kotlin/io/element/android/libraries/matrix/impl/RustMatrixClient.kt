@@ -126,7 +126,6 @@ import org.matrix.rustcomponents.sdk.SendQueueRoomErrorListener
 import org.matrix.rustcomponents.sdk.TaskHandle
 import org.matrix.rustcomponents.sdk.use
 import timber.log.Timber
-import uniffi.matrix_sdk.AccessRule
 import java.io.File
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -388,17 +387,17 @@ class RustMatrixClient(
             val powerLevels = defaultRoomCreationPowerLevels(isSpace = createRoomParams.isSpace, isPublic = hasPublicAccess)
 
             val rustParams = RustCreateRoomParameters(
-                accessRuleOverride = when (createRoomParams.accessRules) {
-                    RoomAccessRules.DIRECT -> AccessRule.DIRECT
-                    RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
-                    RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
-                    // TCHAP access rule - Default room is UNRESTRICTED
-                    else -> AccessRule.UNRESTRICTED
-                },
+//                accessRuleOverride = when (createRoomParams.accessRules) {
+//                    RoomAccessRules.DIRECT -> AccessRule.DIRECT
+//                    RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
+//                    RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
+//                    // TCHAP access rule - Default room is UNRESTRICTED
+//                    else -> AccessRule.UNRESTRICTED
+//                },
                 name = createRoomParams.name,
                 topic = createRoomParams.topic,
                 isEncrypted = createRoomParams.isEncrypted,
-                isRoomFederated = createRoomParams.isRoomFederated,
+//                isRoomFederated = createRoomParams.isRoomFederated,
                 isDirect = createRoomParams.isDirect,
                 visibility = createRoomParams.visibility.map(),
                 preset = when (createRoomParams.preset) {
@@ -421,7 +420,7 @@ class RustMatrixClient(
                 canonicalAlias = createRoomParams.roomAliasName.getOrNull(),
                 isSpace = createRoomParams.isSpace,
             )
-            val roomId = RoomId(innerClient.createRoom(rustParams, isTchapInvite, isTchapInviteExternal))
+            val roomId = RoomId(innerClient.createRoom(rustParams))
             // Wait to receive the room back from the sync but do not returns failure if it fails.
             try {
                 awaitRoom(roomId, 30.seconds, CurrentUserMembership.JOINED)

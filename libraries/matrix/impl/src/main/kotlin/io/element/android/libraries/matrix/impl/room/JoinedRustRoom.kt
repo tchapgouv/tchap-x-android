@@ -80,7 +80,6 @@ import org.matrix.rustcomponents.sdk.WidgetCapabilitiesProvider
 import org.matrix.rustcomponents.sdk.getElementCallRequiredPermissions
 import org.matrix.rustcomponents.sdk.use
 import timber.log.Timber
-import uniffi.matrix_sdk.AccessRule
 import uniffi.matrix_sdk.RoomPowerLevelChanges
 import uniffi.matrix_sdk_ui.TimelineEventFocusThreadMode
 import uniffi.matrix_sdk_ui.TimelineReadReceiptTracking
@@ -300,14 +299,14 @@ class JoinedRustRoom(
     // TCHAP invite-by-email : send an invite by email to create a Tchap account for the given email
     override suspend fun inviteUserByEmail(email: String): Result<Unit> = withContext(roomDispatcher) {
         runCatchingExceptions {
-            innerRoom.inviteUserByEmail(email)
+//            innerRoom.inviteUserByEmail(email)
         }
     }
 
     // TCHAP invite-by-email : send an invite by email to create a Tchap account for all emails
     override suspend fun inviteUsersByEmail(emails: List<String>): Result<Unit> = withContext(roomDispatcher) {
         runCatchingExceptions {
-            innerRoom.inviteUsersByEmail(emails)
+//            innerRoom.inviteUsersByEmail(emails)
         }
     }
 
@@ -542,13 +541,13 @@ class JoinedRustRoom(
     // TCHAP access rule
     override suspend fun setAccessRule(rule: RoomAccessRules): Result<Unit> = withContext(roomDispatcher) {
         runCatchingExceptions {
-            innerRoom.setAccessRule(
-                when (rule) {
-                    RoomAccessRules.DIRECT -> AccessRule.DIRECT
-                    RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
-                    RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
-                },
-            )
+//            innerRoom.setAccessRule(
+//                when (rule) {
+//                    RoomAccessRules.DIRECT -> AccessRule.DIRECT
+//                    RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
+//                    RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
+//                },
+//            )
         }
     }
 }
