@@ -277,26 +277,9 @@ class ConfigureRoomPresenter(
                         accessRules = accessRules,
                         name = config.roomName,
                         topic = config.topic,
-                        isEncrypted = true,
-                        isDirect = false,
-                        visibility = RoomVisibility.Private,
-                        historyVisibilityOverride = RoomHistoryVisibility.Invited,
-                        joinRuleOverride = config.visibilityState.joinRuleItem.toJoinRule()
-                            // No need to specify the Invite join rule override, since the preset is already PRIVATE_CHAT
-                            .takeIf { it != JoinRule.Invite },
-                        preset = RoomPreset.PRIVATE_CHAT,
-                        invite = config.invites.map { it.userId },
-                        avatar = avatarUrl,
-                        isSpace = isSpace,
-                    )
-                }
-                // TCHAP - Enable PrivateNotEncrypted room
-                is RoomVisibilityState.PrivateNotEncrypted -> { // TCHAP room type
-                    CreateRoomParameters(
-                        accessRules = accessRules,
-                        name = config.roomName,
-                        topic = config.topic,
-                        isEncrypted = false,
+                        // TCHAP - Enable PrivateNotEncrypted room
+//                        isEncrypted = true,
+                        isEncrypted = config.visibilityState.joinRuleItem != JoinRuleItem.PrivateVisibility.PrivateNotEncrypted,
                         isDirect = false,
                         visibility = RoomVisibility.Private,
                         historyVisibilityOverride = RoomHistoryVisibility.Invited,

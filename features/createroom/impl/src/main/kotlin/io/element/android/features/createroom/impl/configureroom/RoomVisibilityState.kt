@@ -14,9 +14,6 @@ sealed interface RoomVisibilityState {
     val joinRuleItem: JoinRuleItem
     data class Private(override val joinRuleItem: JoinRuleItem.PrivateVisibility) : RoomVisibilityState
 
-    // TCHAP - Enable PrivateNotEncrypted room
-    data class PrivateNotEncrypted(override val joinRuleItem: JoinRuleItem.PrivateVisibility) : RoomVisibilityState
-
     data class Public(
         val roomAddress: RoomAddress,
         override val joinRuleItem: JoinRuleItem.PublicVisibility,
@@ -24,8 +21,6 @@ sealed interface RoomVisibilityState {
 
     fun roomAddress(): Optional<String> {
         return when (this) {
-            // TCHAP - Enable PrivateNotEncrypted room
-            is PrivateNotEncrypted, // TCHAP room type
             is Private -> Optional.empty()
             is Public -> Optional.of(roomAddress.value)
         }
