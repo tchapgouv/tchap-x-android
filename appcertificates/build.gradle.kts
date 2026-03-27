@@ -32,15 +32,20 @@ android {
         buildConfig = true
     }
 
-    flavorDimensions += listOf("pinning")
+    defaultConfig {
+        // Enable certificate pinning by default
+        buildConfigField("boolean", "ENABLE_CERTIFICATE_PINNING", "true")
+    }
+
     productFlavors {
-        create("withpinning") {
-            dimension = "pinning"
-            buildConfigField(type = "boolean", name = "ENABLE_CERTIFICATE_PINNING", value = "true")
+        // Disable certificate pinning for dev environment
+        getByName("devTchap") {
+            buildConfigField("boolean", "ENABLE_CERTIFICATE_PINNING", "false")
         }
-        create("withoutpinning") {
-            dimension = "pinning"
-            buildConfigField(type = "boolean", name = "ENABLE_CERTIFICATE_PINNING", value = " false")
+
+        // Disable certificate pinning in withoutpinning flavor
+        getByName("withoutpinning") {
+            buildConfigField("boolean", "ENABLE_CERTIFICATE_PINNING", "false")
         }
     }
 }

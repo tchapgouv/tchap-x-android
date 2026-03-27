@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Do not allow clearText traffic -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- Do not allow system and user certificates by default -->
+
+            <!-- Allow only Tchap intermediate certificate authority -->
+            <certificates src="@raw/servicesca_rootca" />
+            <certificates src="@raw/certignaserviceseurootca" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Allow system certificates for firebase if used. No effect on FDroid variant -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="false">firebaseinstallations.googleapis.com</domain>
+        <domain includeSubdomains="false">posthog.tchap.numerique.gouv.fr</domain>
+        <domain includeSubdomains="false">livekit-prd-osc-cgw1.beta.numerique.gouv.fr</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>
