@@ -55,6 +55,7 @@ import io.element.android.features.roommembermoderation.api.RoomMemberModeration
 import io.element.android.libraries.androidutils.clipboard.ClipboardHelper
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
+import io.element.android.libraries.architecture.runUpdatingState
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.extensions.flatMap
 import io.element.android.libraries.core.extensions.runCatchingExceptions
@@ -77,6 +78,7 @@ import io.element.android.libraries.matrix.api.room.RoomMembersState
 import io.element.android.libraries.matrix.api.room.history.RoomHistoryVisibility
 import io.element.android.libraries.matrix.api.room.isDm
 import io.element.android.libraries.matrix.api.room.powerlevels.permissionsAsState
+import io.element.android.libraries.matrix.api.roomdirectory.RoomVisibility
 import io.element.android.libraries.matrix.api.timeline.item.event.EventOrTransactionId
 import io.element.android.libraries.matrix.ui.messages.reply.map
 import io.element.android.libraries.matrix.ui.model.getAvatarData
@@ -209,6 +211,12 @@ class MessagesPresenter(
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
+        // TCHAP : Show public badge only when the room is visible in the room directory
+        val savedIsVisibleInRoomDirectory = remember { mutableStateOf<AsyncData<Boolean>>(AsyncData.Uninitialized) }
+        LaunchedEffect(Unit) {
+            isRoomVisibleInRoomDirectory(savedIsVisibleInRoomDirectory)
+        }
+
         val isKeyShareOnInviteEnabled by featureFlagService.isFeatureEnabledFlow(FeatureFlags.EnableKeyShareOnInvite).collectAsState(initial = false)
         // The top bar should show a "history" icon if:
         //   * History sharing is enabled,
@@ -276,7 +284,9 @@ class MessagesPresenter(
         return MessagesState(
             showMatrixId = showMatrixId,
             isEncrypted = room.roomInfoFlow.value.isEncrypted ?: false,
-            isPublic = room.roomInfoFlow.value.isPublic ?: false,
+            // TCHAP : Show public badge only when the room is visible in the room directory
+//            isPublic = room.roomInfoFlow.value.isPublic ?: false,
+            isPublic = room.roomInfoFlow.collectAsState().value.isPublic == true && savedIsVisibleInRoomDirectory.value.dataOrNull() == true,
             // TCHAP external user
             isOpenToExternalUsers = roomInfo.isOpenToExternalUsers,
             roomId = room.roomId,
@@ -587,6 +597,13 @@ class MessagesPresenter(
         clipboardHelper.copyPlainText(content)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
+        }
+    }
+
+    // TCHAP : Show public badge only when the room is visible in the room directory
+    private fun CoroutineScope.isRoomVisibleInRoomDirectory(isRoomVisible: MutableState<AsyncData<Boolean>>) = launch {
+        isRoomVisible.runUpdatingState {
+            room.getRoomVisibility().map { it == RoomVisibility.Public }
         }
     }
 }

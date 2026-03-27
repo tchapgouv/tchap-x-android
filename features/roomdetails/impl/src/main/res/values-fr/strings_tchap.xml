@@ -24,4 +24,8 @@
 
 <resources>
     <string name="tchap_screen_room_details_badge_external">"Externes"</string>
+    <string name="tchap_screen_room_details_access_via_link_confirm_dialog_title">"Activer l'accès au salon par lien"</string>
+    <string name="tchap_screen_room_details_access_via_link_confirm_dialog_description">"L'activation de l'accès au salon par lien permettra à n'importe qui en sa possession, de le partager et de rejoindre le salon sans invitation.\n\nLes personnes externes à la fonction publique devront tout de même être invitées manuellement."</string>
+    <string name="tchap_screen_room_details_access_via_link_title">"Accès par lien"</string>
+    <string name="tchap_screen_room_details_access_via_link_description">"Les agents pourront rejoindre ce salon et inviter d'autres agents via ce lien."</string>
 </resources>

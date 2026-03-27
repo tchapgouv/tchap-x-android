@@ -43,6 +43,9 @@ data class RoomDetailsState(
     val isFavorite: Boolean,
     val displayRolesAndPermissionsSettings: Boolean,
     val isPublic: Boolean,
+    // TCHAP : Room access link feature
+    val isLinkAccessEnableConfirmDialogVisible: Boolean,
+    val isLinkAccessEnabled: Boolean,
     val heroes: ImmutableList<MatrixUser>,
     val pinnedMessagesCount: Int?,
     val snackbarMessage: SnackbarMessage?,

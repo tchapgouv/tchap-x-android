@@ -10,13 +10,16 @@ package io.element.android.features.roomdetails.impl
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import dev.zacsweers.metro.Inject
 import im.vector.app.features.analytics.plan.Interaction
 import io.element.android.features.knockrequests.api.KnockRequestPermissions
@@ -30,7 +33,9 @@ import io.element.android.features.roomdetailsedit.api.roomDetailsEditPermission
 import io.element.android.features.securityandprivacy.api.SecurityAndPrivacyPermissions
 import io.element.android.features.securityandprivacy.api.securityAndPrivacyPermissions
 import io.element.android.libraries.androidutils.clipboard.ClipboardHelper
+import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
+import io.element.android.libraries.architecture.runUpdatingState
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.designsystem.utils.snackbar.LocalSnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
@@ -47,6 +52,7 @@ import io.element.android.libraries.matrix.api.room.join.JoinRule
 import io.element.android.libraries.matrix.api.room.powerlevels.canEditRolesAndPermissions
 import io.element.android.libraries.matrix.api.room.powerlevels.permissionsAsState
 import io.element.android.libraries.matrix.api.room.roomNotificationSettings
+import io.element.android.libraries.matrix.api.roomdirectory.RoomVisibility
 import io.element.android.libraries.matrix.ui.room.getCurrentRoomMember
 import io.element.android.libraries.matrix.ui.room.getDirectRoomMember
 import io.element.android.libraries.matrix.ui.room.roomMemberIdentityStateChange
@@ -59,6 +65,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Inject
 class RoomDetailsPresenter(
@@ -85,6 +92,12 @@ class RoomDetailsPresenter(
         val roomTopic by remember { derivedStateOf { roomInfo.topic } }
         val isFavorite by remember { derivedStateOf { roomInfo.isFavorite } }
         val joinRule by remember { derivedStateOf { roomInfo.joinRule } }
+
+        // TCHAP : Show public badge only when the room is visible in the room directory
+        val savedIsVisibleInRoomDirectory = remember { mutableStateOf<AsyncData<Boolean>>(AsyncData.Uninitialized) }
+        LaunchedEffect(Unit) {
+            isRoomVisibleInRoomDirectory(savedIsVisibleInRoomDirectory)
+        }
 
         val pinnedMessagesCount by remember { derivedStateOf { roomInfo.pinnedEventIds.size } }
 
@@ -138,6 +151,9 @@ class RoomDetailsPresenter(
             appPreferencesStore.isDeveloperModeEnabledFlow()
         }.collectAsState(initial = false)
 
+        // TCHAP : Room access link feature
+        var isLinkAccessEnableConfirmDialogVisible by remember { mutableStateOf(false) }
+
         val roomNotificationSettingsState by room.roomNotificationSettingsStateFlow.collectAsState()
 
         val snackbarDispatcher = LocalSnackbarDispatcher.current
@@ -159,6 +175,37 @@ class RoomDetailsPresenter(
                     }
                 }
                 is RoomDetailsEvent.SetFavorite -> scope.setFavorite(event.isFavorite)
+                // TCHAP : Room access link feature
+                is RoomDetailsEvent.DismissLinkAccessDialog -> {
+                    isLinkAccessEnableConfirmDialogVisible = false
+                }
+                is RoomDetailsEvent.OnLinkAccessToggle -> {
+                    if (savedIsVisibleInRoomDirectory.value.dataOrNull() == true) return
+                    if (joinRule != JoinRule.Public && !isLinkAccessEnableConfirmDialogVisible) {
+                        isLinkAccessEnableConfirmDialogVisible = true
+                        return
+                    }
+                    scope.launch(dispatchers.io) {
+                        if (joinRule == JoinRule.Public) {
+                            room.updateJoinRule(JoinRule.Invite)
+                        } else {
+                            room.updateJoinRule(JoinRule.Public)
+                        }
+                    }
+                    isLinkAccessEnableConfirmDialogVisible = false
+                }
+                is RoomDetailsEvent.CopyRoomPermalinkToClipboard -> {
+                    scope.launch(dispatchers.io) {
+                        room.getPermalink()
+                            .onSuccess { permalink ->
+                                clipboardHelper.copyPlainText(permalink)
+                                snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
+                            }
+                            .onFailure {
+                                Timber.e(it, "Failed to get permalink for room ${room.roomId}")
+                            }
+                    }
+                }
                 is RoomDetailsEvent.CopyToClipboard -> {
                     clipboardHelper.copyPlainText(event.text)
                     snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
@@ -198,7 +245,12 @@ class RoomDetailsPresenter(
             roomNotificationSettings = roomNotificationSettingsState.roomNotificationSettings(),
             isFavorite = isFavorite,
             displayRolesAndPermissionsSettings = !isDm && permissions.canEditRolesAndPermissions,
-            isPublic = joinRule == JoinRule.Public,
+            // TCHAP : Show public badge only when the room is visible in the room directory
+//            isPublic = joinRule == JoinRule.Public,
+            isPublic = joinRule == JoinRule.Public && savedIsVisibleInRoomDirectory.value.dataOrNull() == true,
+            // TCHAP : Room access link feature
+            isLinkAccessEnableConfirmDialogVisible = isLinkAccessEnableConfirmDialogVisible,
+            isLinkAccessEnabled = joinRule == JoinRule.Public,
             heroes = roomInfo.heroes.toImmutableList(),
             pinnedMessagesCount = pinnedMessagesCount,
             snackbarMessage = snackbarMessage,
@@ -270,5 +322,12 @@ class RoomDetailsPresenter(
             .onSuccess {
                 analyticsService.captureInteraction(Interaction.Name.MobileRoomFavouriteToggle)
             }
+    }
+
+    // TCHAP : Show public badge only when the room is visible in the room directory
+    private fun CoroutineScope.isRoomVisibleInRoomDirectory(isRoomVisible: MutableState<AsyncData<Boolean>>) = launch {
+        isRoomVisible.runUpdatingState {
+            room.getRoomVisibility().map { it == RoomVisibility.Public }
+        }
     }
 }

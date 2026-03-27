@@ -24,4 +24,8 @@
 
 <resources>
     <string name="tchap_screen_room_details_badge_external">"Externals"</string>
+    <string name="tchap_screen_room_details_access_via_link_confirm_dialog_title">"Activate access by link for this room"</string>
+    <string name="tchap_screen_room_details_access_via_link_confirm_dialog_description">"If you activate the access by link, everyone having the link will be able to share it and join the room without invitation.\n\nExternal users will still have to be invited manually to the room."</string>
+    <string name="tchap_screen_room_details_access_via_link_title">"Access via link"</string>
+    <string name="tchap_screen_room_details_access_via_link_description">"Agents will be able to join this room and invite other agents via this link."</string>
 </resources>

@@ -112,6 +112,9 @@ fun aRoomDetailsState(
     isFavorite: Boolean = false,
     displayAdminSettings: Boolean = false,
     isPublic: Boolean = true,
+    // TCHAP : Room access link feature
+    isLinkAccessEnableConfirmDialogVisible: Boolean = false,
+    isLinkAccessEnabled: Boolean = true,
     heroes: List<MatrixUser> = emptyList(),
     pinnedMessagesCount: Int? = null,
     snackbarMessage: SnackbarMessage? = null,
@@ -146,6 +149,9 @@ fun aRoomDetailsState(
     isFavorite = isFavorite,
     displayRolesAndPermissionsSettings = displayAdminSettings,
     isPublic = isPublic,
+    // TCHAP : Room access link feature
+    isLinkAccessEnableConfirmDialogVisible = isLinkAccessEnableConfirmDialogVisible,
+    isLinkAccessEnabled = isLinkAccessEnabled,
     heroes = heroes.toImmutableList(),
     pinnedMessagesCount = pinnedMessagesCount,
     snackbarMessage = snackbarMessage,
