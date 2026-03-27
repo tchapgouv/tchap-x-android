@@ -46,7 +46,7 @@ private const val versionMonth = 3
  * Release number in the month. Value must be in [0,99].
  * Do not update this value. it is updated by the release script.
  */
-private const val versionReleaseNumber = 0
+private const val versionReleaseNumber = 3
 
 // TCHAP - rework version number
 private const val versionMajorNumber = 0
