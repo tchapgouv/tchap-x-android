@@ -53,6 +53,9 @@ class KonsistComposableTest {
                 "CompoundSemanticColorsLightHc",
                 "CompoundSemanticColorsDark",
                 "CompoundSemanticColorsDarkHc",
+                "HorizontalFloatingToolbarItem",
+                "HorizontalFloatingToolbarSeparator",
+                "DebugNavStateNodeHost",
             )
             .withoutPackage(
                 "de.bwi.messenger.features.messages.impl.timeline.components.event"
