@@ -30,8 +30,6 @@ data class ConfigureRoomState(
 ) {
     val isValid: Boolean = config.roomName?.isNotEmpty() == true &&
         (config.visibilityState is RoomVisibilityState.Private ||
-            // TCHAP - Enable PrivateNotEncrypted room
-            config.visibilityState is RoomVisibilityState.PrivateNotEncrypted || // TCHAP room type
             roomAddressValidity == RoomAddressValidity.Valid) &&
         config.visibilityState.joinRuleItem in availableJoinRules
 }
