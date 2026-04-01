@@ -3,10 +3,10 @@
   <string name="screen_chat_backup_key_backup_action_disable">"Delete key storage"</string>
   <string name="screen_chat_backup_key_backup_action_enable">"Turn on backup"</string>
   <string name="screen_chat_backup_key_backup_description">"Store your cryptographic identity and message keys securely on the server. This will allow you to view your message history on any new devices. %1$s."</string>
-  <string name="screen_chat_backup_key_backup_title">"Key storage"</string>
-  <string name="screen_chat_backup_key_storage_disabled_error">"Key storage must be turned on to set up recovery."</string>
+  <string name="screen_chat_backup_key_backup_title">"Automatic saving of messages"</string><!-- Tchap: Custom string -->
+  <string name="screen_chat_backup_key_storage_disabled_error">"Automatic message saving must be turned on to set up recovery."</string><!-- Tchap: Custom string -->
   <string name="screen_chat_backup_key_storage_toggle_description">"Upload keys from this device"</string>
-  <string name="screen_chat_backup_key_storage_toggle_title">"Allow key storage"</string>
+  <string name="screen_chat_backup_key_storage_toggle_title">"Allow automatic saving of messages"</string><!-- Tchap: Custom string -->
   <string name="screen_chat_backup_recovery_action_change">"Change recovery key"</string>
   <string name="screen_chat_backup_recovery_action_change_description">"Recover your cryptographic identity and message history with a recovery key if you’ve lost all your existing devices."</string>
   <string name="screen_chat_backup_recovery_action_confirm">"Enter recovery key"</string>

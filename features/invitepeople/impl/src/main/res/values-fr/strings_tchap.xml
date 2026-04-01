@@ -24,9 +24,9 @@
 
 <resources>
     <!-- tchap settings -->
-    <string name="screen_invite_confirm_open_room_to_externals_title">"Invitation d’un externe"</string>
-    <string name="screen_invite_confirm_open_room_to_externals_message">"En invitant un partenaire externe, ce salon deviendra accessible aux utilisateurs externes.
+    <string name="screen_invite_confirm_open_room_to_externals_title">"Invitation d’une personne externe au secteur public"</string>
+    <string name="screen_invite_confirm_open_room_to_externals_message">"En invitant un partenaire externe, ce salon deviendra accessible aux membres externes.
 Cette modification est définitive et irréversible."</string>
-    <string name="screen_invite_unable_to_open_room_to_externals_title">"Impossible d’ouvrir le salon aux externes"</string>
-    <string name="screen_invite_unable_to_open_room_to_externals_message">"L’ouverture du salon aux externes a échoué. Aucune invitation n’a été envoyée."</string>
+    <string name="screen_invite_unable_to_open_room_to_externals_title">"Impossible d’ouvrir le salon aux personnes externes au secteur public"</string>
+    <string name="screen_invite_unable_to_open_room_to_externals_message">"L’ouverture du salon aux personnes externes du secteur public a échoué. Aucune invitation n’a été envoyée."</string>
 </resources>
