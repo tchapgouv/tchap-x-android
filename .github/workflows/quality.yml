@@ -122,7 +122,7 @@ jobs:
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/develop' }}
       - name: Run Konsist tests
-        run: ./gradlew :tests:konsist:testDebugUnitTest $CI_GRADLE_ARG_PROPERTIES --no-daemon
+        run: ./gradlew :tests:konsist:testTchapWithpinningDebugUnitTest $CI_GRADLE_ARG_PROPERTIES --no-daemon
       - name: Upload reports
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -205,7 +205,7 @@ jobs:
       - name: Build Fdroid Debug
         run: ./gradlew :app:compileFdroidTchapWithpinningDebugKotlin $CI_GRADLE_ARG_PROPERTIES
       - name: Run lint
-        run: ./gradlew :app:lintGplayTchapWithpinningDebug :app:lintFdroidTchapWithpinningDebug lintDebug $CI_GRADLE_ARG_PROPERTIES --continue
+        run: ./gradlew :app:lintGplayTchapWithpinningDebug :app:lintFdroidTchapWithpinningDebug lintGplayTchapWithpinningDebug $CI_GRADLE_ARG_PROPERTIES --continue
       - name: Upload reports
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0

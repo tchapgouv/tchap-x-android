@@ -16,16 +16,6 @@ plugins {
 
 android {
     namespace = "io.element.android.libraries.matrix.impl"
-
-    flavorDimensions += listOf("pinning")
-    productFlavors {
-        create("withpinning") {
-            dimension = "pinning"
-        }
-        create("withoutpinning") {
-            dimension = "pinning"
-        }
-    }
 }
 
 setupDependencyInjection()
