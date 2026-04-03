@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -42,15 +41,11 @@ import io.element.android.libraries.designsystem.components.avatar.AvatarType
 import io.element.android.libraries.designsystem.modifiers.onKeyboardContextMenuAction
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
-import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.designsystem.theme.unreadIndicator
 import io.element.android.libraries.matrix.api.room.CurrentUserMembership
 import io.element.android.libraries.matrix.api.spaces.SpaceRoom
-import io.element.android.libraries.matrix.api.spaces.SpaceRoomVisibility
 import io.element.android.libraries.matrix.ui.model.getAvatarData
-import io.element.android.libraries.matrix.ui.model.icon
-import io.element.android.libraries.matrix.ui.model.label
 import io.element.android.libraries.ui.strings.CommonPlurals
 import io.element.android.libraries.ui.strings.CommonStrings
 import kotlinx.collections.immutable.ImmutableList
@@ -98,8 +93,9 @@ fun SpaceRoomItemView(
                 showIndicator = showUnreadIndicator
             )
             Spacer(modifier = Modifier.height(1.dp))
-            VisibilityRow(visibility = spaceRoom.visibility)
-            Spacer(modifier = Modifier.height(1.dp))
+            // TCHAP : Remove Space Visibility (as it always private)
+//            VisibilityRow(visibility = spaceRoom.visibility)
+//            Spacer(modifier = Modifier.height(1.dp))
             Text(
                 modifier = Modifier.weight(1f),
                 style = ElementTheme.typography.fontBodyMdRegular,
@@ -120,6 +116,8 @@ fun SpaceRoomItemView(
     }
 }
 
+/*
+// TCHAP : Remove Space Visibility (as it always private)
 @Composable
 private fun VisibilityRow(
     visibility: SpaceRoomVisibility,
@@ -147,6 +145,7 @@ private fun VisibilityRow(
         )
     }
 }
+*/
 
 @Composable
 private fun NameAndIndicatorRow(

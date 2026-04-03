@@ -304,7 +304,20 @@ private fun HomeScaffold(
                         contentPadding = contentPadding,
                         state = state.homeSpacesState,
                         lazyListState = spacesLazyListState,
+                        // TCHAP : Space default action is now conversation filtering
                         onSpaceClick = { spaceId ->
+//                            onRoomClick(spaceId)
+                            if (roomListState.spaceFiltersState is SpaceFiltersState.Selecting) {
+                                val spaceFilter = roomListState.spaceFiltersState.availableFilters.find { it.spaceRoom.roomId == spaceId }
+                                if (spaceFilter != null) {
+                                    roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Selecting.SelectFilter(spaceFilter))
+                                } else {
+                                    roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Selecting.Cancel)
+                                }
+                                state.eventSink(HomeEvent.SelectHomeNavigationBarItem(HomeNavigationBarItem.Chats, reselectLastFilters = false))
+                            }
+                        },
+                        onTrailingSpaceClick = { spaceId ->
                             onRoomClick(spaceId)
                         },
                         onCreateSpaceClick = onCreateSpaceClick,

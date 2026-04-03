@@ -16,5 +16,8 @@ object LearnMoreConfig {
 
     // TCHAP - Add FAQ_URL in Preferences
     const val FAQ_URL: String = "https://aide.tchap.numerique.gouv.fr"
+
+    // TCHAP - Add HOW_TO_CREATE_SPACE on create space header
+    const val HOW_TO_CREATE_SPACE: String = "https://aide.tchap.numerique.gouv.fr/fr/article/comment-creer-un-espace-sur-tchap-web-1wmlenx/"
     const val HISTORY_VISIBLE_URL: String = "https://element.io/en/help#e2ee-history-sharing"
 }

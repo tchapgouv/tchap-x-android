@@ -22,6 +22,8 @@ import dev.zacsweers.metro.Inject
 import io.element.android.features.announcement.api.Announcement
 import io.element.android.features.announcement.api.AnnouncementService
 import io.element.android.features.home.impl.roomlist.RoomListState
+import io.element.android.features.home.impl.spacefilters.SpaceFiltersEvent
+import io.element.android.features.home.impl.spacefilters.SpaceFiltersState
 import io.element.android.features.home.impl.spaces.HomeSpacesState
 import io.element.android.features.logout.api.direct.DirectLogoutState
 import io.element.android.features.rageshake.api.RageshakeFeatureAvailability
@@ -85,6 +87,16 @@ class HomePresenter(
                 is HomeEvent.SelectHomeNavigationBarItem -> coroutineState.launch {
                     if (event.item == HomeNavigationBarItem.Spaces) {
                         announcementService.showAnnouncement(Announcement.Space)
+                        // TCHAP : Space default action is now conversation filtering (set state to ShowFilters when showing spaces)
+                        if (roomListState.spaceFiltersState is SpaceFiltersState.Unselected) {
+                            roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Unselected.ShowFilters)
+                        }
+                        if (roomListState.spaceFiltersState is SpaceFiltersState.Selected) {
+                            roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Selected.ShowFilters)
+                        }
+                    } else if (roomListState.spaceFiltersState is SpaceFiltersState.Selecting && event.reselectLastFilters) {
+                        // TCHAP : Space default action is now conversation filtering (add automatic Reselect Last filter)
+                        roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Selecting.ReselectLast)
                     }
                     currentHomeNavigationBarItemOrdinal = event.item.ordinal
                 }
