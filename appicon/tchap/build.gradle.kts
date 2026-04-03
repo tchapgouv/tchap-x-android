@@ -27,22 +27,4 @@ plugins {
 
 android {
     namespace = "fr.gouv.tchap.android.appicon.tchap"
-
-    buildFeatures {
-        buildConfig = true
-    }
-    flavorDimensions += listOf("target")
-
-    productFlavors {
-        // TCHAP productFlavors configs
-        create("devTchap") {
-            dimension = "target"
-        }
-        create("btchap") {
-            dimension = "target"
-        }
-        create("tchap") {
-            dimension = "target"
-        }
-    }
 }

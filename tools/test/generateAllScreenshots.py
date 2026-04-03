@@ -25,7 +25,7 @@ def generateAllScreenshots(languages):
     # If languages is empty, generate all screenshots
     if len(languages) == 0:
         print("Generating all screenshots...")
-        os.system("./gradlew recordPaparazziDebug -PallLanguages")
+        os.system("./gradlew recordPaparazziTchapWithpinningDebug -PallLanguages")
     else:
         tFile = "tests/uitests/src/test/kotlin/translations/TranslationsScreenshotTest.kt"
         print("Generating screenshots for languages: %s" % languages)
@@ -38,7 +38,7 @@ def generateAllScreenshots(languages):
             data = data.replace("@TestParameter(value = [\"de\"])", "@TestParameter(value = [\"%s\"])" % lang)
             with open(tFile, "w") as file:
                 file.write(data)
-            os.system("./gradlew recordPaparazziDebug -PallLanguagesNoEnglish")
+            os.system("./gradlew recordPaparazziTchapWithpinningDebug -PallLanguagesNoEnglish")
             # Git reset the change on file TranslationsScreenshotTest.kt
             os.system("git checkout HEAD -- %s" % tFile)
 

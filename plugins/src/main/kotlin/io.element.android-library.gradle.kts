@@ -23,8 +23,14 @@ plugins {
 android {
     androidConfig(project)
 
-    defaultConfig {
-        missingDimensionStrategy("pinning", "withpinning")
+    flavorDimensions += listOf("target", "pinning")
+    productFlavors {
+        create("tchap") { dimension = "target"; isDefault = true }
+        create("btchap") { dimension = "target" }
+        create("devTchap") { dimension = "target" }
+
+        create("withpinning") { dimension = "pinning"; isDefault = true }
+        create("withoutpinning") { dimension = "pinning" }
     }
 
     compileOptions {

@@ -39,7 +39,7 @@ You can still record the screenshots locally, but please do not commit the chang
 To record the screenshot locally, run the following command:
 
 ```shell
-./gradlew recordPaparazziDebug
+./gradlew recordPaparazziTchapWithpinningDebug
 ```
 
 The task will delete the content of the folder `/snapshots` before recording (see the task `removeOldSnapshots` defined in the project).

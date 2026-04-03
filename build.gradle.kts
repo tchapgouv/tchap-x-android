@@ -203,9 +203,9 @@ subprojects {
             snapshotsDir.deleteRecursively()
         }
     }
-    tasks.findByName("recordPaparazzi")?.dependsOn(removeOldScreenshotsTask)
-    tasks.findByName("recordPaparazziDebug")?.dependsOn(removeOldScreenshotsTask)
-    tasks.findByName("recordPaparazziRelease")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordPaparazziTchapWithpinning")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordPaparazziTchapWithpinningDebug")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordPaparazziTchapWithpinningRelease")?.dependsOn(removeOldScreenshotsTask)
 }
 
 // Make sure to delete old snapshot before recording new ones
@@ -218,9 +218,9 @@ subprojects {
             screenshotsDir.deleteRecursively()
         }
     }
-    tasks.findByName("recordRoborazzi")?.dependsOn(removeOldScreenshotsTask)
-    tasks.findByName("recordRoborazziDebug")?.dependsOn(removeOldScreenshotsTask)
-    tasks.findByName("recordRoborazziRelease")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordRoborazziTchapWithpinning")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordRoborazziTchapWithpinningDebug")?.dependsOn(removeOldScreenshotsTask)
+    tasks.findByName("recordRoborazziTchapWithpinningRelease")?.dependsOn(removeOldScreenshotsTask)
 }
 
 subprojects {
