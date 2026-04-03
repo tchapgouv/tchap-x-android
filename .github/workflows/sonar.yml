@@ -11,7 +11,7 @@ permissions: {}
 
 # Enrich gradle.properties for CI/CD
 env:
-  GRADLE_OPTS: -Dorg.gradle.jvmargs=-Xmx9g -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8 -XX:+HeapDumpOnOutOfMemoryError -XX:+UseG1GC -Dkotlin.daemon.jvm.options=-Xmx3g
+  GRADLE_OPTS: -Dorg.gradle.jvmargs=-Xmx9728m -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8 -XX:+HeapDumpOnOutOfMemoryError -XX:+UseG1GC -Dkotlin.daemon.jvm.options=-Xmx3072m
   CI_GRADLE_ARG_PROPERTIES: --stacktrace -Dsonar.gradle.skipCompile=true --no-configuration-cache
   GROUP: ${{ format('sonar-{0}', github.ref) }}
 
@@ -56,7 +56,9 @@ jobs:
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/develop' }}
       - name: Build debug code and test fixtures
-        run: ./gradlew assembleDebug createFullJarTchapWithpinningDebugTestFixtures :app:createFullJarGplayTchapWithpinningDebugTestFixtures $CI_GRADLE_ARG_PROPERTIES
+        # TCHAP : assemble only TchapWithpinning, as runner has not enough memory to build all variants.
+#        run: ./gradlew assembleDebug createFullJarTchapWithpinningDebugTestFixtures :app:createFullJarGplayTchapWithpinningDebugTestFixtures $CI_GRADLE_ARG_PROPERTIES
+        run: ./gradlew assembleTchapWithpinningDebug createFullJarTchapWithpinningDebugTestFixtures :app:createFullJarGplayTchapWithpinningDebugTestFixtures $CI_GRADLE_ARG_PROPERTIES
       - name: 🔊 Publish results to Sonar
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
