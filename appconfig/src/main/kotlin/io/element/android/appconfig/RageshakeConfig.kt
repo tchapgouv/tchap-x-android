@@ -15,6 +15,11 @@ object RageshakeConfig {
     const val BUG_REPORT_URL = BuildConfig.BUG_REPORT_URL
 
     /**
+     * TCHAP specific: path to submit bug reports.
+     */
+    const val TCHAP_BUG_REPORT_PATH = "bugreports/submit"
+
+    /**
      * As per https://github.com/matrix-org/rageshake:
      * Identifier for the application (eg 'riot-web').
      * Should correspond to a mapping configured in the configuration file for github issue reporting to work.
