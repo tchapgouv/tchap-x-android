@@ -16,6 +16,8 @@
         <domain includeSubdomains="false">firebaseinstallations.googleapis.com</domain>
         <domain includeSubdomains="false">posthog.tchap.numerique.gouv.fr</domain>
         <domain includeSubdomains="false">livekit-prd-osc-cgw1.beta.numerique.gouv.fr</domain>
+        <domain includeSubdomains="false">openmaptiles.data.gouv.fr</domain>
+        <domain includeSubdomains="false">openmaptiles.geo.data.gouv.fr</domain>
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>
