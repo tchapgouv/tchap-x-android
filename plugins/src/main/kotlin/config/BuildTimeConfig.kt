@@ -34,7 +34,9 @@ object BuildTimeConfig {
     val SERVICES_SENTRY_DSN: String? = null
     val SERVICES_SENTRY_DSN_RUST: String? = null
     val BUG_REPORT_URL: String? = null
-    val BUG_REPORT_APP_NAME: String? = null
+
+    // TCHAP : specific Bug report App Name
+    val BUG_REPORT_APP_NAME = "tchap-x-android"
 
     const val PUSH_CONFIG_INCLUDE_FIREBASE = true
     const val PUSH_CONFIG_INCLUDE_UNIFIED_PUSH = true
