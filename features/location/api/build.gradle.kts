@@ -33,7 +33,9 @@ android {
             value = if (isEnterpriseBuild) {
                 BuildTimeConfig.SERVICES_MAPTILER_APIKEY
             } else {
-                System.getenv("ELEMENT_ANDROID_MAPTILER_API_KEY")
+                // TCHAP : Use API key defined in BuildTimeConfig
+                BuildTimeConfig.SERVICES_MAPTILER_APIKEY
+                    ?: System.getenv("ELEMENT_ANDROID_MAPTILER_API_KEY")
                     ?: readLocalProperty("services.maptiler.apikey")
             }
                 ?: ""
@@ -43,22 +45,26 @@ android {
             value = if (isEnterpriseBuild) {
                 BuildTimeConfig.SERVICES_MAPTILER_LIGHT_MAPID
             } else {
-                System.getenv("ELEMENT_ANDROID_MAPTILER_LIGHT_MAP_ID")
+                // TCHAP : Use Light Map ID defined in BuildTimeConfig
+                BuildTimeConfig.SERVICES_MAPTILER_LIGHT_MAPID
+                    ?: System.getenv("ELEMENT_ANDROID_MAPTILER_LIGHT_MAP_ID")
                     ?: readLocalProperty("services.maptiler.lightMapId")
             }
             // fall back to maptiler's default light map.
-                ?: "osm-bright"
+                ?: "basic-v2"
         )
         buildConfigFieldStr(
             name = "MAPTILER_DARK_MAP_ID",
             value = if (isEnterpriseBuild) {
                 BuildTimeConfig.SERVICES_MAPTILER_DARK_MAPID
             } else {
-                System.getenv("ELEMENT_ANDROID_MAPTILER_DARK_MAP_ID")
+                // TCHAP : Use Dark Map ID defined in BuildTimeConfig
+                BuildTimeConfig.SERVICES_MAPTILER_DARK_MAPID
+                    ?: System.getenv("ELEMENT_ANDROID_MAPTILER_DARK_MAP_ID")
                     ?: readLocalProperty("services.maptiler.darkMapId")
             }
             // fall back to maptiler's default dark map.
-                ?: "dark-matter"
+                ?: "basic-v2-dark"
         )
     }
 }

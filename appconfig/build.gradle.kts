@@ -42,7 +42,9 @@ android {
             value = if (isEnterpriseBuild) {
                 BuildTimeConfig.BUG_REPORT_APP_NAME ?: ""
             } else {
-                "element-x-android"
+                // TCHAP : Use Bug report App Name defined in BuildTimeConfig
+                BuildTimeConfig.BUG_REPORT_APP_NAME
+                    ?: "element-x-android"
             },
         )
     }
