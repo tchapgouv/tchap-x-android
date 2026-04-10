@@ -26,4 +26,7 @@
     <!-- tchap home -->
     <string name="tchap_spaces_filters_home_title">Home</string>
     <string name="tchap_spaces_filters_home_description">All conversations</string>
+    <string name="tchap_home_offline_banner_title">Connection failed</string>
+    <string name="tchap_home_offline_banner_description">Check the service status to ensure the problem is not related to your device.</string>
+    <string name="tchap_home_offline_banner_button">View service status</string>
 </resources>

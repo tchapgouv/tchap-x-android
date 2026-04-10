@@ -80,6 +80,8 @@ fun HomeView(
     onSettingsClick: () -> Unit,
     onSetUpRecoveryClick: () -> Unit,
     onConfirmRecoveryKeyClick: () -> Unit,
+    // TCHAP : Display banner when sync is offline
+    onViewServiceStatusClick: () -> Unit,
     onStartChatClick: () -> Unit,
     onCreateSpaceClick: () -> Unit,
     onRoomSettingsClick: (roomId: RoomId) -> Unit,
@@ -118,6 +120,8 @@ fun HomeView(
             state = homeState,
             onSetUpRecoveryClick = onSetUpRecoveryClick,
             onConfirmRecoveryKeyClick = onConfirmRecoveryKeyClick,
+            // TCHAP : Display banner when sync is offline
+            onViewServiceStatusClick = onViewServiceStatusClick,
             onRoomClick = { if (firstThrottler.canHandle()) onRoomClick(it) },
             onOpenSettings = { if (firstThrottler.canHandle()) onSettingsClick() },
             onStartChatClick = { if (firstThrottler.canHandle()) onStartChatClick() },
@@ -144,6 +148,8 @@ private fun HomeScaffold(
     state: HomeState,
     onSetUpRecoveryClick: () -> Unit,
     onConfirmRecoveryKeyClick: () -> Unit,
+    // TCHAP : Display banner when sync is offline
+    onViewServiceStatusClick: () -> Unit,
     onRoomClick: (RoomId) -> Unit,
     onOpenSettings: () -> Unit,
     onStartChatClick: () -> Unit,
@@ -276,6 +282,8 @@ private fun HomeScaffold(
                         eventSink = roomListState.eventSink,
                         onSetUpRecoveryClick = onSetUpRecoveryClick,
                         onConfirmRecoveryKeyClick = onConfirmRecoveryKeyClick,
+                        // TCHAP : Display banner when sync is offline
+                        onViewServiceStatusClick = onViewServiceStatusClick,
                         onRoomClick = ::onRoomClick,
                         onCreateRoomClick = onStartChatClick,
                         contentPadding = contentPadding,
@@ -384,6 +392,8 @@ internal fun HomeViewPreview(@PreviewParameter(HomeStateProvider::class) state: 
         onSettingsClick = {},
         onSetUpRecoveryClick = {},
         onConfirmRecoveryKeyClick = {},
+        // TCHAP : Display banner when sync is offline
+        onViewServiceStatusClick = {},
         onStartChatClick = {},
         onCreateSpaceClick = {},
         onRoomSettingsClick = {},
@@ -404,6 +414,8 @@ internal fun HomeViewA11yPreview() = ElementPreview {
         onSettingsClick = {},
         onSetUpRecoveryClick = {},
         onConfirmRecoveryKeyClick = {},
+        // TCHAP : Display banner when sync is offline
+        onViewServiceStatusClick = {},
         onStartChatClick = {},
         onCreateSpaceClick = {},
         onRoomSettingsClick = {},
