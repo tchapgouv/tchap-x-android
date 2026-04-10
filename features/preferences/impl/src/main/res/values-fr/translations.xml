@@ -36,7 +36,7 @@
   <string name="screen_blocked_users_empty">"Vous n’avez bloqué personne"</string>
   <string name="screen_blocked_users_unblock_alert_action">"Débloquer"</string>
   <string name="screen_blocked_users_unblock_alert_description">"Vous pourrez à nouveau voir tous ses messages."</string>
-  <string name="screen_blocked_users_unblock_alert_title">"Débloquer l’utilisateur"</string>
+  <string name="screen_blocked_users_unblock_alert_title">"Débloquer le membre"</string><!-- Tchap: Custom string -->
   <string name="screen_blocked_users_unblocking">"Déblocage…"</string>
   <string name="screen_edit_profile_display_name">"Pseudonyme"</string>
   <string name="screen_edit_profile_display_name_placeholder">"Votre pseudonyme"</string>

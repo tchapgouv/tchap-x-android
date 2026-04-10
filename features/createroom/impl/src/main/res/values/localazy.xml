@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="screen_create_room_action_create_room">"New room"</string>
-  <string name="screen_create_room_add_people_title">"Invite people"</string>
+  <string name="screen_create_room_add_people_title">"Invite to join Tchap"</string><!-- Tchap: Custom string -->
   <string name="screen_create_room_error_creating_room">"An error occurred when creating the room"</string>
   <string name="screen_create_room_error_creating_space">"The space could not be created because of an unknown error. Try again later."</string>
   <string name="screen_create_room_name_placeholder">"Add name…"</string>
