@@ -7,7 +7,7 @@
   <string name="screen_create_room_name_placeholder">"Ajouter un nom…"</string>
   <string name="screen_create_room_new_room_title">"Nouveau salon"</string>
   <string name="screen_create_room_new_space_title">"Nouvel espace"</string>
-  <string name="screen_create_room_private_option_description">"Seules les membres invitées peuvent joindre."</string><!-- Tchap: Custom string -->
+  <string name="screen_create_room_private_option_description">"Seuls les membres invités peuvent joindre."</string><!-- Tchap: Custom string -->
   <string name="screen_create_room_private_option_title">"Privé"</string>
   <string name="screen_create_room_public_option_description">"N’importe qui peut trouver ce salon.
 Vous pouvez modifier cela à tout moment dans les paramètres du salon."</string>
@@ -17,7 +17,7 @@ Vous pouvez modifier cela à tout moment dans les paramètres du salon."</string
   <string name="screen_create_room_room_access_section_knocking_option_title">"Autoriser la demande à joindre"</string>
   <string name="screen_create_room_room_access_section_knocking_restricted_option_description">"Tout membre de %1$s peut joindre, mais les autres doivent demander un accès."</string>
   <string name="screen_create_room_room_access_section_knocking_restricted_option_title">"Demander à joindre"</string>
-  <string name="screen_create_room_room_access_section_private_option_description">"Seules les membres invitées peuvent joindre."</string><!-- Tchap: Custom string -->
+  <string name="screen_create_room_room_access_section_private_option_description">"Seuls les membres invités peuvent joindre."</string><!-- Tchap: Custom string -->
   <string name="screen_create_room_room_access_section_private_option_title">"Privé"</string>
   <string name="screen_create_room_room_access_section_public_option_description">"Tout le monde peut joindre"</string>
   <string name="screen_create_room_room_access_section_public_option_title">"Public"</string>

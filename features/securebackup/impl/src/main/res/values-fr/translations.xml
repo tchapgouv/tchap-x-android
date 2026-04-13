@@ -4,7 +4,7 @@
   <string name="screen_chat_backup_key_backup_action_enable">"Activer la sauvegarde"</string>
   <string name="screen_chat_backup_key_backup_description">"Stockez votre identité cryptographique et vos clés de message en toute sécurité sur le serveur. Cela vous permettra de consulter l’historique de vos messages sur tous les nouveaux appareils. %1$s."</string>
   <string name="screen_chat_backup_key_backup_title">"Sauvegarde automatique des messages"</string><!-- Tchap: Custom string -->
-  <string name="screen_chat_backup_key_storage_disabled_error">"La sauvegarde automatique des messages doit être activé pour configurer la restauration."</string><!-- Tchap: Custom string -->
+  <string name="screen_chat_backup_key_storage_disabled_error">"La sauvegarde automatique des messages doit être activée pour configurer la restauration."</string><!-- Tchap: Custom string -->
   <string name="screen_chat_backup_key_storage_toggle_description">"Télécharger les clés depuis cet appareil"</string>
   <string name="screen_chat_backup_key_storage_toggle_title">"Autoriser la sauvegarde automatique des messages"</string><!-- Tchap: Custom string -->
   <string name="screen_chat_backup_recovery_action_change">"Changer le code de vérification"</string><!-- Tchap: Custom string -->

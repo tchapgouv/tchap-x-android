@@ -17,6 +17,6 @@
   <string name="screen_bottom_sheet_manage_room_member_unban">"Débloquer l'accès au salon"</string><!-- Tchap: Custom string -->
   <string name="screen_bottom_sheet_manage_room_member_unban_member_confirmation_action">"Débloquer"</string><!-- Tchap: Custom string -->
   <string name="screen_bottom_sheet_manage_room_member_unban_member_confirmation_description">"Ce compte pourra à nouveau rejoindre le salon s’il est invité."</string>
-  <string name="screen_bottom_sheet_manage_room_member_unban_member_confirmation_title">"Êtes-vous sûr de vouloir débloquer ce compte?"</string><!-- Tchap: Custom string -->
+  <string name="screen_bottom_sheet_manage_room_member_unban_member_confirmation_title">"Êtes-vous sûr de vouloir débloquer ce membre?"</string><!-- Tchap: Custom string -->
   <string name="screen_bottom_sheet_manage_room_member_unbanning_user">"Déblocage de %1$s"</string><!-- Tchap: Custom string -->
 </resources>

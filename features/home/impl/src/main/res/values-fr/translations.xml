@@ -38,7 +38,7 @@ En attendant, vous pouvez désélectionner des filtres pour voir vos autres salo
   <string name="screen_roomlist_filter_low_priority_empty_state_title">"Vous n’avez pas encore de salon à priorité basse"</string>
   <string name="screen_roomlist_filter_mixed_empty_state_subtitle">"Veuillez désélectionner des filtres pour voir vos discussions"</string>
   <string name="screen_roomlist_filter_mixed_empty_state_title">"Vous n’avez pas de discussions pour cette sélection"</string>
-  <string name="screen_roomlist_filter_people">"Directs"</string><!-- Tchap: Custom string -->
+  <string name="screen_roomlist_filter_people">"Direct"</string><!-- Tchap: Custom string -->
   <string name="screen_roomlist_filter_people_empty_state_title">"Vous n’avez pas encore de discussions"</string>
   <string name="screen_roomlist_filter_rooms">"Salons"</string>
   <string name="screen_roomlist_filter_rooms_empty_state_title">"Vous n’êtes membre d’aucun salon"</string>
