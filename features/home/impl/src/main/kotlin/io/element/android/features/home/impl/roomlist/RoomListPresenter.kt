@@ -28,7 +28,6 @@ import im.vector.app.features.analytics.plan.Interaction
 import io.element.android.features.announcement.api.Announcement
 import io.element.android.features.announcement.api.AnnouncementService
 import io.element.android.features.home.impl.datasource.RoomListDataSource
-import io.element.android.features.home.impl.filters.RoomListFilter.Rooms
 import io.element.android.features.home.impl.filters.RoomListFiltersState
 import io.element.android.features.home.impl.filters.into
 import io.element.android.features.home.impl.search.RoomListSearchEvent
@@ -52,6 +51,7 @@ import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.encryption.RecoveryState
 import io.element.android.libraries.matrix.api.roomlist.RoomList
 import io.element.android.libraries.matrix.api.roomlist.RoomListFilter
+import io.element.android.libraries.matrix.api.sync.SyncService
 import io.element.android.libraries.matrix.api.timeline.ReceiptType
 import io.element.android.libraries.matrix.ui.safety.rememberHideInvitesAvatar
 import io.element.android.libraries.preferences.api.store.AppPreferencesStore
@@ -91,6 +91,8 @@ class RoomListPresenter(
     private val appPreferencesStore: AppPreferencesStore,
     private val seenInvitesStore: SeenInvitesStore,
     private val announcementService: AnnouncementService,
+    // TCHAP : Display banner when sync is offline
+    private val syncService: SyncService,
     private val coldStartWatcher: AnalyticsColdStartWatcher,
     private val spaceFiltersPresenter: Presenter<SpaceFiltersState>,
 ) : Presenter<RoomListState> {
@@ -247,6 +249,17 @@ class RoomListPresenter(
         val seenRoomInvites by remember { seenInvitesStore.seenRoomIds() }.collectAsState(emptySet())
         val securityBannerState by rememberSecurityBannerState(securityBannerDismissed)
 
+        // TCHAP : Display banner when sync is offline
+        val isOnlineState by syncService.isOnline.collectAsState()
+        val offlineBannerState by remember {
+            derivedStateOf {
+                when (isOnlineState) {
+                    true -> OfflineBannerState.None
+                    false -> OfflineBannerState.ShowOfflineBanner
+                }
+            }
+        }
+
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
@@ -254,6 +267,8 @@ class RoomListPresenter(
         return when {
             showEmpty -> RoomListContentState.Empty(
                 securityBannerState = securityBannerState,
+                // TCHAP : Display banner when sync is offline
+                offlineBannerState = offlineBannerState,
             )
             showSkeleton -> RoomListContentState.Skeleton(count = 16)
             else -> {
@@ -262,6 +277,8 @@ class RoomListPresenter(
                 RoomListContentState.Rooms(
                     showMatrixId = showMatrixId,
                     securityBannerState = securityBannerState,
+                    // TCHAP : Display banner when sync is offline
+                    offlineBannerState = offlineBannerState,
                     showNewNotificationSoundBanner = showNewNotificationSoundBanner,
                     fullScreenIntentPermissionsState = fullScreenIntentPermissionsPresenter.present(),
                     batteryOptimizationState = batteryOptimizationPresenter.present(),

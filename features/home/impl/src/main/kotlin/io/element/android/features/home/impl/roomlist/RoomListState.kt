@@ -60,16 +60,26 @@ enum class SecurityBannerState {
     RecoveryKeyConfirmation,
 }
 
+// TCHAP : Display banner when sync is offline
+enum class OfflineBannerState {
+    None,
+    ShowOfflineBanner,
+}
+
 @Immutable
 sealed interface RoomListContentState {
     data class Skeleton(val count: Int) : RoomListContentState
     data class Empty(
         val securityBannerState: SecurityBannerState,
+        // TCHAP : Display banner when sync is offline
+        val offlineBannerState: OfflineBannerState,
     ) : RoomListContentState
 
     data class Rooms(
         val showMatrixId: Boolean,
         val securityBannerState: SecurityBannerState,
+        // TCHAP : Display banner when sync is offline
+        val offlineBannerState: OfflineBannerState,
         val fullScreenIntentPermissionsState: FullScreenIntentPermissionsState,
         val batteryOptimizationState: BatteryOptimizationState,
         val showNewNotificationSoundBanner: Boolean,
