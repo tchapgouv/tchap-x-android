@@ -113,6 +113,8 @@ class FakeMatrixClient(
     private val performDatabaseVacuumLambda: () -> Result<Unit> = { lambdaError() },
     private val getDatabaseSizesLambda: () -> Result<SdkStoreSizes> = { lambdaError() },
     private val resetWellKnownConfigLambda: () -> Result<Unit> = { lambdaError() },
+    // TCHAP account-expiration
+    private val accountExpirationSendEmailLambda: () -> Result<Unit> = { lambdaError() },
 ) : MatrixClient {
     var setDisplayNameCalled: Boolean = false
         private set
@@ -383,5 +385,10 @@ class FakeMatrixClient(
 
     override suspend fun resetWellKnownConfig(): Result<Unit> {
         return resetWellKnownConfigLambda()
+    }
+
+    // TCHAP account-expiration
+    override suspend fun accountExpirationSendEmail(): Result<Unit> {
+        return accountExpirationSendEmailLambda()
     }
 }
