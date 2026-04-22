@@ -30,6 +30,7 @@ import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackSl
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
+import fr.gouv.tchap.features.accountexpired.api.AccountExpiredEntryPoint
 import im.vector.app.features.analytics.plan.JoinedRoom
 import io.element.android.annotations.ContributesNode
 import io.element.android.appnav.di.MatrixSessionCache
@@ -63,6 +64,7 @@ import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.matrix.api.core.asEventId
 import io.element.android.libraries.matrix.api.core.toRoomIdOrAlias
 import io.element.android.libraries.matrix.api.permalink.PermalinkData
+import io.element.android.libraries.matrix.api.sync.SyncState
 import io.element.android.libraries.oidc.api.OidcAction
 import io.element.android.libraries.oidc.api.OidcActionFlow
 import io.element.android.libraries.sessionstorage.api.LoggedInState
@@ -73,6 +75,7 @@ import io.element.android.services.analytics.api.AnalyticsService
 import io.element.android.services.analytics.api.watchers.AnalyticsColdStartWatcher
 import io.element.android.services.appnavstate.api.ROOM_OPENED_FROM_NOTIFICATION
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
@@ -99,6 +102,7 @@ class RootFlowNode(
     private val featureFlagService: FeatureFlagService,
     private val announcementService: AnnouncementService,
     private val analyticsService: AnalyticsService,
+    private val accountExpiredEntryPoint: AccountExpiredEntryPoint,
     private val analyticsColdStartWatcher: AnalyticsColdStartWatcher,
     @AppCoroutineScope private val appCoroutineScope: CoroutineScope,
 ) : BaseFlowNode<RootFlowNode.NavTarget>(
@@ -109,6 +113,8 @@ class RootFlowNode(
     buildContext = buildContext,
     plugins = plugins
 ) {
+    private var syncStateJob: Job? = null
+
     override fun onBuilt() {
         analyticsColdStartWatcher.start()
         appCoroutineScope.launch {
@@ -194,15 +200,37 @@ class RootFlowNode(
     }
 
     private fun switchToLoggedInFlow(sessionId: SessionId, navId: Int) {
+        observeSyncState(sessionId, navId)
         backstack.safeRoot(NavTarget.LoggedInFlow(sessionId, navId))
     }
 
+    private fun observeSyncState(sessionId: SessionId, navId: Int) {
+        syncStateJob?.cancel()
+        syncStateJob = lifecycleScope.launch {
+            val matrixClient = matrixSessionCache.getOrRestore(sessionId).getOrNull() ?: return@launch
+            matrixClient.syncService.syncState
+                .onEach { state ->
+                    if (state == SyncState.AccountExpired) {
+                        backstack.safeRoot(NavTarget.AccountExpired(sessionId))
+                    } else if (state == SyncState.Running) {
+                        val currentTarget = backstack.elements.value.lastOrNull()?.key?.navTarget
+                        if (currentTarget is NavTarget.AccountExpired) {
+                            switchToLoggedInFlow(sessionId, navId)
+                        }
+                    }
+                }
+                .launchIn(this)
+        }
+    }
+
     private fun switchToNotLoggedInFlow(params: LoginParams?) {
+        syncStateJob?.cancel()
         matrixSessionCache.removeAll()
         backstack.safeRoot(NavTarget.NotLoggedInFlow(params))
     }
 
     private fun switchToSignedOutFlow(sessionId: SessionId) {
+        syncStateJob?.cancel()
         backstack.safeRoot(NavTarget.SignedOutFlow(sessionId))
     }
 
@@ -282,6 +310,10 @@ class RootFlowNode(
             val sessionId: SessionId
         ) : NavTarget
 
+        @Parcelize data class AccountExpired(
+            val sessionId: SessionId
+        ) : NavTarget
+
         @Parcelize data object BugReport : NavTarget
     }
 
@@ -333,6 +365,13 @@ class RootFlowNode(
                     params = SignedOutEntryPoint.Params(
                         sessionId = navTarget.sessionId,
                     ),
+                )
+            }
+            is NavTarget.AccountExpired -> {
+                accountExpiredEntryPoint.createNode(
+                    parentNode = this,
+                    buildContext = buildContext,
+                    sessionId = navTarget.sessionId,
                 )
             }
             NavTarget.SplashScreen -> emptyNode(buildContext)

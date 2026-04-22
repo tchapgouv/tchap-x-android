@@ -14,4 +14,5 @@ enum class SyncState {
     Error,
     Terminated,
     Offline,
+    AccountExpired,
 }

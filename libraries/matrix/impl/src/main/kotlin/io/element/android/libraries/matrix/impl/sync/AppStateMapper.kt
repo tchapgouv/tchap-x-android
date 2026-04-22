@@ -18,5 +18,6 @@ internal fun SyncServiceState.toSyncState(): SyncState {
         SyncServiceState.TERMINATED -> SyncState.Terminated
         SyncServiceState.ERROR -> SyncState.Error
         SyncServiceState.OFFLINE -> SyncState.Offline
+        SyncServiceState.ACCOUNT_EXPIRED -> SyncState.AccountExpired
     }
 }
