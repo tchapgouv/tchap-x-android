@@ -9,7 +9,7 @@
 # do not exit when any command fails (issue with git flow)
 set +e
 
-appName="Tchap Android"
+appName="Tchap X Android"
 
 printf "\n================================================================================\n"
 printf "|                    Welcome to the release script!                            |\n"
@@ -158,34 +158,42 @@ git checkout develop
 git pull
 
 printf "\n================================================================================\n"
-# Guessing version to propose a default version
+# Reading version from file
 versionsFile="./plugins/src/main/kotlin/Versions.kt"
+
+# TCHAP - Use major/minor/patch format instead of year/month
+# Guessing version to propose a default version
 # The version of the release must match the date of next monday, where the release is supposed to go live
 # The command below gets the date of next monday
-nextMondayDateCommand="date -v +1w -v -monday"
+# nextMondayDateCommand="date -v +1w -v -monday"
 # Get release year on 2 digits
-versionYearCandidate=$(${nextMondayDateCommand} +%y)
-currentVersionMonth=$(grep "val versionMonth" ${versionsFile} | cut  -d " " -f6)
+# versionYearCandidate=$(${nextMondayDateCommand} +%y)
+# currentVersionMonth=$(grep "val versionMonth" ${versionsFile} | cut  -d " " -f6)
 # Get release month on 2 digits
-versionMonthCandidate=$(${nextMondayDateCommand} +%m)
-versionMonthCandidateNoLeadingZero=${versionMonthCandidate/#0/}
-currentVersionReleaseNumber=$(grep "val versionReleaseNumber" ${versionsFile} | cut  -d " " -f6)
+# versionMonthCandidate=$(${nextMondayDateCommand} +%m)
+# versionMonthCandidateNoLeadingZero=${versionMonthCandidate/#0/}
+# currentVersionReleaseNumber=$(grep "val versionReleaseNumber" ${versionsFile} | cut  -d " " -f6)
 # if the release month is the same as the current version, we increment the release number, else we reset it to 0
-if [[ ${currentVersionMonth} -eq ${versionMonthCandidateNoLeadingZero} ]]; then
-  versionReleaseNumberCandidate=$((currentVersionReleaseNumber + 1))
-else
-  versionReleaseNumberCandidate=0
-fi
-versionCandidate="${versionYearCandidate}.${versionMonthCandidate}.${versionReleaseNumberCandidate}"
+# if [[ ${currentVersionMonth} -eq ${versionMonthCandidateNoLeadingZero} ]]; then
+#  versionReleaseNumberCandidate=$((currentVersionReleaseNumber + 1))
+# else
+#  versionReleaseNumberCandidate=0
+# fi
+# versionCandidate="${versionYearCandidate}.${versionMonthCandidate}.${versionReleaseNumberCandidate}"
 
-read -r -p "Please enter the release version (example: ${versionCandidate}). Format must be 'YY.MM.x' or 'YY.MM.xy', with year and month matching next Monday. Just press enter if ${versionCandidate} is correct. " version
+versionMajorNumber=$(grep "private const val versionMajorNumber =" ${versionsFile} | cut -d '=' -f 2 | xargs)
+versionMinorNumber=$(grep "private const val versionMinorNumber =" ${versionsFile} | cut -d '=' -f 2 | xargs)
+versionPatchNumber=$(grep "private const val versionPatchNumber =" ${versionsFile} | cut -d '=' -f 2 | xargs)
+versionCandidate="${versionMajorNumber}.${versionMinorNumber}.${versionPatchNumber}"
+
+read -r -p "Please enter the release version (example: ${versionCandidate}). Just press enter if ${versionCandidate} is correct. " version
 version=${version:-${versionCandidate}}
 
-# extract year, month and release number for future use
-versionYear=$(echo "${version}" | cut  -d "." -f1)
-versionMonth=$(echo "${version}" | cut  -d "." -f2)
-versionMonthNoLeadingZero=${versionMonth/#0/}
-versionReleaseNumber=$(echo "${version}" | cut  -d "." -f3)
+# extract major, minor and patch for future use
+versionMajorNumber=$(echo "${version}" | cut  -d "." -f1)
+versionMinorNumber=$(echo "${version}" | cut  -d "." -f2)
+versionMinorNumberNoLeadingZero=${versionMinorNumber/#0/}
+versionPatchNumber=$(echo "${version}" | cut  -d "." -f3)
 
 printf "\n================================================================================\n"
 printf "Starting the release %s\n" "${version}"
@@ -207,11 +215,18 @@ if [[ $ret -ne 0 ]]; then
 fi
 
 # Ensure version is OK
+# versionsFileBak="${versionsFile}.bak"
+# cp ${versionsFile} ${versionsFileBak}
+# sed "s/private const val versionYear = .*/private const val versionYear = ${versionYear}/" ${versionsFileBak} > ${versionsFile}
+# sed "s/private const val versionMonth = .*/private const val versionMonth = ${versionMonthNoLeadingZero}/" ${versionsFile}    > ${versionsFileBak}
+# sed "s/private const val versionReleaseNumber = .*/private const val versionReleaseNumber = ${versionReleaseNumber}/" ${versionsFileBak} > ${versionsFile}
+# rm ${versionsFileBak}
+
 versionsFileBak="${versionsFile}.bak"
 cp ${versionsFile} ${versionsFileBak}
-sed "s/private const val versionYear = .*/private const val versionYear = ${versionYear}/" ${versionsFileBak} > ${versionsFile}
-sed "s/private const val versionMonth = .*/private const val versionMonth = ${versionMonthNoLeadingZero}/" ${versionsFile}    > ${versionsFileBak}
-sed "s/private const val versionReleaseNumber = .*/private const val versionReleaseNumber = ${versionReleaseNumber}/" ${versionsFileBak} > ${versionsFile}
+sed "s/private const val versionMajorNumber = .*/private const val versionMajorNumber = ${versionMajorNumber}/" ${versionsFileBak} > ${versionsFile}
+sed "s/private const val versionMinorNumber = .*/private const val versionMinorNumber = ${versionMinorNumberNoLeadingZero}/" ${versionsFile}    > ${versionsFileBak}
+sed "s/private const val versionPatchNumber = .*/private const val versionPatchNumber = ${versionPatchNumber}/" ${versionsFileBak} > ${versionsFile}
 rm ${versionsFileBak}
 
 printf "\n================================================================================\n"
@@ -250,8 +265,8 @@ git commit -a -m "Version ${version}"
 # TCHAP - Disable fastlane
 #printf "\n================================================================================\n"
 #printf "Creating fastlane file...\n"
-#printf -v versionReleaseNumber2Digits "%02d" "${versionReleaseNumber}"
-#fastlaneFile="20${versionYear}${versionMonth}${versionReleaseNumber2Digits}0.txt"
+#printf -v versionPatchNumber2Digits "%02d" "${versionPatchNumber}"
+#fastlaneFile="${versionMajorNumber}${versionMinorNumber}${versionPatchNumber2Digits}0.txt"
 #fastlanePathFile="./fastlane/metadata/android/en-US/changelogs/${fastlaneFile}"
 #printf "Main changes in this version: bug fixes and improvements.\nFull changelog: https://github.com/tchapgouv/tchap-x-android/releases" > "${fastlanePathFile}"
 #
