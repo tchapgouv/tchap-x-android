@@ -1,3 +1,24 @@
+Changements dans Tchap X Android v0.9.0
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v0.9.0 -->
+
+## Qu'est-ce qui a changé ?
+### ✨ Nouveautés
+* Afficher un message lorsque Tchap est inaccessible by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/173
+### 🐛 Corrections de bugs
+* Correction du dégradé pour le surlignage des messages by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/175
+### 🗣 Textes & Traductions
+* Aligner le wording avec la taxonomie Tchap by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/165
+* Aligner le wording avec la taxonomie Tchap #2 by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/174
+* Modification de la description de l'onglet Espace by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/178
+* Correction de textes by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/181
+### 🧱 Build
+* Script de génération de release pour Tchap by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/179
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v0.8.2-nightly...v0.9.0
+
 Changements dans Tchap X Android v0.8.2-nightly
 =============================
 
