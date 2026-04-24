@@ -22,7 +22,7 @@
   <string name="a11y_notifications_new_mentions">"Nouvelles mentions"</string>
   <string name="a11y_notifications_new_messages">"Nouveaux messages"</string>
   <string name="a11y_notifications_ongoing_call">"Appel en cours"</string>
-  <string name="a11y_other_user_avatar">"Avatar de l’autre utilisateur"</string>
+  <string name="a11y_other_user_avatar">"Avatar de l’autre membre"</string><!-- Tchap: Custom string -->
   <string name="a11y_page_n">"Page %1$d"</string>
   <string name="a11y_pause">"Pause"</string>
   <string name="a11y_paused_voice_message">"Message vocal, durée: %1$s, position actuelle: %2$s"</string>
@@ -49,8 +49,8 @@
   <string name="a11y_show_password">"Afficher le mot de passe"</string>
   <string name="a11y_start_call">"Démarrer un appel"</string>
   <string name="a11y_tombstoned_room">"Salon clôturé"</string>
-  <string name="a11y_user_avatar">"Avatar de l’utilisateur"</string>
-  <string name="a11y_user_menu">"Menu utilisateur"</string>
+  <string name="a11y_user_avatar">"Avatar du membre"</string><!-- Tchap: Custom string -->
+  <string name="a11y_user_menu">"Menu membre"</string><!-- Tchap: Custom string -->
   <string name="a11y_view_avatar">"Voir l’avatar"</string>
   <string name="a11y_view_details">"Afficher les détails"</string>
   <string name="a11y_voice_message">"Message vocal, durée: %1$s"</string>
@@ -105,9 +105,9 @@
   <string name="action_go_to_settings">"Ouvrir les paramètres"</string>
   <string name="action_ignore">"Ignorer"</string>
   <string name="action_invite">"Inviter"</string>
-  <string name="action_invite_friends">"Inviter des amis"</string>
-  <string name="action_invite_friends_to_app">"Inviter des amis à %1$s"</string>
-  <string name="action_invite_people_to_app">"Invitez des personnes à %1$s"</string>
+  <string name="action_invite_friends">"Inviter à rejoindre Tchap"</string><!-- Tchap: Custom string -->
+  <string name="action_invite_friends_to_app">"Inviter à rejoindre %1$s"</string><!-- Tchap: Custom string -->
+  <string name="action_invite_people_to_app">"Invitez à rejoindre %1$s"</string><!-- Tchap: Custom string -->
   <string name="action_invites_list">"Invitations"</string>
   <string name="action_join">"Rejoindre"</string>
   <string name="action_learn_more">"En savoir plus"</string>
@@ -117,7 +117,7 @@
   <string name="action_leave_space">"Quitter l’espace"</string>
   <string name="action_load_more">"Voir plus"</string>
   <string name="action_manage_account">"Gérer le compte"</string>
-  <string name="action_manage_devices">"Gérez les sessions"</string>
+  <string name="action_manage_devices">"Gérez les appareils"</string><!-- Tchap: Custom string -->
   <string name="action_manage_rooms">"Gérer les salons"</string>
   <string name="action_message">"Message"</string>
   <string name="action_minimize">"Minimiser"</string>
@@ -188,11 +188,11 @@
   <string name="common_an_image">"une image"</string>
   <string name="common_analytics">"Statistiques d’utilisation"</string>
   <string name="common_android_shortcuts_remove_reason_left_room">"Vous avez quitté le salon"</string>
-  <string name="common_android_shortcuts_remove_reason_session_logged_out">"Vous avez été déconnecté de la session"</string>
+  <string name="common_android_shortcuts_remove_reason_session_logged_out">"Vous avez été déconnecté de l'appareil"</string><!-- Tchap: Custom string -->
   <string name="common_appearance">"Apparence"</string>
   <string name="common_audio">"Audio"</string>
   <string name="common_beta">"Bêta"</string>
-  <string name="common_blocked_users">"Utilisateurs bloqués"</string>
+  <string name="common_blocked_users">"Membres bloqués"</string><!-- Tchap: Custom string -->
   <string name="common_bubbles">"Bulles"</string>
   <string name="common_call_started">"Appel démarré"</string>
   <string name="common_chat_backup">"Sauvegarde des discussions"</string>
@@ -208,7 +208,7 @@
   <string name="common_decryption_error">"Erreur de déchiffrement"</string>
   <string name="common_description">"Description"</string>
   <string name="common_developer_options">"Options pour les développeurs"</string>
-  <string name="common_device_id">"Identifiant de session"</string>
+  <string name="common_device_id">"Identifiant de l'appareil"</string><!-- Tchap: Custom string -->
   <string name="common_direct_chat">"Discussion à deux"</string>
   <string name="common_do_not_show_this_again">"Ne plus afficher"</string>
   <string name="common_download_failed">"Échec du téléchargement"</string>
@@ -262,7 +262,7 @@ Raison : %1$s."</string>
   <string name="common_message_layout">"Mode d’affichage des messages"</string>
   <string name="common_message_removed">"Message supprimé"</string>
   <string name="common_modern">"Moderne"</string>
-  <string name="common_mute">"Mettre en sourdine"</string>
+  <string name="common_mute">"Sourdine"</string><!-- Tchap: Custom string -->
   <string name="common_name">"Nom"</string>
   <string name="common_name_and_id">"%1$s (%2$s)"</string>
   <string name="common_no_results">"Aucun résultat"</string>
@@ -274,7 +274,7 @@ Raison : %1$s."</string>
   <string name="common_or">"ou"</string>
   <string name="common_other_options">"Autres options"</string>
   <string name="common_password">"Mot de passe"</string>
-  <string name="common_people">"Personnes"</string>
+  <string name="common_people">"Membres"</string><!-- Tchap: Custom string -->
   <string name="common_permalink">"Permalien"</string>
   <string name="common_permission">"Autorisation"</string>
   <string name="common_pinned">"Épinglé"</string>
@@ -370,20 +370,20 @@ Raison : %1$s."</string>
   <string name="common_unable_to_decrypt_insecure_device">"Envoyé depuis un appareil non sécurisé"</string>
   <string name="common_unable_to_decrypt_no_access">"Vous ne pouvez pas voir ce message"</string>
   <string name="common_unable_to_decrypt_verification_violation">"L’identité vérifiée de l’expéditeur a été réinitialisée"</string>
-  <string name="common_unable_to_invite_message">"Les invitations n’ont pas pu être envoyées à un ou plusieurs utilisateurs."</string>
+  <string name="common_unable_to_invite_message">"Les invitations n’ont pas pu être envoyées à un ou plusieurs membres."</string><!-- Tchap: Custom string -->
   <string name="common_unable_to_invite_title">"Impossible d’envoyer une ou plusieurs invitations"</string>
   <string name="common_unlock">"Déverrouillage"</string>
-  <string name="common_unmute">"Retirer la sourdine"</string>
+  <string name="common_unmute">"Réactiver"</string><!-- Tchap: Custom string -->
   <string name="common_unsupported_call">"Appel non pris en charge"</string>
   <string name="common_unsupported_event">"Événement non pris en charge"</string>
-  <string name="common_username">"Nom d’utilisateur"</string>
+  <string name="common_username">"Nom de membre"</string><!-- Tchap: Custom string -->
   <string name="common_verification_cancelled">"Vérification annulée"</string>
   <string name="common_verification_complete">"Vérification terminée"</string>
   <string name="common_verification_failed">"Échec de la vérification"</string>
   <string name="common_verified">"Vérifié(e)"</string>
-  <string name="common_verify_device">"Vérifier la session"</string>
+  <string name="common_verify_device">"Vérifier l'appareil"</string><!-- Tchap: Custom string -->
   <string name="common_verify_identity">"Vérifier l’identité"</string>
-  <string name="common_verify_user">"Vérifier l’utilisateur"</string>
+  <string name="common_verify_user">"Vérifier le membre"</string><!-- Tchap: Custom string -->
   <string name="common_video">"Vidéo"</string>
   <string name="common_video_quality_high">"Haute qualité"</string>
   <string name="common_video_quality_high_description">"Meilleure qualité mais plus gros fichier"</string>
@@ -474,7 +474,7 @@ Raison : %1$s."</string>
   <string name="screen_resolve_send_failure_you_unsigned_device_title">"Votre message n’a pas été envoyé car vous n’avez pas vérifié tous vos appareils"</string>
   <string name="screen_room_change_role_administrators_or_owners_title">"Modifier les administrateurs ou les propriétaires"</string>
   <string name="screen_room_error_failed_processing_media">"Échec du traitement des médias à télécharger, veuillez réessayer."</string>
-  <string name="screen_room_error_failed_retrieving_user_details">"Impossible de récupérer les détails de l’utilisateur"</string>
+  <string name="screen_room_error_failed_retrieving_user_details">"Impossible de récupérer les détails du membre"</string><!-- Tchap: Custom string -->
   <string name="screen_room_event_pill">"Message dans %1$s"</string>
   <string name="screen_room_grouped_state_events_expand">"Développer"</string>
   <string name="screen_room_grouped_state_events_reduce">"Réduire"</string>
@@ -490,7 +490,7 @@ Raison : %1$s."</string>
   <string name="screen_share_open_google_maps">"Ouvrir dans Google Maps"</string>
   <string name="screen_share_open_osm_maps">"Ouvrir dans OpenStreetMap"</string>
   <string name="screen_share_this_location_action">"Partager cette position"</string>
-  <string name="screen_space_list_description">"Espaces que vous avez créés ou rejoints."</string>
+  <string name="screen_space_list_description">"Sélectionnez un espace pour filtrer vos conversations ou cliquez l’icone à droite pour afficher ses informations."</string><!-- Tchap: Custom string -->
   <string name="screen_space_list_details">"%1$s • %2$s"</string>
   <string name="screen_space_list_empty_state_title">"Créer des espaces pour organiser les salons"</string>
   <string name="screen_space_list_parent_space">"Espace %1$s"</string>
@@ -505,5 +505,5 @@ Raison : %1$s."</string>
   <string name="timeline_decryption_failure_historical_event_unverified_device">"Vous devez vérifier cet appareil pour accéder à l’historique des messages"</string>
   <string name="timeline_decryption_failure_historical_event_user_not_joined">"Vous ne pouvez pas voir ce message"</string>
   <string name="timeline_decryption_failure_unable_to_decrypt">"Impossible de déchiffrer le message"</string>
-  <string name="timeline_decryption_failure_withheld_unverified">"Ce message a été bloqué soit parce que vous n’avez pas vérifié votre session, soit parce que l’expéditeur doit vérifier votre identité."</string>
+  <string name="timeline_decryption_failure_withheld_unverified">"Ce message a été bloqué soit parce que vous n’avez pas vérifié votre appareil, soit parce que l’expéditeur doit vérifier votre identité."</string><!-- Tchap: Custom string -->
 </resources>

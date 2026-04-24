@@ -28,7 +28,7 @@
   <string name="screen_link_new_device_root_title">"Quel type d’appareil souhaitez-vous associer ?"</string>
   <string name="screen_link_new_device_wrong_number_subtitle">"Veuillez réessayer et assurez-vous d’avoir saisi correctement le code à 2 chiffres. Si les chiffres ne correspondent toujours pas, veuillez contacter votre fournisseur de compte."</string>
   <string name="screen_link_new_device_wrong_number_title">"Les nombres ne correspondent pas"</string>
-  <string name="screen_qr_code_login_connection_note_secure_state_description">"Aucune connexion sécurisée n’a pu être établie avec la nouvelle session. Vos sessions existantes sont toujours en sécurité et vous n’avez pas à vous en soucier."</string>
+  <string name="screen_qr_code_login_connection_note_secure_state_description">"Aucune connexion sécurisée n’a pu être établie avec le nouvel appareil. Vos appareils existants sont toujours en sécurité et vous n’avez pas à vous en soucier."</string><!-- Tchap: Custom string -->
   <string name="screen_qr_code_login_connection_note_secure_state_list_header">"Et maintenant ?"</string>
   <string name="screen_qr_code_login_connection_note_secure_state_list_item_1">"Essayez de vous connecter à nouveau à l’aide du code QR au cas où il s’agirait d’un problème réseau"</string>
   <string name="screen_qr_code_login_connection_note_secure_state_list_item_2">"Si vous rencontrez le même problème, essayez un autre réseau wifi ou utilisez vos données mobiles au lieu du wifi"</string>

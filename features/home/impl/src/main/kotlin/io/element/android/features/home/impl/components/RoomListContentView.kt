@@ -23,13 +23,13 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.features.home.impl.components.OfflineBanner
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.home.impl.R
@@ -41,6 +41,7 @@ import io.element.android.features.home.impl.filters.aRoomListFiltersState
 import io.element.android.features.home.impl.filters.selection.FilterSelectionState
 import io.element.android.features.home.impl.model.RoomListRoomSummary
 import io.element.android.features.home.impl.model.RoomSummaryDisplayType
+import io.element.android.features.home.impl.roomlist.OfflineBannerState
 import io.element.android.features.home.impl.roomlist.RoomListContentState
 import io.element.android.features.home.impl.roomlist.RoomListContentStateProvider
 import io.element.android.features.home.impl.roomlist.RoomListEvent
@@ -67,6 +68,8 @@ fun RoomListContentView(
     eventSink: (RoomListEvent) -> Unit,
     onSetUpRecoveryClick: () -> Unit,
     onConfirmRecoveryKeyClick: () -> Unit,
+    // TCHAP : Display banner when sync is offline
+    onViewServiceStatusClick: () -> Unit,
     onRoomClick: (RoomListRoomSummary) -> Unit,
     onCreateRoomClick: () -> Unit,
     contentPadding: PaddingValues,
@@ -88,6 +91,8 @@ fun RoomListContentView(
                 onSetUpRecoveryClick = onSetUpRecoveryClick,
                 onConfirmRecoveryKeyClick = onConfirmRecoveryKeyClick,
                 onCreateRoomClick = onCreateRoomClick,
+                // TCHAP : Display banner when sync is offline
+                onViewServiceStatusClick = onViewServiceStatusClick,
             )
         }
         is RoomListContentState.Rooms -> {
@@ -100,6 +105,8 @@ fun RoomListContentView(
                 eventSink = eventSink,
                 onSetUpRecoveryClick = onSetUpRecoveryClick,
                 onConfirmRecoveryKeyClick = onConfirmRecoveryKeyClick,
+                // TCHAP : Display banner when sync is offline
+                onViewServiceStatusClick = onViewServiceStatusClick,
                 onRoomClick = onRoomClick,
                 lazyListState = lazyListState,
                 contentPadding = contentPadding,
@@ -135,6 +142,8 @@ private fun EmptyView(
     eventSink: (RoomListEvent) -> Unit,
     onSetUpRecoveryClick: () -> Unit,
     onConfirmRecoveryKeyClick: () -> Unit,
+    // TCHAP : Display banner when sync is offline
+    onViewServiceStatusClick: () -> Unit,
     onCreateRoomClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -167,6 +176,14 @@ private fun EmptyView(
                 }
                 SecurityBannerState.None -> Unit
             }
+
+            // TCHAP : Display banner when sync is offline
+            when (state.offlineBannerState) {
+                OfflineBannerState.ShowOfflineBanner -> {
+                    OfflineBanner(onViewServiceStatusClick = onViewServiceStatusClick)
+                }
+                OfflineBannerState.None -> {}
+            }
         }
     }
 }
@@ -180,6 +197,8 @@ private fun RoomsView(
     eventSink: (RoomListEvent) -> Unit,
     onSetUpRecoveryClick: () -> Unit,
     onConfirmRecoveryKeyClick: () -> Unit,
+    // TCHAP : Display banner when sync is offline
+    onViewServiceStatusClick: () -> Unit,
     onRoomClick: (RoomListRoomSummary) -> Unit,
     contentPadding: PaddingValues,
     lazyListState: LazyListState,
@@ -200,6 +219,8 @@ private fun RoomsView(
             eventSink = eventSink,
             onSetUpRecoveryClick = onSetUpRecoveryClick,
             onConfirmRecoveryKeyClick = onConfirmRecoveryKeyClick,
+            // TCHAP : Display banner when sync is offline
+            onViewServiceStatusClick = onViewServiceStatusClick,
             onRoomClick = onRoomClick,
             contentPadding = contentPadding,
             lazyListState = lazyListState,
@@ -215,6 +236,8 @@ private fun RoomsViewList(
     eventSink: (RoomListEvent) -> Unit,
     onSetUpRecoveryClick: () -> Unit,
     onConfirmRecoveryKeyClick: () -> Unit,
+    // TCHAP : Display banner when sync is offline
+    onViewServiceStatusClick: () -> Unit,
     onRoomClick: (RoomListRoomSummary) -> Unit,
     contentPadding: PaddingValues,
     lazyListState: LazyListState,
@@ -260,6 +283,16 @@ private fun RoomsViewList(
                     )
                 }
             }
+        }
+
+        // TCHAP : Display banner when sync is offline
+        when (state.offlineBannerState) {
+            OfflineBannerState.ShowOfflineBanner -> {
+                item {
+                    OfflineBanner(onViewServiceStatusClick = onViewServiceStatusClick)
+                }
+            }
+            OfflineBannerState.None -> {}
         }
 
         // Note: do not use a key for the LazyColumn, or the scroll will not behave as expected if a room
@@ -346,6 +379,8 @@ internal fun RoomListContentViewPreview(@PreviewParameter(RoomListContentStatePr
         eventSink = {},
         onSetUpRecoveryClick = {},
         onConfirmRecoveryKeyClick = {},
+        // TCHAP : Display banner when sync is offline
+        onViewServiceStatusClick = {},
         onRoomClick = {},
         onCreateRoomClick = {},
         lazyListState = rememberLazyListState(),

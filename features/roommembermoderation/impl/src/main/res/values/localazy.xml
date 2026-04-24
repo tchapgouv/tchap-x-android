@@ -11,7 +11,7 @@
   <string name="screen_bottom_sheet_manage_room_member_kick_member_confirmation_title">"Are you sure you want to remove this member?"</string>
   <string name="screen_bottom_sheet_manage_room_member_kick_member_from_space_confirmation_description">"They will be able to join this space again if invited, and they’ll still keep their memberships of any rooms or subspaces."</string>
   <string name="screen_bottom_sheet_manage_room_member_member_user_info">"View profile"</string>
-  <string name="screen_bottom_sheet_manage_room_member_remove">"Remove user"</string>
+  <string name="screen_bottom_sheet_manage_room_member_remove">"Remove from room (reversible)"</string><!-- Tchap: Custom string -->
   <string name="screen_bottom_sheet_manage_room_member_remove_confirmation_title">"Remove member and ban from joining in the future?"</string>
   <string name="screen_bottom_sheet_manage_room_member_removing_user">"Removing %1$s…"</string>
   <string name="screen_bottom_sheet_manage_room_member_unban">"Unban user"</string>

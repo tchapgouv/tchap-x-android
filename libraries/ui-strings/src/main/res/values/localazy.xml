@@ -108,8 +108,8 @@
   <string name="action_go_to_settings">"Go to settings"</string>
   <string name="action_ignore">"Ignore"</string>
   <string name="action_invite">"Invite"</string>
-  <string name="action_invite_friends">"Invite people"</string>
-  <string name="action_invite_friends_to_app">"Invite people to %1$s"</string>
+  <string name="action_invite_friends">"Invite to join Tchap"</string><!-- Tchap: Custom string -->
+  <string name="action_invite_friends_to_app">"Invite to join %1$s"</string><!-- Tchap: Custom string -->
   <string name="action_invite_people_to_app">"Invite people to %1$s"</string>
   <string name="action_invites_list">"Invites"</string>
   <string name="action_join">"Join"</string>

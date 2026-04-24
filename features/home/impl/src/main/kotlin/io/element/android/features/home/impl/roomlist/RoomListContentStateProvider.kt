@@ -35,6 +35,8 @@ open class RoomListContentStateProvider : PreviewParameterProvider<RoomListConte
 
 internal fun aRoomsContentState(
     securityBannerState: SecurityBannerState = SecurityBannerState.None,
+    // TCHAP : Display banner when sync is offline
+    offlineBannerState: OfflineBannerState = OfflineBannerState.None,
     showNewNotificationSoundBanner: Boolean = false,
     summaries: ImmutableList<RoomListRoomSummary> = aRoomListRoomSummaryList(),
     fullScreenIntentPermissionsState: FullScreenIntentPermissionsState = aFullScreenIntentPermissionsState(),
@@ -43,6 +45,8 @@ internal fun aRoomsContentState(
 ) = RoomListContentState.Rooms(
     showMatrixId = false,
     securityBannerState = securityBannerState,
+    // TCHAP : Display banner when sync is offline
+    offlineBannerState = offlineBannerState,
     showNewNotificationSoundBanner = showNewNotificationSoundBanner,
     fullScreenIntentPermissionsState = fullScreenIntentPermissionsState,
     batteryOptimizationState = batteryOptimizationState,
@@ -54,6 +58,10 @@ internal fun aSkeletonContentState() = RoomListContentState.Skeleton(16)
 
 internal fun anEmptyContentState(
     securityBannerState: SecurityBannerState = SecurityBannerState.None,
+    // TCHAP : Display banner when sync is offline
+    offlineBannerState: OfflineBannerState = OfflineBannerState.None,
 ) = RoomListContentState.Empty(
     securityBannerState = securityBannerState,
+    // TCHAP : Display banner when sync is offline
+    offlineBannerState = offlineBannerState,
 )

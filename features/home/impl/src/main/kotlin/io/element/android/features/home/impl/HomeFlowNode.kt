@@ -29,8 +29,10 @@ import com.bumble.appyx.navmodel.backstack.operation.pop
 import com.bumble.appyx.navmodel.backstack.operation.push
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
+import fr.gouv.tchap.android.appconfig.TchapConfig
 import im.vector.app.features.analytics.plan.MobileScreen
 import io.element.android.annotations.ContributesNode
+import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.home.api.HomeEntryPoint
 import io.element.android.features.home.impl.components.RoomListMenuAction
 import io.element.android.features.home.impl.model.RoomListRoomSummary
@@ -43,6 +45,7 @@ import io.element.android.features.logout.api.direct.DirectLogoutView
 import io.element.android.features.reportroom.api.ReportRoomEntryPoint
 import io.element.android.features.rolesandpermissions.api.ChangeRoomMemberRolesEntryPoint
 import io.element.android.features.rolesandpermissions.api.ChangeRoomMemberRolesListType
+import io.element.android.libraries.androidutils.browser.openUrlInChromeCustomTab
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.BackstackView
 import io.element.android.libraries.architecture.BaseFlowNode
@@ -162,10 +165,16 @@ class HomeFlowNode(
         stateFlow.value.roomListState.eventSink(RoomListEvent.LeaveRoom(roomId, needsConfirmation = false))
     }
 
+    // TCHAP : Display banner when sync is offline
+    private fun onViewServiceStatusClick(activity: Activity, darkTheme: Boolean) {
+        activity.openUrlInChromeCustomTab(null, darkTheme, TchapConfig.SERVICE_STATUS_URL)
+    }
+
     private fun rootNode(buildContext: BuildContext): Node {
         return node(buildContext) { modifier ->
             val state by stateFlow.collectAsState()
             val activity = requireNotNull(LocalActivity.current)
+            val isDark = ElementTheme.isLightTheme.not()
 
             val loadingJoinedRoomJob = remember { mutableStateOf<AsyncData<Job>>(AsyncData.Uninitialized) }
             if (loadingJoinedRoomJob.value.isLoading()) {
@@ -223,6 +232,8 @@ class HomeFlowNode(
                 onCreateSpaceClick = callback::navigateToCreateSpace,
                 onSetUpRecoveryClick = callback::navigateToSetUpRecovery,
                 onConfirmRecoveryKeyClick = callback::navigateToEnterRecoveryKey,
+                // TCHAP : Display banner when sync is offline
+                onViewServiceStatusClick = { onViewServiceStatusClick(activity, isDark) },
                 onRoomSettingsClick = callback::navigateToRoomSettings,
                 onMenuActionClick = { onMenuActionClick(activity, it) },
                 onReportRoomClick = ::navigateToReportRoom,

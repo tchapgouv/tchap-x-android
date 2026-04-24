@@ -38,7 +38,7 @@ import io.element.android.features.messages.impl.timeline.model.event.TimelineIt
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemVoiceContent
 import io.element.android.features.messages.impl.timeline.protection.TimelineProtectionEvent
 import io.element.android.features.messages.impl.timeline.protection.TimelineProtectionState
-import io.element.android.libraries.designsystem.colors.gradientSubtleColors
+import io.element.android.libraries.designsystem.colors.gradientInfoColors
 import io.element.android.libraries.designsystem.modifiers.onKeyboardContextMenuAction
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
@@ -222,7 +222,7 @@ private fun Modifier.focusedEvent(
     focusedEventOffset: Dp,
 ): Modifier {
     val highlightedLineColor = ElementTheme.colors.borderAccentSubtle
-    val gradientColors = gradientSubtleColors()
+    val gradientColors = gradientInfoColors()
     val verticalOffset = focusedEventOffset.toPx()
     val verticalRatio = 0.7f
     return drawWithCache {
