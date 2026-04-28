@@ -212,7 +212,7 @@ android {
         }
 
         // TCHAP productFlavors configs
-        create("devTchap") {
+        create("tchapDev") {
             dimension = "target"
 
             resValue("string", "app_name", "Tchap dev")
@@ -220,7 +220,7 @@ android {
             applicationIdSuffix = ".dev"
             versionNameSuffix = "_dev"
         }
-        create("btchap") {
+        create("tchapPreprod") {
             dimension = "target"
 
             resValue("string", "app_name", "Tchap preprod")

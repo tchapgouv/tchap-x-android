@@ -26,8 +26,8 @@ android {
     flavorDimensions += listOf("target", "pinning")
     productFlavors {
         create("tchap") { dimension = "target"; isDefault = true }
-        create("btchap") { dimension = "target" }
-        create("devTchap") { dimension = "target" }
+        create("tchapPreprod") { dimension = "target" }
+        create("tchapDev") { dimension = "target" }
 
         create("withpinning") { dimension = "pinning"; isDefault = true }
         create("withoutpinning") { dimension = "pinning" }
