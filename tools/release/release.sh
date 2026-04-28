@@ -9,7 +9,7 @@
 # do not exit when any command fails (issue with git flow)
 set +e
 
-appName="Tchap Android"
+appName="Tchap beta Android"
 
 printf "\n================================================================================\n"
 printf "|                    Welcome to the release script!                            |\n"
