@@ -39,7 +39,7 @@ android {
 
     productFlavors {
         // Disable certificate pinning for dev environment
-        getByName("devTchap") {
+        getByName("tchapDev") {
             buildConfigField("boolean", "ENABLE_CERTIFICATE_PINNING", "false")
         }
 
