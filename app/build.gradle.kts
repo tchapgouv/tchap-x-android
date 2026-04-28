@@ -212,18 +212,18 @@ android {
         }
 
         // TCHAP productFlavors configs
-        create("devTchap") {
+        create("tchapDev") {
             dimension = "target"
 
-            resValue("string", "app_name", "DevTchap X beta")
+            resValue("string", "app_name", "Tchap beta dev")
 
             applicationIdSuffix = ".dev"
             versionNameSuffix = "_dev"
         }
-        create("btchap") {
+        create("tchapPreprod") {
             dimension = "target"
 
-            resValue("string", "app_name", "Btchap X beta")
+            resValue("string", "app_name", "Tchap beta preprod")
 
             applicationIdSuffix = ".staging"
             versionNameSuffix = "_b"
@@ -231,7 +231,7 @@ android {
         create("tchap") {
             dimension = "target"
 
-            resValue("string", "app_name", "Tchap X beta")
+            resValue("string", "app_name", "Tchap beta")
         }
 
         create("withpinning") {

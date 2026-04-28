@@ -19,7 +19,7 @@ open class AnalyticsPreferencesStateProvider : PreviewParameterProvider<Analytic
 }
 
 fun aAnalyticsPreferencesState(
-    applicationName: String = "Tchap X",
+    applicationName: String = "Tchap",
     isEnabled: Boolean = false,
     policyUrl: String = "https://www.tchap.gouv.fr",
 ) = AnalyticsPreferencesState(
