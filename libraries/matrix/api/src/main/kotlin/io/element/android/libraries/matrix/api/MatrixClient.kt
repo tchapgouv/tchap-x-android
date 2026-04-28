@@ -223,6 +223,11 @@ interface MatrixClient {
      * Resets the cached client `well-known` config by the SDK.
      */
     suspend fun resetWellKnownConfig(): Result<Unit>
+
+    /**
+     * TCHAP account-expiration : request to send a new email to provide the user with an updated link to renew their account.
+     */
+    suspend fun accountExpirationSendEmail(): Result<Unit>
 }
 
 /**

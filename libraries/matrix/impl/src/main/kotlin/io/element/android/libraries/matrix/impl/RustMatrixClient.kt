@@ -136,6 +136,7 @@ import org.matrix.rustcomponents.sdk.CreateRoomParameters as RustCreateRoomParam
 import org.matrix.rustcomponents.sdk.RoomPreset as RustRoomPreset
 import org.matrix.rustcomponents.sdk.SyncService as ClientSyncService
 
+@Suppress("LargeClass")
 class RustMatrixClient(
     private val innerClient: Client,
     private val sessionStore: SessionStore,
@@ -857,6 +858,14 @@ class RustMatrixClient(
         Timber.i("Scheduling periodic database vacuuming for session $sessionId")
         val request = PerformDatabaseVacuumRequestBuilder(sessionId)
         sessionCoroutineScope.launch { workManagerScheduler.submit(request) }
+    }
+
+    // TCHAP account-expiration : request to send a new email to provide the user with an updated link to renew their account
+    override suspend fun accountExpirationSendEmail(): Result<Unit> {
+        return runCatchingExceptions {
+            Timber.d("Request to send a new email of account expiration for session $sessionId")
+            innerClient.accountExpirationSendEmail()
+        }
     }
 }
 

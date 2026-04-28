@@ -19,5 +19,8 @@ object LearnMoreConfig {
 
     // TCHAP - Add HOW_TO_CREATE_SPACE on create space header
     const val HOW_TO_CREATE_SPACE: String = "https://aide.tchap.numerique.gouv.fr/fr/article/comment-creer-un-espace-sur-tchap-web-1wmlenx/"
+
+    // TCHAP - Add HOW_TO_RENEW_MY_ACCOUNT on account expired view
+    const val HOW_TO_RENEW_MY_ACCOUNT = "https://aide.tchap.numerique.gouv.fr/fr/article/renouvellement-de-votre-compte-tchap-expiration-1g4e6xh/"
     const val HISTORY_VISIBLE_URL: String = "https://element.io/en/help#e2ee-history-sharing"
 }
