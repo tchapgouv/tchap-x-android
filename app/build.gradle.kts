@@ -215,7 +215,7 @@ android {
         create("tchapDev") {
             dimension = "target"
 
-            resValue("string", "app_name", "Tchap dev")
+            resValue("string", "app_name", "Tchap beta dev")
 
             applicationIdSuffix = ".dev"
             versionNameSuffix = "_dev"
@@ -223,7 +223,7 @@ android {
         create("tchapPreprod") {
             dimension = "target"
 
-            resValue("string", "app_name", "Tchap preprod")
+            resValue("string", "app_name", "Tchap beta preprod")
 
             applicationIdSuffix = ".staging"
             versionNameSuffix = "_b"
@@ -231,7 +231,7 @@ android {
         create("tchap") {
             dimension = "target"
 
-            resValue("string", "app_name", "Tchap")
+            resValue("string", "app_name", "Tchap beta")
         }
 
         create("withpinning") {
