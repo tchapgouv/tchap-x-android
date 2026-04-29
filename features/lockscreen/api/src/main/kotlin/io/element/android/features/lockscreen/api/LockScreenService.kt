@@ -34,6 +34,12 @@ interface LockScreenService {
      * @return true if the pin is setup, false otherwise.
      */
     fun isPinSetup(): Flow<Boolean>
+
+    /**
+     * TCHAP : disable-screenshots
+     * Check isDebug to allow screenshots.
+     */
+    val isDebug: Boolean
 }
 
 /**
@@ -43,10 +49,15 @@ interface LockScreenService {
 fun LockScreenService.handleSecureFlag(activity: ComponentActivity) {
     isPinSetup()
         .onEach { isPinSetup ->
+            // TCHAP : disable-screenshots
+            // Enable screenshots only in debug and when the Pin is not Setup
+            val enableScreenshots = isDebug && !isPinSetup
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                activity.setRecentsScreenshotEnabled(!isPinSetup)
+//                activity.setRecentsScreenshotEnabled(!isPinSetup)
+                activity.setRecentsScreenshotEnabled(enableScreenshots)
             } else {
-                if (isPinSetup) {
+//                if (isPinSetup) {
+                if (!enableScreenshots) {
                     activity.window.setFlags(
                         WindowManager.LayoutParams.FLAG_SECURE,
                         WindowManager.LayoutParams.FLAG_SECURE
