@@ -9,7 +9,7 @@
 # do not exit when any command fails (issue with git flow)
 set +e
 
-appName="Tchap X Android"
+appName="Tchap beta Android"
 
 printf "\n================================================================================\n"
 printf "|                    Welcome to the release script!                            |\n"
@@ -230,7 +230,8 @@ sed "s/private const val versionPatchNumber = .*/private const val versionPatchN
 rm ${versionsFileBak}
 
 printf "\n================================================================================\n"
-githubCreateReleaseLink="https://github.com/tchapgouv/tchap-x-android/releases/new?tag=v${version}&title=Tchap%20Android%20v${version}"
+appNameURI=$(echo "$appName" | sed "s/ /%20/g")
+githubCreateReleaseLink="https://github.com/tchapgouv/tchap-x-android/releases/new?tag=v${version}&title=${appNameURI}%20v${version}"
 printf "Generating release notes...\n"
 printf -- "Open this link: %s\n" "${githubCreateReleaseLink}"
 printf "Then:\n"
@@ -525,7 +526,6 @@ printf "You can then go to \"Publishing overview\" and send the new release for 
 read -r -p "Press enter to continue. "
 
 printf "\n================================================================================\n"
-githubCreateReleaseLink="https://github.com/tchapgouv/tchap-x-android/releases/new?tag=v${version}&title=Tchap%20Android%20v${version}"
 printf "Creating the release on gitHub.\n"
 printf -- "Return to (or re-open) this link: %s\n" "${githubCreateReleaseLink}"
 printf "Then\n"

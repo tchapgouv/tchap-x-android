@@ -61,7 +61,7 @@ open class StartChatStateProvider : PreviewParameterProvider<StartChatState> {
 }
 
 fun aCreateRoomRootState(
-    applicationName: String = "Tchap X Preview",
+    applicationName: String = "Tchap Preview",
     userListState: UserListState = aUserListState(),
     startDmAction: AsyncAction<RoomId> = AsyncAction.Uninitialized,
     isRoomDirectorySearchEnabled: Boolean = false,

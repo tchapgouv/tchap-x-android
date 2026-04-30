@@ -26,7 +26,7 @@ fun aLoggedInState(
     showSyncSpinner: Boolean = false,
     pusherRegistrationState: AsyncData<Unit> = AsyncData.Uninitialized,
     forceNativeSlidingSyncMigration: Boolean = false,
-    appName: String = "Tchap X",
+    appName: String = "Tchap",
 ) = LoggedInState(
     showSyncSpinner = showSyncSpinner,
     pusherRegistrationState = pusherRegistrationState,

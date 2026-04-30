@@ -162,7 +162,7 @@ class RustMatrixAuthenticationService(
             runCatchingExceptions {
                 val client = currentClient ?: error("You need to call `setHomeserver()` first")
                 val currentSessionPaths = sessionPaths ?: error("You need to call `setHomeserver()` first")
-                // Tchap specific - Use "Tchap X Android" for initialDeviceName when creating session
+                // Tchap specific - Use "$applicationName Android" for initialDeviceName when creating session
                 client.login(username, password, "${buildMeta.applicationName} Android", null)
                 // Ensure that the user is not already logged in with the same account
                 ensureNotAlreadyLoggedIn(client)

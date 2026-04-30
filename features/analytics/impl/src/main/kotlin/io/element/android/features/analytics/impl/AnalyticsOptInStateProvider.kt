@@ -21,7 +21,7 @@ open class AnalyticsOptInStateProvider : PreviewParameterProvider<AnalyticsOptIn
 fun aAnalyticsOptInState(
     hasPolicyLink: Boolean = true,
 ) = AnalyticsOptInState(
-    applicationName = "Tchap X",
+    applicationName = "Tchap",
     hasPolicyLink = hasPolicyLink,
     eventSink = {}
 )
