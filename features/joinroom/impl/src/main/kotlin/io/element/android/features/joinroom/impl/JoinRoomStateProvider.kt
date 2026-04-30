@@ -159,9 +159,9 @@ fun aFailureContentState(): ContentState {
 
 fun aLoadedContentState(
     roomId: RoomId = A_ROOM_ID,
-    name: String? = "Tchap X android",
+    name: String? = "Tchap android",
     alias: RoomAlias? = RoomAlias("#exa:matrix.org"),
-    topic: String? = "Tchap X is a secure, private and decentralized messenger.",
+    topic: String? = "Tchap is a secure, private and decentralized messenger.",
     numberOfMembers: Long? = null,
     roomAvatarUrl: String? = null,
     joinAuthorisationStatus: JoinAuthorisationStatus = JoinAuthorisationStatus.Unknown,

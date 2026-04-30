@@ -62,7 +62,7 @@ class QrCodeErrorViewTest {
         onRetry: () -> Unit = EnsureNeverCalled(),
         onCancel: () -> Unit = EnsureNeverCalled(),
         errorScreenType: QrCodeErrorScreenType = QrCodeErrorScreenType.UnknownError,
-        appName: String = "Tchap X",
+        appName: String = "Tchap",
     ) {
         setContent {
             QrCodeErrorView(

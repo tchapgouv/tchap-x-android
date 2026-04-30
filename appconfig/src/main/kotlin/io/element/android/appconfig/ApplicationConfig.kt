@@ -31,5 +31,5 @@ object ApplicationConfig {
      * Cannot be empty.
      * For Element, the value is "Element". We use the same name for desktop and mobile for now.
      */
-    const val DESKTOP_APPLICATION_NAME: String = "Tchap"
+    const val DESKTOP_APPLICATION_NAME: String = "Tchap Desktop"
 }
