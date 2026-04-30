@@ -1,3 +1,15 @@
+Changements dans Tchap beta Android v0.10.0
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v0.10.0 -->
+
+## Qu'est-ce qui a changé ?
+### 🧱 Build
+* Renommer l'application Tchap X en Tchap by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/184
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v0.9.0...v0.10.0
+
 Changements dans Tchap X Android v0.9.0
 =============================
 
