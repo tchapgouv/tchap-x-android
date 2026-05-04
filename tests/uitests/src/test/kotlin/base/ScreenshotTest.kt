@@ -77,6 +77,7 @@ private fun Paparazzi.fixScreenshotName(preview: ComposablePreview<AndroidPrevie
     val packageName = preview.declaringClass
         // Remove common prefix
         .replace("io.element.android.", "")
+        .replace("fr.gouv.tchap.", "")
         .split(".")
         // Remove class name
         .dropLast(1)
