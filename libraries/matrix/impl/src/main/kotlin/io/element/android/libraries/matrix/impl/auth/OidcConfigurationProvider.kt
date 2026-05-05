@@ -20,7 +20,9 @@ class OidcConfigurationProvider(
     private val oidcRedirectUrlProvider: OidcRedirectUrlProvider,
 ) {
     fun get(): OidcConfiguration = OidcConfiguration(
-        clientName = buildMeta.applicationName,
+        // TCHAP - Suffix appName with Android
+//        clientName = buildMeta.applicationName,
+        clientName = "${buildMeta.applicationName} Android",
         redirectUri = oidcRedirectUrlProvider.provide(),
         clientUri = OidcConfig.CLIENT_URI,
         logoUri = OidcConfig.LOGO_URI,
