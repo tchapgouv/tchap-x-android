@@ -170,25 +170,15 @@ private fun SuggestionItemView(
                     )
                 }
             }
-<<<<<<< HEAD
             subtitle?.let {
                 Text(
                     text = subtitle,
                     style = ElementTheme.typography.fontBodySmRegular,
                     color = ElementTheme.colors.textSecondary,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-=======
-            Text(
-                text = subtitle,
-                style = ElementTheme.typography.fontBodySmRegular,
-                color = ElementTheme.colors.textSecondary,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
->>>>>>> main-element
         }
     }
 }

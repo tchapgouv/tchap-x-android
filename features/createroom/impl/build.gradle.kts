@@ -40,11 +40,8 @@ dependencies {
     implementation(projects.libraries.mediaupload.api)
     implementation(projects.libraries.permissions.api)
     implementation(projects.libraries.previewutils)
-<<<<<<< HEAD
     implementation(projects.libraries.usersearch.impl)
     implementation(projects.libraries.tchaputils)
-=======
->>>>>>> main-element
     implementation(projects.services.analytics.api)
     implementation(libs.coil.compose)
     implementation(projects.libraries.featureflag.api)

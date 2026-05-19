@@ -129,6 +129,7 @@ fun StartChatView(
         confirmationDialog = { data ->
             if (data is ConfirmingStartDmWithMatrixUser) {
                 CreateDmConfirmationBottomSheet(
+                    showMatrixId = data.showMatrixId,
                     matrixUser = data.matrixUser,
                     isUserIdentityUnknown = data.isUserIdentityUnknown,
                     onSendInvite = {

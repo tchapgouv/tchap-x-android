@@ -28,7 +28,8 @@ class DefaultEnterpriseService(
     override var selectedHomeserver: Int = -1
 
     override suspend fun isEnterpriseUser(sessionId: SessionId) = false
-<<<<<<< HEAD
+
+    override suspend fun tweakMasUrl(url: String, homeserver: String) = url
 
     override fun defaultHomeserverList(): List<String> = homeserverConfiguration.defaultHomeserverList
 
@@ -43,10 +44,6 @@ class DefaultEnterpriseService(
         return homeservers[selectedHomeserver]
     }
 
-=======
-    override suspend fun tweakMasUrl(url: String, homeserver: String) = url
-    override fun defaultHomeserverList(): List<String> = emptyList()
->>>>>>> main-element
     override suspend fun isAllowedToConnectToHomeserver(homeserverUrl: String) = true
 
     override suspend fun overrideBrandColor(sessionId: SessionId?, brandColor: String?) = Unit

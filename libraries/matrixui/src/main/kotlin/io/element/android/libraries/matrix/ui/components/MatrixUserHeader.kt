@@ -35,30 +35,7 @@ import io.element.android.libraries.matrix.ui.model.getBestName
 
 @Composable
 fun MatrixUserHeader(
-<<<<<<< HEAD
     showMatrixId: Boolean,
-    matrixUser: MatrixUser?,
-    modifier: Modifier = Modifier,
-    // TODO handle click on this item, to let the user be able to update their profile.
-    // onClick: () -> Unit,
-) {
-    if (matrixUser == null) {
-        MatrixUserHeaderPlaceholder(modifier = modifier)
-    } else {
-        MatrixUserHeaderContent(
-            showMatrixId = showMatrixId,
-            matrixUser = matrixUser,
-            modifier = modifier,
-            // onClick = onClick
-        )
-    }
-}
-
-@Composable
-private fun MatrixUserHeaderContent(
-    showMatrixId: Boolean,
-=======
->>>>>>> main-element
     matrixUser: MatrixUser,
     modifier: Modifier = Modifier,
 ) {

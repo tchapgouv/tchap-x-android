@@ -70,13 +70,10 @@ fun aRoomInfo(
     roomVersion: String? = "11",
     privilegedCreatorRole: Boolean = false,
     isLowPriority: Boolean = false,
-<<<<<<< HEAD
     // TCHAP external user
     isOpenToExternalUsers: Boolean = false,
-=======
     activeCallIntentConsensus: CallIntentConsensus = CallIntentConsensus.None,
     isDm: Boolean = false,
->>>>>>> main-element
 ) = RoomInfo(
     id = id,
     name = name,
@@ -114,11 +111,8 @@ fun aRoomInfo(
     roomVersion = roomVersion,
     privilegedCreatorRole = privilegedCreatorRole,
     isLowPriority = isLowPriority,
-<<<<<<< HEAD
     // TCHAP external user
     isOpenToExternalUsers = isOpenToExternalUsers,
-=======
     activeCallIntentConsensus = activeCallIntentConsensus,
     isDm = isDm,
->>>>>>> main-element
 )

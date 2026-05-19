@@ -167,6 +167,10 @@ class LoginFlowNode(
                         backstack.push(NavTarget.LoginPassword())
                     }
 
+                    override fun navigateToLoginHint() {
+                        backstack.push(NavTarget.LoginHint(isAccountCreation = false))
+                    }
+
                     override fun navigateToOAuth(oAuthDetails: OAuthDetails) {
                         navigateToMas(oAuthDetails)
                     }
@@ -203,17 +207,12 @@ class LoginFlowNode(
                         callback.navigateToBugReport()
                     }
 
-<<<<<<< HEAD
                     override fun navigateToLoginHint() {
                         backstack.push(NavTarget.LoginHint(isAccountCreation = false))
                     }
 
-                    override fun navigateToOidc(oidcDetails: OidcDetails) {
-                        navigateToMas(oidcDetails)
-=======
                     override fun navigateToOAuth(oAuthDetails: OAuthDetails) {
                         navigateToMas(oAuthDetails)
->>>>>>> main-element
                     }
 
                     override fun navigateToCreateAccount(url: String) {
@@ -353,8 +352,8 @@ class LoginFlowNode(
                 )
 
                 val callback = object : LoginHintNode.Callback {
-                    override fun navigateToOidc(oidcDetails: OidcDetails) {
-                        navigateToMas(oidcDetails)
+                    override fun navigateToOAuth(oauthDetails: OAuthDetails) {
+                        navigateToMas(oauthDetails)
                     }
 
                     override fun navigateToCreateAccount(url: String) {
@@ -366,7 +365,7 @@ class LoginFlowNode(
                     }
 
                     override fun navigateToLoginPassword() {
-                        backstack.push(NavTarget.LoginPassword)
+                        backstack.push(NavTarget.LoginPassword())
                     }
                 }
                 createNode<LoginHintNode>(buildContext, listOf(inputs, callback))

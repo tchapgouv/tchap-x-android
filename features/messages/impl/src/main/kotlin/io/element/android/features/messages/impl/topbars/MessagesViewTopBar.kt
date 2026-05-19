@@ -161,7 +161,6 @@ private fun RoomAvatarAndNameRow(
                 isTombstoned = isTombstoned,
             ),
         )
-<<<<<<< HEAD
         Column(
             modifier = Modifier.padding(horizontal = 8.dp)
         ) {
@@ -181,20 +180,6 @@ private fun RoomAvatarAndNameRow(
                 roomBadge = roomBadges,
             )
         }
-=======
-        Text(
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .semantics {
-                    heading()
-                },
-            text = roomName ?: stringResource(CommonStrings.common_no_room_name),
-            style = ElementTheme.typography.fontBodyLgMedium,
-            fontStyle = FontStyle.Italic.takeIf { roomName == null },
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
->>>>>>> main-element
     }
 }
 
@@ -223,9 +208,7 @@ internal fun MessagesViewTopBarPreview() = ElementPreview {
         sharedHistoryIcon = sharedHistoryIcon,
         onRoomDetailsClick = {},
         onBackClick = {},
-<<<<<<< HEAD
         roomBadges = persistentListOf(RoomBadge.EXTERNAL),
-=======
         menuActions = {
             MessagesMenuActions(
                 roomCallState = roomCallState,
@@ -234,7 +217,6 @@ internal fun MessagesViewTopBarPreview() = ElementPreview {
                 onThreadsListClick = {},
             )
         }
->>>>>>> main-element
     )
     Column {
         AMessagesViewTopBar()

@@ -24,13 +24,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-<<<<<<< HEAD
 import androidx.compose.ui.platform.LocalInspectionMode
-=======
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
->>>>>>> main-element
 import androidx.compose.ui.unit.dp
 import coil3.Extras
 import coil3.compose.AsyncImagePainter
@@ -66,15 +62,7 @@ fun StaticMapView(
     contentDescription: String?,
     modifier: Modifier = Modifier,
     darkMode: Boolean = !ElementTheme.isLightTheme,
-    ) {
-    val context = LocalContext.current
-    // Tchap: Create the map renderer or Fake it in preview context
-    val tchapMapRenderer: TchapMapRenderer = if (LocalInspectionMode.current) {
-        FakeTchapMapRenderer()
-    } else {
-        DefaultTchapMapRenderer(darkMode, LocalContext.current)
-    }
-
+) {
     // Using BoxWithConstraints to:
     // 1) Size the inner Image to the same Dp size of the outer BoxWithConstraints.
     // 2) Request the static map image of the exact required size in Px to fill the AsyncImage.
@@ -82,26 +70,6 @@ fun StaticMapView(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-<<<<<<< HEAD
-        var retryHash by remember { mutableIntStateOf(0) }
-        val builder = remember { StaticMapUrlBuilder() }
-
-        val locationUiData = LocationUiData(Location(lat, lon, 0f), zoom, Size(constraints.maxWidth, constraints.maxHeight))
-        val imageFile = tchapMapRenderer.getStaticMapFileFromLocation(locationUiData)
-
-        val painter = rememberAsyncImagePainter(
-            model = if (constraints.isZero) {
-                // Avoid building a URL if any of the size constraints is zero (else it will thrown an exception).
-                null
-            } else {
-                ImageRequest.Builder(context)
-                    .data(imageFile) // Tchap: use the locally generated snapshot of location (instead of request call)
-                    .size(width = constraints.maxWidth, height = constraints.maxHeight)
-                    .apply {
-                        extras.set(Extras.Key("retry_hash"), retryHash).build()
-                    }
-                    .build()
-=======
         // Case 1: Stale location - show stale map with stale pin, no fetching
         when {
             pinVariant is PinVariant.StaleLocation -> {
@@ -111,7 +79,6 @@ fun StaticMapView(
                     width = maxWidth,
                     height = maxHeight,
                 )
->>>>>>> main-element
             }
             // Case 2: Null location - show blurred placeholder, no pin, no loading
             location == null -> {
@@ -136,17 +103,6 @@ fun StaticMapView(
     }
 }
 
-<<<<<<< HEAD
-        // Tchap: Generate locally snapshot of location if it doesn't exist
-        if (!imageFile.exists()) {
-            tchapMapRenderer.generateMapSnapshot(locationUiData) {
-                painter.restart()
-            }
-        }
-
-        val collectedState = painter.state.collectAsState()
-        if (collectedState.value is AsyncImagePainter.State.Success) {
-=======
 @Composable
 private fun BoxWithConstraintsScope.StaleMapContent(
     pinVariant: PinVariant,
@@ -177,23 +133,35 @@ private fun BoxWithConstraintsScope.LoadableMapContent(
     var retryHash by remember { mutableIntStateOf(0) }
     val builder = remember { StaticMapUrlBuilder() }
 
+    // Tchap: Create the map renderer or Fake it in preview context
+    val tchapMapRenderer: TchapMapRenderer = if (LocalInspectionMode.current) {
+        FakeTchapMapRenderer()
+    } else {
+        DefaultTchapMapRenderer(darkMode, LocalContext.current)
+    }
+
+    // Tchap: Try to retrieve the imageFile that was created earlier
+    val locationUiData = LocationUiData(location, zoom, Size(constraints.maxWidth, constraints.maxHeight))
+    val imageFile = tchapMapRenderer.getStaticMapFileFromLocation(locationUiData)
+
     val painter = rememberAsyncImagePainter(
         model = if (constraints.isZero) {
             // Avoid building a URL if any of the size constraints is zero
             null
         } else {
             ImageRequest.Builder(context)
-                .data(
-                    builder.build(
-                        lat = location.lat,
-                        lon = location.lon,
-                        zoom = zoom,
-                        darkMode = darkMode,
-                        width = constraints.maxWidth,
-                        height = constraints.maxHeight,
-                        density = LocalDensity.current.density,
-                    )
-                )
+//                .data(
+//                    builder.build(
+//                        lat = location.lat,
+//                        lon = location.lon,
+//                        zoom = zoom,
+//                        darkMode = darkMode,
+//                        width = constraints.maxWidth,
+//                        height = constraints.maxHeight,
+//                        density = LocalDensity.current.density,
+//                    )
+//                )
+                .data(imageFile) // Tchap: use the locally generated snapshot of location (instead of request call)
                 .size(width = constraints.maxWidth, height = constraints.maxHeight)
                 .apply {
                     extras.set(Extras.Key("retry_hash"), retryHash).build()
@@ -202,10 +170,16 @@ private fun BoxWithConstraintsScope.LoadableMapContent(
         }
     )
 
+    // Tchap: Generate locally snapshot of location if it doesn't exist
+    if (!imageFile.exists()) {
+        tchapMapRenderer.generateMapSnapshot(locationUiData) {
+            painter.restart()
+        }
+    }
+
     val state by painter.state.collectAsState()
     when (state) {
         is AsyncImagePainter.State.Success -> {
->>>>>>> main-element
             Image(
                 painter = painter,
                 contentDescription = contentDescription,

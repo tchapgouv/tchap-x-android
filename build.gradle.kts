@@ -52,13 +52,10 @@ allprojects {
 
     tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
         exclude("io/element/android/tests/konsist/failures/**")
-<<<<<<< HEAD
         exclude("**/de.bwi.messenger.features.messages.impl.timeline.components.event/**")
-=======
 
         // This file comes from another project and we want to keep it as close to the original as possible
         exclude("org/rustls/platformverifier/**")
->>>>>>> main-element
     }
 
     // KtLint

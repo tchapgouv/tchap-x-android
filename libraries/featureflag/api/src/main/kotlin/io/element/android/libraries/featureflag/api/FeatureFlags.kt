@@ -22,17 +22,6 @@ enum class FeatureFlags(
     override val isFinished: Boolean,
     override val isInLabs: Boolean = false,
 ) : Feature {
-<<<<<<< HEAD
-    RoomDirectorySearch(
-        key = "feature.roomdirectorysearch",
-        title = "Room directory search",
-        description = "Allow user to search for public rooms in their homeserver",
-        // TCHAP enable Room directory search by default
-        defaultValue = { true },
-        isFinished = false,
-    ),
-=======
->>>>>>> main-element
     ShowBlockedUsersDetails(
         key = "feature.showBlockedUsersDetails",
         title = "Show blocked users details",
@@ -98,7 +87,6 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
-<<<<<<< HEAD
 
     // TCHAP feature flag to show matrix ID in user rows or user profile
     ShowMatrixId(
@@ -107,16 +95,6 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
-    SyncNotificationsWithWorkManager(
-        key = "feature.sync_notifications_with_workmanager",
-        title = "Sync notifications with WorkManager",
-        description = "Use WorkManager to schedule notification sync tasks when a push is received." +
-            " This should improve reliability and battery usage.",
-        defaultValue = { true },
-        isFinished = false,
-    ),
-=======
->>>>>>> main-element
     QrCodeLogin(
         key = "feature.qr_code_login",
         title = "QR Code Login",
@@ -131,7 +109,6 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
-<<<<<<< HEAD
 
     // TCHAP - PrivateNotEncrypted room feature flag
     PrivateNotEncryptedRooms(
@@ -140,8 +117,6 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
-
-=======
     AllowBlackTheme(
         key = "feature.allow_black_theme",
         title = "Black theme",
@@ -156,7 +131,6 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
->>>>>>> main-element
     ValidateNetworkWhenSchedulingNotificationFetching(
         key = "feature.validate_network_when_scheduling_notification_fetching",
         title = "Validate internet connectivity when scheduling notification fetching",

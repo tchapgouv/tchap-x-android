@@ -54,6 +54,7 @@ class ClassicFlowNode(
     interface Callback : Plugin {
         fun navigateToOnBoarding(allowBackNavigation: Boolean)
         fun navigateToLoginPassword()
+        fun navigateToLoginHint()
         fun navigateToOAuth(oAuthDetails: OAuthDetails)
         fun navigateToCreateAccount(url: String)
     }
@@ -109,6 +110,10 @@ class ClassicFlowNode(
 
                     override fun navigateToLoginPassword() {
                         callback.navigateToLoginPassword()
+                    }
+
+                    override fun navigateToLoginHint() {
+                        callback.navigateToLoginHint()
                     }
 
                     override fun navigateToOAuth(oAuthDetails: OAuthDetails) {

@@ -11,12 +11,9 @@ package io.element.android.libraries.matrix.ui.components
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
-<<<<<<< HEAD
-import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
-=======
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
->>>>>>> main-element
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight

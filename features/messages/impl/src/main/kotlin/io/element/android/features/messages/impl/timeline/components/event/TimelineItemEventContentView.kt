@@ -77,13 +77,6 @@ fun TimelineItemEventContentView(
             onContentLayoutChange = onContentLayoutChange,
             modifier = modifier
         )
-<<<<<<< HEAD
-        is TimelineItemLocationContent -> TimelineItemLocationView(
-            content = content,
-            modifier = modifier
-        )
-        is TimelineItemImageContent -> BwiTimelineItemImageView(
-=======
         is TimelineItemLocationContent -> {
             TimelineItemLocationView(
                 content = content.ensureActiveLiveLocation(),
@@ -91,8 +84,7 @@ fun TimelineItemEventContentView(
                 modifier = modifier
             )
         }
-        is TimelineItemImageContent -> TimelineItemImageView(
->>>>>>> main-element
+        is TimelineItemImageContent -> BwiTimelineItemImageView(
             content = content,
             hideMediaContent = hideMediaContent,
             onContentClick = onContentClick,

@@ -139,13 +139,8 @@ class OnboardingViewTest {
                 eventSink = eventSink,
             ),
         )
-<<<<<<< HEAD
-        val buttonText = rule.activity.getString(R.string.tchap_screen_onboarding_sign_in_to, "element.io")
-        rule.onNodeWithText(buttonText).performClick()
-=======
-        val buttonText = activity!!.getString(R.string.screen_onboarding_sign_in_to, "element.io")
+        val buttonText = activity!!.getString(R.string.tchap_screen_onboarding_sign_in_to, "element.io")
         onNodeWithText(buttonText).performClick()
->>>>>>> main-element
         eventSink.assertSingle(OnBoardingEvents.OnSignIn("element.io"))
     }
 

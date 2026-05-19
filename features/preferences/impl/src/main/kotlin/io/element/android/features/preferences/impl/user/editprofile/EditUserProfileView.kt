@@ -138,27 +138,15 @@ fun EditUserProfileView(
 //                value = state.displayName,
 //                placeholder = stringResource(CommonStrings.common_room_name_placeholder),
 //                singleLine = true,
+//                enabled = state.canChangeDisplayName,
 //                onValueChange = { state.eventSink(EditUserProfileEvent.UpdateDisplayName(it)) },
 //            )
-            // TCHAP show displayName as Text instead of TextField
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = state.displayName,
                 style = ElementTheme.typography.fontBodyLgRegular,
                 textAlign = TextAlign.Center,
             )
-<<<<<<< HEAD
-=======
-            Spacer(modifier = Modifier.height(32.dp))
-            TextField(
-                label = stringResource(R.string.screen_edit_profile_display_name),
-                value = state.displayName,
-                placeholder = stringResource(CommonStrings.common_room_name_placeholder),
-                singleLine = true,
-                enabled = state.canChangeDisplayName,
-                onValueChange = { state.eventSink(EditUserProfileEvent.UpdateDisplayName(it)) },
-            )
->>>>>>> main-element
         }
 
         AvatarActionBottomSheet(

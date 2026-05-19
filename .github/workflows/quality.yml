@@ -37,14 +37,8 @@ jobs:
         with:
           persist-credentials: false
       - name: Add SSH private keys for submodule repositories
-<<<<<<< HEAD
-        uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
-        # Skip in forks
-        if: ${{ github.repository == 'element-hq/element-x-android' && ('pull_request' != github.event_name || github.event.pull_request.head.repo.full_name == github.repository) }}
-=======
         uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
         if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'element-hq/element-x-android' }}
->>>>>>> main-element
         with:
           ssh-private-key: ${{ secrets.ELEMENT_ENTERPRISE_DEPLOY_KEY }}
       - name: Clone submodules
@@ -108,14 +102,8 @@ jobs:
           lfs: true # Tchap TODO : Remove this when maven is using matrix-sdk from Tchap repository
           persist-credentials: false
       - name: Add SSH private keys for submodule repositories
-<<<<<<< HEAD
-        uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
-        # Skip in forks
-        if: ${{ github.repository == 'element-hq/element-x-android' }}
-=======
         uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
         if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'element-hq/element-x-android' }}
->>>>>>> main-element
         with:
           ssh-private-key: ${{ secrets.ELEMENT_ENTERPRISE_DEPLOY_KEY }}
       - name: Clone submodules
@@ -192,14 +180,8 @@ jobs:
           lfs: true # Tchap TODO : Remove this when maven is using matrix-sdk from Tchap repository
           persist-credentials: false
       - name: Add SSH private keys for submodule repositories
-<<<<<<< HEAD
-        uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
-        # Skip in forks
-        if: ${{ github.repository == 'element-hq/element-x-android' }}
-=======
         uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
         if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'element-hq/element-x-android' }}
->>>>>>> main-element
         with:
           ssh-private-key: ${{ secrets.ELEMENT_ENTERPRISE_DEPLOY_KEY }}
       - name: Clone submodules
@@ -245,14 +227,8 @@ jobs:
           lfs: true # Tchap TODO : Remove this when maven is using matrix-sdk from Tchap repository
           persist-credentials: false
       - name: Add SSH private keys for submodule repositories
-<<<<<<< HEAD
-        uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
-        # Skip in forks
-        if: ${{ github.repository == 'element-hq/element-x-android' }}
-=======
         uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
         if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'element-hq/element-x-android' }}
->>>>>>> main-element
         with:
           ssh-private-key: ${{ secrets.ELEMENT_ENTERPRISE_DEPLOY_KEY }}
       - name: Clone submodules
@@ -294,14 +270,8 @@ jobs:
           lfs: true # Tchap TODO : Remove this when maven is using matrix-sdk from Tchap repository
           persist-credentials: false
       - name: Add SSH private keys for submodule repositories
-<<<<<<< HEAD
-        uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
-        # Skip in forks
-        if: ${{ github.repository == 'element-hq/element-x-android' }}
-=======
         uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
         if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'element-hq/element-x-android' }}
->>>>>>> main-element
         with:
           ssh-private-key: ${{ secrets.ELEMENT_ENTERPRISE_DEPLOY_KEY }}
       - name: Clone submodules
@@ -342,14 +312,8 @@ jobs:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.ref }}
           persist-credentials: false
       - name: Add SSH private keys for submodule repositories
-<<<<<<< HEAD
-        uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
-        # Skip in forks
-        if: ${{ github.repository == 'element-hq/element-x-android' }}
-=======
         uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
         if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'element-hq/element-x-android' }}
->>>>>>> main-element
         with:
           ssh-private-key: ${{ secrets.ELEMENT_ENTERPRISE_DEPLOY_KEY }}
       - name: Clone submodules

@@ -61,6 +61,7 @@ fun LoginWithClassicView(
     onOtherOptionsClick: () -> Unit,
     onOAuthDetails: (OAuthDetails) -> Unit,
     onNeedLoginPassword: () -> Unit,
+    onNeedLoginHint: () -> Unit,
     onLearnMoreClick: () -> Unit,
     onCreateAccountContinue: (url: String) -> Unit,
     modifier: Modifier = Modifier,
@@ -202,6 +203,7 @@ fun LoginWithClassicView(
         onLearnMoreClick = onLearnMoreClick,
         onOAuthDetails = onOAuthDetails,
         onNeedLoginPassword = onNeedLoginPassword,
+        onNeedLoginHint = onNeedLoginHint,
         onCreateAccountContinue = onCreateAccountContinue,
     )
 }
@@ -214,6 +216,7 @@ internal fun LoginWithClassicViewPreview(@PreviewParameter(LoginWithClassicState
         onOtherOptionsClick = {},
         onOAuthDetails = {},
         onNeedLoginPassword = {},
+        onNeedLoginHint = {},
         onLearnMoreClick = {},
         onCreateAccountContinue = {},
     )

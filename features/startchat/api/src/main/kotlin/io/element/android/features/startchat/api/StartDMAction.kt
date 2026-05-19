@@ -16,12 +16,14 @@ import io.element.android.libraries.matrix.api.user.MatrixUser
 interface StartDMAction {
     /**
      * Try to find an existing DM with the given user, or create one if none exists.
+     * @param showMatrixId Do we need to show MatrixID in UI.
      * @param matrixUser The user to start a DM with.
      * @param createIfDmDoesNotExist If true, create a DM if one does not exist. If false and the DM
      * does not exist, the action will fail with the value [ConfirmingStartDmWithMatrixUser].
      * @param actionState The state to update with the result of the action.
      */
     suspend fun execute(
+        showMatrixId: Boolean,
         matrixUser: MatrixUser,
         createIfDmDoesNotExist: Boolean,
         actionState: MutableState<AsyncAction<RoomId>>,

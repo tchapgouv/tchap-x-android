@@ -72,12 +72,8 @@ class OnBoardingNode(
             onCreateAccount = callback::navigateToSignUpFlow,
             onSignInWithQrCode = callback::navigateToQrCode,
             onReportProblem = callback::navigateToBugReport,
-<<<<<<< HEAD
-            onOidcDetails = callback::navigateToOidc,
-            onNeedLoginHint = callback::navigateToLoginHint,
-=======
             onOAuthDetails = callback::navigateToOAuth,
->>>>>>> main-element
+            onNeedLoginHint = callback::navigateToLoginHint,
             onNeedLoginPassword = callback::navigateToLoginPassword,
             onLearnMoreClick = { openLearnMorePage(context) },
             onCreateAccountContinue = callback::navigateToCreateAccount,

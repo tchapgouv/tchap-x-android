@@ -146,21 +146,14 @@ private fun ColumnScope.MultiAccountSection(
     )
     state.otherSessions.forEach { matrixUser ->
         MatrixUserRow(
-            modifier = Modifier
-                .clickable {
-                    state.eventSink(PreferencesRootEvent.SwitchToSession(matrixUser.userId))
-                }
-                .padding(top = 2.dp, bottom = 2.dp, end = 8.dp),
+            modifier = Modifier.clickable {
+                state.eventSink(PreferencesRootEvent.SwitchToSession(matrixUser.userId))
+            },
             matrixUser = matrixUser,
             avatarSize = AvatarSize.AccountItem,
-<<<<<<< HEAD
             showMatrixId = showMatrixId,
-            )
-        HorizontalDivider()
-=======
-            verticalSpaceWidth = 16.dp,
         )
->>>>>>> main-element
+        HorizontalDivider()
     }
     ListItem(
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Plus())),
@@ -252,9 +245,6 @@ private fun ColumnScope.GeneralSection(
     onDeactivateClick: () -> Unit,
 ) {
     ListItem(
-<<<<<<< HEAD
-        headlineContent = { Text(stringResource(id = CommonStrings.tchap_common_faq)) },
-=======
         headlineContent = { Text(stringResource(id = CommonStrings.common_advanced_settings)) },
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Settings())),
         onClick = onOpenAdvancedSettings,
@@ -267,8 +257,7 @@ private fun ColumnScope.GeneralSection(
         )
     }
     ListItem(
-        headlineContent = { Text(stringResource(id = CommonStrings.common_about)) },
->>>>>>> main-element
+        headlineContent = { Text(stringResource(id = CommonStrings.tchap_common_faq)) },
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Info())),
         onClick = { onOpenFAQ() },
     )
@@ -388,20 +377,3 @@ private fun ContentToPreview(state: PreferencesRootState) {
         showMatrixId = false,
     )
 }
-<<<<<<< HEAD
-
-@PreviewsDayNight
-@Composable
-internal fun MultiAccountSectionPreview() = ElementPreview {
-    Column {
-        MultiAccountSection(
-            state = aPreferencesRootState(
-                otherSessions = aMatrixUserList(),
-            ),
-            onAddAccountClick = {},
-            showMatrixId = false,
-        )
-    }
-}
-=======
->>>>>>> main-element

@@ -172,11 +172,7 @@ fun RoomDetailsView(
                 }
                 is RoomDetailsType.Dm -> {
                     DmHeaderSection(
-<<<<<<< HEAD
                         showMatrixId = state.showMatrixId,
-                        me = state.roomType.me,
-=======
->>>>>>> main-element
                         otherMember = state.roomType.otherMember,
                         roomName = state.roomName,
                         isTombstoned = state.isTombstoned,
@@ -470,11 +466,7 @@ private fun RoomHeaderSection(
 
 @Composable
 private fun DmHeaderSection(
-<<<<<<< HEAD
     showMatrixId: Boolean,
-    me: RoomMember,
-=======
->>>>>>> main-element
     otherMember: RoomMember,
     roomName: String,
     isTombstoned: Boolean,

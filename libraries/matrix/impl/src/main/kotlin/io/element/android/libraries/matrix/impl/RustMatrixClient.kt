@@ -864,17 +864,16 @@ class RustMatrixClient(
         sessionCoroutineScope.launch { workManagerScheduler.submit(request) }
     }
 
-<<<<<<< HEAD
     // TCHAP account-expiration : request to send a new email to provide the user with an updated link to renew their account
     override suspend fun accountExpiredSendEmail(): Result<Unit> {
         return runCatchingExceptions {
             Timber.d("Request to send a new email of account expiration for session $sessionId")
             innerClient.accountExpiredSendEmail()
         }
-=======
+    }
+
     override fun homeserverCapabilities(): HomeserverCapabilitiesProvider {
         return RustHomeserverCapabilitiesProvider(innerClient.homeserverCapabilities())
->>>>>>> main-element
     }
 }
 

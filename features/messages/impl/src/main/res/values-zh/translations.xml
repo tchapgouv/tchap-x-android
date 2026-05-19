@@ -49,11 +49,7 @@
   <string name="screen_room_timeline_add_reaction">"添加反应"</string>
   <string name="screen_room_timeline_beginning_of_room">"这是房间 %1$s 的开头。"</string>
   <string name="screen_room_timeline_beginning_of_room_no_name">"这是本对话的开始。"</string>
-<<<<<<< HEAD
-  <string name="screen_room_timeline_legacy_call">"不支持的呼叫。询问呼叫者是否可以使用新的 %1$s 应用程序。"</string>
-=======
-  <string name="screen_room_timeline_legacy_call">"不受支持的通话。询问呼叫方是否可以使用新的 Element X app。"</string>
->>>>>>> main-element
+  <string name="screen_room_timeline_legacy_call">"不受支持的通话。询问呼叫方是否可以使用新的 %1$s app。"</string>
   <string name="screen_room_timeline_less_reactions">"折叠"</string>
   <string name="screen_room_timeline_message_copied">"消息已复制"</string>
   <string name="screen_room_timeline_no_permission_to_post">"你无权在此房间发言"</string>

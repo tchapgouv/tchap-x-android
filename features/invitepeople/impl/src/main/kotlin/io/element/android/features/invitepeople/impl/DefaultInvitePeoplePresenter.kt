@@ -45,11 +45,8 @@ import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
-<<<<<<< HEAD
 import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
-=======
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityState
->>>>>>> main-element
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.RoomMembershipState
@@ -219,30 +216,27 @@ class DefaultInvitePeoplePresenter(
                     }
                 }
                 is InvitePeopleEvents.SendInvites -> {
-<<<<<<< HEAD
-                    showOpenRoomToExternalsDialog = false // TCHAP external user
-                    // TCHAP invite-by-email : call sendInvites or sendTchapEmailInvites depending if the user need to be invited by email to create an account
-//                    room.dataOrNull()?.let {
-//                        sessionCoroutineScope.sendInvites(it, selectedUsers.value, sendInvitesAction)
-                    room.dataOrNull()?.let { room ->
-                        val (emailInvites, userInvites) = selectedUsers.value.partition {
-                            it.userId.value.contains(TchapPatterns.inviteByEmailSuffixMarker())
-                        }
-
-                        if (userInvites.isNotEmpty()) {
-                            sessionCoroutineScope.sendInvites(room, userInvites, sendInvitesAction)
-                        }
-                        if (emailInvites.isNotEmpty()) {
-                            sessionCoroutineScope.sendTchapEmailInvites(room, emailInvites, sendInvitesAction)
-=======
                     if (unknownUsers.isNotEmpty() && sendInvitesAction.value !is ConfirmingUnknownUserInvitation) {
                         sendInvitesAction.value = ConfirmingUnknownUserInvitation(
                             unknownUsers
                         )
                     } else {
-                        room.dataOrNull()?.let {
-                            sessionCoroutineScope.sendInvites(it, selectedUsers.value, sendInvitesAction)
->>>>>>> main-element
+                        showOpenRoomToExternalsDialog = false // TCHAP external user
+                        // TCHAP invite-by-email : call sendInvites or sendTchapEmailInvites
+                        // depending if the user need to be invited by email to create an account
+//                        room.dataOrNull()?.let {
+//                            sessionCoroutineScope.sendInvites(it, selectedUsers.value, sendInvitesAction)
+                        room.dataOrNull()?.let { room ->
+                            val (emailInvites, userInvites) = selectedUsers.value.partition {
+                                it.userId.value.contains(TchapPatterns.inviteByEmailSuffixMarker())
+                            }
+
+                            if (userInvites.isNotEmpty()) {
+                                sessionCoroutineScope.sendInvites(room, userInvites, sendInvitesAction)
+                            }
+                            if (emailInvites.isNotEmpty()) {
+                                sessionCoroutineScope.sendTchapEmailInvites(room, emailInvites, sendInvitesAction)
+                            }
                         }
                     }
                 }

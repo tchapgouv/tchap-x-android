@@ -28,6 +28,7 @@ class DefaultStartDMAction(
     private val analyticsService: AnalyticsService,
 ) : StartDMAction {
     override suspend fun execute(
+        showMatrixId: Boolean,
         matrixUser: MatrixUser,
         createIfDmDoesNotExist: Boolean,
         actionState: MutableState<AsyncAction<RoomId>>,
@@ -46,6 +47,7 @@ class DefaultStartDMAction(
             StartDMResult.DmDoesNotExist -> {
                 val identityState = matrixClient.encryptionService.getUserIdentity(matrixUser.userId, fallbackToServer = false).getOrNull()
                 actionState.value = ConfirmingStartDmWithMatrixUser(
+                    showMatrixId = showMatrixId,
                     matrixUser = matrixUser,
                     isUserIdentityUnknown = identityState == null
                 )

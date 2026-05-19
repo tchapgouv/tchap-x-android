@@ -77,11 +77,8 @@ dependencies {
     implementation(projects.libraries.matrixui)
     implementation(projects.libraries.uiStrings)
     implementation(libs.coil.compose)
-<<<<<<< HEAD
     implementation(libs.maplibre)
-=======
     implementation(libs.datetime)
->>>>>>> main-element
 
     testCommonDependencies(libs)
 }

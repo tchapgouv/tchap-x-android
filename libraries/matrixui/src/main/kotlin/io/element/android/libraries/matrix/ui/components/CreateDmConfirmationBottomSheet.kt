@@ -55,6 +55,7 @@ import io.element.android.libraries.ui.strings.CommonStrings
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateDmConfirmationBottomSheet(
+    showMatrixId: Boolean,
     matrixUser: MatrixUser,
     isUserIdentityUnknown: Boolean,
     onSendInvite: () -> Unit,
@@ -96,7 +97,7 @@ fun CreateDmConfirmationBottomSheet(
                     subTitle = descriptionContent,
                     iconStyle = BigIcon.Style.Default(CompoundIcons.UserAddSolid()),
                 )
-                MatrixUserRow(matrixUser)
+                MatrixUserRow(showMatrixId, matrixUser)
                 Spacer(modifier = Modifier.height(32.dp))
                 ButtonRowMolecule(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -158,6 +159,7 @@ internal fun CreateDmConfirmationBottomSheetPreview(
     ) state: CreateDmConfirmationBottomSheetState
 ) = ElementPreview {
     CreateDmConfirmationBottomSheet(
+        showMatrixId = state.showMatrixId,
         matrixUser = state.matrixUser,
         isUserIdentityUnknown = state.isUserIdentityUnknown,
         onSendInvite = {},
@@ -166,13 +168,14 @@ internal fun CreateDmConfirmationBottomSheetPreview(
 }
 
 data class CreateDmConfirmationBottomSheetState(
+    val showMatrixId: Boolean,
     val matrixUser: MatrixUser,
     val isUserIdentityUnknown: Boolean,
 )
 
 class CreateDmConfirmationBottomSheetStateProvider : PreviewParameterProvider<CreateDmConfirmationBottomSheetState> {
     override val values = sequenceOf(
-        CreateDmConfirmationBottomSheetState(matrixUser = aMatrixUser(), isUserIdentityUnknown = false),
-        CreateDmConfirmationBottomSheetState(matrixUser = aMatrixUser(), isUserIdentityUnknown = true),
+        CreateDmConfirmationBottomSheetState(showMatrixId = false, matrixUser = aMatrixUser(), isUserIdentityUnknown = false),
+        CreateDmConfirmationBottomSheetState(showMatrixId = false, matrixUser = aMatrixUser(), isUserIdentityUnknown = true),
     )
 }

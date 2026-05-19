@@ -81,11 +81,8 @@ import io.element.android.libraries.matrix.api.room.RoomInfo
 import io.element.android.libraries.matrix.api.room.RoomMembersState
 import io.element.android.libraries.matrix.api.room.history.RoomHistoryVisibility
 import io.element.android.libraries.matrix.api.room.powerlevels.permissionsAsState
-<<<<<<< HEAD
 import io.element.android.libraries.matrix.api.roomdirectory.RoomVisibility
-=======
 import io.element.android.libraries.matrix.api.timeline.Timeline
->>>>>>> main-element
 import io.element.android.libraries.matrix.api.timeline.item.event.EventOrTransactionId
 import io.element.android.libraries.matrix.ui.messages.reply.map
 import io.element.android.libraries.matrix.ui.model.getAvatarData
@@ -226,7 +223,6 @@ class MessagesPresenter(
         val dmRoomMember by room.getDirectRoomMember(membersState)
         val roomMemberIdentityStateChanges = identityChangeState.roomMemberIdentityStateChanges
 
-<<<<<<< HEAD
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
@@ -237,9 +233,6 @@ class MessagesPresenter(
             isRoomVisibleInRoomDirectory(savedIsVisibleInRoomDirectory)
         }
 
-        val isKeyShareOnInviteEnabled by featureFlagService.isFeatureEnabledFlow(FeatureFlags.EnableKeyShareOnInvite).collectAsState(initial = false)
-=======
->>>>>>> main-element
         // The top bar should show a "history" icon if:
         //   * The room is encrypted, and:
         //   * The room's history_visibility allows future users to see content.

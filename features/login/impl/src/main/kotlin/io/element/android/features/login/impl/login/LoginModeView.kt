@@ -32,12 +32,8 @@ fun LoginModeView(
     loginMode: AsyncData<LoginMode>,
     onClearError: () -> Unit,
     onLearnMoreClick: () -> Unit,
-<<<<<<< HEAD
-    onOidcDetails: (OidcDetails) -> Unit,
-    onNeedLoginHint: () -> Unit,
-=======
     onOAuthDetails: (OAuthDetails) -> Unit,
->>>>>>> main-element
+    onNeedLoginHint: () -> Unit,
     onNeedLoginPassword: () -> Unit,
     onCreateAccountContinue: (url: String) -> Unit
 ) {
@@ -129,12 +125,8 @@ fun LoginModeView(
         is AsyncData.Loading -> Unit // The Continue button shows the loading state
         is AsyncData.Success -> {
             when (val loginModeData = loginMode.data) {
-<<<<<<< HEAD
                 LoginMode.LoginHint -> onNeedLoginHint()
-                is LoginMode.Oidc -> onOidcDetails(loginModeData.oidcDetails)
-=======
                 is LoginMode.OAuth -> onOAuthDetails(loginModeData.oAuthDetails)
->>>>>>> main-element
                 LoginMode.PasswordLogin -> onNeedLoginPassword()
                 is LoginMode.AccountCreation -> onCreateAccountContinue(loginModeData.url)
             }

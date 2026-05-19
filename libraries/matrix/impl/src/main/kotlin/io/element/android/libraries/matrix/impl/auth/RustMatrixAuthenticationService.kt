@@ -55,11 +55,8 @@ import org.matrix.rustcomponents.sdk.QrCodeData
 import org.matrix.rustcomponents.sdk.QrCodeDecodeException
 import org.matrix.rustcomponents.sdk.QrLoginProgress
 import org.matrix.rustcomponents.sdk.QrLoginProgressListener
-<<<<<<< HEAD
-import org.matrix.rustcomponents.sdk.tchapGetInstance
-=======
 import org.matrix.rustcomponents.sdk.SecretsBundleWithUserId
->>>>>>> main-element
+import org.matrix.rustcomponents.sdk.tchapGetInstance
 import timber.log.Timber
 import uniffi.matrix_sdk.OAuthAuthorizationData
 import uniffi.matrix_sdk_tchap.TchapGetInstanceConfig
@@ -73,14 +70,10 @@ class RustMatrixAuthenticationService(
     private val sessionStore: SessionStore,
     private val rustMatrixClientFactory: RustMatrixClientFactory,
     private val passphraseGenerator: PassphraseGenerator,
-<<<<<<< HEAD
-    private val oidcConfigurationProvider: OidcConfigurationProvider,
     private val userAgentProvider: UserAgentProvider,
     private val buildMeta: BuildMeta,
-=======
     private val oAuthConfigurationProvider: OAuthConfigurationProvider,
     private val enterpriseService: EnterpriseService,
->>>>>>> main-element
 ) : MatrixAuthenticationService {
     // Any existing Element Classic session that we want to try to import secrets from during login.
     private var elementClassicSession: ElementClassicSession? = null
@@ -177,17 +170,14 @@ class RustMatrixAuthenticationService(
             runCatchingExceptions {
                 val client = currentClient ?: error("You need to call `setHomeserver()` first")
                 val currentSessionPaths = sessionPaths ?: error("You need to call `setHomeserver()` first")
-<<<<<<< HEAD
-                // Tchap specific - Use "$applicationName Android" for initialDeviceName when creating session
-                client.login(username, password, "${buildMeta.applicationName} Android", null)
-=======
                 client.login(
                     username = username,
                     password = password,
-                    initialDeviceName = "Element X Android",
+                    // Tchap specific - Use "$applicationName Android" for initialDeviceName when creating session
+//                    initialDeviceName = "Element X Android",
+                    initialDeviceName = "${buildMeta.applicationName} Android",
                     deviceId = null,
                 )
->>>>>>> main-element
                 // Ensure that the user is not already logged in with the same account
                 ensureNotAlreadyLoggedIn(client)
                 tryToImportSecretForElementClassicSession(client)

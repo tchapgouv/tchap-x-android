@@ -59,10 +59,12 @@ open class StartChatStateProvider : PreviewParameterProvider<StartChatState> {
 }
 
 fun aConfirmingStartDmWithMatrixUser(
+    showMatrixId: Boolean = false,
     matrixUser: MatrixUser = aMatrixUser(),
     isUserIdentityUnknown: Boolean = false
 ): ConfirmingStartDmWithMatrixUser {
     return ConfirmingStartDmWithMatrixUser(
+        showMatrixId,
         matrixUser,
         isUserIdentityUnknown
     )

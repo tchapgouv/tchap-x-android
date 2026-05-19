@@ -139,12 +139,9 @@ private fun aSpaceInfo(
         roomVersion = "11",
         privilegedCreatorRole = false,
         isLowPriority = false,
-<<<<<<< HEAD
         // TCHAP external user
         isOpenToExternalUsers = false,
-=======
         activeCallIntentConsensus = CallIntentConsensus.None,
->>>>>>> main-element
     )
 }
 

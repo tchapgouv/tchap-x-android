@@ -64,11 +64,7 @@ fun Project.setupKover() {
     tasks.register("koverVerifyAll") {
         group = "verification"
         description = "Verifies the code coverage of all subprojects."
-<<<<<<< HEAD
-        val dependencies = listOf(":app:koverVerifyGplayTchapWithpinningDebug") + koverVariants.map { ":app:koverVerify${it.replaceFirstChar(Char::titlecase)}" }
-=======
         val dependencies = listOf(":koverVerifyMerged") + koverVariants.map { ":app:koverVerify${it.replaceFirstChar(Char::titlecase)}" }
->>>>>>> main-element
         dependsOn(dependencies)
     }
     // https://kotlin.github.io/kotlinx-kover/
@@ -242,13 +238,8 @@ fun Project.setupKover() {
 }
 
 fun KoverVariantCreateConfig.defaultVariants(project: Project) {
-<<<<<<< HEAD
-    if (project.name == "app") {
-        addWithDependencies("gplayTchapDevWithpinningDebug")
-=======
     if (project.path == ":app") {
-        addWithDependencies("gplayDebug")
->>>>>>> main-element
+        addWithDependencies("gplayTchapDevWithpinningDebug")
     } else {
         addWithDependencies("debug", "jvm", optional = true)
     }

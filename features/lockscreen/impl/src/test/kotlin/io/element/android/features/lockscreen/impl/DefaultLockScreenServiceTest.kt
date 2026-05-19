@@ -18,13 +18,10 @@ import io.element.android.features.lockscreen.impl.pin.SECRET_KEY_ALIAS
 import io.element.android.features.lockscreen.impl.pin.createDefaultPinCodeManager
 import io.element.android.features.lockscreen.impl.pin.storage.InMemoryLockScreenStore
 import io.element.android.features.lockscreen.impl.storage.LockScreenStore
-<<<<<<< HEAD
 import io.element.android.libraries.core.meta.BuildMeta
-import io.element.android.libraries.matrix.test.core.aBuildMeta
-=======
 import io.element.android.libraries.cryptography.api.SecretKeyRepository
 import io.element.android.libraries.cryptography.test.SimpleSecretKeyRepository
->>>>>>> main-element
+import io.element.android.libraries.matrix.test.core.aBuildMeta
 import io.element.android.libraries.sessionstorage.api.observer.SessionObserver
 import io.element.android.libraries.sessionstorage.test.observer.FakeSessionObserver
 import io.element.android.services.appnavstate.api.AppForegroundStateService

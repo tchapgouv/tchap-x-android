@@ -38,13 +38,9 @@ open class OnBoardingStateProvider : PreviewParameterProvider<OnBoardingState> {
 
 fun anOnBoardingState(
     isAddingAccount: Boolean = false,
-<<<<<<< HEAD
-    productionApplicationName: String = "Tchap",
-=======
     showBackButton: Boolean = false,
     showDeveloperSettings: Boolean = false,
-    productionApplicationName: String = "Element",
->>>>>>> main-element
+    productionApplicationName: String = "Tchap",
     defaultAccountProvider: String? = null,
     mustChooseAccountProvider: Boolean = false,
     canLoginWithQrCode: Boolean = false,

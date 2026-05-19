@@ -80,12 +80,9 @@ fun aRoomSummary(
     roomVersion: String? = "11",
     privilegedCreatorRole: Boolean = false,
     isLowPriority: Boolean = false,
-<<<<<<< HEAD
     // TCHAP external user
     isOpenToExternalUsers: Boolean = false,
-=======
     activeCallIntentConsensus: CallIntentConsensus = CallIntentConsensus.None,
->>>>>>> main-element
 ) = RoomSummary(
     info = RoomInfo(
         id = roomId,
@@ -124,13 +121,10 @@ fun aRoomSummary(
         roomVersion = roomVersion,
         privilegedCreatorRole = privilegedCreatorRole,
         isLowPriority = isLowPriority,
-<<<<<<< HEAD
         // TCHAP external user
         isOpenToExternalUsers = isOpenToExternalUsers,
-=======
         activeCallIntentConsensus = activeCallIntentConsensus,
         isDm = false,
->>>>>>> main-element
     ),
     latestEvent = latestEvent,
 )

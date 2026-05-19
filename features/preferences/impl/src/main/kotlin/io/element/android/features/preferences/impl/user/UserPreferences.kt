@@ -19,12 +19,8 @@ import io.element.android.libraries.matrix.ui.components.MatrixUserProvider
 
 @Composable
 fun UserPreferences(
-<<<<<<< HEAD
     showMatrixId: Boolean,
-    user: MatrixUser?,
-=======
     matrixUser: MatrixUser,
->>>>>>> main-element
     modifier: Modifier = Modifier,
 ) {
     MatrixUserHeader(
@@ -36,11 +32,6 @@ fun UserPreferences(
 
 @PreviewsDayNight
 @Composable
-<<<<<<< HEAD
-internal fun UserPreferencesPreview(@PreviewParameter(MatrixUserWithNullProvider::class) matrixUser: MatrixUser?) = ElementPreview {
-    UserPreferences(showMatrixId = false, matrixUser)
-=======
 internal fun UserPreferencesPreview(@PreviewParameter(MatrixUserProvider::class) matrixUser: MatrixUser) = ElementPreview {
-    UserPreferences(matrixUser)
->>>>>>> main-element
+    UserPreferences(showMatrixId = false, matrixUser)
 }

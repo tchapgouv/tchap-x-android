@@ -161,6 +161,7 @@ private fun InvitePeopleContentView(
 
         if (state.sendInvitesAction is ConfirmingUnknownUserInvitation) {
             InvitePeopleConfirmModal(
+                showMatrixId = state.showMatrixId,
                 users = state.sendInvitesAction.users,
                 onDismiss = { state.eventSink.invoke(DefaultInvitePeopleEvents.DismissUnknownUsersModal) },
                 onInvite = { state.eventSink.invoke(InvitePeopleEvents.SendInvites) },
@@ -259,6 +260,7 @@ private fun InvitePeopleSearchBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InvitePeopleConfirmModal(
+    showMatrixId: Boolean,
     users: ImmutableList<MatrixUser>,
     onDismiss: () -> Unit,
     onInvite: () -> Unit,
@@ -291,7 +293,7 @@ private fun InvitePeopleConfirmModal(
 
         LazyColumn {
             items(users) { user ->
-                MatrixUserRow(user)
+                MatrixUserRow(showMatrixId, user)
             }
         }
 

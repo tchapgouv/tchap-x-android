@@ -126,13 +126,9 @@ class OnBoardingPresenter(
 
         return OnBoardingState(
             isAddingAccount = isAddingAccount,
-<<<<<<< HEAD
-            productionApplicationName = buildMeta.applicationName,
-=======
             showBackButton = params.showBackButton,
             showDeveloperSettings = buildMeta.buildType != BuildType.RELEASE,
-            productionApplicationName = buildMeta.productionApplicationName,
->>>>>>> main-element
+            productionApplicationName = buildMeta.applicationName,
             defaultAccountProvider = defaultAccountProvider,
             mustChooseAccountProvider = mustChooseAccountProvider,
             canLoginWithQrCode = canLoginWithQrCode,

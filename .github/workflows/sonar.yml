@@ -56,13 +56,9 @@ jobs:
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/develop' }}
       - name: Build debug code and test fixtures
-<<<<<<< HEAD
         # TCHAP : assemble only TchapWithpinning, as runner has not enough memory to build all variants.
-#        run: ./gradlew assembleDebug createFullJarTchapWithpinningDebugTestFixtures :app:createFullJarGplayTchapWithpinningDebugTestFixtures $CI_GRADLE_ARG_PROPERTIES
+#        run: ./gradlew assembleGplayDebug createFullJarDebugTestFixtures :app:createFullJarGplayDebugTestFixtures $CI_GRADLE_ARG_PROPERTIES
         run: ./gradlew assembleTchapWithpinningDebug createFullJarTchapWithpinningDebugTestFixtures :app:createFullJarGplayTchapWithpinningDebugTestFixtures $CI_GRADLE_ARG_PROPERTIES
-=======
-        run: ./gradlew assembleGplayDebug createFullJarDebugTestFixtures :app:createFullJarGplayDebugTestFixtures $CI_GRADLE_ARG_PROPERTIES
->>>>>>> main-element
       - name: 🔊 Publish results to Sonar
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

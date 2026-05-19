@@ -27,17 +27,11 @@ import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.runCatchingUpdatingState
 import io.element.android.libraries.matrix.api.auth.AuthenticationException
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
-<<<<<<< HEAD
-import io.element.android.libraries.matrix.api.auth.OidcPrompt
-import io.element.android.libraries.oidc.api.OidcAction
-import io.element.android.libraries.oidc.api.OidcActionFlow
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-=======
 import io.element.android.libraries.matrix.api.auth.OAuthPrompt
 import io.element.android.libraries.oauth.api.OAuthAction
 import io.element.android.libraries.oauth.api.OAuthActionFlow
->>>>>>> main-element
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * This class is responsible for managing the login flow, including handling OIDC actions and
@@ -91,6 +85,7 @@ class LoginHelper(
                 isAccountCreation = isAccountCreation,
                 homeserverUrl = homeServerFromLoginHint,
                 loginHint = loginHint,
+                resolvedHomeserverUrl = null,
             )
         } else {
             loginModeState.value = AsyncData.Failure(AuthenticationException.NoHomeserverAvailable("Failed to resolve the account's homeserver"))
@@ -104,20 +99,6 @@ class LoginHelper(
         loginHint: String?,
     ) {
         suspend {
-<<<<<<< HEAD
-            authenticationService.setHomeserver(homeserverUrl).map { matrixHomeServerDetails ->
-                if (matrixHomeServerDetails.supportsOidcLogin) {
-                    // Tchap - Show LoginHintView when loginHint is null
-                    if (loginHint == null) {
-                        LoginMode.LoginHint
-                    } else {
-                        // Retrieve the details right now
-                        val oidcPrompt = if (isAccountCreation) OidcPrompt.Create else OidcPrompt.Login
-                        LoginMode.Oidc(
-                            authenticationService.getOidcUrl(prompt = oidcPrompt, loginHint = loginHint).getOrThrow()
-                        )
-                    }
-=======
             authenticationService.setHomeserver(homeserverUrl).recoverCatching {
                 // No .well-known file?
                 // If the homeserver is not reachable, try using resolvedHomeserverUrl.
@@ -128,12 +109,16 @@ class LoginHelper(
                 }
             }.map { matrixHomeServerDetails ->
                 if (matrixHomeServerDetails.supportsOAuthLogin) {
-                    // Retrieve the details right now
-                    val oAuthPrompt = if (isAccountCreation) OAuthPrompt.Create else OAuthPrompt.Login
-                    LoginMode.OAuth(
-                        authenticationService.getOAuthUrl(prompt = oAuthPrompt, loginHint = loginHint).getOrThrow()
-                    )
->>>>>>> main-element
+                    // Tchap - Show LoginHintView when loginHint is null
+                    if (loginHint == null) {
+                        LoginMode.LoginHint
+                    } else {
+                        // Retrieve the details right now
+                        val oAuthPrompt = if (isAccountCreation) OAuthPrompt.Create else OAuthPrompt.Login
+                        LoginMode.OAuth(
+                            authenticationService.getOAuthUrl(prompt = oAuthPrompt, loginHint = loginHint).getOrThrow()
+                        )
+                    }
                 } else if (isAccountCreation) {
                     val url = webClientUrlForAuthenticationRetriever.retrieve(homeserverUrl)
                     LoginMode.AccountCreation(url)

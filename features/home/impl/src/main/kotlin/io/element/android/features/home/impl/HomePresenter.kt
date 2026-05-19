@@ -81,10 +81,9 @@ class HomePresenter(
 
         fun handleEvent(event: HomeEvent) {
             when (event) {
-<<<<<<< HEAD
                 is HomeEvent.SelectHomeNavigationBarItem -> coroutineState.launch {
+                    currentHomeNavigationBarItemOrdinal = event.item.ordinal
                     if (event.item == HomeNavigationBarItem.Spaces) {
-                        announcementService.showAnnouncement(Announcement.Space)
                         // TCHAP : Space default action is now conversation filtering (set state to ShowFilters when showing spaces)
                         if (roomListState.spaceFiltersState is SpaceFiltersState.Unselected) {
                             roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Unselected.ShowFilters)
@@ -96,10 +95,6 @@ class HomePresenter(
                         // TCHAP : Space default action is now conversation filtering (add automatic Reselect Last filter)
                         roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Selecting.ReselectLast)
                     }
-=======
-                is HomeEvent.SelectHomeNavigationBarItem -> {
->>>>>>> main-element
-                    currentHomeNavigationBarItemOrdinal = event.item.ordinal
                 }
                 is HomeEvent.SwitchToAccount -> coroutineState.launch {
                     sessionStore.setLatestSession(event.sessionId.value)

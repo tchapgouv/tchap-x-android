@@ -9,7 +9,6 @@
 package io.element.android.features.rageshake.impl.reporter
 
 import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesBinding
 import io.element.android.appconfig.RageshakeConfig
 import io.element.android.features.enterprise.api.BugReportUrl
@@ -27,7 +26,6 @@ import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 
 @ContributesBinding(AppScope::class)
-@AssistedInject
 class DefaultBugReporterUrlProvider(
     private val bugReportAppNameProvider: BugReportAppNameProvider,
     private val enterpriseService: EnterpriseService,

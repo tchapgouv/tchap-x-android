@@ -44,6 +44,7 @@ dependencies {
     implementation(projects.libraries.uiCommon)
     implementation(projects.libraries.uiStrings)
     implementation(projects.features.login.api)
+    implementation(projects.features.accountexpired.api)
 
     implementation(libs.coil)
 

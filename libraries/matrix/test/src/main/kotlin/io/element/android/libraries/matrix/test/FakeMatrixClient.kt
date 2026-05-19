@@ -391,13 +391,12 @@ class FakeMatrixClient(
         return resetWellKnownConfigLambda()
     }
 
-<<<<<<< HEAD
     // TCHAP account-expiration
     override suspend fun accountExpiredSendEmail(): Result<Unit> {
         return accountExpiredSendEmailLambda()
-=======
+    }
+
     override fun homeserverCapabilities(): HomeserverCapabilitiesProvider {
         return homeserverCapabilitiesProvider
->>>>>>> main-element
     }
 }

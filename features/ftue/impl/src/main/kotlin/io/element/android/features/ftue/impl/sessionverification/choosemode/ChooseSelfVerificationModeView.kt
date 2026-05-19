@@ -128,13 +128,8 @@ private fun ChooseSelfVerificationModeButtons(
                         onClick = onUseAnotherDevice,
                     )
                 }
-<<<<<<< HEAD
-                if (state.buttonsState.data.canEnterRecoveryKey) {
-                    OutlinedButton(
-=======
                 if (state.buttonsState.data.canUseRecoveryKey) {
-                    Button(
->>>>>>> main-element
+                    OutlinedButton(
                         modifier = Modifier.fillMaxWidth(),
                         text = stringResource(R.string.screen_identity_confirmation_use_recovery_key),
                         onClick = onUseRecoveryKey,

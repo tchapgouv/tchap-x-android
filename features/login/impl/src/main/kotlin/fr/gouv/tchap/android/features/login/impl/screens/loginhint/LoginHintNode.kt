@@ -34,12 +34,11 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
-import io.element.android.features.login.impl.screens.chooseaccountprovider.ChooseAccountProviderNode.Callback
 import io.element.android.features.login.impl.util.openLearnMorePage
 import io.element.android.libraries.architecture.NodeInputs
 import io.element.android.libraries.architecture.callback
 import io.element.android.libraries.architecture.inputs
-import io.element.android.libraries.matrix.api.auth.OidcDetails
+import io.element.android.libraries.matrix.api.auth.OAuthDetails
 
 @ContributesNode(AppScope::class)
 @AssistedInject
@@ -51,7 +50,7 @@ class LoginHintNode(
     interface Callback : Plugin {
         fun navigateToLoginHint()
         fun navigateToLoginPassword()
-        fun navigateToOidc(oidcDetails: OidcDetails)
+        fun navigateToOAuth(oauthDetails: OAuthDetails)
         fun navigateToCreateAccount(url: String)
     }
 
@@ -76,7 +75,7 @@ class LoginHintNode(
             state = state,
             modifier = modifier,
             onBackClick = ::navigateUp,
-            onOidcDetails = callback::navigateToOidc,
+            onOAuthDetails = callback::navigateToOAuth,
             onNeedLoginHint = callback::navigateToLoginHint,
             onNeedLoginPassword = callback::navigateToLoginPassword,
             onLearnMoreClick = { openLearnMorePage(context) },

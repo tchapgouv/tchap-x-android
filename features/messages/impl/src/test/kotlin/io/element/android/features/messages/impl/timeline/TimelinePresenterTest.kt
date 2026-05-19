@@ -10,11 +10,8 @@ package io.element.android.features.messages.impl.timeline
 
 import app.cash.turbine.ReceiveTurbine
 import com.google.common.truth.Truth.assertThat
-<<<<<<< HEAD
 import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
-=======
 import io.element.android.features.location.test.FakeActiveLiveLocationShareManager
->>>>>>> main-element
 import io.element.android.features.messages.impl.FakeMessagesNavigator
 import io.element.android.features.messages.impl.crypto.sendfailure.resolve.aResolveVerifiedUserSendFailureState
 import io.element.android.features.messages.impl.fixtures.aMessageEvent

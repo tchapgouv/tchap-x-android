@@ -69,16 +69,12 @@ data class RoomDetailsState(
         if (isPublic) {
             add(RoomBadge.PUBLIC)
         }
-<<<<<<< HEAD
         // TCHAP external user
         if (isOpenToExternalUsers) {
             add(RoomBadge.EXTERNAL)
         }
 
-        if (enableKeyShareOnInvite && isEncrypted) {
-=======
         if (isEncrypted) {
->>>>>>> main-element
             when (roomHistoryVisibility) {
                 RoomHistoryVisibility.Invited, RoomHistoryVisibility.Joined -> add(RoomBadge.SHARED_HISTORY_HIDDEN)
                 RoomHistoryVisibility.Shared -> add(RoomBadge.SHARED_HISTORY_SHARED)

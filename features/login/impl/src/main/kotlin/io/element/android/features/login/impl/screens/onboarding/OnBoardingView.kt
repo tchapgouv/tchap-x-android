@@ -66,12 +66,8 @@ fun OnBoardingView(
     onSignInWithQrCode: () -> Unit,
     onSignIn: (mustChooseAccountProvider: Boolean) -> Unit,
     onCreateAccount: () -> Unit,
-<<<<<<< HEAD
-    onOidcDetails: (OidcDetails) -> Unit,
-    onNeedLoginHint: () -> Unit,
-=======
     onOAuthDetails: (OAuthDetails) -> Unit,
->>>>>>> main-element
+    onNeedLoginHint: () -> Unit,
     onNeedLoginPassword: () -> Unit,
     onLearnMoreClick: () -> Unit,
     onCreateAccountContinue: (url: String) -> Unit,
@@ -85,12 +81,8 @@ fun OnBoardingView(
                 state.eventSink(OnBoardingEvents.ClearError)
             },
             onLearnMoreClick = onLearnMoreClick,
-<<<<<<< HEAD
-            onOidcDetails = onOidcDetails,
-            onNeedLoginHint = onNeedLoginHint,
-=======
             onOAuthDetails = onOAuthDetails,
->>>>>>> main-element
+            onNeedLoginHint = onNeedLoginHint,
             onNeedLoginPassword = onNeedLoginPassword,
             onCreateAccountContinue = onCreateAccountContinue,
         )
@@ -362,12 +354,8 @@ internal fun OnBoardingViewPreview(
         onSignIn = {},
         onCreateAccount = {},
         onReportProblem = {},
-<<<<<<< HEAD
-        onOidcDetails = {},
-        onNeedLoginHint = {},
-=======
         onOAuthDetails = {},
->>>>>>> main-element
+        onNeedLoginHint = {},
         onNeedLoginPassword = {},
         onLearnMoreClick = {},
         onCreateAccountContinue = {},

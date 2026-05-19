@@ -20,7 +20,9 @@ class OAuthConfigurationProvider(
     private val oAuthRedirectUrlProvider: OAuthRedirectUrlProvider,
 ) {
     fun get(): OAuthConfiguration = OAuthConfiguration(
-        clientName = buildMeta.applicationName,
+        // TCHAP - Suffix appName with Android
+//        clientName = buildMeta.applicationName,
+        clientName = "${buildMeta.applicationName} Android",
         redirectUri = oAuthRedirectUrlProvider.provide(),
         clientUri = OAuthConfig.CLIENT_URI,
         logoUri = OAuthConfig.LOGO_URI,

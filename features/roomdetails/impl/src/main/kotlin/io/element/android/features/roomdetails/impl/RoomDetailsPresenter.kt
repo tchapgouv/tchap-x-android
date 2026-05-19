@@ -40,6 +40,8 @@ import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.designsystem.utils.snackbar.LocalSnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.designsystem.utils.snackbar.collectSnackbarMessageAsState
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityState
 import io.element.android.libraries.matrix.api.notificationsettings.NotificationSettingsService
@@ -49,11 +51,7 @@ import io.element.android.libraries.matrix.api.room.join.JoinRule
 import io.element.android.libraries.matrix.api.room.powerlevels.canEditRolesAndPermissions
 import io.element.android.libraries.matrix.api.room.powerlevels.permissionsAsState
 import io.element.android.libraries.matrix.api.room.roomNotificationSettings
-<<<<<<< HEAD
 import io.element.android.libraries.matrix.api.roomdirectory.RoomVisibility
-import io.element.android.libraries.matrix.ui.room.getCurrentRoomMember
-=======
->>>>>>> main-element
 import io.element.android.libraries.matrix.ui.room.getDirectRoomMember
 import io.element.android.libraries.matrix.ui.room.roomMemberIdentityStateChange
 import io.element.android.libraries.preferences.api.store.AppPreferencesStore
@@ -78,6 +76,7 @@ class RoomDetailsPresenter(
     private val analyticsService: AnalyticsService,
     private val clipboardHelper: ClipboardHelper,
     private val appPreferencesStore: AppPreferencesStore,
+    private val featureFlagService: FeatureFlagService,
 ) : Presenter<RoomDetailsState> {
     @Composable
     override fun present(): RoomDetailsState {
@@ -237,18 +236,13 @@ class RoomDetailsPresenter(
             roomNotificationSettings = roomNotificationSettingsState.roomNotificationSettings(),
             isFavorite = isFavorite,
             displayRolesAndPermissionsSettings = !isDm && permissions.canEditRolesAndPermissions,
-<<<<<<< HEAD
             // TCHAP : Show public badge only when the room is visible in the room directory
 //            isPublic = joinRule == JoinRule.Public,
             isPublic = joinRule == JoinRule.Public && savedIsVisibleInRoomDirectory.value.dataOrNull() == true,
             // TCHAP : Room access link feature
             isLinkAccessEnableConfirmDialogVisible = isLinkAccessEnableConfirmDialogVisible,
             isLinkAccessEnabled = joinRule == JoinRule.Public,
-            heroes = roomInfo.heroes.toImmutableList(),
-=======
-            isPublic = joinRule == JoinRule.Public,
             heroes = roomInfo.heroes,
->>>>>>> main-element
             pinnedMessagesCount = pinnedMessagesCount,
             snackbarMessage = snackbarMessage,
             canShowKnockRequests = canShowKnockRequests,

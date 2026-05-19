@@ -29,16 +29,12 @@ dependencies {
         debugImplementation(libs.matrix.sdk)
         releaseImplementation(libs.matrix.sdk)
     }
-<<<<<<< HEAD
     implementation(projects.appcertificates)
-    implementation(projects.appconfig)
     implementation(projects.libraries.bwi.api)
-=======
     implementation(projects.libraries.rustlsTls)
 
     implementation(projects.appconfig)
     implementation(projects.features.enterprise.api)
->>>>>>> main-element
     implementation(projects.libraries.androidutils)
     implementation(projects.libraries.architecture)
     implementation(projects.libraries.di)

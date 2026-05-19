@@ -50,6 +50,7 @@ object MatrixBadgeAtom {
             Type.Info -> ElementTheme.colors.bgBadgeInfo
         }
         val borderStroke = when (data.type) {
+            Type.External -> null
             Type.Positive -> null
             Type.Neutral -> BorderStroke(1.dp, ElementTheme.colors.borderInteractiveSecondary)
             Type.Negative -> null
@@ -63,9 +64,9 @@ object MatrixBadgeAtom {
             Type.Info -> ElementTheme.colors.textBadgeInfo
         }
         val iconColor = when (data.type) {
+            Type.External -> ElementTheme.colors.textDecorative6
             Type.Positive -> ElementTheme.colors.iconAccentPrimary
             Type.Neutral -> ElementTheme.colors.iconPrimary
-            Type.External -> ElementTheme.colors.textDecorative6
             Type.Negative -> ElementTheme.colors.iconCriticalPrimary
             Type.Info -> ElementTheme.colors.iconInfoPrimary
         }
@@ -75,11 +76,8 @@ object MatrixBadgeAtom {
             backgroundColor = backgroundColor,
             iconColor = iconColor,
             textColor = textColor,
-<<<<<<< HEAD
-            isSmall = true
-=======
+            isSmall = true,
             borderStroke = borderStroke,
->>>>>>> main-element
         )
     }
 }

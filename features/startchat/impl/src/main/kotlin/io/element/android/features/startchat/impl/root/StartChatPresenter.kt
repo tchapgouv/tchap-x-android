@@ -10,6 +10,8 @@ package io.element.android.features.startchat.impl.root
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -22,6 +24,8 @@ import io.element.android.features.startchat.impl.userlist.UserListPresenterArgs
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.meta.BuildMeta
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.usersearch.api.UserRepository
 import kotlinx.coroutines.launch
@@ -31,6 +35,7 @@ class StartChatPresenter(
     presenterFactory: UserListPresenter.Factory,
     userRepository: UserRepository,
     userListDataStore: UserListDataStore,
+    private val featureFlagService: FeatureFlagService,
     private val startDMAction: StartDMAction,
     private val buildMeta: BuildMeta,
 ) : Presenter<StartChatState> {
@@ -49,20 +54,15 @@ class StartChatPresenter(
         val localCoroutineScope = rememberCoroutineScope()
         val startDmActionState: MutableState<AsyncAction<RoomId>> = remember { mutableStateOf(AsyncAction.Uninitialized) }
 
-<<<<<<< HEAD
-        val isRoomDirectorySearchEnabled by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.RoomDirectorySearch)
-        }.collectAsState(initial = false)
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(initial = false)
 
-=======
->>>>>>> main-element
         fun handleEvent(event: StartChatEvents) {
             when (event) {
                 is StartChatEvents.StartDM -> localCoroutineScope.launch {
                     startDMAction.execute(
+                        showMatrixId = showMatrixId,
                         matrixUser = event.matrixUser,
                         createIfDmDoesNotExist = startDmActionState.value is AsyncAction.Confirming,
                         actionState = startDmActionState,

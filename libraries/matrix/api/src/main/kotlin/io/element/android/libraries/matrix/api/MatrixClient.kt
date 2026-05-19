@@ -226,14 +226,11 @@ interface MatrixClient {
      */
     suspend fun resetWellKnownConfig(): Result<Unit>
 
-<<<<<<< HEAD
     /**
      * TCHAP account-expiration : request to send a new email to provide the user with an updated link to renew their account.
      */
     suspend fun accountExpiredSendEmail(): Result<Unit>
-=======
     fun homeserverCapabilities(): HomeserverCapabilitiesProvider
->>>>>>> main-element
 }
 
 /**

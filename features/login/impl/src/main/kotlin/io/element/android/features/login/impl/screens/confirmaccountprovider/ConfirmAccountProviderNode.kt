@@ -59,12 +59,8 @@ class ConfirmAccountProviderNode(
         ConfirmAccountProviderView(
             state = state,
             modifier = modifier,
-<<<<<<< HEAD
-            onOidcDetails = callback::navigateToOidc,
-            onNeedLoginHint = callback::navigateToLoginHint,
-=======
             onOAuthDetails = callback::navigateToOAuth,
->>>>>>> main-element
+            onNeedLoginHint = callback::navigateToLoginHint,
             onNeedLoginPassword = callback::navigateToLoginPassword,
             onCreateAccountContinue = callback::navigateToCreateAccount,
             onChange = callback::navigateToChangeAccountProvider,

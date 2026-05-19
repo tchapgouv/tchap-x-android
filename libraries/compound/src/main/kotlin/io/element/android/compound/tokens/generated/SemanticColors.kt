@@ -52,12 +52,9 @@ data class SemanticColors(
     val bgBadgeAccent: Color,
     val bgBadgeCritical: Color,
     val bgBadgeDefault: Color,
-<<<<<<< HEAD
     /** Badge default background colour */
     val bgBadgeExternal: Color,
     /** Badge info background colour */
-=======
->>>>>>> main-element
     val bgBadgeInfo: Color,
     val bgBadgePrimary: Color,
     val bgBadgeSecondary: Color,

@@ -44,17 +44,10 @@ android {
 }
 
 dependencies {
-<<<<<<< HEAD
     implementation(projects.libraries.bwi.api)
     implementation(projects.libraries.di)
     implementation(projects.libraries.tchaputils)
-    implementation(projects.libraries.androidutils)
     implementation(projects.libraries.core)
-    implementation(projects.services.analytics.api)
-    implementation(libs.serialization.json)
-    api(projects.libraries.sessionStorage.api)
-=======
->>>>>>> main-element
     implementation(libs.coroutines.core)
     implementation(libs.serialization.json)
     implementation(projects.libraries.androidutils)
