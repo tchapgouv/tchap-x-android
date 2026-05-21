@@ -28,7 +28,6 @@ import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.RoomIdOrAlias
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.createroom.CreateRoomParameters
-import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
 import io.element.android.libraries.matrix.api.createroom.RoomPreset
 import io.element.android.libraries.matrix.api.linknewdevice.LinkDesktopHandler
 import io.element.android.libraries.matrix.api.linknewdevice.LinkMobileHandler
@@ -126,7 +125,6 @@ import org.matrix.rustcomponents.sdk.SendQueueRoomErrorListener
 import org.matrix.rustcomponents.sdk.TaskHandle
 import org.matrix.rustcomponents.sdk.use
 import timber.log.Timber
-import uniffi.matrix_sdk.AccessRule
 import java.io.File
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -377,7 +375,7 @@ class RustMatrixClient(
             // TCHAP invite-by-email
             var isTchapInvite = false
             var isTchapInviteExternal = false
-            if (createRoomParams.accessRules === RoomAccessRules.DIRECT &&
+            if (createRoomParams.isDirect &&
                 createRoomParams.invite?.get(0)?.value?.contains(TchapPatterns.inviteByEmailSuffixMarker()) == true) {
                 // isTchapInvite = true when room is DM & first invite userId contains inviteByEmailSuffixMarker
                 isTchapInvite = true
@@ -388,16 +386,10 @@ class RustMatrixClient(
             val powerLevels = defaultRoomCreationPowerLevels(isSpace = createRoomParams.isSpace, isPublic = hasPublicAccess)
 
             val rustParams = RustCreateRoomParameters(
-                accessRuleOverride = when (createRoomParams.accessRules) {
-                    RoomAccessRules.DIRECT -> AccessRule.DIRECT
-                    RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
-                    RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
-                    // TCHAP access rule - Default room is UNRESTRICTED
-                    else -> AccessRule.UNRESTRICTED
-                },
                 name = createRoomParams.name,
                 topic = createRoomParams.topic,
                 isEncrypted = createRoomParams.isEncrypted,
+                // Tchap-specific : access_rules (federate param on creation_content)
                 isRoomFederated = createRoomParams.isRoomFederated,
                 isDirect = createRoomParams.isDirect,
                 visibility = createRoomParams.visibility.map(),
@@ -434,7 +426,6 @@ class RustMatrixClient(
 
     override suspend fun createDM(userId: UserId): Result<RoomId> {
         val createRoomParams = CreateRoomParameters(
-            accessRules = RoomAccessRules.DIRECT, // Tchap: make accessRules `direct` for Direct room.
             name = null,
             isEncrypted = true,
             isDirect = true,
