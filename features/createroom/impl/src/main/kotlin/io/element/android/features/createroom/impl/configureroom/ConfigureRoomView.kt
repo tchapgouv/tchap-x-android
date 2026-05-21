@@ -377,7 +377,7 @@ private fun RoomJoinRuleOptions(
                 },
                 headlineContent = {
                     val title = when (item) {
-                        JoinRuleItem.PublicVisibility.Public -> stringResource(R.string.screen_create_room_room_access_section_public_option_title)
+                        JoinRuleItem.PublicVisibility.Public -> stringResource(R.string.tchap_screen_create_room_public_option_title)
                         is JoinRuleItem.PrivateVisibility.Restricted -> stringResource(R.string.screen_create_room_room_access_section_restricted_option_title)
                         JoinRuleItem.PublicVisibility.AskToJoin -> stringResource(R.string.screen_create_room_room_access_section_knocking_option_title)
                         is JoinRuleItem.PrivateVisibility.AskToJoinRestricted -> stringResource(

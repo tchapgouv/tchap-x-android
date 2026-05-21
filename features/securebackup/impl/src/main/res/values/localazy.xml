@@ -2,15 +2,9 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="screen_chat_backup_key_backup_action_disable">"Delete key storage"</string>
   <string name="screen_chat_backup_key_backup_action_enable">"Turn on backup"</string>
-<<<<<<< HEAD
-  <string name="screen_chat_backup_key_backup_description">"Store your cryptographic identity and message keys securely on the server. This will allow you to view your message history on any new devices. %1$s."</string>
+  <string name="screen_chat_backup_key_backup_description">"This will allow you to verify your digital identity and view your chat history on any new devices. %1$s."</string><!-- Tchap: Custom string -->
   <string name="screen_chat_backup_key_backup_title">"Automatic saving of messages"</string><!-- Tchap: Custom string -->
-  <string name="screen_chat_backup_key_storage_disabled_error">"Automatic message saving must be turned on to set up recovery."</string><!-- Tchap: Custom string -->
-=======
-  <string name="screen_chat_backup_key_backup_description">"This will allow you to view your chat history on any new devices and is required for backup of chats and digital identity. %1$s."</string>
-  <string name="screen_chat_backup_key_backup_title">"Key storage"</string>
-  <string name="screen_chat_backup_key_storage_disabled_error">"Key storage must be turned on to back up your chats."</string>
->>>>>>> main-element
+  <string name="screen_chat_backup_key_storage_disabled_error">"Automatic message saving must be turned on to configure restoration."</string><!-- Tchap: Custom string -->
   <string name="screen_chat_backup_key_storage_toggle_description">"Upload keys from this device"</string>
   <string name="screen_chat_backup_key_storage_toggle_title">"Allow automatic saving of messages"</string><!-- Tchap: Custom string -->
   <string name="screen_chat_backup_recovery_action_change">"Change recovery key"</string>
