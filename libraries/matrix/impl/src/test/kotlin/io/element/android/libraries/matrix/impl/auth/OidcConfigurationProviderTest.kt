@@ -23,7 +23,7 @@ class OidcConfigurationProviderTest {
             ),
             oidcRedirectUrlProvider = FakeOidcRedirectUrlProvider(),
         ).get()
-        assertThat(result.clientName).isEqualTo("myName")
+        assertThat(result.clientName).isEqualTo("myName Android")
         assertThat(result.redirectUri).isEqualTo(FAKE_REDIRECT_URL)
     }
 }
