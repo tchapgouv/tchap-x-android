@@ -32,4 +32,6 @@
     <string name="tchap_screen_onboarding_sign_in_to">"Se connecter"</string>
     <string name="tchap_screen_onboarding_welcome_message">"La messagerie instantanée du secteur public."</string>
     <string name="tchap_screen_onboarding_welcome_title">"Bienvenue dans %1$s"</string>
+    <string name="tchap_screen_onboarding_legacy_continue">"Continuer avec ce compte"</string>
+    <string name="tchap_screen_onboarding_legacy_other_account">"Utiliser un autre compte"</string>
 </resources>

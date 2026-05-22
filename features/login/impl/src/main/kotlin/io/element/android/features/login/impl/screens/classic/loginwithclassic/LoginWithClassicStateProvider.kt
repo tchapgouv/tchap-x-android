@@ -24,6 +24,7 @@ open class LoginWithClassicStateProvider : PreviewParameterProvider<LoginWithCla
 }
 
 fun aLoginWithClassicState(
+    showMatrixId: Boolean = false,
     isElementPro: Boolean = false,
     userId: UserId = UserId("@alice:matrix.org"),
     displayName: String? = null,
@@ -32,6 +33,7 @@ fun aLoginWithClassicState(
     loginMode: AsyncData<LoginMode> = AsyncData.Uninitialized,
     eventSink: (LoginWithClassicEvent) -> Unit = {},
 ) = LoginWithClassicState(
+    showMatrixId = showMatrixId,
     isElementPro = isElementPro,
     userId = userId,
     displayName = displayName,
