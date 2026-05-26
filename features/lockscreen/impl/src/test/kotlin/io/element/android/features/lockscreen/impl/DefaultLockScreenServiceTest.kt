@@ -17,6 +17,8 @@ import io.element.android.features.lockscreen.impl.pin.PinCodeManager
 import io.element.android.features.lockscreen.impl.pin.createDefaultPinCodeManager
 import io.element.android.features.lockscreen.impl.pin.storage.InMemoryLockScreenStore
 import io.element.android.features.lockscreen.impl.storage.LockScreenStore
+import io.element.android.libraries.core.meta.BuildMeta
+import io.element.android.libraries.matrix.test.core.aBuildMeta
 import io.element.android.libraries.sessionstorage.api.observer.SessionObserver
 import io.element.android.libraries.sessionstorage.test.observer.FakeSessionObserver
 import io.element.android.services.appnavstate.api.AppForegroundStateService
@@ -85,6 +87,7 @@ private fun TestScope.createDefaultLockScreenService(
     sessionObserver: SessionObserver = FakeSessionObserver(),
     appForegroundStateService: AppForegroundStateService = FakeAppForegroundStateService(),
     biometricAuthenticatorManager: BiometricAuthenticatorManager = FakeBiometricAuthenticatorManager(),
+    buildMeta: BuildMeta = aBuildMeta(),
 ) = DefaultLockScreenService(
     lockScreenConfig = lockScreenConfig,
     lockScreenStore = lockScreenStore,
@@ -93,4 +96,5 @@ private fun TestScope.createDefaultLockScreenService(
     sessionObserver = sessionObserver,
     appForegroundStateService = appForegroundStateService,
     biometricAuthenticatorManager = biometricAuthenticatorManager,
+    buildMeta = buildMeta,
 )
