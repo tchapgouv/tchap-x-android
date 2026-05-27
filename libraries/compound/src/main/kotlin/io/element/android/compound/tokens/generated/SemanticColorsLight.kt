@@ -38,9 +38,17 @@ val compoundColorsLight = SemanticColors(
     bgActionTertiaryRest = LightColorTokens.colorThemeBg,
     bgActionTertiarySelected = LightColorTokens.colorGray400,
     bgBadgeAccent = LightColorTokens.colorGreen400,
+<<<<<<< HEAD
     bgBadgeDefault = LightColorTokens.colorGray400,
     bgBadgeExternal = LightColorTokens.colorOrange400,
     bgBadgeInfo = LightColorTokens.colorBlue400,
+=======
+    bgBadgeCritical = LightColorTokens.colorRed300,
+    bgBadgeDefault = LightColorTokens.colorThemeBg,
+    bgBadgeInfo = LightColorTokens.colorBlue400,
+    bgBadgePrimary = LightColorTokens.colorGray1400,
+    bgBadgeSecondary = LightColorTokens.colorGray400,
+>>>>>>> main-element
     bgCanvasDefault = LightColorTokens.colorThemeBg,
     bgCanvasDefaultLevel1 = LightColorTokens.colorThemeBg,
     bgCanvasDisabled = LightColorTokens.colorGray200,
@@ -58,8 +66,14 @@ val compoundColorsLight = SemanticColors(
     bgSubtlePrimary = LightColorTokens.colorBlue400,
     bgSubtleSecondary = LightColorTokens.colorGray300,
     bgSubtleSecondaryLevel0 = LightColorTokens.colorGray300,
+<<<<<<< HEAD
     bgSuccessSubtle = LightColorTokens.colorGreen400,
     borderAccentSubtle = LightColorTokens.colorBlue700,
+=======
+    bgSuccessSubtle = LightColorTokens.colorGreen200,
+    borderAccentPrimary = LightColorTokens.colorGreen900,
+    borderAccentSubtle = LightColorTokens.colorGreen700,
+>>>>>>> main-element
     borderCriticalHovered = LightColorTokens.colorRed1000,
     borderCriticalPrimary = LightColorTokens.colorRed900,
     borderCriticalSubtle = LightColorTokens.colorRed500,
@@ -103,7 +117,12 @@ val compoundColorsLight = SemanticColors(
     iconSuccessPrimary = LightColorTokens.colorBlue1200,
     iconTertiary = LightColorTokens.colorGray800,
     iconTertiaryAlpha = LightColorTokens.colorAlphaGray800,
+<<<<<<< HEAD
     textActionAccent = LightColorTokens.colorBlue900,
+=======
+    separatorPrimary = LightColorTokens.colorGray400,
+    textActionAccent = LightColorTokens.colorGreen900,
+>>>>>>> main-element
     textActionPrimary = LightColorTokens.colorGray1400,
     textBadgeAccent = LightColorTokens.colorGreen1200,
     textBadgeDefault = LightColorTokens.colorGray1200,

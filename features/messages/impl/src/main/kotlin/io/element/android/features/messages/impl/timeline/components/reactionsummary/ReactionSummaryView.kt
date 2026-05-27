@@ -91,7 +91,8 @@ fun ReactionSummaryView(
     if (state.target != null) {
         ModalBottomSheet(
             onDismissRequest = ::onDismiss,
-            modifier = modifier
+            modifier = modifier,
+            scrollable = false,
         ) {
             ReactionSummaryViewContent(summary = state.target)
         }

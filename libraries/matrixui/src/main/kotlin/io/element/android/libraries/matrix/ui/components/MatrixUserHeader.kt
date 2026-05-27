@@ -8,6 +8,7 @@
 
 package io.element.android.libraries.matrix.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,6 +35,7 @@ import io.element.android.libraries.matrix.ui.model.getBestName
 
 @Composable
 fun MatrixUserHeader(
+<<<<<<< HEAD
     showMatrixId: Boolean,
     matrixUser: MatrixUser?,
     modifier: Modifier = Modifier,
@@ -55,33 +57,36 @@ fun MatrixUserHeader(
 @Composable
 private fun MatrixUserHeaderContent(
     showMatrixId: Boolean,
+=======
+>>>>>>> main-element
     matrixUser: MatrixUser,
     modifier: Modifier = Modifier,
-    // onClick: () -> Unit,
 ) {
     Row(
         modifier = modifier
-            // .clickable(onClick = onClick)
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 16.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Avatar(
             modifier = Modifier
-                .padding(vertical = 12.dp),
+                .padding(vertical = 7.dp),
             avatarData = matrixUser.getAvatarData(size = AvatarSize.UserPreference),
             avatarType = AvatarType.User,
         )
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(13.dp))
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             // Name
             Text(
                 modifier = Modifier.clipToBounds(),
                 text = matrixUser.getBestName(),
                 maxLines = 1,
-                style = ElementTheme.typography.fontHeadingSmMedium,
+                style = ElementTheme.typography.fontHeadingMdRegular,
                 overflow = TextOverflow.Ellipsis,
                 color = ElementTheme.colors.textPrimary,
             )

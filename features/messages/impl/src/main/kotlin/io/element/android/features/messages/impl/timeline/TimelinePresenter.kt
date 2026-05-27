@@ -24,6 +24,7 @@ import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import io.element.android.features.location.api.live.ActiveLiveLocationShareManager
 import io.element.android.features.messages.impl.MessagesNavigator
 import io.element.android.features.messages.impl.UserEventPermissions
 import io.element.android.features.messages.impl.crypto.sendfailure.resolve.ResolveVerifiedUserSendFailureEvent
@@ -57,7 +58,6 @@ import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.UniqueId
 import io.element.android.libraries.matrix.api.core.asEventId
 import io.element.android.libraries.matrix.api.room.JoinedRoom
-import io.element.android.libraries.matrix.api.room.isDm
 import io.element.android.libraries.matrix.api.room.powerlevels.permissionsAsState
 import io.element.android.libraries.matrix.api.room.roomMembers
 import io.element.android.libraries.matrix.api.timeline.ReceiptType
@@ -104,6 +104,7 @@ class TimelinePresenter(
     private val roomCallStatePresenter: Presenter<RoomCallState>,
     private val featureFlagService: FeatureFlagService,
     private val analyticsService: AnalyticsService,
+    private val liveLocationShareManager: ActiveLiveLocationShareManager,
 ) : Presenter<TimelineState> {
     private val tag = "TimelinePresenter"
 
@@ -159,6 +160,9 @@ class TimelinePresenter(
         val displayThreadSummaries by produceState(false) {
             value = featureFlagService.isFeatureEnabled(FeatureFlags.Threads)
         }
+        val displayFloatingDateBadge by produceState(false) {
+            value = featureFlagService.isFeatureEnabled(FeatureFlags.FloatingDateBadge)
+        }
 
         fun handleEvent(event: TimelineEvent) {
             when (event) {
@@ -206,6 +210,9 @@ class TimelinePresenter(
                 }
                 is TimelineEvent.EditPoll -> {
                     navigator.navigateToEditPoll(event.pollStartId)
+                }
+                is TimelineEvent.StopLiveLocationShare -> sessionCoroutineScope.launch {
+                    liveLocationShareManager.stopShare(room.roomId)
                 }
                 is TimelineEvent.FocusOnEvent -> sessionCoroutineScope.launch {
                     focusRequestState.value = FocusRequestState.Requested(event.eventId, event.debounce)
@@ -325,6 +332,7 @@ class TimelinePresenter(
             messageShieldDialogData = messageShieldDialogData.value,
             resolveVerifiedUserSendFailureState = resolveVerifiedUserSendFailureState,
             displayThreadSummaries = displayThreadSummaries,
+            displayFloatingDateBadge = displayFloatingDateBadge,
             eventSink = ::handleEvent,
         )
     }

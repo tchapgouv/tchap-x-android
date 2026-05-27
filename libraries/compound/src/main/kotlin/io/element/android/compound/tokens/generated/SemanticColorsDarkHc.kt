@@ -37,10 +37,19 @@ val compoundColorsHcDark = SemanticColors(
     bgActionTertiaryHovered = DarkHcColorTokens.colorGray300,
     bgActionTertiaryRest = DarkHcColorTokens.colorThemeBg,
     bgActionTertiarySelected = DarkHcColorTokens.colorGray400,
+<<<<<<< HEAD
     bgBadgeAccent = DarkHcColorTokens.colorAlphaGreen500,
     bgBadgeDefault = DarkHcColorTokens.colorAlphaGray500,
     bgBadgeExternal = DarkHcColorTokens.colorOrange500,
     bgBadgeInfo = DarkHcColorTokens.colorAlphaBlue500,
+=======
+    bgBadgeAccent = DarkHcColorTokens.colorGreen400,
+    bgBadgeCritical = DarkHcColorTokens.colorRed300,
+    bgBadgeDefault = DarkHcColorTokens.colorThemeBg,
+    bgBadgeInfo = DarkHcColorTokens.colorBlue400,
+    bgBadgePrimary = DarkHcColorTokens.colorGray1400,
+    bgBadgeSecondary = DarkHcColorTokens.colorGray400,
+>>>>>>> main-element
     bgCanvasDefault = DarkHcColorTokens.colorThemeBg,
     bgCanvasDefaultLevel1 = DarkHcColorTokens.colorGray300,
     bgCanvasDisabled = DarkHcColorTokens.colorGray200,
@@ -58,8 +67,14 @@ val compoundColorsHcDark = SemanticColors(
     bgSubtlePrimary = DarkHcColorTokens.colorBlue300,
     bgSubtleSecondary = DarkHcColorTokens.colorGray300,
     bgSubtleSecondaryLevel0 = DarkHcColorTokens.colorThemeBg,
+<<<<<<< HEAD
     bgSuccessSubtle = DarkHcColorTokens.colorGreen400,
     borderAccentSubtle = DarkHcColorTokens.colorBlue700,
+=======
+    bgSuccessSubtle = DarkHcColorTokens.colorGreen200,
+    borderAccentPrimary = DarkHcColorTokens.colorGreen900,
+    borderAccentSubtle = DarkHcColorTokens.colorGreen700,
+>>>>>>> main-element
     borderCriticalHovered = DarkHcColorTokens.colorRed1000,
     borderCriticalPrimary = DarkHcColorTokens.colorRed900,
     borderCriticalSubtle = DarkHcColorTokens.colorRed500,
@@ -103,7 +118,12 @@ val compoundColorsHcDark = SemanticColors(
     iconSuccessPrimary = DarkHcColorTokens.colorBlue1200,
     iconTertiary = DarkHcColorTokens.colorGray800,
     iconTertiaryAlpha = DarkHcColorTokens.colorAlphaGray800,
+<<<<<<< HEAD
     textActionAccent = DarkHcColorTokens.colorBlue600,
+=======
+    separatorPrimary = DarkHcColorTokens.colorGray400,
+    textActionAccent = DarkHcColorTokens.colorGreen900,
+>>>>>>> main-element
     textActionPrimary = DarkHcColorTokens.colorGray1400,
     textBadgeAccent = DarkHcColorTokens.colorGreen1100,
     textBadgeDefault = DarkHcColorTokens.colorGray1100,

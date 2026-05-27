@@ -30,7 +30,7 @@ import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.components.Button
 import io.element.android.libraries.designsystem.theme.components.TextButton
-import io.element.android.libraries.matrix.api.auth.OidcDetails
+import io.element.android.libraries.matrix.api.auth.OAuthDetails
 import io.element.android.libraries.testtags.TestTags
 import io.element.android.libraries.testtags.testTag
 import io.element.android.libraries.ui.strings.CommonStrings
@@ -38,8 +38,12 @@ import io.element.android.libraries.ui.strings.CommonStrings
 @Composable
 fun ConfirmAccountProviderView(
     state: ConfirmAccountProviderState,
+<<<<<<< HEAD
     onOidcDetails: (OidcDetails) -> Unit,
     onNeedLoginHint: () -> Unit,
+=======
+    onOAuthDetails: (OAuthDetails) -> Unit,
+>>>>>>> main-element
     onNeedLoginPassword: () -> Unit,
     onLearnMoreClick: () -> Unit,
     onCreateAccountContinue: (url: String) -> Unit,
@@ -104,8 +108,12 @@ fun ConfirmAccountProviderView(
                 eventSink(ConfirmAccountProviderEvents.ClearError)
             },
             onLearnMoreClick = onLearnMoreClick,
+<<<<<<< HEAD
             onOidcDetails = onOidcDetails,
             onNeedLoginHint = onNeedLoginHint,
+=======
+            onOAuthDetails = onOAuthDetails,
+>>>>>>> main-element
             onNeedLoginPassword = onNeedLoginPassword,
             onCreateAccountContinue = onCreateAccountContinue,
         )
@@ -119,8 +127,12 @@ internal fun ConfirmAccountProviderViewPreview(
 ) = ElementPreview {
     ConfirmAccountProviderView(
         state = state,
+<<<<<<< HEAD
         onOidcDetails = {},
         onNeedLoginHint = {},
+=======
+        onOAuthDetails = {},
+>>>>>>> main-element
         onNeedLoginPassword = {},
         onCreateAccountContinue = {},
         onLearnMoreClick = {},

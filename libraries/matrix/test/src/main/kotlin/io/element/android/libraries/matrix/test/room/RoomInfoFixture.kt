@@ -12,6 +12,7 @@ import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.RoomAlias
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.UserId
+import io.element.android.libraries.matrix.api.room.CallIntentConsensus
 import io.element.android.libraries.matrix.api.room.CurrentUserMembership
 import io.element.android.libraries.matrix.api.room.RoomInfo
 import io.element.android.libraries.matrix.api.room.RoomMember
@@ -69,8 +70,13 @@ fun aRoomInfo(
     roomVersion: String? = "11",
     privilegedCreatorRole: Boolean = false,
     isLowPriority: Boolean = false,
+<<<<<<< HEAD
     // TCHAP external user
     isOpenToExternalUsers: Boolean = false,
+=======
+    activeCallIntentConsensus: CallIntentConsensus = CallIntentConsensus.None,
+    isDm: Boolean = false,
+>>>>>>> main-element
 ) = RoomInfo(
     id = id,
     name = name,
@@ -108,6 +114,11 @@ fun aRoomInfo(
     roomVersion = roomVersion,
     privilegedCreatorRole = privilegedCreatorRole,
     isLowPriority = isLowPriority,
+<<<<<<< HEAD
     // TCHAP external user
     isOpenToExternalUsers = isOpenToExternalUsers,
+=======
+    activeCallIntentConsensus = activeCallIntentConsensus,
+    isDm = isDm,
+>>>>>>> main-element
 )

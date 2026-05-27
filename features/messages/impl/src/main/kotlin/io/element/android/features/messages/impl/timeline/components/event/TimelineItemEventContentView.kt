@@ -35,6 +35,7 @@ import io.element.android.features.messages.impl.timeline.model.event.TimelineIt
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemUnknownContent
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemVideoContent
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemVoiceContent
+import io.element.android.features.messages.impl.timeline.model.event.ensureActiveLiveLocation
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.voiceplayer.api.VoiceMessageState
 import io.element.android.wysiwyg.link.Link
@@ -76,11 +77,22 @@ fun TimelineItemEventContentView(
             onContentLayoutChange = onContentLayoutChange,
             modifier = modifier
         )
+<<<<<<< HEAD
         is TimelineItemLocationContent -> TimelineItemLocationView(
             content = content,
             modifier = modifier
         )
         is TimelineItemImageContent -> BwiTimelineItemImageView(
+=======
+        is TimelineItemLocationContent -> {
+            TimelineItemLocationView(
+                content = content.ensureActiveLiveLocation(),
+                onStopLiveLocationClick = { eventSink(TimelineEvent.StopLiveLocationShare) },
+                modifier = modifier
+            )
+        }
+        is TimelineItemImageContent -> TimelineItemImageView(
+>>>>>>> main-element
             content = content,
             hideMediaContent = hideMediaContent,
             onContentClick = onContentClick,

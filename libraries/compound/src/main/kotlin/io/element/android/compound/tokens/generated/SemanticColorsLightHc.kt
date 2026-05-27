@@ -37,10 +37,19 @@ val compoundColorsHcLight = SemanticColors(
     bgActionTertiaryHovered = LightHcColorTokens.colorGray300,
     bgActionTertiaryRest = LightHcColorTokens.colorThemeBg,
     bgActionTertiarySelected = LightHcColorTokens.colorGray400,
+<<<<<<< HEAD
     bgBadgeAccent = LightHcColorTokens.colorAlphaGreen400,
     bgBadgeDefault = LightHcColorTokens.colorAlphaGray400,
     bgBadgeExternal = LightHcColorTokens.colorOrange400,
     bgBadgeInfo = LightHcColorTokens.colorAlphaBlue400,
+=======
+    bgBadgeAccent = LightHcColorTokens.colorGreen400,
+    bgBadgeCritical = LightHcColorTokens.colorRed300,
+    bgBadgeDefault = LightHcColorTokens.colorThemeBg,
+    bgBadgeInfo = LightHcColorTokens.colorBlue400,
+    bgBadgePrimary = LightHcColorTokens.colorGray1400,
+    bgBadgeSecondary = LightHcColorTokens.colorGray400,
+>>>>>>> main-element
     bgCanvasDefault = LightHcColorTokens.colorThemeBg,
     bgCanvasDefaultLevel1 = LightHcColorTokens.colorThemeBg,
     bgCanvasDisabled = LightHcColorTokens.colorGray200,
@@ -58,8 +67,14 @@ val compoundColorsHcLight = SemanticColors(
     bgSubtlePrimary = LightHcColorTokens.colorBlue400,
     bgSubtleSecondary = LightHcColorTokens.colorGray300,
     bgSubtleSecondaryLevel0 = LightHcColorTokens.colorGray300,
+<<<<<<< HEAD
     bgSuccessSubtle = LightHcColorTokens.colorGreen400,
     borderAccentSubtle = LightHcColorTokens.colorBlue700,
+=======
+    bgSuccessSubtle = LightHcColorTokens.colorGreen200,
+    borderAccentPrimary = LightHcColorTokens.colorGreen900,
+    borderAccentSubtle = LightHcColorTokens.colorGreen700,
+>>>>>>> main-element
     borderCriticalHovered = LightHcColorTokens.colorRed1000,
     borderCriticalPrimary = LightHcColorTokens.colorRed900,
     borderCriticalSubtle = LightHcColorTokens.colorRed500,
@@ -103,7 +118,12 @@ val compoundColorsHcLight = SemanticColors(
     iconSuccessPrimary = LightHcColorTokens.colorBlue1200,
     iconTertiary = LightHcColorTokens.colorGray800,
     iconTertiaryAlpha = LightHcColorTokens.colorAlphaGray800,
+<<<<<<< HEAD
     textActionAccent = LightHcColorTokens.colorBlue900,
+=======
+    separatorPrimary = LightHcColorTokens.colorGray400,
+    textActionAccent = LightHcColorTokens.colorGreen900,
+>>>>>>> main-element
     textActionPrimary = LightHcColorTokens.colorGray1400,
     textBadgeAccent = LightHcColorTokens.colorGreen1100,
     textBadgeDefault = LightHcColorTokens.colorGray1100,

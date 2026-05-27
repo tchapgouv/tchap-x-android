@@ -31,9 +31,11 @@ import io.element.android.libraries.matrix.api.room.SendQueueUpdate
 import io.element.android.libraries.matrix.api.room.history.RoomHistoryVisibility
 import io.element.android.libraries.matrix.api.room.join.JoinRule
 import io.element.android.libraries.matrix.api.room.knock.KnockRequest
+import io.element.android.libraries.matrix.api.room.location.LiveLocationShare
 import io.element.android.libraries.matrix.api.room.powerlevels.RoomPowerLevelsValues
 import io.element.android.libraries.matrix.api.room.powerlevels.UserRoleChange
 import io.element.android.libraries.matrix.api.room.roomNotificationSettings
+import io.element.android.libraries.matrix.api.room.threads.ThreadsListService
 import io.element.android.libraries.matrix.api.roomdirectory.RoomVisibility
 import io.element.android.libraries.matrix.api.timeline.Timeline
 import io.element.android.libraries.matrix.api.widget.MatrixWidgetDriver
@@ -43,9 +45,14 @@ import io.element.android.libraries.matrix.impl.mapper.map
 import io.element.android.libraries.matrix.impl.room.history.map
 import io.element.android.libraries.matrix.impl.room.join.map
 import io.element.android.libraries.matrix.impl.room.knock.RustKnockRequest
+import io.element.android.libraries.matrix.impl.room.location.liveLocationSharesFlow
+import io.element.android.libraries.matrix.impl.room.location.map
+import io.element.android.libraries.matrix.impl.room.location.timedByExpiry
 import io.element.android.libraries.matrix.impl.room.member.RoomMemberListFetcher
+import io.element.android.libraries.matrix.impl.room.threads.RustThreadsListService
 import io.element.android.libraries.matrix.impl.roomdirectory.map
 import io.element.android.libraries.matrix.impl.timeline.RustTimeline
+import io.element.android.libraries.matrix.impl.timeline.item.event.TimelineEventContentMapper
 import io.element.android.libraries.matrix.impl.util.MessageEventContent
 import io.element.android.libraries.matrix.impl.util.mxCallbackFlow
 import io.element.android.libraries.matrix.impl.widget.RustWidgetDriver
@@ -67,6 +74,7 @@ import kotlinx.coroutines.withContext
 import org.matrix.rustcomponents.sdk.DateDividerMode
 import org.matrix.rustcomponents.sdk.IdentityStatusChangeListener
 import org.matrix.rustcomponents.sdk.KnockRequestsListener
+import org.matrix.rustcomponents.sdk.LiveLocationException
 import org.matrix.rustcomponents.sdk.RoomMessageEventMessageType
 import org.matrix.rustcomponents.sdk.RoomSendQueueUpdate
 import org.matrix.rustcomponents.sdk.SendQueueListener
@@ -145,6 +153,12 @@ class JoinedRustRoom(
     override val roomNotificationSettingsStateFlow = MutableStateFlow<RoomNotificationSettingsState>(RoomNotificationSettingsState.Unknown)
 
     override val liveTimeline = liveInnerTimeline.map(mode = Timeline.Mode.Live)
+
+    override val threadsListService: ThreadsListService = RustThreadsListService(
+        inner = innerRoom.threadListService(),
+        contentMapper = TimelineEventContentMapper(),
+        roomCoroutineScope = roomCoroutineScope,
+    )
 
     override val syncUpdateFlow = flow {
         var counter = 0L
@@ -350,7 +364,7 @@ class JoinedRustRoom(
         roomNotificationSettingsStateFlow.value = RoomNotificationSettingsState.Pending(prevRoomNotificationSettings = currentRoomNotificationSettings)
         runCatchingExceptions {
             val isEncrypted = roomInfoFlow.value.isEncrypted ?: getUpdatedIsEncrypted().getOrThrow()
-            notificationSettingsService.getRoomNotificationSettings(roomId, isEncrypted, isOneToOne).getOrThrow()
+            notificationSettingsService.getRoomNotificationSettings(roomId = roomId, isEncrypted = isEncrypted, isOneToOne = isDm()).getOrThrow()
         }.map {
             roomNotificationSettingsStateFlow.value = RoomNotificationSettingsState.Ready(it)
         }.onFailure {
@@ -516,11 +530,44 @@ class JoinedRustRoom(
         }
     }
 
+    override fun subscribeToLiveLocationShares(): Flow<List<LiveLocationShare>> {
+        return innerRoom.liveLocationSharesFlow().timedByExpiry(systemClock::epochMillis)
+    }
+
+    override suspend fun startLiveLocationShare(durationMillis: Long): Result<EventId> = withContext(roomDispatcher) {
+        runCatchingExceptions {
+            innerRoom.startLiveLocationShare(durationMillis.toULong())
+        }.map(::EventId)
+    }
+
+    override suspend fun stopLiveLocationShare(): Result<Unit> = withContext(roomDispatcher) {
+        runCatchingExceptions {
+            innerRoom.stopLiveLocationShare()
+        }.mapFailure { throwable ->
+            when (throwable) {
+                is LiveLocationException -> throwable.map()
+                else -> throwable
+            }
+        }
+    }
+
+    override suspend fun sendLiveLocation(geoUri: String): Result<Unit> = withContext(roomDispatcher) {
+        runCatchingExceptions {
+            innerRoom.sendLiveLocation(geoUri)
+        }.mapFailure { throwable ->
+            when (throwable) {
+                is LiveLocationException -> throwable.map()
+                else -> throwable
+            }
+        }
+    }
+
     override fun close() = destroy()
 
     override fun destroy() {
         baseRoom.destroy()
-        liveInnerTimeline.destroy()
+        liveTimeline.close()
+        threadsListService.destroy()
         Timber.d("Room $roomId destroyed")
     }
 

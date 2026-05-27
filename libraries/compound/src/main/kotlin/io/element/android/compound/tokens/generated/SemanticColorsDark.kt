@@ -38,9 +38,17 @@ val compoundColorsDark = SemanticColors(
     bgActionTertiaryRest = DarkColorTokens.colorThemeBg,
     bgActionTertiarySelected = DarkColorTokens.colorGray400,
     bgBadgeAccent = DarkColorTokens.colorGreen400,
+<<<<<<< HEAD
     bgBadgeDefault = DarkColorTokens.colorGray400,
     bgBadgeExternal = DarkColorTokens.colorOrange400,
     bgBadgeInfo = DarkColorTokens.colorBlue400,
+=======
+    bgBadgeCritical = DarkColorTokens.colorRed300,
+    bgBadgeDefault = DarkColorTokens.colorThemeBg,
+    bgBadgeInfo = DarkColorTokens.colorBlue400,
+    bgBadgePrimary = DarkColorTokens.colorGray1400,
+    bgBadgeSecondary = DarkColorTokens.colorGray400,
+>>>>>>> main-element
     bgCanvasDefault = DarkColorTokens.colorThemeBg,
     bgCanvasDefaultLevel1 = DarkColorTokens.colorGray200,
     bgCanvasDisabled = DarkColorTokens.colorGray200,
@@ -58,8 +66,14 @@ val compoundColorsDark = SemanticColors(
     bgSubtlePrimary = DarkColorTokens.colorBlue200,
     bgSubtleSecondary = DarkColorTokens.colorGray200,
     bgSubtleSecondaryLevel0 = DarkColorTokens.colorThemeBg,
+<<<<<<< HEAD
     bgSuccessSubtle = DarkColorTokens.colorGreen400,
     borderAccentSubtle = DarkColorTokens.colorBlue700,
+=======
+    bgSuccessSubtle = DarkColorTokens.colorGreen200,
+    borderAccentPrimary = DarkColorTokens.colorGreen900,
+    borderAccentSubtle = DarkColorTokens.colorGreen700,
+>>>>>>> main-element
     borderCriticalHovered = DarkColorTokens.colorRed1000,
     borderCriticalPrimary = DarkColorTokens.colorRed900,
     borderCriticalSubtle = DarkColorTokens.colorRed500,
@@ -103,7 +117,12 @@ val compoundColorsDark = SemanticColors(
     iconSuccessPrimary = DarkColorTokens.colorBlue1200,
     iconTertiary = DarkColorTokens.colorGray800,
     iconTertiaryAlpha = DarkColorTokens.colorAlphaGray800,
+<<<<<<< HEAD
     textActionAccent = DarkColorTokens.colorBlue600,
+=======
+    separatorPrimary = DarkColorTokens.colorGray400,
+    textActionAccent = DarkColorTokens.colorGreen900,
+>>>>>>> main-element
     textActionPrimary = DarkColorTokens.colorGray1400,
     textBadgeAccent = DarkColorTokens.colorGreen1200,
     textBadgeDefault = DarkColorTokens.colorGray1200,

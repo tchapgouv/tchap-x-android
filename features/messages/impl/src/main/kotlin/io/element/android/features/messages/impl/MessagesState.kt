@@ -64,6 +64,8 @@ data class MessagesState(
     /** Type of "shared history" icon to show in the top bar. */
     val topBarSharedHistoryIcon: SharedHistoryIcon,
     val successorRoom: SuccessorRoom?,
+    val threads: Threads,
+    val showLiveLocationShareBanner: Boolean,
     val eventSink: (MessagesEvent) -> Unit
 ) {
     val roomBadges = buildList {
@@ -81,6 +83,11 @@ data class MessagesState(
         }
     }.toPersistentList()
     val isTombstoned = successorRoom != null
+
+    data class Threads(
+        val hasThreads: Boolean,
+        val hasUnreadThreads: Boolean,
+    )
 }
 
 /** Type of "shared history" icon to show in the top bar. */

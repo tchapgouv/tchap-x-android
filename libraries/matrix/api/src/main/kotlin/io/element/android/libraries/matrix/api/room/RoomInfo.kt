@@ -29,6 +29,7 @@ data class RoomInfo(
     val avatarUrl: String?,
     val isPublic: Boolean?,
     val isDirect: Boolean,
+    val isDm: Boolean,
     val isEncrypted: Boolean?,
     // TCHAP external user
     val isOpenToExternalUsers: Boolean,
@@ -79,6 +80,7 @@ data class RoomInfo(
     val roomVersion: String?,
     val privilegedCreatorRole: Boolean,
     val isLowPriority: Boolean,
+    val activeCallIntentConsensus: CallIntentConsensus,
 ) {
     val aliases: List<RoomAlias>
         get() = listOfNotNull(canonicalAlias) + alternativeAliases

@@ -16,8 +16,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+<<<<<<< HEAD
 import dev.zacsweers.metro.Inject
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.convertIdToMatrixId
+=======
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+>>>>>>> main-element
 import io.element.android.features.login.impl.accountprovider.AccountProviderDataSource
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
@@ -27,12 +33,22 @@ import io.element.android.libraries.matrix.api.core.SessionId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Inject
+@AssistedInject
 class LoginPasswordPresenter(
+<<<<<<< HEAD
     private val buildMeta: BuildMeta,
+=======
+    @Assisted
+    private val initialLogin: String,
+>>>>>>> main-element
     private val authenticationService: MatrixAuthenticationService,
     private val accountProviderDataSource: AccountProviderDataSource,
 ) : Presenter<LoginPasswordState> {
+    @AssistedFactory
+    interface Factory {
+        fun create(initialLogin: String): LoginPasswordPresenter
+    }
+
     @Composable
     override fun present(): LoginPasswordState {
         val localCoroutineScope = rememberCoroutineScope()
@@ -41,7 +57,12 @@ class LoginPasswordPresenter(
         }
 
         val formState = rememberSaveable {
-            mutableStateOf(LoginFormState.Default)
+            mutableStateOf(
+                LoginFormState(
+                    login = initialLogin,
+                    password = "",
+                )
+            )
         }
         val accountProvider by accountProviderDataSource.flow.collectAsState()
 

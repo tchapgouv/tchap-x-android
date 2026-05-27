@@ -44,6 +44,7 @@ android {
 }
 
 dependencies {
+<<<<<<< HEAD
     implementation(projects.libraries.bwi.api)
     implementation(projects.libraries.di)
     implementation(projects.libraries.tchaputils)
@@ -52,8 +53,14 @@ dependencies {
     implementation(projects.services.analytics.api)
     implementation(libs.serialization.json)
     api(projects.libraries.sessionStorage.api)
+=======
+>>>>>>> main-element
     implementation(libs.coroutines.core)
-    api(projects.libraries.architecture)
+    implementation(libs.serialization.json)
+    implementation(projects.libraries.androidutils)
+    implementation(projects.libraries.architecture)
+    implementation(projects.libraries.sessionStorage.api)
+    implementation(projects.services.analytics.api)
 
     testCommonDependencies(libs)
     testImplementation(projects.libraries.matrix.test)

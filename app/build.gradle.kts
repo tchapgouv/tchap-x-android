@@ -21,10 +21,8 @@ import extension.allFeaturesImpl
 import extension.allLibrariesImpl
 import extension.allServicesImpl
 import extension.buildConfigFieldStr
-import extension.koverDependencies
 import extension.locales
 import extension.setupDependencyInjection
-import extension.setupKover
 import extension.testCommonDependencies
 import java.util.Locale
 
@@ -39,8 +37,6 @@ plugins {
     // To be able to update the firebase.xml files, uncomment and build the project
     // alias(libs.plugins.gms.google.services)
 }
-
-setupKover()
 
 android {
     namespace = "io.element.android.x"
@@ -107,14 +103,14 @@ android {
     logger.warnInBox("Building ${defaultConfig.applicationId} ($baseAppName) [$buildType]")
 
     buildTypes {
-        val oidcRedirectSchemeBase = BuildTimeConfig.METADATA_HOST_REVERSED ?: "io.element.android"
+        val oAuthRedirectSchemeBase = BuildTimeConfig.METADATA_HOST_REVERSED ?: "io.element.android"
         getByName("debug") {
             // TCHAP : app_name defined in target flavorDimensions bellow
 //            resValue("string", "app_name", "$baseAppName dbg")
             resValue(
                 "string",
                 "login_redirect_scheme",
-                "$oidcRedirectSchemeBase.debug",
+                "$oAuthRedirectSchemeBase.debug",
             )
             applicationIdSuffix = ".debug"
             signingConfig = signingConfigs.getByName("debug")
@@ -126,7 +122,7 @@ android {
             resValue(
                 "string",
                 "login_redirect_scheme",
-                oidcRedirectSchemeBase,
+                oAuthRedirectSchemeBase,
             )
             signingConfig = signingConfigs.getByName("debug")
 
@@ -164,7 +160,7 @@ android {
             resValue(
                 "string",
                 "login_redirect_scheme",
-                "$oidcRedirectSchemeBase.nightly",
+                "$oAuthRedirectSchemeBase.nightly",
             )
             matchingFallbacks += listOf("release")
             signingConfig = signingConfigs.getByName("nightly")
@@ -329,8 +325,6 @@ dependencies {
     testCommonDependencies(libs)
     testImplementation(projects.libraries.matrix.test)
     testImplementation(projects.services.toolbox.test)
-
-    koverDependencies()
 }
 
 tasks.withType<GenerateBuildConfig>().configureEach {
@@ -347,6 +341,7 @@ licensee {
     allow("BSD-2-Clause")
     allow("BSD-3-Clause")
     allow("EPL-1.0")
+    allowUrl("https://opensource.org/license/bsd-3-clause")
     allowUrl("https://opensource.org/licenses/MIT")
     allowUrl("https://developer.android.com/studio/terms.html")
     allowUrl("https://www.zetetic.net/sqlcipher/license/")

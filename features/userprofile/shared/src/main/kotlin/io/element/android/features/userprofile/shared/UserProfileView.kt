@@ -117,6 +117,7 @@ fun UserProfileView(
                     if (data is ConfirmingStartDmWithMatrixUser) {
                         CreateDmConfirmationBottomSheet(
                             matrixUser = data.matrixUser,
+                            isUserIdentityUnknown = data.isUserIdentityUnknown,
                             onSendInvite = {
                                 state.eventSink(UserProfileEvents.StartDM)
                             },

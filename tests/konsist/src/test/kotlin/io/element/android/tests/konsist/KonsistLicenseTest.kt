@@ -49,7 +49,11 @@ class KonsistLicenseTest {
             .files
             .filter {
                 it.moduleName.startsWith("enterprise").not() &&
+<<<<<<< HEAD
                     it.path.contains("/fr/gouv/tchap/").not() &&
+=======
+                    it.moduleName != "libraries/rustls-tls" &&
+>>>>>>> main-element
                     it.nameWithExtension != "locales.kt" &&
                     it.name.startsWith("Template ").not()
             }
@@ -88,7 +92,11 @@ class KonsistLicenseTest {
             .scopeFromProject()
             .files
             .filter {
+<<<<<<< HEAD
                 it.path.contains("/fr/gouv/tchap/").not() &&
+=======
+                it.moduleName.endsWith("rustls-tls").not() &&
+>>>>>>> main-element
                 it.nameWithExtension != "locales.kt" &&
                 it.nameWithExtension != "KonsistLicenseTest.kt" &&
                     it.name.startsWith("Template ").not()

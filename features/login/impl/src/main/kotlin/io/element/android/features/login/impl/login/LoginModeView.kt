@@ -24,7 +24,7 @@ import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.LocalBuildMeta
 import io.element.android.libraries.matrix.api.auth.AuthenticationException
-import io.element.android.libraries.matrix.api.auth.OidcDetails
+import io.element.android.libraries.matrix.api.auth.OAuthDetails
 import io.element.android.libraries.ui.strings.CommonStrings
 
 @Composable
@@ -32,8 +32,12 @@ fun LoginModeView(
     loginMode: AsyncData<LoginMode>,
     onClearError: () -> Unit,
     onLearnMoreClick: () -> Unit,
+<<<<<<< HEAD
     onOidcDetails: (OidcDetails) -> Unit,
     onNeedLoginHint: () -> Unit,
+=======
+    onOAuthDetails: (OAuthDetails) -> Unit,
+>>>>>>> main-element
     onNeedLoginPassword: () -> Unit,
     onCreateAccountContinue: (url: String) -> Unit
 ) {
@@ -125,8 +129,12 @@ fun LoginModeView(
         is AsyncData.Loading -> Unit // The Continue button shows the loading state
         is AsyncData.Success -> {
             when (val loginModeData = loginMode.data) {
+<<<<<<< HEAD
                 LoginMode.LoginHint -> onNeedLoginHint()
                 is LoginMode.Oidc -> onOidcDetails(loginModeData.oidcDetails)
+=======
+                is LoginMode.OAuth -> onOAuthDetails(loginModeData.oAuthDetails)
+>>>>>>> main-element
                 LoginMode.PasswordLogin -> onNeedLoginPassword()
                 is LoginMode.AccountCreation -> onCreateAccountContinue(loginModeData.url)
             }
@@ -145,7 +153,7 @@ internal fun LoginModeViewPreview(@PreviewParameter(LoginModeViewErrorProvider::
             loginMode = AsyncData.Failure(error),
             onClearError = {},
             onLearnMoreClick = {},
-            onOidcDetails = {},
+            onOAuthDetails = {},
             onNeedLoginPassword = {},
             onNeedLoginHint = {},
             onCreateAccountContinue = {}

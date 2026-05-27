@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -51,7 +53,6 @@ import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.components.avatar.AvatarType
-import io.element.android.libraries.designsystem.components.avatar.DmAvatars
 import io.element.android.libraries.designsystem.components.button.BackButton
 import io.element.android.libraries.designsystem.components.button.MainActionButton
 import io.element.android.libraries.designsystem.components.dialogs.ConfirmationDialog
@@ -93,6 +94,7 @@ import io.element.android.libraries.ui.strings.CommonStrings
 import io.element.android.services.analytics.compose.LocalAnalyticsService
 import io.element.android.services.analyticsproviders.api.trackers.captureInteraction
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
@@ -170,10 +172,14 @@ fun RoomDetailsView(
                 }
                 is RoomDetailsType.Dm -> {
                     DmHeaderSection(
+<<<<<<< HEAD
                         showMatrixId = state.showMatrixId,
                         me = state.roomType.me,
+=======
+>>>>>>> main-element
                         otherMember = state.roomType.otherMember,
                         roomName = state.roomName,
+                        isTombstoned = state.isTombstoned,
                         openAvatarPreview = { name, avatarUrl ->
                             openAvatarPreview(name, avatarUrl)
                         },
@@ -444,6 +450,7 @@ private fun RoomHeaderSection(
             ),
             contentDescription = stringResource(CommonStrings.a11y_room_avatar),
             modifier = Modifier
+                .clip(CircleShape)
                 .clickable(
                     enabled = avatarUrl != null,
                     onClickLabel = stringResource(CommonStrings.action_view),
@@ -463,10 +470,14 @@ private fun RoomHeaderSection(
 
 @Composable
 private fun DmHeaderSection(
+<<<<<<< HEAD
     showMatrixId: Boolean,
     me: RoomMember,
+=======
+>>>>>>> main-element
     otherMember: RoomMember,
     roomName: String,
+    isTombstoned: Boolean,
     openAvatarPreview: (name: String, url: String) -> Unit,
     onSubtitleClick: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -477,11 +488,24 @@ private fun DmHeaderSection(
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        DmAvatars(
-            userAvatarData = me.getAvatarData(size = AvatarSize.DmCluster),
-            otherUserAvatarData = otherMember.getAvatarData(size = AvatarSize.DmCluster),
-            openAvatarPreview = { url -> openAvatarPreview(me.getBestName(), url) },
-            openOtherAvatarPreview = { url -> openAvatarPreview(roomName, url) },
+        Avatar(
+            avatarData = AvatarData(otherMember.userId.value, roomName, otherMember.avatarUrl, AvatarSize.RoomDetailsHeader),
+            avatarType = AvatarType.Room(
+                heroes = persistentListOf(
+                    otherMember.getAvatarData(size = AvatarSize.RoomDetailsHeader)
+                ),
+                isTombstoned = isTombstoned,
+            ),
+            contentDescription = stringResource(CommonStrings.a11y_room_avatar),
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable(
+                    enabled = otherMember.avatarUrl != null,
+                    onClickLabel = stringResource(CommonStrings.action_view),
+                ) {
+                    openAvatarPreview(otherMember.getBestName(), otherMember.avatarUrl!!)
+                }
+                .testTag(TestTags.roomDetailAvatar)
         )
         TitleAndSubtitle(
             title = roomName,

@@ -45,7 +45,11 @@ import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
+<<<<<<< HEAD
 import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
+=======
+import io.element.android.libraries.matrix.api.encryption.identity.IdentityState
+>>>>>>> main-element
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.RoomMembershipState
@@ -58,6 +62,7 @@ import io.element.android.services.apperror.api.AppErrorStateService
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.launchIn
@@ -140,6 +145,35 @@ class DefaultInvitePeoplePresenter(
             }
         }
 
+        val selectedUserIdentities = produceState(
+            emptyMap<MatrixUser, IdentityState?>().toImmutableMap(),
+            selectedUsers.value,
+        ) {
+            val selected = selectedUsers.value
+
+            val cached = value
+                .filterKeys { it in selected }
+
+            val uncached = selected
+                .filterNot(cached::containsKey)
+                .associateWith { user ->
+                    matrixClient.encryptionService
+                        .getUserIdentity(user.userId, fallbackToServer = false)
+                        .getOrNull()
+                }
+
+            value = (cached + uncached).toImmutableMap()
+        }
+
+        val unknownUsers by remember {
+            derivedStateOf {
+                selectedUserIdentities.value
+                    .filterValues { it == null }
+                    .keys
+                    .toImmutableList()
+            }
+        }
+
         LaunchedEffect(room.isSuccess()) {
             room.dataOrNull()?.let {
                 fetchMembers(it, roomMembers)
@@ -158,19 +192,34 @@ class DefaultInvitePeoplePresenter(
 
         fun handleEvent(event: InvitePeopleEvents) {
             when (event) {
-                is DefaultInvitePeopleEvents.OnSearchActiveChanged -> {
-                    searchActive = event.active
-                    if (!event.active) {
-                        queryState.clearText()
+                // Dedicated `when` for exhaustivity.
+                is DefaultInvitePeopleEvents -> when (event) {
+                    is DefaultInvitePeopleEvents.OnSearchActiveChanged -> {
+                        searchActive = event.active
+                        if (!event.active) {
+                            queryState.clearText()
+                        }
+                    }
+
+                    is DefaultInvitePeopleEvents.ToggleUser -> {
+                        selectedUsers.toggleUser(event.user)
+                        searchResults.toggleUser(event.user)
+                        // suggestions will automatically update via derivedStateOf when selectedUsers changes
+                    }
+                    is DefaultInvitePeopleEvents.DismissUnknownUsersModal -> {
+                        sendInvitesAction.value = AsyncAction.Uninitialized
+                    }
+                    is DefaultInvitePeopleEvents.RemoveUnknownUsers -> {
+                        val usersToRemove = selectedUsers.value.filter { it in unknownUsers }
+                        usersToRemove.forEach { user ->
+                            selectedUsers.toggleUser(user)
+                            searchResults.toggleUser(user)
+                        }
+                        sendInvitesAction.value = AsyncAction.Uninitialized
                     }
                 }
-
-                is DefaultInvitePeopleEvents.ToggleUser -> {
-                    selectedUsers.toggleUser(event.user)
-                    searchResults.toggleUser(event.user)
-                    // suggestions will automatically update via derivedStateOf when selectedUsers changes
-                }
                 is InvitePeopleEvents.SendInvites -> {
+<<<<<<< HEAD
                     showOpenRoomToExternalsDialog = false // TCHAP external user
                     // TCHAP invite-by-email : call sendInvites or sendTchapEmailInvites depending if the user need to be invited by email to create an account
 //                    room.dataOrNull()?.let {
@@ -185,6 +234,15 @@ class DefaultInvitePeoplePresenter(
                         }
                         if (emailInvites.isNotEmpty()) {
                             sessionCoroutineScope.sendTchapEmailInvites(room, emailInvites, sendInvitesAction)
+=======
+                    if (unknownUsers.isNotEmpty() && sendInvitesAction.value !is ConfirmingUnknownUserInvitation) {
+                        sendInvitesAction.value = ConfirmingUnknownUserInvitation(
+                            unknownUsers
+                        )
+                    } else {
+                        room.dataOrNull()?.let {
+                            sessionCoroutineScope.sendInvites(it, selectedUsers.value, sendInvitesAction)
+>>>>>>> main-element
                         }
                     }
                 }

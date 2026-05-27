@@ -31,7 +31,8 @@ class KonsistPreviewTest {
             .assertTrue {
                 it.hasNameEndingWith("Preview") &&
                     it.hasNameEndingWith("LightPreview").not() &&
-                    it.hasNameEndingWith("DarkPreview").not()
+                    it.hasNameEndingWith("DarkPreview").not() &&
+                    it.hasNameEndingWith("BlackPreview").not()
             }
     }
 
@@ -62,7 +63,8 @@ class KonsistPreviewTest {
             .functions()
             .withAllAnnotationsOf(PreviewsDayNight::class)
             .assertTrue {
-                it.text.contains("ElementPreview")
+                it.text.contains("ElementPreview") ||
+                    it.text.contains("ElementTimelineItemPreview")
             }
     }
 
