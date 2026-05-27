@@ -18,8 +18,8 @@ internal fun SyncServiceState.toSyncState(): SyncState {
         SyncServiceState.TERMINATED -> SyncState.Terminated
         SyncServiceState.ERROR -> SyncState.Error
         SyncServiceState.OFFLINE -> SyncState.Offline
-        //:tchap: account-expiration
+        // :tchap: account-expiration
         SyncServiceState.ACCOUNT_EXPIRED -> SyncState.AccountExpired
-        //:tchap: end
+        // :tchap: end
     }
 }
