@@ -14,5 +14,7 @@ enum class SyncState {
     Error,
     Terminated,
     Offline,
+    //:tchap: account-expiration
     AccountExpired,
+    //:tchap: end
 }

@@ -113,7 +113,9 @@ class RootFlowNode(
     buildContext = buildContext,
     plugins = plugins
 ) {
+    //:tchap: account-expiration - Job to watch the sync state
     private var syncStateJob: Job? = null
+    //:tchap: end
 
     override fun onBuilt() {
         analyticsColdStartWatcher.start()
@@ -200,10 +202,13 @@ class RootFlowNode(
     }
 
     private fun switchToLoggedInFlow(sessionId: SessionId, navId: Int) {
+        //:tchap: account-expiration
         observeSyncState(sessionId, navId)
+        //:tchap: end
         backstack.safeRoot(NavTarget.LoggedInFlow(sessionId, navId))
     }
 
+    //:tchap: account-expiration
     private fun observeSyncState(sessionId: SessionId, navId: Int) {
         syncStateJob?.cancel()
         syncStateJob = lifecycleScope.launch {
@@ -222,15 +227,20 @@ class RootFlowNode(
                 .launchIn(this)
         }
     }
+    //:tchap: end
 
     private fun switchToNotLoggedInFlow(params: LoginParams?) {
+        //:tchap: account-expiration
         syncStateJob?.cancel()
+        //:tchap: end
         matrixSessionCache.removeAll()
         backstack.safeRoot(NavTarget.NotLoggedInFlow(params))
     }
 
     private fun switchToSignedOutFlow(sessionId: SessionId) {
+        //:tchap: account-expiration
         syncStateJob?.cancel()
+        //:tchap: end
         backstack.safeRoot(NavTarget.SignedOutFlow(sessionId))
     }
 
@@ -310,9 +320,11 @@ class RootFlowNode(
             val sessionId: SessionId
         ) : NavTarget
 
+        //:tchap: account-expiration
         @Parcelize data class AccountExpired(
             val sessionId: SessionId
         ) : NavTarget
+        //:tchap: end
 
         @Parcelize data object BugReport : NavTarget
     }
@@ -367,6 +379,7 @@ class RootFlowNode(
                     ),
                 )
             }
+            //:tchap: account-expiration
             is NavTarget.AccountExpired -> {
                 accountExpiredEntryPoint.createNode(
                     parentNode = this,
@@ -374,6 +387,7 @@ class RootFlowNode(
                     sessionId = navTarget.sessionId,
                 )
             }
+            //:tchap: end
             NavTarget.SplashScreen -> emptyNode(buildContext)
             NavTarget.BugReport -> {
                 val callback = object : BugReportEntryPoint.Callback {
