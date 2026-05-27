@@ -859,7 +859,9 @@ private fun defaultRoomCreationPowerLevels(isPublic: Boolean, isSpace: Boolean) 
     ban = null,
     kick = null,
     redact = null,
-    invite = if (isPublic) 0 else 50,
+    // TCHAP : Temp fix for issue : https://github.com/tchapgouv/tchap-backend/issues/187
+//    invite = if (isPublic) 0 else 50,
+    invite = if (isPublic) null else 50,
     notifications = null,
     users = mapOf(),
     events = if (!isSpace) {
