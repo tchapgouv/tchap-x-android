@@ -18,8 +18,11 @@ import io.element.android.libraries.matrix.api.core.UserId
 open class LoginWithClassicStateProvider : PreviewParameterProvider<LoginWithClassicState> {
     override val values: Sequence<LoginWithClassicState>
         get() = sequenceOf(
-            aLoginWithClassicState(),
-            aLoginWithClassicState(isElementPro = true, displayName = USER_NAME_ALICE),
+            // :tchap: tchap-legacy-connection
+//            aLoginWithClassicState(),
+//            aLoginWithClassicState(isElementPro = true, displayName = USER_NAME_ALICE),
+            aLoginWithClassicState(displayName = USER_NAME_ALICE),
+            // :tchap: end
         )
 }
 
