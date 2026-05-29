@@ -39,7 +39,10 @@ class ImageCompressor(
         resizeMode: ResizeMode,
         mimeType: String,
         orientation: Int = ExifInterface.ORIENTATION_UNDEFINED,
-        desiredQuality: Int = 78,
+        // :tchap: Increase optimized image quality for Tchap
+//        desiredQuality: Int = 78,
+        desiredQuality: Int = 85,
+        // :tchap: end
     ): Result<ImageCompressionResult> = withContext(dispatchers.io) {
         runCatchingExceptions {
             val format = mimeTypeToCompressFormat(mimeType)
