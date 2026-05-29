@@ -18,6 +18,8 @@ import io.element.android.features.lockscreen.impl.biometric.DefaultBiometricUnl
 import io.element.android.features.lockscreen.impl.pin.DefaultPinCodeManagerCallback
 import io.element.android.features.lockscreen.impl.pin.PinCodeManager
 import io.element.android.features.lockscreen.impl.storage.LockScreenStore
+import io.element.android.libraries.core.meta.BuildMeta
+import io.element.android.libraries.core.meta.BuildType
 import io.element.android.libraries.di.annotations.AppCoroutineScope
 import io.element.android.libraries.sessionstorage.api.observer.SessionListener
 import io.element.android.libraries.sessionstorage.api.observer.SessionObserver
@@ -43,10 +45,14 @@ class DefaultLockScreenService(
     private val coroutineScope: CoroutineScope,
     private val sessionObserver: SessionObserver,
     private val appForegroundStateService: AppForegroundStateService,
-    biometricAuthenticatorManager: BiometricAuthenticatorManager,
+    buildMeta: BuildMeta,
+    private val biometricAuthenticatorManager: BiometricAuthenticatorManager,
 ) : LockScreenService {
     private val _lockState = MutableStateFlow<LockScreenLockState>(LockScreenLockState.Unlocked)
     override val lockState: StateFlow<LockScreenLockState> = _lockState
+
+    // TCHAP : disable-screenshots (isDebug allow screenshots)
+    override val isDebug: Boolean = buildMeta.buildType == BuildType.DEBUG
 
     private var lockJob: Job? = null
 
@@ -81,6 +87,7 @@ class DefaultLockScreenService(
             override suspend fun onSessionDeleted(userId: String, wasLastSession: Boolean) {
                 if (wasLastSession) {
                     pinCodeManager.deletePinCode()
+                    biometricAuthenticatorManager.disable()
                 }
             }
         })

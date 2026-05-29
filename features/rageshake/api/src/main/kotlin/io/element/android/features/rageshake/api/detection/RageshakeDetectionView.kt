@@ -8,7 +8,11 @@
 
 package io.element.android.features.rageshake.api.detection
 
+import android.os.Build
+import android.view.WindowManager
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
@@ -33,6 +37,10 @@ fun RageshakeDetectionView(
 ) {
     val eventSink = state.eventSink
     val context = LocalContext.current
+
+    // TCHAP : disable-screenshots
+    AllowScreenshotEffect(state.takeScreenshot || state.showDialog)
+
     OnLifecycleEvent { _, event ->
         when (event) {
             Lifecycle.Event.ON_RESUME -> eventSink(RageshakeDetectionEvent.StartDetection)
@@ -57,6 +65,32 @@ fun RageshakeDetectionView(
     }
 }
 
+// TCHAP : disable-screenshots
+@Composable
+private fun AllowScreenshotEffect(enabled: Boolean) {
+    val activity = LocalActivity.current ?: return
+    DisposableEffect(enabled) {
+        if (enabled) {
+            val window = activity.window
+            val wasSecure = window.attributes.flags and WindowManager.LayoutParams.FLAG_SECURE != 0
+            window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                activity.setRecentsScreenshotEnabled(true)
+            }
+            onDispose {
+                if (wasSecure) {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        activity.setRecentsScreenshotEnabled(false)
+                    }
+                }
+            }
+        } else {
+            onDispose {}
+        }
+    }
+}
+
 @Composable
 private fun TakeScreenshot(
     onScreenshot: (ImageResult) -> Unit
@@ -77,7 +111,7 @@ private fun RageshakeDialogContent(
     onYesClick: () -> Unit = { },
 ) {
     ConfirmationDialog(
-        title = stringResource(id = CommonStrings.action_report_bug),
+        title = stringResource(id = CommonStrings.common_report_a_problem),
         content = stringResource(id = R.string.rageshake_detection_dialog_content),
         thirdButtonText = stringResource(id = CommonStrings.action_disable),
         submitText = stringResource(id = CommonStrings.action_yes),

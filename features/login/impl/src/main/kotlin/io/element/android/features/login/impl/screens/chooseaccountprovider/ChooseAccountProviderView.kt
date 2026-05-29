@@ -43,14 +43,14 @@ import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.components.Button
 import io.element.android.libraries.designsystem.theme.components.Scaffold
 import io.element.android.libraries.designsystem.theme.components.TopAppBar
-import io.element.android.libraries.matrix.api.auth.OidcDetails
+import io.element.android.libraries.matrix.api.auth.OAuthDetails
 import io.element.android.libraries.ui.strings.CommonStrings
 
 @Composable
 fun ChooseAccountProviderView(
     state: ChooseAccountProviderState,
     onBackClick: () -> Unit,
-    onOidcDetails: (OidcDetails) -> Unit,
+    onOAuthDetails: (OAuthDetails) -> Unit,
     onNeedLoginPassword: () -> Unit,
     onLearnMoreClick: () -> Unit,
     onNeedLoginHint: () -> Unit,
@@ -130,7 +130,7 @@ fun ChooseAccountProviderView(
                     state.eventSink(ChooseAccountProviderEvents.ClearError)
                 },
                 onLearnMoreClick = onLearnMoreClick,
-                onOidcDetails = onOidcDetails,
+                onOAuthDetails = onOAuthDetails,
                 onNeedLoginPassword = onNeedLoginPassword,
                 onNeedLoginHint = onNeedLoginHint,
                 onCreateAccountContinue = onCreateAccountContinue,
@@ -146,7 +146,7 @@ internal fun ChooseAccountProviderViewPreview(@PreviewParameter(ChooseAccountPro
         state = state,
         onBackClick = { },
         onLearnMoreClick = { },
-        onOidcDetails = { },
+        onOAuthDetails = { },
         onNeedLoginPassword = { },
         onNeedLoginHint = { },
         onCreateAccountContinue = { },

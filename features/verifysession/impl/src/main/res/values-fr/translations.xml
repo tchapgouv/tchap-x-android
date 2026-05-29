@@ -2,8 +2,8 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="screen_identity_confirmation_cannot_confirm">"Confirmation impossible ?"</string>
   <string name="screen_identity_confirmation_create_new_recovery_key">"Créer un nouveau code de vérification"</string><!-- Tchap: Custom string -->
-  <string name="screen_identity_confirmation_subtitle">"Vérifier cet appareil pour configurer votre messagerie sécurisée."</string><!-- Tchap: Custom string -->
-  <string name="screen_identity_confirmation_title">"Confirmez votre identité"</string>
+  <string name="screen_identity_confirmation_subtitle">"Choisissez votre méthode de vérification."</string><!-- Tchap: Custom string -->
+  <string name="screen_identity_confirmation_title">"Confirmez votre identité numérique"</string>
   <string name="screen_identity_confirmation_use_another_device">"Utiliser un autre appareil"</string><!-- Tchap: Custom string -->
   <string name="screen_identity_confirmation_use_recovery_key">"Utiliser le code de vérification"</string><!-- Tchap: Custom string -->
   <string name="screen_identity_confirmed_subtitle">"Vous pouvez désormais lire ou envoyer des messages en toute sécurité, et tout membre avec qui vous discutez peut également faire confiance à cet appareil."</string><!-- Tchap: Custom string -->
@@ -50,5 +50,5 @@
   <string name="screen_session_verification_waiting_subtitle">"Une fois acceptée, vous pourrez poursuivre la vérification."</string>
   <string name="screen_session_verification_waiting_to_accept_subtitle">"Pour continuer, acceptez la demande de lancement de la procédure de vérification sur votre autre appareil."</string><!-- Tchap: Custom string -->
   <string name="screen_session_verification_waiting_to_accept_title">"En attente d’acceptation de la demande"</string>
-  <string name="screen_signout_in_progress_dialog_content">"Déconnexion…"</string>
+  <string name="screen_signout_in_progress_dialog_content">"Suppression de l’appareil…"</string>
 </resources>

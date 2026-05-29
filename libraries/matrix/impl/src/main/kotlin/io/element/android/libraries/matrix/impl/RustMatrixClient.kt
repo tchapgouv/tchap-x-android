@@ -19,6 +19,7 @@ import io.element.android.libraries.core.data.tryOrNull
 import io.element.android.libraries.core.extensions.mapFailure
 import io.element.android.libraries.core.extensions.runCatchingExceptions
 import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.matrix.api.HomeserverCapabilitiesProvider
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.analytics.SdkStoreSizes
 import io.element.android.libraries.matrix.api.core.DeviceId
@@ -28,12 +29,11 @@ import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.RoomIdOrAlias
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.createroom.CreateRoomParameters
-import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
 import io.element.android.libraries.matrix.api.createroom.RoomPreset
 import io.element.android.libraries.matrix.api.linknewdevice.LinkDesktopHandler
 import io.element.android.libraries.matrix.api.linknewdevice.LinkMobileHandler
 import io.element.android.libraries.matrix.api.media.MatrixMediaLoader
-import io.element.android.libraries.matrix.api.oidc.AccountManagementAction
+import io.element.android.libraries.matrix.api.oauth.AccountManagementAction
 import io.element.android.libraries.matrix.api.room.BaseRoom
 import io.element.android.libraries.matrix.api.room.CurrentUserMembership
 import io.element.android.libraries.matrix.api.room.JoinedRoom
@@ -61,7 +61,7 @@ import io.element.android.libraries.matrix.impl.media.RustMediaLoader
 import io.element.android.libraries.matrix.impl.media.RustMediaPreviewService
 import io.element.android.libraries.matrix.impl.notification.RustNotificationService
 import io.element.android.libraries.matrix.impl.notificationsettings.RustNotificationSettingsService
-import io.element.android.libraries.matrix.impl.oidc.toRustAction
+import io.element.android.libraries.matrix.impl.oauth.toRustAction
 import io.element.android.libraries.matrix.impl.pushers.RustPushersService
 import io.element.android.libraries.matrix.impl.room.GetRoomResult
 import io.element.android.libraries.matrix.impl.room.NotJoinedRustRoom
@@ -72,6 +72,7 @@ import io.element.android.libraries.matrix.impl.room.RustRoomFactory
 import io.element.android.libraries.matrix.impl.room.TimelineEventFilterFactory
 import io.element.android.libraries.matrix.impl.room.history.map
 import io.element.android.libraries.matrix.impl.room.join.map
+import io.element.android.libraries.matrix.impl.room.location.map
 import io.element.android.libraries.matrix.impl.room.preview.RoomPreviewInfoMapper
 import io.element.android.libraries.matrix.impl.roomdirectory.RustRoomDirectoryService
 import io.element.android.libraries.matrix.impl.roomdirectory.map
@@ -115,6 +116,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.matrix.rustcomponents.sdk.AuthData
 import org.matrix.rustcomponents.sdk.AuthDataPasswordDetails
+import org.matrix.rustcomponents.sdk.BeaconInfoListener
+import org.matrix.rustcomponents.sdk.BeaconInfoUpdate
 import org.matrix.rustcomponents.sdk.Client
 import org.matrix.rustcomponents.sdk.ClientException
 import org.matrix.rustcomponents.sdk.IgnoredUsersListener
@@ -126,7 +129,6 @@ import org.matrix.rustcomponents.sdk.SendQueueRoomErrorListener
 import org.matrix.rustcomponents.sdk.TaskHandle
 import org.matrix.rustcomponents.sdk.use
 import timber.log.Timber
-import uniffi.matrix_sdk.AccessRule
 import java.io.File
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -136,6 +138,7 @@ import org.matrix.rustcomponents.sdk.CreateRoomParameters as RustCreateRoomParam
 import org.matrix.rustcomponents.sdk.RoomPreset as RustRoomPreset
 import org.matrix.rustcomponents.sdk.SyncService as ClientSyncService
 
+@Suppress("LargeClass")
 class RustMatrixClient(
     private val innerClient: Client,
     private val sessionStore: SessionStore,
@@ -209,6 +212,15 @@ class RustMatrixClient(
         sessionDispatcher = sessionDispatcher,
         analyticsService = analyticsService,
     )
+
+    override val ownBeaconInfoUpdates = mxCallbackFlow {
+        val listener = object : BeaconInfoListener {
+            override fun onUpdate(update: BeaconInfoUpdate) {
+                trySend(update.map())
+            }
+        }
+        innerClient.subscribeToOwnBeaconInfoUpdates(listener)
+    }
 
     override val sessionVerificationService = RustSessionVerificationService(
         client = innerClient,
@@ -377,7 +389,7 @@ class RustMatrixClient(
             // TCHAP invite-by-email
             var isTchapInvite = false
             var isTchapInviteExternal = false
-            if (createRoomParams.accessRules === RoomAccessRules.DIRECT &&
+            if (createRoomParams.isDirect &&
                 createRoomParams.invite?.get(0)?.value?.contains(TchapPatterns.inviteByEmailSuffixMarker()) == true) {
                 // isTchapInvite = true when room is DM & first invite userId contains inviteByEmailSuffixMarker
                 isTchapInvite = true
@@ -388,16 +400,10 @@ class RustMatrixClient(
             val powerLevels = defaultRoomCreationPowerLevels(isSpace = createRoomParams.isSpace, isPublic = hasPublicAccess)
 
             val rustParams = RustCreateRoomParameters(
-                accessRuleOverride = when (createRoomParams.accessRules) {
-                    RoomAccessRules.DIRECT -> AccessRule.DIRECT
-                    RoomAccessRules.UNRESTRICTED -> AccessRule.UNRESTRICTED
-                    RoomAccessRules.RESTRICTED -> AccessRule.RESTRICTED
-                    // TCHAP access rule - Default room is UNRESTRICTED
-                    else -> AccessRule.UNRESTRICTED
-                },
                 name = createRoomParams.name,
                 topic = createRoomParams.topic,
                 isEncrypted = createRoomParams.isEncrypted,
+                // Tchap-specific : access_rules (federate param on creation_content)
                 isRoomFederated = createRoomParams.isRoomFederated,
                 isDirect = createRoomParams.isDirect,
                 visibility = createRoomParams.visibility.map(),
@@ -434,7 +440,6 @@ class RustMatrixClient(
 
     override suspend fun createDM(userId: UserId): Result<RoomId> {
         val createRoomParams = CreateRoomParameters(
-            accessRules = RoomAccessRules.DIRECT, // Tchap: make accessRules `direct` for Direct room.
             name = null,
             isEncrypted = true,
             isDirect = true,
@@ -858,6 +863,18 @@ class RustMatrixClient(
         val request = PerformDatabaseVacuumRequestBuilder(sessionId)
         sessionCoroutineScope.launch { workManagerScheduler.submit(request) }
     }
+
+    // TCHAP account-expiration : request to send a new email to provide the user with an updated link to renew their account
+    override suspend fun accountExpiredSendEmail(): Result<Unit> {
+        return runCatchingExceptions {
+            Timber.d("Request to send a new email of account expiration for session $sessionId")
+            innerClient.accountExpiredSendEmail()
+        }
+    }
+
+    override fun homeserverCapabilities(): HomeserverCapabilitiesProvider {
+        return RustHomeserverCapabilitiesProvider(innerClient.homeserverCapabilities())
+    }
 }
 
 private fun defaultRoomCreationPowerLevels(isPublic: Boolean, isSpace: Boolean) = PowerLevels(
@@ -868,7 +885,9 @@ private fun defaultRoomCreationPowerLevels(isPublic: Boolean, isSpace: Boolean) 
     ban = null,
     kick = null,
     redact = null,
-    invite = if (isPublic) 0 else 50,
+    // TCHAP : Temp fix for issue : https://github.com/tchapgouv/tchap-backend/issues/187
+//    invite = if (isPublic) 0 else 50,
+    invite = if (isPublic) null else 50,
     notifications = null,
     users = mapOf(),
     events = if (!isSpace) {

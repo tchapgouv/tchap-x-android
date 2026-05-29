@@ -42,7 +42,7 @@
   <string name="screen_room_change_role_unsaved_changes_description">"Vous avez des modifications non-enregistrées."</string>
   <string name="screen_room_change_role_unsaved_changes_title">"Enregistrer les changements ?"</string>
   <string name="screen_room_details_add_topic_title">"Ajouter un sujet"</string>
-  <string name="screen_room_details_badge_encrypted">"Sécurisé"</string> <!-- TCHAP custom string -->
+  <string name="screen_room_details_badge_encrypted">"Chiffré"</string>
   <string name="screen_room_details_badge_not_encrypted">"Non chiffré"</string>
   <string name="screen_room_details_badge_public">"Public"</string> <!-- TCHAP custom string -->
   <string name="screen_room_details_edit_room_title">"Modifier les détails"</string>
@@ -56,6 +56,7 @@
   <string name="screen_room_details_invite_people_dont_close">"Ne fermez pas l’application avant que l’opération soit terminée."</string>
   <string name="screen_room_details_invite_people_preparing">"Préparation des invitations…"</string>
   <string name="screen_room_details_invite_people_title">"Inviter des membres"</string><!-- Tchap: Custom string -->
+  <string name="screen_room_details_invite_title">"Inviter"</string>
   <string name="screen_room_details_leave_conversation_title">"Quitter la discussion"</string>
   <string name="screen_room_details_leave_room_title">"Quitter le salon"</string>
   <string name="screen_room_details_media_gallery_title">"Médias et fichiers"</string>

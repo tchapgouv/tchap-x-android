@@ -222,8 +222,7 @@ private fun HomeScaffold(
         },
         floatingActionButton = {
             // TCHAP : Disable navigation bar for external users
-//            if (state.showNavigationBar) {
-            if (state.showNavigationBar && !currentUserIsExternal) {
+            if (!currentUserIsExternal) {
                 val coroutineScope = rememberCoroutineScope()
                 HomeBottomBar(
                     currentHomeNavigationBarItem = state.currentHomeNavigationBarItem,
@@ -246,27 +245,20 @@ private fun HomeScaffold(
                             state.eventSink(HomeEvent.SelectHomeNavigationBarItem(item))
                         }
                     },
-                    floatingActionButton = when (state.currentHomeNavigationBarItem) {
-                        HomeNavigationBarItem.Chats -> {
-                            {
+                    floatingActionButton = {
+                        when (state.currentHomeNavigationBarItem) {
+                            HomeNavigationBarItem.Chats -> {
                                 HomeFloatingActionButton(onStartChatClick, CommonStrings.action_create_room)
                             }
-                        }
-                        HomeNavigationBarItem.Spaces -> if (state.homeSpacesState.canCreateSpaces) {
-                            {
+                            HomeNavigationBarItem.Spaces -> {
                                 HomeFloatingActionButton(onCreateSpaceClick, CommonStrings.action_create_space)
                             }
-                        } else {
-                            // No FAB for spaces if we cannot create spaces
-                            null
                         }
                     },
                 )
-            } else {
-                HomeFloatingActionButton(onStartChatClick, CommonStrings.action_create_room)
             }
         },
-        floatingActionButtonPosition = if (state.showNavigationBar) FabPosition.Center else FabPosition.End,
+        floatingActionButtonPosition = FabPosition.Center,
         content = { padding ->
             val contentPadding = PaddingValues(
                 bottom = 96.dp,

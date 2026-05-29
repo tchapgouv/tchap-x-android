@@ -1,3 +1,31 @@
+Changements dans Tchap beta Android v0.11.0
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v0.11.0 -->
+
+## Qu'est-ce qui a changé ?
+### ✨ Nouveautés
+* Désactiver les screenshots sur l'application by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/190
+* Ajout de l'écran d'expiration de compte by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/183
+* Connexion à partir de Tchap Legacy by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/200
+### 🙌 Améliorations
+* Ajout du nouveau logo Tchap dans la liste des sessions by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/192
+* Augmenter la qualité des images par défaut by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/205
+### 🐛 Corrections de bugs
+* Correction pour la création de salons publiques by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/197
+* Autorisation des certificats Let's Encrypt sur l'environnement de dév by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/202
+### ⚠️ Modifications de l'API
+* Nettoyage des access_rules à la création de salons by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/193
+### 🧱 Build
+* Ajout des previews spécifiques à Tchap by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/189
+* Suffixe le nom de l'application avec le buildType (debug / nightly) by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/203
+### Autres
+* Merge Element X v26.05.1 by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/195
+* Merge Element X v26.05.2 by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/204
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v0.10.0...v0.11.0
+
 Changements dans Tchap beta Android v0.10.0
 =============================
 

@@ -15,7 +15,6 @@ import io.element.android.libraries.matrix.api.roomdirectory.RoomVisibility
 import java.util.Optional
 
 data class CreateRoomParameters(
-    val accessRules: RoomAccessRules? = null,
     val name: String?,
     val topic: String? = null,
     val isEncrypted: Boolean,

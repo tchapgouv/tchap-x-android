@@ -76,7 +76,7 @@ import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.Scaffold
 import io.element.android.libraries.designsystem.theme.components.TextField
 import io.element.android.libraries.designsystem.theme.components.TopAppBar
-import io.element.android.libraries.matrix.api.auth.OidcDetails
+import io.element.android.libraries.matrix.api.auth.OAuthDetails
 import io.element.android.libraries.testtags.TestTags
 import io.element.android.libraries.testtags.testTag
 import io.element.android.libraries.ui.strings.CommonStrings
@@ -86,7 +86,7 @@ import io.element.android.libraries.ui.strings.CommonStrings
 fun LoginHintView(
     state: LoginHintState,
     onBackClick: () -> Unit,
-    onOidcDetails: (OidcDetails) -> Unit,
+    onOAuthDetails: (OAuthDetails) -> Unit,
     onNeedLoginHint: () -> Unit,
     onNeedLoginPassword: () -> Unit,
     onLearnMoreClick: () -> Unit,
@@ -197,7 +197,7 @@ fun LoginHintView(
                     state.eventSink(LoginHintEvents.ClearError)
                 },
                 onLearnMoreClick = onLearnMoreClick,
-                onOidcDetails = onOidcDetails,
+                onOAuthDetails = onOAuthDetails,
                 onNeedLoginPassword = onNeedLoginPassword,
                 onNeedLoginHint = onNeedLoginHint,
                 onCreateAccountContinue = onCreateAccountContinue,
@@ -285,7 +285,7 @@ internal fun LoginHintViewPreview(@PreviewParameter(LoginHintStateProvider::clas
     LoginHintView(
         state = state,
         onBackClick = {},
-        onOidcDetails = {},
+        onOAuthDetails = {},
         onNeedLoginHint = {},
         onNeedLoginPassword = {},
         onLearnMoreClick = {},

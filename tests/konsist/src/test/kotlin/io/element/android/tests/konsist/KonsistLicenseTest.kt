@@ -50,6 +50,7 @@ class KonsistLicenseTest {
             .filter {
                 it.moduleName.startsWith("enterprise").not() &&
                     it.path.contains("/fr/gouv/tchap/").not() &&
+                    it.moduleName != "libraries/rustls-tls" &&
                     it.nameWithExtension != "locales.kt" &&
                     it.name.startsWith("Template ").not()
             }
@@ -89,6 +90,7 @@ class KonsistLicenseTest {
             .files
             .filter {
                 it.path.contains("/fr/gouv/tchap/").not() &&
+                it.moduleName.endsWith("rustls-tls").not() &&
                 it.nameWithExtension != "locales.kt" &&
                 it.nameWithExtension != "KonsistLicenseTest.kt" &&
                     it.name.startsWith("Template ").not()

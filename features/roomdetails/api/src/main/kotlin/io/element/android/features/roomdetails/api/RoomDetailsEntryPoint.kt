@@ -39,7 +39,8 @@ interface RoomDetailsEntryPoint : FeatureEntryPoint {
 
     interface Callback : Plugin {
         fun navigateToGlobalNotificationSettings()
-        fun navigateToRoom(roomId: RoomId, serverNames: List<String>)
+        fun navigateToDeveloperSettings()
+        fun navigateToRoom(roomId: RoomId, serverNames: List<String>, clearBackStack: Boolean = false)
         fun handlePermalinkClick(data: PermalinkData, pushToBackstack: Boolean)
         fun startForwardEventFlow(eventId: EventId, fromPinnedEvents: Boolean)
     }

@@ -12,7 +12,7 @@ permissions: {}
 # Enrich gradle.properties for CI/CD
 env:
   GRADLE_OPTS: -Dorg.gradle.jvmargs=-Xmx9728m -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8 -XX:+HeapDumpOnOutOfMemoryError -XX:+UseG1GC -Dkotlin.daemon.jvm.options=-Xmx3072m
-  CI_GRADLE_ARG_PROPERTIES: --stacktrace -Dsonar.gradle.skipCompile=true --no-configuration-cache
+  CI_GRADLE_ARG_PROPERTIES: --stacktrace -Dsonar.gradle.skipCompile=true --no-configuration-cache --no-daemon --max-workers=2
   GROUP: ${{ format('sonar-{0}', github.ref) }}
 
 jobs:
@@ -52,12 +52,12 @@ jobs:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '21'
       - name: Configure gradle
-        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
+        uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6.1.0
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/develop' }}
       - name: Build debug code and test fixtures
         # TCHAP : assemble only TchapWithpinning, as runner has not enough memory to build all variants.
-#        run: ./gradlew assembleDebug createFullJarTchapWithpinningDebugTestFixtures :app:createFullJarGplayTchapWithpinningDebugTestFixtures $CI_GRADLE_ARG_PROPERTIES
+#        run: ./gradlew assembleGplayDebug createFullJarDebugTestFixtures :app:createFullJarGplayDebugTestFixtures $CI_GRADLE_ARG_PROPERTIES
         run: ./gradlew assembleTchapWithpinningDebug createFullJarTchapWithpinningDebugTestFixtures :app:createFullJarGplayTchapWithpinningDebugTestFixtures $CI_GRADLE_ARG_PROPERTIES
       - name: 🔊 Publish results to Sonar
         env:

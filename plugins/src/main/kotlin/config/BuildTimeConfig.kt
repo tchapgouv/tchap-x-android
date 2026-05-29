@@ -22,7 +22,10 @@ object BuildTimeConfig {
 
     val METADATA_HOST_REVERSED: String? = null
     val URL_WEBSITE: String? = null
-    val URL_LOGO: String? = null
+
+    // TCHAP : specific URL
+    const val URL_LOGO: String = "https://www.tchap.gouv.fr/vector-icons/300.png"
+
     val URL_COPYRIGHT: String? = null
 
     // TCHAP : specific URL
@@ -36,7 +39,7 @@ object BuildTimeConfig {
     val BUG_REPORT_URL: String? = null
 
     // TCHAP : specific Bug report App Name
-    val BUG_REPORT_APP_NAME = "tchap-x-android"
+    const val BUG_REPORT_APP_NAME = "tchap-x-android"
 
     const val PUSH_CONFIG_INCLUDE_FIREBASE = true
     const val PUSH_CONFIG_INCLUDE_UNIFIED_PUSH = true

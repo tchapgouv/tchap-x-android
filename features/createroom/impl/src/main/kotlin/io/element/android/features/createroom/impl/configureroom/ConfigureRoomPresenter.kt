@@ -33,7 +33,6 @@ import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.createroom.CreateRoomParameters
-import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
 import io.element.android.libraries.matrix.api.createroom.RoomPreset
 import io.element.android.libraries.matrix.api.room.alias.RoomAliasHelper
 import io.element.android.libraries.matrix.api.room.history.RoomHistoryVisibility
@@ -85,7 +84,6 @@ class ConfigureRoomPresenter(
 
     @Composable
     override fun present(): ConfigureRoomState {
-        val canAddRoomToSpace by featureFlagService.isFeatureEnabledFlow(FeatureFlags.CreateSpaces).collectAsState(false)
         val cameraPermissionState = cameraPermissionPresenter.present()
         val createRoomConfig by dataStore.getCreateRoomConfigFlow().collectAsState()
         val homeserverName = remember { matrixClient.userIdServerName() }
@@ -119,12 +117,8 @@ class ConfigureRoomPresenter(
         }.collectAsState(initial = false)
 
         var spaces by remember { mutableStateOf<ImmutableList<SpaceRoom>>(persistentListOf()) }
-        LaunchedEffect(canAddRoomToSpace) {
-            spaces = if (canAddRoomToSpace) {
-                matrixClient.spaceService.editableSpaces().getOrElse { emptyList() }.toImmutableList()
-            } else {
-                persistentListOf()
-            }
+        LaunchedEffect(Unit) {
+            spaces = matrixClient.spaceService.editableSpaces().getOrElse { emptyList() }.toImmutableList()
             val parentSpace = spaces.find { it.roomId == initialParentSpaceId }
             parentSpace?.let {
                 dataStore.setParentSpace(parentSpace = parentSpace, updateVisibility = true)
@@ -250,12 +244,10 @@ class ConfigureRoomPresenter(
         createRoomAction: MutableState<AsyncAction<RoomId>>
     ) = launch {
         suspend {
-            val accessRules = RoomAccessRules.RESTRICTED
             val avatarUrl = config.avatarUri?.let { uploadAvatar(it.toUri()) }
             val params = when (config.visibilityState) {
                 is RoomVisibilityState.Public -> {
                     CreateRoomParameters(
-                        accessRules = accessRules,
                         name = config.roomName,
                         topic = config.topic,
                         isEncrypted = false,
@@ -274,7 +266,6 @@ class ConfigureRoomPresenter(
                 }
                 is RoomVisibilityState.Private -> {
                     CreateRoomParameters(
-                        accessRules = accessRules,
                         name = config.roomName,
                         topic = config.topic,
                         // TCHAP - Enable PrivateNotEncrypted room

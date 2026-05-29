@@ -29,25 +29,48 @@ android {
         buildConfig = true
     }
 
-    buildTypes {
+    // :tchap: tchap-legacy-connection - Use "target" productFlavors instead of "buildType" variants (debug / release)
+//    buildTypes {
+//        val elementClassicPackageKey = "elementClassicPackage"
+//        val elementClassicPackage = "im.vector.app"
+//        val elementClassicPackageDebug = "$elementClassicPackage.debug"
+//        val elementClassicPackageNightly = "$elementClassicPackage.nightly"
+//        getByName("release") {
+//            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackage
+//            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackage)
+//        }
+//        getByName("debug") {
+//            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackageDebug
+//            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackageDebug)
+//        }
+//        register("nightly") {
+//            matchingFallbacks += listOf("release")
+//            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackageNightly
+//            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackageNightly)
+//        }
+//    }
+    productFlavors {
         val elementClassicPackageKey = "elementClassicPackage"
-        val elementClassicPackage = "im.vector.app"
-        val elementClassicPackageDebug = "$elementClassicPackage.debug"
-        val elementClassicPackageNightly = "$elementClassicPackage.nightly"
-        getByName("release") {
-            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackage
-            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackage)
+        val tchapLegacyPackage = "fr.gouv.tchap.a"
+        val tchapLegacyPreprodPackage = "fr.gouv.rie.tchap"
+        val tchapLegacyDevPackage = "fr.gouv.tchap.dev"
+
+        getByName("tchap") {
+            manifestPlaceholders[elementClassicPackageKey] = tchapLegacyPackage
+            buildConfigFieldStr(elementClassicPackageKey, tchapLegacyPackage)
         }
-        getByName("debug") {
-            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackageDebug
-            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackageDebug)
+
+        getByName("tchapPreprod") {
+            manifestPlaceholders[elementClassicPackageKey] = tchapLegacyPreprodPackage
+            buildConfigFieldStr(elementClassicPackageKey, tchapLegacyPreprodPackage)
         }
-        register("nightly") {
-            matchingFallbacks += listOf("release")
-            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackageNightly
-            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackageNightly)
+
+        getByName("tchapDev") {
+            manifestPlaceholders[elementClassicPackageKey] = tchapLegacyDevPackage
+            buildConfigFieldStr(elementClassicPackageKey, tchapLegacyDevPackage)
         }
     }
+    // :tchap: end
 }
 
 setupDependencyInjection()
@@ -55,6 +78,7 @@ setupDependencyInjection()
 dependencies {
     implementation(projects.appconfig)
     implementation(projects.features.enterprise.api)
+    implementation(projects.features.preferences.api)
     implementation(projects.features.rageshake.api)
     implementation(projects.libraries.core)
     implementation(projects.libraries.androidutils)
@@ -69,7 +93,7 @@ dependencies {
     implementation(projects.libraries.permissions.api)
     implementation(projects.libraries.sessionStorage.api)
     implementation(projects.libraries.qrcode)
-    implementation(projects.libraries.oidc.api)
+    implementation(projects.libraries.oauth.api)
     implementation(projects.libraries.uiUtils)
     implementation(projects.libraries.wellknown.api)
     implementation(libs.androidx.browser)
@@ -80,9 +104,10 @@ dependencies {
     testCommonDependencies(libs, true)
     testImplementation(projects.features.login.test)
     testImplementation(projects.features.enterprise.test)
+    testImplementation(projects.features.preferences.test)
     testImplementation(projects.libraries.featureflag.test)
     testImplementation(projects.libraries.matrix.test)
-    testImplementation(projects.libraries.oidc.test)
+    testImplementation(projects.libraries.oauth.test)
     testImplementation(projects.libraries.permissions.test)
     testImplementation(projects.libraries.sessionStorage.test)
     testImplementation(projects.libraries.wellknown.test)

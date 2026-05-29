@@ -30,6 +30,7 @@ import com.bumble.appyx.navmodel.backstack.transitionhandler.rememberBackstackSl
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
+import fr.gouv.tchap.features.accountexpired.api.AccountExpiredEntryPoint
 import im.vector.app.features.analytics.plan.JoinedRoom
 import io.element.android.annotations.ContributesNode
 import io.element.android.appnav.di.MatrixSessionCache
@@ -63,8 +64,9 @@ import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.matrix.api.core.asEventId
 import io.element.android.libraries.matrix.api.core.toRoomIdOrAlias
 import io.element.android.libraries.matrix.api.permalink.PermalinkData
-import io.element.android.libraries.oidc.api.OidcAction
-import io.element.android.libraries.oidc.api.OidcActionFlow
+import io.element.android.libraries.matrix.api.sync.SyncState
+import io.element.android.libraries.oauth.api.OAuthAction
+import io.element.android.libraries.oauth.api.OAuthActionFlow
 import io.element.android.libraries.sessionstorage.api.LoggedInState
 import io.element.android.libraries.sessionstorage.api.SessionStore
 import io.element.android.libraries.ui.common.nodes.emptyNode
@@ -73,6 +75,7 @@ import io.element.android.services.analytics.api.AnalyticsService
 import io.element.android.services.analytics.api.watchers.AnalyticsColdStartWatcher
 import io.element.android.services.appnavstate.api.ROOM_OPENED_FROM_NOTIFICATION
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
@@ -95,10 +98,11 @@ class RootFlowNode(
     private val signedOutEntryPoint: SignedOutEntryPoint,
     private val accountSelectEntryPoint: AccountSelectEntryPoint,
     private val intentResolver: IntentResolver,
-    private val oidcActionFlow: OidcActionFlow,
+    private val oAuthActionFlow: OAuthActionFlow,
     private val featureFlagService: FeatureFlagService,
     private val announcementService: AnnouncementService,
     private val analyticsService: AnalyticsService,
+    private val accountExpiredEntryPoint: AccountExpiredEntryPoint,
     private val analyticsColdStartWatcher: AnalyticsColdStartWatcher,
     @AppCoroutineScope private val appCoroutineScope: CoroutineScope,
 ) : BaseFlowNode<RootFlowNode.NavTarget>(
@@ -109,6 +113,10 @@ class RootFlowNode(
     buildContext = buildContext,
     plugins = plugins
 ) {
+    // :tchap: account-expiration - Job to watch the sync state
+    private var syncStateJob: Job? = null
+    // :tchap: end
+
     override fun onBuilt() {
         analyticsColdStartWatcher.start()
         appCoroutineScope.launch {
@@ -194,15 +202,45 @@ class RootFlowNode(
     }
 
     private fun switchToLoggedInFlow(sessionId: SessionId, navId: Int) {
+        // :tchap: account-expiration
+        observeSyncState(sessionId, navId)
+        // :tchap: end
         backstack.safeRoot(NavTarget.LoggedInFlow(sessionId, navId))
     }
 
+    // :tchap: account-expiration
+    private fun observeSyncState(sessionId: SessionId, navId: Int) {
+        syncStateJob?.cancel()
+        syncStateJob = lifecycleScope.launch {
+            val matrixClient = matrixSessionCache.getOrRestore(sessionId).getOrNull() ?: return@launch
+            matrixClient.syncService.syncState
+                .onEach { state ->
+                    if (state == SyncState.AccountExpired) {
+                        backstack.safeRoot(NavTarget.AccountExpired(sessionId))
+                    } else if (state == SyncState.Running) {
+                        val currentTarget = backstack.elements.value.lastOrNull()?.key?.navTarget
+                        if (currentTarget is NavTarget.AccountExpired) {
+                            switchToLoggedInFlow(sessionId, navId)
+                        }
+                    }
+                }
+                .launchIn(this)
+        }
+    }
+    // :tchap: end
+
     private fun switchToNotLoggedInFlow(params: LoginParams?) {
+        // :tchap: account-expiration
+        syncStateJob?.cancel()
+        // :tchap: end
         matrixSessionCache.removeAll()
         backstack.safeRoot(NavTarget.NotLoggedInFlow(params))
     }
 
     private fun switchToSignedOutFlow(sessionId: SessionId) {
+        // :tchap: account-expiration
+        syncStateJob?.cancel()
+        // :tchap: end
         backstack.safeRoot(NavTarget.SignedOutFlow(sessionId))
     }
 
@@ -252,7 +290,8 @@ class RootFlowNode(
             val transitionHandler = rememberDelegateTransitionHandler<NavTarget, BackStack.State> { navTarget ->
                 when (navTarget) {
                     is NavTarget.SplashScreen,
-                    is NavTarget.LoggedInFlow -> backstackFader
+                    is NavTarget.LoggedInFlow,
+                    is NavTarget.NotLoggedInFlow -> backstackFader
                     else -> backstackSlider
                 }
             }
@@ -281,6 +320,12 @@ class RootFlowNode(
         @Parcelize data class SignedOutFlow(
             val sessionId: SessionId
         ) : NavTarget
+
+        // :tchap: account-expiration
+        @Parcelize data class AccountExpired(
+            val sessionId: SessionId
+        ) : NavTarget
+        // :tchap: end
 
         @Parcelize data object BugReport : NavTarget
     }
@@ -335,6 +380,15 @@ class RootFlowNode(
                     ),
                 )
             }
+            // :tchap: account-expiration
+            is NavTarget.AccountExpired -> {
+                accountExpiredEntryPoint.createNode(
+                    parentNode = this,
+                    buildContext = buildContext,
+                    sessionId = navTarget.sessionId,
+                )
+            }
+            // :tchap: end
             NavTarget.SplashScreen -> emptyNode(buildContext)
             NavTarget.BugReport -> {
                 val callback = object : BugReportEntryPoint.Callback {
@@ -391,7 +445,7 @@ class RootFlowNode(
                 navigateTo(resolvedIntent.deeplinkData)
             }
             is ResolvedIntent.Login -> onLoginLink(resolvedIntent.params)
-            is ResolvedIntent.Oidc -> onOidcAction(resolvedIntent.oidcAction)
+            is ResolvedIntent.OAuth -> onOAuthAction(resolvedIntent.oAuthAction)
             is ResolvedIntent.Permalink -> navigateTo(resolvedIntent.permalinkData)
             is ResolvedIntent.IncomingShare -> onIncomingShare(resolvedIntent.shareIntentData)
         }
@@ -528,8 +582,8 @@ class RootFlowNode(
         }
     }
 
-    private fun onOidcAction(oidcAction: OidcAction) {
-        oidcActionFlow.post(oidcAction)
+    private fun onOAuthAction(oAuthAction: OAuthAction) {
+        oAuthActionFlow.post(oAuthAction)
     }
 
     private suspend fun attachSession(sessionId: SessionId): LoggedInFlowNode {

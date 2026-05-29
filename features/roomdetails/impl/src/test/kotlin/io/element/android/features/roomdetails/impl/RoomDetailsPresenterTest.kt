@@ -21,9 +21,6 @@ import io.element.android.libraries.androidutils.clipboard.ClipboardHelper
 import io.element.android.libraries.androidutils.clipboard.FakeClipboardHelper
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
-import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomMembersState
@@ -81,11 +78,6 @@ class RoomDetailsPresenterTest {
         dispatchers: CoroutineDispatchers = testCoroutineDispatchers(),
         notificationSettingsService: FakeNotificationSettingsService = FakeNotificationSettingsService(),
         analyticsService: AnalyticsService = FakeAnalyticsService(),
-        featureFlagService: FeatureFlagService = FakeFeatureFlagService(
-            mapOf(
-                FeatureFlags.Knock.key to false,
-            )
-        ),
         encryptionService: FakeEncryptionService = FakeEncryptionService(),
         clipboardHelper: ClipboardHelper = FakeClipboardHelper(),
         appPreferencesStore: AppPreferencesStore = InMemoryAppPreferencesStore()
@@ -110,7 +102,6 @@ class RoomDetailsPresenterTest {
             buildMeta = buildMeta,
             client = matrixClient,
             room = room,
-            featureFlagService = featureFlagService,
             notificationSettingsService = matrixClient.notificationSettingsService,
             roomMembersDetailsPresenterFactory = roomMemberDetailsPresenterFactory,
             leaveRoomPresenter = { leaveRoomState },
@@ -203,19 +194,14 @@ class RoomDetailsPresenterTest {
             givenRoomInfo(
                 aRoomInfo(
                     isEncrypted = true,
-                    isDirect = true,
+                    isDm = true,
                 )
             )
         }
         val presenter = createRoomDetailsPresenter(room)
         presenter.testWithLifecycleOwner(lifecycleOwner = fakeLifecycleOwner) {
             val initialState = awaitItem()
-            assertThat(initialState.roomType).isEqualTo(
-                RoomDetailsType.Dm(
-                    me = myRoomMember,
-                    otherMember = otherRoomMember,
-                )
-            )
+            assertThat(initialState.roomType).isEqualTo(RoomDetailsType.Dm(otherMember = otherRoomMember))
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -293,7 +279,7 @@ class RoomDetailsPresenterTest {
             givenRoomInfo(
                 aRoomInfo(
                     isEncrypted = true,
-                    isDirect = true,
+                    isDm = true,
                 )
             )
         }
@@ -316,7 +302,6 @@ class RoomDetailsPresenterTest {
         val myRoomMember = aRoomMember(A_SESSION_ID)
         val otherRoomMember = aRoomMember(A_USER_ID_2)
         val room = aJoinedRoom(
-            isDirect = true,
             topic = null,
             roomPermissions = roomPermissions(),
             userDisplayNameResult = { Result.success(A_USER_NAME) },
@@ -334,7 +319,7 @@ class RoomDetailsPresenterTest {
 
             givenRoomInfo(
                 aRoomInfo(
-                    isDirect = true,
+                    isDm = true,
                     activeMembersCount = 2,
                     topic = null,
                 )
@@ -574,17 +559,11 @@ class RoomDetailsPresenterTest {
             roomPermissions = roomPermissions(),
             joinRule = JoinRule.Knock,
         )
-        val featureFlagService = FakeFeatureFlagService(
-            mapOf(FeatureFlags.Knock.key to false)
-        )
         val presenter = createRoomDetailsPresenter(
             room = room,
-            featureFlagService = featureFlagService,
         )
         presenter.testWithLifecycleOwner(lifecycleOwner = fakeLifecycleOwner) {
             skipItems(1)
-            assertThat(awaitItem().canShowKnockRequests).isFalse()
-            featureFlagService.setFeatureEnabled(FeatureFlags.Knock, true)
             assertThat(awaitItem().canShowKnockRequests).isTrue()
             room.givenRoomInfo(aRoomInfo(joinRule = JoinRule.Invite))
             assertThat(awaitItem().canShowKnockRequests).isFalse()
@@ -597,8 +576,7 @@ class RoomDetailsPresenterTest {
         val room = aJoinedRoom(
             roomPermissions = roomPermissions(),
         )
-        val featureFlagService = FakeFeatureFlagService()
-        val presenter = createRoomDetailsPresenter(room = room, featureFlagService = featureFlagService)
+        val presenter = createRoomDetailsPresenter(room = room)
         presenter.testWithLifecycleOwner(lifecycleOwner = fakeLifecycleOwner) {
             skipItems(1)
             with(awaitItem()) {

@@ -21,6 +21,7 @@ class FakeStartDMAction(
     }
 ) : StartDMAction {
     override suspend fun execute(
+        showMatrixId: Boolean,
         matrixUser: MatrixUser,
         createIfDmDoesNotExist: Boolean,
         actionState: MutableState<AsyncAction<RoomId>>,

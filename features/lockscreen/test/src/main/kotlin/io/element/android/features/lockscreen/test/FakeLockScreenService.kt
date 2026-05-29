@@ -20,6 +20,8 @@ class FakeLockScreenService : LockScreenService {
     private val _lockState: MutableStateFlow<LockScreenLockState> = MutableStateFlow(LockScreenLockState.Locked)
     override val lockState: StateFlow<LockScreenLockState> = _lockState
 
+    override var isDebug: Boolean = true
+
     override fun isSetupRequired(): Flow<Boolean> {
         return isPinSetup.map { !it }
     }

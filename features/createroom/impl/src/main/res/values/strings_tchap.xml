@@ -31,6 +31,7 @@
     <string name="tchap_screen_create_room_private_not_encrypted_option_title">"Private room"</string>
     <string name="tchap_screen_create_room_private_not_encrypted_option_description">"• Not encrypted
 • Access by invite only</string>
+    <string name="tchap_screen_create_room_public_option_title">"Public room"</string>
     <string name="tchap_screen_create_room_public_option_description">"• Not encrypted messages
 • Accessible from rooms directory
 • Not accessible to external guests"</string>

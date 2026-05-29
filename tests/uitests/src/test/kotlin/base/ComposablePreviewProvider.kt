@@ -23,6 +23,7 @@ private val PACKAGE_TREES = arrayOf(
     "io.element.android.appicon",
     "io.element.android.appnav",
     "io.element.android.x",
+    "fr.gouv.tchap",
 )
 
 object ComposablePreviewProvider : TestParameterValuesProvider() {
