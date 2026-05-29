@@ -18,12 +18,16 @@ import io.element.android.libraries.matrix.api.core.UserId
 open class LoginWithClassicStateProvider : PreviewParameterProvider<LoginWithClassicState> {
     override val values: Sequence<LoginWithClassicState>
         get() = sequenceOf(
-            aLoginWithClassicState(),
-            aLoginWithClassicState(isElementPro = true, displayName = USER_NAME_ALICE),
+            // :tchap: tchap-legacy-connection
+//            aLoginWithClassicState(),
+//            aLoginWithClassicState(isElementPro = true, displayName = USER_NAME_ALICE),
+            aLoginWithClassicState(displayName = USER_NAME_ALICE),
+            // :tchap: end
         )
 }
 
 fun aLoginWithClassicState(
+    showMatrixId: Boolean = false,
     isElementPro: Boolean = false,
     userId: UserId = UserId("@alice:matrix.org"),
     displayName: String? = null,
@@ -32,6 +36,7 @@ fun aLoginWithClassicState(
     loginMode: AsyncData<LoginMode> = AsyncData.Uninitialized,
     eventSink: (LoginWithClassicEvent) -> Unit = {},
 ) = LoginWithClassicState(
+    showMatrixId = showMatrixId,
     isElementPro = isElementPro,
     userId = userId,
     displayName = displayName,

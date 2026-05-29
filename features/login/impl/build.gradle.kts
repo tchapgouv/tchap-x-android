@@ -29,25 +29,48 @@ android {
         buildConfig = true
     }
 
-    buildTypes {
+    // :tchap: tchap-legacy-connection - Use "target" productFlavors instead of "buildType" variants (debug / release)
+//    buildTypes {
+//        val elementClassicPackageKey = "elementClassicPackage"
+//        val elementClassicPackage = "im.vector.app"
+//        val elementClassicPackageDebug = "$elementClassicPackage.debug"
+//        val elementClassicPackageNightly = "$elementClassicPackage.nightly"
+//        getByName("release") {
+//            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackage
+//            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackage)
+//        }
+//        getByName("debug") {
+//            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackageDebug
+//            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackageDebug)
+//        }
+//        register("nightly") {
+//            matchingFallbacks += listOf("release")
+//            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackageNightly
+//            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackageNightly)
+//        }
+//    }
+    productFlavors {
         val elementClassicPackageKey = "elementClassicPackage"
-        val elementClassicPackage = "im.vector.app"
-        val elementClassicPackageDebug = "$elementClassicPackage.debug"
-        val elementClassicPackageNightly = "$elementClassicPackage.nightly"
-        getByName("release") {
-            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackage
-            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackage)
+        val tchapLegacyPackage = "fr.gouv.tchap.a"
+        val tchapLegacyPreprodPackage = "fr.gouv.rie.tchap"
+        val tchapLegacyDevPackage = "fr.gouv.tchap.dev"
+
+        getByName("tchap") {
+            manifestPlaceholders[elementClassicPackageKey] = tchapLegacyPackage
+            buildConfigFieldStr(elementClassicPackageKey, tchapLegacyPackage)
         }
-        getByName("debug") {
-            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackageDebug
-            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackageDebug)
+
+        getByName("tchapPreprod") {
+            manifestPlaceholders[elementClassicPackageKey] = tchapLegacyPreprodPackage
+            buildConfigFieldStr(elementClassicPackageKey, tchapLegacyPreprodPackage)
         }
-        register("nightly") {
-            matchingFallbacks += listOf("release")
-            manifestPlaceholders[elementClassicPackageKey] = elementClassicPackageNightly
-            buildConfigFieldStr(elementClassicPackageKey, elementClassicPackageNightly)
+
+        getByName("tchapDev") {
+            manifestPlaceholders[elementClassicPackageKey] = tchapLegacyDevPackage
+            buildConfigFieldStr(elementClassicPackageKey, tchapLegacyDevPackage)
         }
     }
+    // :tchap: end
 }
 
 setupDependencyInjection()
