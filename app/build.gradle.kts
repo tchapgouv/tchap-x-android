@@ -105,7 +105,7 @@ android {
     buildTypes {
         val oAuthRedirectSchemeBase = BuildTimeConfig.METADATA_HOST_REVERSED ?: "io.element.android"
         getByName("debug") {
-            // TCHAP : app_name defined in target flavorDimensions bellow
+            // TCHAP : app_name defined in applicationVariants.configureEach bellow
 //            resValue("string", "app_name", "$baseAppName dbg")
             resValue(
                 "string",
@@ -117,7 +117,7 @@ android {
         }
 
         getByName("release") {
-            // TCHAP : app_name defined in target flavorDimensions bellow
+            // TCHAP : app_name defined in applicationVariants.configureEach bellow
 //            resValue("string", "app_name", baseAppName)
             resValue(
                 "string",
@@ -155,7 +155,7 @@ android {
             initWith(release)
             applicationIdSuffix = ".nightly"
             versionNameSuffix = "-nightly"
-            // TCHAP : app_name defined in target flavorDimensions bellow
+            // TCHAP : app_name defined in applicationVariants.configureEach bellow
 //            resValue("string", "app_name", "$baseAppName nightly")
             resValue(
                 "string",
@@ -211,23 +211,17 @@ android {
         create("tchapDev") {
             dimension = "target"
 
-            resValue("string", "app_name", "Tchap beta dev")
-
             applicationIdSuffix = ".dev"
             versionNameSuffix = "_dev"
         }
         create("tchapPreprod") {
             dimension = "target"
 
-            resValue("string", "app_name", "Tchap beta preprod")
-
             applicationIdSuffix = ".staging"
-            versionNameSuffix = "_b"
+            versionNameSuffix = "_preprod"
         }
         create("tchap") {
             dimension = "target"
-
-            resValue("string", "app_name", "Tchap beta")
         }
 
         create("withpinning") {
@@ -237,6 +231,30 @@ android {
             dimension = "pinning"
         }
     }
+
+    // :tchap: AppName based on "target" flavor & buildType
+    applicationVariants.configureEach {
+        val targetFlavor = productFlavors.find { it.dimension == "target" }?.name
+
+        // BaseName based on "target" flavor
+        val flavorBaseName = when (targetFlavor) {
+            "tchapDev" -> "$baseAppName dev"
+            "tchapPreprod" -> "$baseAppName preprod"
+            "tchap" -> baseAppName
+            else -> baseAppName
+        }
+
+        // Add a suffix based on buildType (use this.buildType to differentiate from buildType line#103)
+        val suffix = when (this.buildType.name) {
+            "debug" -> " dbg"
+            "nightly" -> " nightly"
+            else -> ""
+        }
+
+        // Final AppName
+        resValue("string", "app_name", flavorBaseName + suffix)
+    }
+    // :tchap: end
 
     packaging {
         resources.pickFirsts += setOf(
