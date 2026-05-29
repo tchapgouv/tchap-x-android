@@ -119,7 +119,10 @@ class ThumbnailFactory(
         val extension = mimeTypeToCompressFileExtension(mimeType)
         val thumbnailFile = context.createTmpFile(extension = extension)
         thumbnailFile.outputStream().use { outputStream ->
-            bitmapThumbnail.compress(format, 78, outputStream)
+            // :tchap: Increase optimized thumbnail quality for Tchap
+//            bitmapThumbnail.compress(format, 78, outputStream)
+            bitmapThumbnail.compress(format, 85, outputStream)
+            // :tchap: end
         }
         val blurhash = BlurHash.encode(bitmapThumbnail, 3, 3)
         val thumbnailResult = ThumbnailResult(
