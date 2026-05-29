@@ -107,12 +107,8 @@ private fun InvitePeopleContentView(
         }
 
         InvitePeopleSearchBar(
-<<<<<<< HEAD
             showMatrixId = state.showMatrixId,
-            modifier = Modifier.fillMaxWidth(),
-=======
             modifier = Modifier.imePadding().fillMaxWidth(),
->>>>>>> main-element
             queryState = state.searchQuery,
             showLoader = state.showSearchLoader,
             selectedUsers = state.selectedUsers,

@@ -45,12 +45,8 @@ class DefaultLockScreenService(
     private val coroutineScope: CoroutineScope,
     private val sessionObserver: SessionObserver,
     private val appForegroundStateService: AppForegroundStateService,
-<<<<<<< HEAD
     buildMeta: BuildMeta,
-    biometricAuthenticatorManager: BiometricAuthenticatorManager,
-=======
     private val biometricAuthenticatorManager: BiometricAuthenticatorManager,
->>>>>>> main-element
 ) : LockScreenService {
     private val _lockState = MutableStateFlow<LockScreenLockState>(LockScreenLockState.Unlocked)
     override val lockState: StateFlow<LockScreenLockState> = _lockState

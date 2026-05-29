@@ -45,12 +45,9 @@ import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
-<<<<<<< HEAD
-import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
-=======
 import io.element.android.libraries.matrix.api.createroom.CreateRoomParameters
+import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
 import io.element.android.libraries.matrix.api.createroom.RoomPreset
->>>>>>> main-element
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityState
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomMember
@@ -230,31 +227,32 @@ class DefaultInvitePeoplePresenter(
                             unknownUsers
                         )
                     } else {
-<<<<<<< HEAD
                         showOpenRoomToExternalsDialog = false // TCHAP external user
                         // TCHAP invite-by-email : call sendInvites or sendTchapEmailInvites
                         // depending if the user need to be invited by email to create an account
 //                        room.dataOrNull()?.let {
-//                            sessionCoroutineScope.sendInvites(it, selectedUsers.value, sendInvitesAction)
-                        room.dataOrNull()?.let { room ->
-                            val (emailInvites, userInvites) = selectedUsers.value.partition {
-                                it.userId.value.contains(TchapPatterns.inviteByEmailSuffixMarker())
+//                            sessionCoroutineScope.launch {
+//                                if (it.isDm()) {
+//                                    createRoomFromDm(it, selectedUsers.value, createRoomFromDmAction)
+//                                } else {
+//                                    sendInvites(it, selectedUsers.value, sendInvitesAction)
+//                                }
+                        room.dataOrNull()?.let {
+                            val (emailInvites, userInvites) = selectedUsers.value.partition { user ->
+                                user.userId.value.contains(TchapPatterns.inviteByEmailSuffixMarker())
                             }
 
                             if (userInvites.isNotEmpty()) {
-                                sessionCoroutineScope.sendInvites(room, userInvites, sendInvitesAction)
+                                sessionCoroutineScope.launch {
+                                    if (it.isDm()) {
+                                        createRoomFromDm(it, userInvites, createRoomFromDmAction)
+                                    } else {
+                                        sendInvites(it, userInvites, sendInvitesAction)
+                                    }
+                                }
                             }
                             if (emailInvites.isNotEmpty()) {
-                                sessionCoroutineScope.sendTchapEmailInvites(room, emailInvites, sendInvitesAction)
-=======
-                        room.dataOrNull()?.let {
-                            sessionCoroutineScope.launch {
-                                if (it.isDm()) {
-                                    createRoomFromDm(it, selectedUsers.value, createRoomFromDmAction)
-                                } else {
-                                    sendInvites(it, selectedUsers.value, sendInvitesAction)
-                                }
->>>>>>> main-element
+                                sessionCoroutineScope.sendTchapEmailInvites(it, emailInvites, sendInvitesAction)
                             }
                         }
                     }
@@ -263,7 +261,6 @@ class DefaultInvitePeoplePresenter(
                     searchActive = false
                     queryState.clearText()
                 }
-<<<<<<< HEAD
                 // TCHAP external user
                 is InvitePeopleEvents.CheckExternalsAndSendInvites -> {
                     val hasSelectedExternalUsers = selectedUsers.value.any { it.userId.toString().isExternalTchapUser() }
@@ -272,11 +269,10 @@ class DefaultInvitePeoplePresenter(
                     } else {
                         handleEvent(InvitePeopleEvents.SendInvites)
                     }
-=======
+                }
                 is InvitePeopleEvents.ClearError -> {
                     sendInvitesAction.value = AsyncAction.Uninitialized
                     createRoomFromDmAction.value = AsyncAction.Uninitialized
->>>>>>> main-element
                 }
             }
         }
@@ -346,7 +342,6 @@ class DefaultInvitePeoplePresenter(
         }
     }
 
-<<<<<<< HEAD
     // TCHAP invite-by-email : send an invite by email to create a Tchap account for all email in emailToInvite
     private fun CoroutineScope.sendTchapEmailInvites(
         room: JoinedRoom,
@@ -366,7 +361,9 @@ class DefaultInvitePeoplePresenter(
             }
 
             Result.success(Unit)
-=======
+        }
+    }
+
     private fun CoroutineScope.createRoomFromDm(
         currentRoom: JoinedRoom,
         selectedUsers: List<MatrixUser>,
@@ -393,7 +390,6 @@ class DefaultInvitePeoplePresenter(
                     isSpace = false,
                 )
             )
->>>>>>> main-element
         }
     }
 

@@ -102,14 +102,6 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
-<<<<<<< HEAD
-    SignInWithClassic(
-        key = "feature.signin_with_classic",
-        title = "Sign in with Element Classic",
-        description = "Allow the application to sign in to the current Element Classic account.",
-        defaultValue = { false },
-        isFinished = false,
-    ),
 
     // TCHAP - PrivateNotEncrypted room feature flag
     PrivateNotEncryptedRooms(
@@ -118,8 +110,6 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
-=======
->>>>>>> main-element
     AllowBlackTheme(
         key = "feature.allow_black_theme",
         title = "Black theme",
