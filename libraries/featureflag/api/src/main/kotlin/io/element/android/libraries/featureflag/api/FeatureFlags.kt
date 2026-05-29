@@ -102,13 +102,6 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
-    SignInWithClassic(
-        key = "feature.signin_with_classic",
-        title = "Sign in with Element Classic",
-        description = "Allow the application to sign in to the current Element Classic account.",
-        defaultValue = { false },
-        isFinished = false,
-    ),
 
     // TCHAP - PrivateNotEncrypted room feature flag
     PrivateNotEncryptedRooms(
@@ -121,13 +114,6 @@ enum class FeatureFlags(
         key = "feature.allow_black_theme",
         title = "Black theme",
         description = "Allow selecting the black appearance theme for battery saving on OLED.",
-        defaultValue = { false },
-        isFinished = false,
-    ),
-    LiveLocationSharing(
-        key = "feature.liveLocationSharing",
-        title = "Live location sharing",
-        description = "Allow sharing live location in rooms.",
         defaultValue = { false },
         isFinished = false,
     ),

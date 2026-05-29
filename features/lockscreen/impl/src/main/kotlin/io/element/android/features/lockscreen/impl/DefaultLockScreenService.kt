@@ -46,7 +46,7 @@ class DefaultLockScreenService(
     private val sessionObserver: SessionObserver,
     private val appForegroundStateService: AppForegroundStateService,
     buildMeta: BuildMeta,
-    biometricAuthenticatorManager: BiometricAuthenticatorManager,
+    private val biometricAuthenticatorManager: BiometricAuthenticatorManager,
 ) : LockScreenService {
     private val _lockState = MutableStateFlow<LockScreenLockState>(LockScreenLockState.Unlocked)
     override val lockState: StateFlow<LockScreenLockState> = _lockState
@@ -87,6 +87,7 @@ class DefaultLockScreenService(
             override suspend fun onSessionDeleted(userId: String, wasLastSession: Boolean) {
                 if (wasLastSession) {
                     pinCodeManager.deletePinCode()
+                    biometricAuthenticatorManager.disable()
                 }
             }
         })
