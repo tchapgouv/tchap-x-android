@@ -52,6 +52,9 @@ import io.element.android.libraries.matrix.ui.components.AvatarPickerView
 import io.element.android.libraries.permissions.api.PermissionsView
 import io.element.android.libraries.ui.strings.CommonStrings
 
+/**
+ * https://www.figma.com/design/pDlJZGBsri47FNTXMnEdXB/Compound-Android-Templates?node-id=3182-36115&t=U1vS3px9HzlzWYd7-4
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditUserProfileView(
@@ -117,6 +120,7 @@ fun EditUserProfileView(
                 state = avatarPickerState,
                 onClick = ::onAvatarClick,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
+                enabled = state.canChangeAvatarUrl,
             )
             // TCHAP hide the Matrix Id depending of showMatrixId feature flag
             if (state.showMatrixId) {
@@ -134,9 +138,9 @@ fun EditUserProfileView(
 //                value = state.displayName,
 //                placeholder = stringResource(CommonStrings.common_room_name_placeholder),
 //                singleLine = true,
+//                enabled = state.canChangeDisplayName,
 //                onValueChange = { state.eventSink(EditUserProfileEvent.UpdateDisplayName(it)) },
 //            )
-            // TCHAP show displayName as Text instead of TextField
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = state.displayName,

@@ -24,7 +24,9 @@ import io.element.android.services.toolbox.test.sdk.FakeBuildVersionSdkIntProvid
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 
+@Config(sdk = [33])
 @RunWith(AndroidJUnit4::class)
 class DefaultSyncPendingNotificationsRequestBuilderTest {
     @Test
@@ -78,6 +80,9 @@ class DefaultSyncPendingNotificationsRequestBuilderTest {
             sessionId = A_SESSION_ID,
             sdkVersion = 33,
             isInAirGapEnvironment = false,
+            featureFlagService = FakeFeatureFlagService(initialState = mapOf(
+                FeatureFlags.ValidateNetworkWhenSchedulingNotificationFetching.key to true
+            )),
         )
 
         val results = request.build()
@@ -98,6 +103,9 @@ class DefaultSyncPendingNotificationsRequestBuilderTest {
             sessionId = A_SESSION_ID,
             sdkVersion = 33,
             isInAirGapEnvironment = true,
+            featureFlagService = FakeFeatureFlagService(initialState = mapOf(
+                FeatureFlags.ValidateNetworkWhenSchedulingNotificationFetching.key to true
+            )),
         )
 
         val results = request.build()

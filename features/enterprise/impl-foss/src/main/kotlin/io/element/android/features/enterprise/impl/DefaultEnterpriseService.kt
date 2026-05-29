@@ -29,6 +29,8 @@ class DefaultEnterpriseService(
 
     override suspend fun isEnterpriseUser(sessionId: SessionId) = false
 
+    override suspend fun tweakMasUrl(url: String, homeserver: String) = url
+
     override fun defaultHomeserverList(): List<String> = homeserverConfiguration.defaultHomeserverList
 
     override fun getNextRandomHomeserver(): String {

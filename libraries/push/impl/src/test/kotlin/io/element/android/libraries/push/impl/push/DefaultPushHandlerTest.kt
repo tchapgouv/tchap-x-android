@@ -11,6 +11,7 @@
 package io.element.android.libraries.push.impl.push
 
 import app.cash.turbine.test
+import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.RoomId
@@ -26,8 +27,8 @@ import io.element.android.libraries.push.impl.history.PushHistoryService
 import io.element.android.libraries.push.impl.notifications.FakeNotificationResultProcessor
 import io.element.android.libraries.push.impl.test.DefaultTestPush
 import io.element.android.libraries.push.impl.troubleshoot.DiagnosticPushHandler
+import io.element.android.libraries.push.impl.workmanager.FakeSyncPendingNotificationsRequestBuilder
 import io.element.android.libraries.push.impl.workmanager.SyncPendingNotificationsRequestBuilder
-import io.element.android.libraries.push.test.workmanager.FakeSyncPendingNotificationsRequestBuilder
 import io.element.android.libraries.pushproviders.api.PushData
 import io.element.android.libraries.pushstore.api.clientsecret.PushClientSecret
 import io.element.android.libraries.pushstore.test.userpushstore.FakeUserPushStore
@@ -40,8 +41,11 @@ import io.element.android.services.toolbox.test.systemclock.FakeSystemClock
 import io.element.android.tests.testutils.lambda.lambdaError
 import io.element.android.tests.testutils.lambda.lambdaRecorder
 import io.element.android.tests.testutils.lambda.value
+import io.element.android.tests.testutils.testCoroutineDispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.time.Duration.Companion.milliseconds
@@ -173,6 +177,10 @@ class DefaultPushHandlerTest {
                 workManagerScheduler = workManagerScheduler,
             )
             defaultPushHandler.handle(aPushData, A_PUSHER_INFO)
+
+            // Give it enough time to increment the push counter
+            runCurrent()
+
             submitWorkLambda.assertions()
                 .isNeverCalled()
             incrementPushCounterResult.assertions()
@@ -207,7 +215,7 @@ class DefaultPushHandlerTest {
             .isCalledOnce()
     }
 
-    private fun createDefaultPushHandler(
+    private fun TestScope.createDefaultPushHandler(
         incrementPushCounterResult: () -> Unit = { lambdaError() },
         userPushStore: FakeUserPushStore = FakeUserPushStore(),
         pushClientSecret: PushClientSecret = FakePushClientSecret(),
@@ -222,6 +230,7 @@ class DefaultPushHandlerTest {
             start = {},
             stop = {},
         ),
+        dispatchers: CoroutineDispatchers = testCoroutineDispatchers(),
     ): DefaultPushHandler {
         return DefaultPushHandler(
             incrementPushDataStore = object : IncrementPushDataStore {
@@ -241,7 +250,8 @@ class DefaultPushHandlerTest {
             resultProcessor = resultProcessor,
             syncPendingNotificationsRequestFactory = SyncPendingNotificationsRequestBuilder.Factory {
                 FakeSyncPendingNotificationsRequestBuilder()
-            }
+            },
+            dispatchers = dispatchers,
         )
     }
 }

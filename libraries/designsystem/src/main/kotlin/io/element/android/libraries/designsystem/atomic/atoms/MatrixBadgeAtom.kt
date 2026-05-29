@@ -8,8 +8,10 @@
 
 package io.element.android.libraries.designsystem.atomic.atoms
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.libraries.designsystem.components.Badge
@@ -18,6 +20,9 @@ import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.badgeExternalBackgroundColor
 import io.element.android.libraries.designsystem.theme.badgeExternalContentColor
 
+/**
+ * https://www.figma.com/design/G1xy0HDZKJf5TCRFmKb5d5/Compound-Android-Components?node-id=1960-491
+ */
 object MatrixBadgeAtom {
     data class MatrixBadgeData(
         val text: String,
@@ -44,6 +49,13 @@ object MatrixBadgeAtom {
             Type.Negative -> ElementTheme.colors.bgCriticalSubtle
             Type.Info -> ElementTheme.colors.bgBadgeInfo
         }
+        val borderStroke = when (data.type) {
+            Type.External -> null
+            Type.Positive -> null
+            Type.Neutral -> BorderStroke(1.dp, ElementTheme.colors.borderInteractiveSecondary)
+            Type.Negative -> null
+            Type.Info -> null
+        }
         val textColor = when (data.type) {
             Type.External -> ElementTheme.colors.badgeExternalContentColor
             Type.Positive -> ElementTheme.colors.textBadgeAccent
@@ -52,9 +64,9 @@ object MatrixBadgeAtom {
             Type.Info -> ElementTheme.colors.textBadgeInfo
         }
         val iconColor = when (data.type) {
+            Type.External -> ElementTheme.colors.textDecorative6
             Type.Positive -> ElementTheme.colors.iconAccentPrimary
             Type.Neutral -> ElementTheme.colors.iconPrimary
-            Type.External -> ElementTheme.colors.textDecorative6
             Type.Negative -> ElementTheme.colors.iconCriticalPrimary
             Type.Info -> ElementTheme.colors.iconInfoPrimary
         }
@@ -64,7 +76,8 @@ object MatrixBadgeAtom {
             backgroundColor = backgroundColor,
             iconColor = iconColor,
             textColor = textColor,
-            isSmall = true
+            isSmall = true,
+            borderStroke = borderStroke,
         )
     }
 }

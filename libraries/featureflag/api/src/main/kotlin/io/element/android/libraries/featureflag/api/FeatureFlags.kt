@@ -22,14 +22,6 @@ enum class FeatureFlags(
     override val isFinished: Boolean,
     override val isInLabs: Boolean = false,
 ) : Feature {
-    RoomDirectorySearch(
-        key = "feature.roomdirectorysearch",
-        title = "Room directory search",
-        description = "Allow user to search for public rooms in their homeserver",
-        // TCHAP enable Room directory search by default
-        defaultValue = { true },
-        isFinished = false,
-    ),
     ShowBlockedUsersDetails(
         key = "feature.showBlockedUsersDetails",
         title = "Show blocked users details",
@@ -53,43 +45,11 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
-    EnableKeyShareOnInvite(
-        key = "feature.enableKeyShareOnInvite",
-        title = "Share encrypted history with new members",
-        description = "When inviting a user to an encrypted room that has history visibility set to \"shared\"," +
-            " share encrypted history with that user, and accept encrypted history when you are invited to such a room." +
-            "\nRequires an app restart to take effect." +
-            "\n\nWARNING: this feature is EXPERIMENTAL and not all security precautions are implemented." +
-            " Do not enable on production accounts.",
-        defaultValue = { false },
-        isFinished = false,
-    ),
     Knock(
         key = "feature.knock",
         title = "Ask to join",
         description = "Allow creating rooms which users can request access to.",
         defaultValue = { false },
-        isFinished = false,
-    ),
-    CreateSpaces(
-        key = "feature.createSpaces",
-        title = "Create spaces",
-        description = "Allow creating spaces.",
-        defaultValue = { true },
-        isFinished = false,
-    ),
-    SpaceSettings(
-        key = "feature.spaceSettings",
-        title = "Space settings",
-        description = "Allow managing space settings such as details, permissions and privacy.",
-        defaultValue = { true },
-        isFinished = false,
-    ),
-    RoomListSpaceFilters(
-        key = "feature.roomListSpaceFilters",
-        title = "Room list space filters",
-        description = "Allow filtering the room list by space.",
-        defaultValue = { true },
         isFinished = false,
     ),
     PrintLogsToLogcat(
@@ -135,14 +95,6 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
-    SyncNotificationsWithWorkManager(
-        key = "feature.sync_notifications_with_workmanager",
-        title = "Sync notifications with WorkManager",
-        description = "Use WorkManager to schedule notification sync tasks when a push is received." +
-            " This should improve reliability and battery usage.",
-        defaultValue = { true },
-        isFinished = false,
-    ),
     QrCodeLogin(
         key = "feature.qr_code_login",
         title = "QR Code Login",
@@ -165,13 +117,55 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
-
+    AllowBlackTheme(
+        key = "feature.allow_black_theme",
+        title = "Black theme",
+        description = "Allow selecting the black appearance theme for battery saving on OLED.",
+        defaultValue = { false },
+        isFinished = false,
+    ),
+    LiveLocationSharing(
+        key = "feature.liveLocationSharing",
+        title = "Live location sharing",
+        description = "Allow sharing live location in rooms.",
+        defaultValue = { false },
+        isFinished = false,
+    ),
     ValidateNetworkWhenSchedulingNotificationFetching(
         key = "feature.validate_network_when_scheduling_notification_fetching",
-        title = "validate internet connectivity when scheduling notification fetching",
+        title = "Validate internet connectivity when scheduling notification fetching",
         description = "Only fetch events for push notifications when the device has internet connectivity. " +
             "Enabling this can be problematic in air-gapped environments.",
         defaultValue = { true },
+        isFinished = false,
+    ),
+    FloatingDateBadge(
+        key = "feature.floating_date_badge",
+        title = "Display sticky date headers in the timeline",
+        description = "When scrolling, a sticky date badge will be displayed so you can easily know on which date the messages you're seeing were sent.",
+        defaultValue = { false },
+        isFinished = false,
+    ),
+    SlashCommand(
+        key = "feature.slash_command",
+        title = "Parse slash commands in the message composer",
+        description = "Allow parsing slash commands in the message composer and perform action.",
+        defaultValue = { false },
+        isFinished = false,
+    ),
+    RoomThreadList(
+        key = "feature.room_thread_list",
+        title = "Add a list of threads in a room",
+        description = "Add a new screen with a list of threads in a room.",
+        defaultValue = { false },
+        isFinished = false,
+    ),
+    AutomaticBackPagination(
+        key = "feature.automatic_back_pagination",
+        title = "Automatic back pagination of rooms",
+        description = "Allow the app to automatically back paginate in rooms to pre-fetch older messages in background." +
+            "\nRequires an app restart to take effect.",
+        defaultValue = { false },
         isFinished = false,
     ),
 }

@@ -35,9 +35,9 @@ class StartChatPresenter(
     presenterFactory: UserListPresenter.Factory,
     userRepository: UserRepository,
     userListDataStore: UserListDataStore,
+    private val featureFlagService: FeatureFlagService,
     private val startDMAction: StartDMAction,
     private val buildMeta: BuildMeta,
-    private val featureFlagService: FeatureFlagService,
 ) : Presenter<StartChatState> {
     private val presenter = presenterFactory.create(
         UserListPresenterArgs(
@@ -54,9 +54,6 @@ class StartChatPresenter(
         val localCoroutineScope = rememberCoroutineScope()
         val startDmActionState: MutableState<AsyncAction<RoomId>> = remember { mutableStateOf(AsyncAction.Uninitialized) }
 
-        val isRoomDirectorySearchEnabled by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.RoomDirectorySearch)
-        }.collectAsState(initial = false)
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(initial = false)
@@ -65,6 +62,7 @@ class StartChatPresenter(
             when (event) {
                 is StartChatEvents.StartDM -> localCoroutineScope.launch {
                     startDMAction.execute(
+                        showMatrixId = showMatrixId,
                         matrixUser = event.matrixUser,
                         createIfDmDoesNotExist = startDmActionState.value is AsyncAction.Confirming,
                         actionState = startDmActionState,
@@ -79,7 +77,6 @@ class StartChatPresenter(
             applicationName = buildMeta.applicationName,
             userListState = userListState,
             startDmAction = startDmActionState.value,
-            isRoomDirectorySearchEnabled = isRoomDirectorySearchEnabled,
             eventSink = ::handleEvent,
         )
     }

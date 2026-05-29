@@ -74,7 +74,8 @@ class DefaultRoomLatestEventFormatterTest {
             roomMembershipContentFormatter = RoomMembershipContentFormatter(fakeMatrixClient, stringProvider),
             profileChangeContentFormatter = ProfileChangeContentFormatter(stringProvider),
             stateContentFormatter = StateContentFormatter(stringProvider),
-            permalinkParser = FakePermalinkParser(),
+            rtcNotificationContentFormatter = RtcNotificationContentFormatter(fakeMatrixClient, stringProvider),
+            permalinkParser = FakePermalinkParser()
         )
     }
 
@@ -190,7 +191,7 @@ class DefaultRoomLatestEventFormatterTest {
             ImageMessageType(body, null, null, MediaSource("url"), null),
             StickerMessageType(body, null, null, MediaSource("url"), null),
             FileMessageType(body, null, null, MediaSource("url"), null),
-            LocationMessageType(body, "geo:1,2", null),
+            LocationMessageType(body, "geo:1,2", null, null),
             NoticeMessageType(body, null),
             EmoteMessageType(body, null),
             OtherMessageType(msgType = "a_type", body = body),
@@ -746,7 +747,6 @@ class DefaultRoomLatestEventFormatterTest {
             OtherState.PolicyRuleRoom,
             OtherState.PolicyRuleServer,
             OtherState.PolicyRuleUser,
-            OtherState.RoomAliases,
             OtherState.RoomCanonicalAlias,
             OtherState.RoomGuestAccess,
             OtherState.RoomHistoryVisibility,

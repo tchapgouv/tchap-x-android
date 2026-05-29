@@ -147,6 +147,7 @@ class UserProfilePresenter(
                 UserProfileEvents.StartDM -> {
                     coroutineScope.launch {
                         startDMAction.execute(
+                            showMatrixId = showMatrixId,
                             matrixUser = userProfile ?: MatrixUser(userId),
                             createIfDmDoesNotExist = startDmActionState.value is AsyncAction.Confirming,
                             actionState = startDmActionState,

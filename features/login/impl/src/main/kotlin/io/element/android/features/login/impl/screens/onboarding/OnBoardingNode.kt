@@ -22,7 +22,7 @@ import io.element.android.features.login.impl.util.openLearnMorePage
 import io.element.android.libraries.architecture.NodeInputs
 import io.element.android.libraries.architecture.callback
 import io.element.android.libraries.architecture.inputs
-import io.element.android.libraries.matrix.api.auth.OidcDetails
+import io.element.android.libraries.matrix.api.auth.OAuthDetails
 
 @ContributesNode(AppScope::class)
 @AssistedInject
@@ -41,14 +41,16 @@ class OnBoardingNode(
         fun navigateToBugReport()
         fun navigateToLoginHint()
         fun navigateToLoginPassword()
-        fun navigateToOidc(oidcDetails: OidcDetails)
+        fun navigateToOAuth(oAuthDetails: OAuthDetails)
         fun navigateToCreateAccount(url: String)
+        fun navigateToDeveloperSettings()
         fun onDone()
     }
 
     data class Params(
         val accountProvider: String?,
         val loginHint: String?,
+        val showBackButton: Boolean,
     ) : NodeInputs
 
     private val callback: Callback = callback()
@@ -62,6 +64,7 @@ class OnBoardingNode(
     override fun View(modifier: Modifier) {
         val state = presenter.present()
         val context = LocalContext.current
+
         OnBoardingView(
             state = state,
             modifier = modifier,
@@ -69,12 +72,13 @@ class OnBoardingNode(
             onCreateAccount = callback::navigateToSignUpFlow,
             onSignInWithQrCode = callback::navigateToQrCode,
             onReportProblem = callback::navigateToBugReport,
-            onOidcDetails = callback::navigateToOidc,
+            onOAuthDetails = callback::navigateToOAuth,
             onNeedLoginHint = callback::navigateToLoginHint,
             onNeedLoginPassword = callback::navigateToLoginPassword,
             onLearnMoreClick = { openLearnMorePage(context) },
             onCreateAccountContinue = callback::navigateToCreateAccount,
             onBackClick = callback::onDone,
+            onDeveloperSettingsClick = callback::navigateToDeveloperSettings,
         )
     }
 }

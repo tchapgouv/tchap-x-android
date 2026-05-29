@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,24 +28,35 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.compound.theme.ElementTheme
+import io.element.android.compound.tokens.generated.CompoundIcons
+import io.element.android.features.invitepeople.api.InvitePeopleEvents
 import io.element.android.libraries.architecture.AsyncData
+import io.element.android.libraries.designsystem.atomic.molecules.ButtonRowMolecule
+import io.element.android.libraries.designsystem.atomic.molecules.IconTitleSubtitleMolecule
+import io.element.android.libraries.designsystem.components.BigIcon
 import io.element.android.libraries.designsystem.components.async.AsyncFailure
 import io.element.android.libraries.designsystem.components.async.AsyncLoading
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
+import io.element.android.libraries.designsystem.theme.components.Button
 import io.element.android.libraries.designsystem.theme.components.HorizontalDivider
+import io.element.android.libraries.designsystem.theme.components.IconSource
 import io.element.android.libraries.designsystem.theme.components.ListSectionHeader
+import io.element.android.libraries.designsystem.theme.components.ModalBottomSheet
+import io.element.android.libraries.designsystem.theme.components.OutlinedButton
 import io.element.android.libraries.designsystem.theme.components.SearchBar
 import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
 import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.matrix.ui.components.CheckableUserRow
 import io.element.android.libraries.matrix.ui.components.CheckableUserRowData
+import io.element.android.libraries.matrix.ui.components.MatrixUserRow
 import io.element.android.libraries.matrix.ui.components.SelectedUsersRowList
 import io.element.android.libraries.matrix.ui.model.getAvatarData
 import io.element.android.libraries.matrix.ui.model.getBestName
 import io.element.android.libraries.ui.strings.CommonStrings
+import io.element.android.libraries.ui.utils.strings.simplePluralStringResource
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
@@ -146,6 +158,16 @@ private fun InvitePeopleContentView(
                 }
             }
         }
+
+        if (state.sendInvitesAction is ConfirmingUnknownUserInvitation) {
+            InvitePeopleConfirmModal(
+                showMatrixId = state.showMatrixId,
+                users = state.sendInvitesAction.users,
+                onDismiss = { state.eventSink.invoke(DefaultInvitePeopleEvents.DismissUnknownUsersModal) },
+                onInvite = { state.eventSink.invoke(InvitePeopleEvents.SendInvites) },
+                onRemove = { state.eventSink.invoke(DefaultInvitePeopleEvents.RemoveUnknownUsers) }
+            )
+        }
     }
 }
 
@@ -233,6 +255,66 @@ private fun InvitePeopleSearchBar(
             }
         },
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun InvitePeopleConfirmModal(
+    showMatrixId: Boolean,
+    users: ImmutableList<MatrixUser>,
+    onDismiss: () -> Unit,
+    onInvite: () -> Unit,
+    onRemove: () -> Unit
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        dragHandle = null,
+        scrollable = false,
+    ) {
+        IconTitleSubtitleMolecule(
+            title = simplePluralStringResource(
+                resIdForOne = R.string.screen_invite_users_confirm_dialog_title_one_user,
+                resIdForOthers = R.string.screen_invite_users_confirm_dialog_title_mutiple_users,
+                count = users.size,
+            ),
+            subTitle = simplePluralStringResource(
+                resIdForOne = R.string.screen_invite_users_confirm_dialog_subtitle_one_user,
+                resIdForOthers = R.string.screen_invite_users_confirm_dialog_subtitle_multiple_users,
+                count = users.size,
+            ),
+            iconStyle = BigIcon.Style.Default(CompoundIcons.UserAddSolid()),
+            modifier = Modifier.padding(
+                top = 32.dp,
+                bottom = 16.dp,
+                start = 16.dp,
+                end = 16.dp,
+            )
+        )
+
+        LazyColumn {
+            items(users) { user ->
+                MatrixUserRow(showMatrixId, user)
+            }
+        }
+
+        ButtonRowMolecule(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(16.dp)
+        ) {
+            OutlinedButton(
+                text = stringResource(CommonStrings.action_remove),
+                onClick = onRemove,
+                leadingIcon = IconSource.Vector(CompoundIcons.Close()),
+                modifier = Modifier.weight(1f)
+            )
+            Button(
+                text = stringResource(CommonStrings.action_invite),
+                onClick = onInvite,
+                leadingIcon = IconSource.Vector(CompoundIcons.Check()),
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
 }
 
 @PreviewsDayNight
