@@ -102,6 +102,7 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
+<<<<<<< HEAD
     SignInWithClassic(
         key = "feature.signin_with_classic",
         title = "Sign in with Element Classic",
@@ -117,17 +118,12 @@ enum class FeatureFlags(
         defaultValue = { false },
         isFinished = false,
     ),
+=======
+>>>>>>> main-element
     AllowBlackTheme(
         key = "feature.allow_black_theme",
         title = "Black theme",
         description = "Allow selecting the black appearance theme for battery saving on OLED.",
-        defaultValue = { false },
-        isFinished = false,
-    ),
-    LiveLocationSharing(
-        key = "feature.liveLocationSharing",
-        title = "Live location sharing",
-        description = "Allow sharing live location in rooms.",
         defaultValue = { false },
         isFinished = false,
     ),

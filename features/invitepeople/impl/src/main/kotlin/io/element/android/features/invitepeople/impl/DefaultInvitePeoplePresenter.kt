@@ -45,13 +45,21 @@ import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.RoomId
+<<<<<<< HEAD
 import io.element.android.libraries.matrix.api.createroom.RoomAccessRules
+=======
+import io.element.android.libraries.matrix.api.createroom.CreateRoomParameters
+import io.element.android.libraries.matrix.api.createroom.RoomPreset
+>>>>>>> main-element
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityState
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.RoomMembershipState
 import io.element.android.libraries.matrix.api.room.filterMembers
+import io.element.android.libraries.matrix.api.room.history.RoomHistoryVisibility
+import io.element.android.libraries.matrix.api.room.join.JoinRule
 import io.element.android.libraries.matrix.api.room.recent.getRecentDirectRooms
+import io.element.android.libraries.matrix.api.roomdirectory.RoomVisibility
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.ui.strings.CommonStrings
 import io.element.android.libraries.usersearch.api.UserRepository
@@ -98,6 +106,7 @@ class DefaultInvitePeoplePresenter(
         val showSearchLoader = rememberSaveable { mutableStateOf(false) }
         var showOpenRoomToExternalsDialog by rememberSaveable { mutableStateOf(false) } // TCHAP external user
         val sendInvitesAction = remember { mutableStateOf<AsyncAction<Unit>>(AsyncAction.Uninitialized) }
+        val createRoomFromDmAction = remember { mutableStateOf<AsyncAction<RoomId>>(AsyncAction.Uninitialized) }
 
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
@@ -221,6 +230,7 @@ class DefaultInvitePeoplePresenter(
                             unknownUsers
                         )
                     } else {
+<<<<<<< HEAD
                         showOpenRoomToExternalsDialog = false // TCHAP external user
                         // TCHAP invite-by-email : call sendInvites or sendTchapEmailInvites
                         // depending if the user need to be invited by email to create an account
@@ -236,6 +246,15 @@ class DefaultInvitePeoplePresenter(
                             }
                             if (emailInvites.isNotEmpty()) {
                                 sessionCoroutineScope.sendTchapEmailInvites(room, emailInvites, sendInvitesAction)
+=======
+                        room.dataOrNull()?.let {
+                            sessionCoroutineScope.launch {
+                                if (it.isDm()) {
+                                    createRoomFromDm(it, selectedUsers.value, createRoomFromDmAction)
+                                } else {
+                                    sendInvites(it, selectedUsers.value, sendInvitesAction)
+                                }
+>>>>>>> main-element
                             }
                         }
                     }
@@ -244,6 +263,7 @@ class DefaultInvitePeoplePresenter(
                     searchActive = false
                     queryState.clearText()
                 }
+<<<<<<< HEAD
                 // TCHAP external user
                 is InvitePeopleEvents.CheckExternalsAndSendInvites -> {
                     val hasSelectedExternalUsers = selectedUsers.value.any { it.userId.toString().isExternalTchapUser() }
@@ -252,6 +272,11 @@ class DefaultInvitePeoplePresenter(
                     } else {
                         handleEvent(InvitePeopleEvents.SendInvites)
                     }
+=======
+                is InvitePeopleEvents.ClearError -> {
+                    sendInvitesAction.value = AsyncAction.Uninitialized
+                    createRoomFromDmAction.value = AsyncAction.Uninitialized
+>>>>>>> main-element
                 }
             }
         }
@@ -294,6 +319,7 @@ class DefaultInvitePeoplePresenter(
             searchResults = searchResults.value,
             showSearchLoader = showSearchLoader.value,
             sendInvitesAction = sendInvitesAction.value,
+            createRoomFromDmAction = createRoomFromDmAction.value,
             suggestions = suggestions,
             eventSink = ::handleEvent,
         )
@@ -320,6 +346,7 @@ class DefaultInvitePeoplePresenter(
         }
     }
 
+<<<<<<< HEAD
     // TCHAP invite-by-email : send an invite by email to create a Tchap account for all email in emailToInvite
     private fun CoroutineScope.sendTchapEmailInvites(
         room: JoinedRoom,
@@ -339,6 +366,34 @@ class DefaultInvitePeoplePresenter(
             }
 
             Result.success(Unit)
+=======
+    private fun CoroutineScope.createRoomFromDm(
+        currentRoom: JoinedRoom,
+        selectedUsers: List<MatrixUser>,
+        createRoomFromDmAction: MutableState<AsyncAction<RoomId>>,
+    ) = launch {
+        createRoomFromDmAction.runUpdatingState {
+            val currentUsers = currentRoom.getMembers(limit = 100).getOrNull().orEmpty()
+                .filter { it.membership.isActive() }
+            val invitees = (currentUsers.map { it.userId } + selectedUsers.map { it.userId })
+                .filter { it != matrixClient.sessionId }
+                .distinct()
+            matrixClient.createRoom(
+                CreateRoomParameters(
+                    name = null,
+                    topic = null,
+                    isEncrypted = true,
+                    isDirect = false,
+                    visibility = RoomVisibility.Private,
+                    preset = RoomPreset.PRIVATE_CHAT,
+                    invite = invitees,
+                    avatar = null,
+                    joinRuleOverride = JoinRule.Invite,
+                    historyVisibilityOverride = RoomHistoryVisibility.Invited,
+                    isSpace = false,
+                )
+            )
+>>>>>>> main-element
         }
     }
 
