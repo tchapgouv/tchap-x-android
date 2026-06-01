@@ -1,0 +1,31 @@
+appId: ${MAESTRO_APP_ID}
+---
+## MAS page
+- extendedWaitUntil:
+    visible: "Tchap"
+    timeout: 10000
+- runFlow:
+    when:
+      visible: "Se déconnecter"
+    commands:
+      - tapOn: "Se déconnecter"
+- retry:
+    maxRetries: 3
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: "form-1"
+          timeout: 10000
+- runFlow:
+    when:
+      notVisible: ${MAESTRO_USERNAME}
+    commands:
+      - tapOn:
+          id: "form-1"
+      - inputText: ${MAESTRO_USERNAME}
+      - pressKey: Enter
+- tapOn:
+    id: "form-3"
+- inputText: ${MAESTRO_PASSWORD}
+- pressKey: Enter
+- tapOn: "Continuer"

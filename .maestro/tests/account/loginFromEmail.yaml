@@ -1,0 +1,16 @@
+appId: ${MAESTRO_APP_ID}
+---
+- tapOn: "Se connecter manuellement"
+- runFlow: ../assertions/assertLoginDisplayed.yaml
+- takeScreenshot: build/maestro/100-SignInFromEmail
+## Enter the login hint
+- tapOn:
+    id: "login-email_username"
+- inputText: ${MAESTRO_USERNAME}
+- tapOn:
+    id: "login-continue"
+## MAS page
+- runFlow: ./loginInMAS.yaml
+## Back to native world
+- runFlow: ../assertions/assertSessionVerificationDisplayed.yaml
+- runFlow: ./verifySession.yaml

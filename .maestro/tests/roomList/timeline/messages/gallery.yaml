@@ -1,0 +1,12 @@
+appId: ${MAESTRO_APP_ID}
+---
+- takeScreenshot: build/maestro/520-Gallery
+- tapOn: "Ajouter une pièce jointe"
+- tapOn: "Galerie Photo et Vidéo"
+- tapOn: "Photo prise le 25 sept. 2026 00:36"
+- tapOn: "Photo prise le 25 sept. 2026 00:36"
+- tapOn: "OK"
+- tapOn: "Légende facultative…"
+- inputText: "I am a gallery legend!"
+- tapOn: "Envoyer un message"
+- takeScreenshot: build/maestro/521-Gallery

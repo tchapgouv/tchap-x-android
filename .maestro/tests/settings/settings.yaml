@@ -2,44 +2,53 @@ appId: ${MAESTRO_APP_ID}
 ---
 - tapOn:
     id: "home_screen-settings"
-- assertVisible: "Settings"
+- assertVisible: "Paramètres"
 - takeScreenshot: build/maestro/600-Settings
-- tapOn:
-    text: "Analytics"
-- assertVisible: "Share analytics data"
-- back
+
+- assertVisible: "Gérer le compte et les appareils"
 
 - tapOn:
     text: "Notifications"
-- assertVisible: "Enable notifications on this device"
+- assertVisible: "Activer les notifications sur cet appareil"
 - back
 
 - tapOn:
-    text: "Report a problem"
-- assertVisible: "Report a problem"
-- back
-
-- tapOn:
-    text: "Legals"
-- assertVisible: "Copyright"
-- assertVisible: "Terms of use"
-- assertVisible: "Privacy policy"
-- back
-
-- tapOn:
-    text: "Screen lock"
-- assertVisible: "Choose PIN"
+    text: "Verrouillage d’écran"
+- assertVisible: "Choisissez un code PIN"
 - hideKeyboard
 - back
 
 - tapOn:
-    text: "Advanced settings"
-- assertVisible: "View source"
+    text: "Chiffrement"
+- assertVisible: "Autoriser la sauvegarde automatique des messages"
 - back
 
 - tapOn:
-    text: "Developer options"
-- assertVisible: "Feature flags"
+    text: "Paramètres avancés"
+- assertVisible: "Afficher la source"
+- back
+
+- tapOn:
+    text: "Foire Aux Questions"
+- assertVisible: "Comment pouvons-nous vous aider ?"
+- back
+
+- tapOn:
+    text: "Mentions légales"
+- assertVisible: "Droits d’auteur"
+- assertVisible: "Conditions Générales d'Utilisation"
+- assertVisible: "Politique de confidentialité"
+- assertVisible: "Licences open source"
+- back
+
+- tapOn:
+    text: "Remonter un problème"
+- assertVisible: "Remonter un problème"
+- back
+
+- tapOn:
+    text: "Statistiques d’utilisation"
+- assertVisible: "Partagez des données de statistiques d’utilisation"
 - back
 
 - back
