@@ -1,0 +1,37 @@
+appId: ${MAESTRO_APP_ID}
+---
+- tapOn: "Se connecter manuellement"
+- runFlow: ../assertions/assertLoginDisplayed.yaml
+- takeScreenshot: build/maestro/100-SignInFromEmail
+## Enter the login hint
+- tapOn:
+    id: "login-email_username"
+# Test external email login attempt
+- inputText: ${MAESTRO_INVITEE1_MXID}
+- tapOn:
+    id: "login-continue"
+- assertVisible: "Êtes-vous un(e) invité(e) externe ?"
+- assertVisible: 'Si ce n''est pas le cas, vérifier que votre adresse email "${MAESTRO_INVITEE1_MXID}" ne contient pas d''erreur.'
+- tapOn: "Annuler"
+# Test invalid email format by entering only 3 characters
+- doubleTapOn:
+    id: "login-email_username"
+- eraseText: 50
+- inputText: ${MAESTRO_USERNAME.substring(0, 3)}
+- assertVisible: "Format d'email invalide"
+# Assert the continue button is disabled
+- assertVisible:
+    id: "login-continue"
+    enabled: false
+# Resume with the full correct email
+- doubleTapOn:
+    id: "login-email_username"
+- eraseText: 50
+- inputText: ${MAESTRO_USERNAME}
+- tapOn:
+    id: "login-continue"
+## MAS page
+- runFlow: ./loginInMAS.yaml
+## Back to native world
+- runFlow: ../assertions/assertSessionVerificationDisplayed.yaml
+- runFlow: ./verifySession.yaml

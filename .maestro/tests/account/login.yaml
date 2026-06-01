@@ -1,31 +1,23 @@
 appId: ${MAESTRO_APP_ID}
 ---
-- tapOn: "Sign in manually"
-- runFlow: ../assertions/assertLoginDisplayed.yaml
-- takeScreenshot: build/maestro/100-SignIn
-# The account provider field defaults to matrix.org, so continue straight to the MAS login.
-- tapOn:
-    id: "login-continue"
-## MAS page
-- retry:
-    maxRetries: 3
+- runFlow:
+    when:
+      visible: "Bienvenue sur le nouveau Tchap"
     commands:
-      - extendedWaitUntil:
-          visible:
-            id: "form-1"
-          timeout: 10000
-- tapOn:
-    id: "form-1"
-- inputText: ${MAESTRO_USERNAME}
-- pressKey: Enter
-- tapOn:
-    id: "form-3"
-- inputText: ${MAESTRO_PASSWORD}
-- pressKey: Enter
-- tapOn: "Continue"
-## Back to native world
-- runFlow: ../assertions/assertSessionVerificationDisplayed.yaml
-- runFlow: ./verifySession.yaml
-- runFlow: ../assertions/assertAnalyticsDisplayed.yaml
-- tapOn: "Not now"
+      - runFlow: ./loginFromClassic.yaml
+- runFlow:
+    when:
+      visible: "Bienvenue dans ${MAESTRO_APP_NAME}"
+    commands:
+      - runFlow: ./loginFromEmail.yaml
+- runFlow:
+    when:
+      visible: "Bienvenue dans le nouveau Tchap Android"
+    commands:
+      - tapOn: "Commencer"
+- runFlow:
+    when:
+      visible: "Autorisez les notifications et ne ùanquez aucun message"
+    commands:
+      - tapOn: "Pas maintenant"
 - runFlow: ../assertions/assertHomeDisplayed.yaml

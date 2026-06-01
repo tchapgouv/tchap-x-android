@@ -1,0 +1,13 @@
+appId: ${MAESTRO_APP_ID}
+---
+- takeScreenshot: build/maestro/520-Picture
+- tapOn: "Ajouter une pièce jointe"
+- tapOn: "Prendre une photo"
+- tapOn:
+    text: "Shutter|Obturateur"
+- tapOn:
+    text: "Done|OK"
+- tapOn: "Légende facultative…"
+- inputText: "I am a picture legend!"
+- tapOn: "Envoyer un message"
+- takeScreenshot: build/maestro/521-Picture

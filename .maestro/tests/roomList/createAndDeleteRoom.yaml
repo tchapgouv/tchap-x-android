@@ -1,58 +1,66 @@
 appId: ${MAESTRO_APP_ID}
 ---
 # Purpose: Test the creation and deletion of a room
-- tapOn: "Create room"
-- tapOn: "New room"
-- tapOn: "Add name…"
+- tapOn: "Créer un salon"
+- tapOn: "Nouveau salon"
+- tapOn: "Ajouter un nom…"
 - inputText: "aRoomName"
-- tapOn: "Add description…"
+- tapOn: "Ajouter une description…"
 - inputText: "aRoomTopic"
-- tapOn: "Create"
+- tapOn: "Créer"
 - takeScreenshot: build/maestro/320-createAndDeleteRoom
-- tapOn: "Search for someone"
+- tapOn: "Rechercher quelqu’un"
 - inputText: ${MAESTRO_INVITEE1_MXID}
 - tapOn:
     text: ${MAESTRO_INVITEE1_MXID}
     index: 1
-- tapOn: "Finish"
+- tapOn: "Terminer"
+- assertVisible: "Invitation d’une personne externe au secteur public"
+- tapOn:
+    id: "dialog-positive"
 - runFlow:
     when:
-      visible: 'Invite new contact to this room?'
+      visible: "Inviter un nouveau contact dans ce salon ?"
     commands:
       - tapOn:
           id: "confirm_invite_unknown"
+- assertVisible: "CHIFFRÉ"
+- assertVisible: "EXTERNES"
 - tapOn: "aRoomName"
-- tapOn: "Invite"
-# assert there's 1 member and 1 invitee
-- tapOn: "Search for someone"
-- inputText: ${MAESTRO_INVITEE2_MXID}
-- tapOn:
-    text: ${MAESTRO_INVITEE2_MXID}
-    index: 1
-# Hide keyboard by tapping on an external element in case it's displayed, otherwise it will 'eat' the back button press
-- tapOn:
-    # Navigation title
-    text: "Invite people"
-- tapOn: "Invite"
-- runFlow:
-    when:
-      visible: 'Invite new contact to this room?'
-    commands:
-      - tapOn:
-          id: "confirm_invite_unknown"
+- assertVisible: "CHIFFRÉ"
+- assertVisible: "EXTERNES"
 - scrollUntilVisible:
     direction: DOWN
     element:
-      text: "People"
-- tapOn: "People"
-# assert there's 1 member and 2 invitees
-- tapOn: "Back"
-- scroll
-- scroll
-- tapOn: "Leave room"
-- tapOn: "Leave"
+      text: "Membres"
+- tapOn: "Membres"
+- assertVisible: "1 Invité(e)"
+- assertVisible: "1 Membre"
+- tapOn: "Inviter"
+# assert there's 1 member and 1 invitee
+- tapOn: "Rechercher quelqu’un"
+- inputText: ${MAESTRO_INVITEE2_MXID}
+- tapOn: "Raphaël Chevallier [Tchap - LaSuite]"
+# Hide keyboard by tapping on an external element in case it's displayed, otherwise it will 'eat' the back button press
+- tapOn:
+    # Navigation title
+    text: "Inviter des membres"
+- tapOn: "Inviter"
 - runFlow:
     when:
-      visible: 'You need an invite in order to join'
+      visible: "Inviter un nouveau contact dans ce salon ?"
     commands:
-      - tapOn: "Back"
+      - tapOn:
+          id: "confirm_invite_unknown"
+- assertVisible: "2 Invité(e)s"
+- assertVisible: "1 Membre"
+- tapOn: "Retour"
+- scroll
+- scroll
+- tapOn: "Quitter le salon"
+- tapOn: "Quitter"
+- runFlow:
+    when:
+      visible: "You need an invite in order to join"
+    commands:
+      - tapOn: "Retour"
