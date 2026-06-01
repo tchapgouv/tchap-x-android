@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -130,19 +131,26 @@ private fun BoxWithConstraintsScope.LoadableMapContent(
     darkMode: Boolean,
 ) {
     val context = LocalContext.current
+    val isInspectionMode = LocalInspectionMode.current
     var retryHash by remember { mutableIntStateOf(0) }
     val builder = remember { StaticMapUrlBuilder() }
 
     // Tchap: Create the map renderer or Fake it in preview context
-    val tchapMapRenderer: TchapMapRenderer = if (LocalInspectionMode.current) {
-        FakeTchapMapRenderer()
-    } else {
-        DefaultTchapMapRenderer(darkMode, LocalContext.current)
+    val tchapMapRenderer: TchapMapRenderer = remember(darkMode, isInspectionMode) {
+        if (isInspectionMode) {
+            FakeTchapMapRenderer()
+        } else {
+            DefaultTchapMapRenderer(darkMode, context)
+        }
     }
 
     // Tchap: Try to retrieve the imageFile that was created earlier
-    val locationUiData = LocationUiData(location, zoom, Size(constraints.maxWidth, constraints.maxHeight))
-    val imageFile = tchapMapRenderer.getStaticMapFileFromLocation(locationUiData)
+    val locationUiData = remember(location, zoom, constraints.maxWidth, constraints.maxHeight) {
+        LocationUiData(location, zoom, Size(constraints.maxWidth, constraints.maxHeight))
+    }
+    val imageFile = remember(locationUiData) {
+        tchapMapRenderer.getStaticMapFileFromLocation(locationUiData)
+    }
 
     val painter = rememberAsyncImagePainter(
         model = if (constraints.isZero) {
@@ -171,8 +179,9 @@ private fun BoxWithConstraintsScope.LoadableMapContent(
     )
 
     // Tchap: Generate locally snapshot of location if it doesn't exist
-    if (!imageFile.exists()) {
-        tchapMapRenderer.generateMapSnapshot(locationUiData) {
+    LaunchedEffect(imageFile, locationUiData) {
+        if (!imageFile.exists()) {
+            tchapMapRenderer.generateMapSnapshot(locationUiData)
             painter.restart()
         }
     }

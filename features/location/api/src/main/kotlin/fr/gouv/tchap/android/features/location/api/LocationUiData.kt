@@ -39,9 +39,13 @@ data class LocationUiData(
     override fun toString(): String {
         return StringBuilder()
             .append(location.lat)
+            .append(",")
             .append(location.lon)
+            .append(",")
             .append(mapZoom)
+            .append(",")
             .append(mapSize.width)
+            .append("x")
             .append(mapSize.height)
             .toString()
     }

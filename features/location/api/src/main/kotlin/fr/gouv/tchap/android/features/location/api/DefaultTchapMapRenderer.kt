@@ -27,11 +27,12 @@ package fr.gouv.tchap.android.features.location.api
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Size
-import androidx.annotation.UiThread
 import io.element.android.features.location.api.Location
 import io.element.android.features.location.api.internal.TileServerStyleUriBuilder
-import io.element.android.libraries.core.extensions.finally
 import io.element.android.libraries.core.extensions.runCatchingExceptions
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import org.maplibre.android.MapLibre
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.geometry.LatLng
@@ -46,14 +47,26 @@ import java.util.concurrent.ConcurrentHashMap
 class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context: Context) : TchapMapRenderer {
     companion object {
         const val MAP_SNAPSHOT_SUBDIR: String = "tchap/map-snapshot-cache"
+
+        private var isMapLibreInitialized = false
+
+        private fun initializeMapLibre(context: Context) {
+            if (!isMapLibreInitialized) {
+                MapLibre.getInstance(context.applicationContext)
+                isMapLibreInitialized = true
+            }
+        }
+
+        // Limit the number of concurrent snapshots to avoid crashing Vulkan/GPU resources,
+        // especially on emulators or low-end devices.
+        private val snapshotSemaphore = Semaphore(2)
     }
 
     private val styleBuilder: Style.Builder = Style.Builder().fromUri(TileServerStyleUriBuilder().build(darkMode))
-    private lateinit var mapSnapshotter: MapSnapshotter
     private val pendingGenerationSnapshot = Collections.newSetFromMap(ConcurrentHashMap<String, Boolean>())
 
     init {
-        MapLibre.getInstance(context)
+        initializeMapLibre(context)
     }
 
     private fun hashString(input: String): String {
@@ -77,10 +90,8 @@ class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context
         return File(snapshotDir, getStaticMapFilenameFromLocation(locationUiData))
     }
 
-    @UiThread
-    override fun generateMapSnapshot(
-        locationUiData: LocationUiData,
-        onComplete: () -> Unit
+    override suspend fun generateMapSnapshot(
+        locationUiData: LocationUiData
     ) {
         val mapSnapshotFilename = getStaticMapFilenameFromLocation(locationUiData)
         val mapSnapshotFile = getStaticMapFileFromLocation(locationUiData)
@@ -89,21 +100,39 @@ class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context
         }
 
         pendingGenerationSnapshot.add(mapSnapshotFilename)
-        mapSnapshotter = getMapSnapshotter(context, locationUiData.location, locationUiData.mapZoom, locationUiData.mapSize)
-        mapSnapshotter.start(
-            { mapSnapshot ->
-                runCatchingExceptions {
-                    mapSnapshotFile.outputStream().use {
-                        mapSnapshot.bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+
+        try {
+            snapshotSemaphore.withPermit {
+                suspendCancellableCoroutine { continuation ->
+                    val mapSnapshotter = getMapSnapshotter(context, locationUiData.location, locationUiData.mapZoom, locationUiData.mapSize)
+                    continuation.invokeOnCancellation {
+                        mapSnapshotter.cancel()
                     }
-                    onComplete()
-                }.onFailure {
-                    Timber.e("Map snapshot was not stored at this time")
-                }.finally {
-                    pendingGenerationSnapshot.remove(mapSnapshotFilename)
+
+                    mapSnapshotter.start(
+                        { mapSnapshot ->
+                            runCatchingExceptions {
+                                mapSnapshotFile.outputStream().use {
+                                    mapSnapshot.bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+                                }
+                                continuation.resumeWith(Result.success(Unit))
+                            }.onFailure {
+                                Timber.e(it, "Map snapshot was not stored at this time")
+                                continuation.resumeWith(Result.failure(it))
+                            }
+                        },
+                        { error ->
+                            Timber.e("Map snapshot generation failed: $error")
+                            continuation.resumeWith(Result.failure(Exception(error)))
+                        }
+                    )
                 }
             }
-        )
+        } catch (e: Exception) {
+            Timber.e(e, "Error during map snapshot generation")
+        } finally {
+            pendingGenerationSnapshot.remove(mapSnapshotFilename)
+        }
     }
 
     private fun getMapSnapshotter(
