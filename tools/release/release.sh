@@ -90,7 +90,9 @@ function get_release_notes() {
   local version=$1
   local appName=$2
 
-  local appNameURI=$(echo "$appName" | sed "s/ /%20/g")
+  local appNameURI
+  appNameURI=$(echo "$appName" | sed "s/ /%20/g")
+
   # This variable is used later in the script to finalize the release on GitHub
   githubCreateReleaseLink="https://github.com/tchapgouv/tchap-x-android/releases/new?tag=v${version}&title=${appNameURI}%20v${version}"
 
@@ -592,7 +594,7 @@ else
 fi
 
 printf "\n================================================================================\n"
-printf "Creating the release on gitHub.\n"
+printf "Creating the release on gitHub.\n\n"
 
 # TCHAP - Display again GitHub translated specific notes
 printf "<!-- Release notes generated using configuration in .github/release.yml at v${version} -->\n\n## Qu'est-ce qui a changé ?\n${releaseNotesContent}\n\n"
