@@ -86,6 +86,41 @@ function check_yubikey() {
     done
 }
 
+function get_release_notes() {
+  local version=$1
+  local appName=$2
+
+  local appNameURI=$(echo "$appName" | sed "s/ /%20/g")
+  # This variable is used later in the script to finalize the release on GitHub
+  githubCreateReleaseLink="https://github.com/tchapgouv/tchap-x-android/releases/new?tag=v${version}&title=${appNameURI}%20v${version}"
+
+  printf "Generating release notes...\n"
+  printf -- "Open this link: %s\n" "${githubCreateReleaseLink}"
+  printf "Then:\n"
+  printf " - Click on the 'Generate release notes' button on GitHub.\n"
+  printf " - Optionally reorder items and fix typos.\n"
+  printf " - Copy the generated notes.\n"
+
+  local notes
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    read -r -p "Press Enter once you have copied the notes to your clipboard (I'll read them from there)... "
+    notes=$(pbpaste)
+  else
+    printf "Paste notes below and press Ctrl+D once finished:\n"
+    notes=$(cat)
+  fi
+
+  # TCHAP - Clean release notes: extract only what's after "## What's Changed" if it exists
+  if echo "$notes" | grep -qi "## [Ww]hat.s [Cc]hanged"; then
+      notes=$(echo "$notes" | sed -n '/## [Ww]hat.s [Cc]hanged/,$p' | sed '1d')
+  fi
+
+  # Always remove leading empty lines from the beginning
+  notes=$(echo "$notes" | sed '/./,$!d')
+
+  releaseNotesContent="${notes}"
+}
+
 if [[ ${envError} == 0 ]]; then
     check_yubikey "${yubikeyPin}"
 fi
@@ -107,6 +142,14 @@ if [[ -z "${gitHubToken}" ]]; then
     printf "    export TCHAP_GITHUB_TOKEN=\"your_token_here\"\n"
     printf " 5. Restart your terminal or run 'source ~/.zshrc' (or your shell profile file).\n\n"
     envError=1
+elif [[ ${envError} == 0 ]]; then
+    printf "Checking GitHub token validity...\n"
+    if ! python3 -c "import requests; r = requests.get('https://api.github.com/user', headers={'Authorization': 'Bearer ${gitHubToken}', 'Accept': 'application/vnd.github+json'}); r.raise_for_status()" &> /dev/null; then
+        printf "Fatal: TCHAP_GITHUB_TOKEN is invalid or expired.\n"
+        envError=1
+    else
+        printf "GitHub token OK.\n"
+    fi
 fi
 # Android home
 androidHome="${ANDROID_HOME}"
@@ -195,100 +238,102 @@ versionMinorNumber=$(echo "${version}" | cut  -d "." -f2)
 versionMinorNumberNoLeadingZero=${versionMinorNumber/#0/}
 versionPatchNumber=$(echo "${version}" | cut  -d "." -f3)
 
-printf "\n================================================================================\n"
-printf "Starting the release %s\n" "${version}"
-git flow release start "${version}"
+# Check if the tag already exists
+tag_exists=$(git tag -l "v${version}")
+if [[ -n "${tag_exists}" ]]; then
+    printf "Tag v%s already exists. Skipping release creation and resuming from artifact download...\n" "${version}"
+    is_resuming=1
+else
+    is_resuming=0
+fi
 
-# Note: in case the release is already started and the script is started again, checkout the release branch again.
-ret=$?
-if [[ $ret -ne 0 ]]; then
-  printf "Mmh, it seems that the release is already started. I'm displaying the changes now:\n"
-  git diff --stat "release/${version}" origin/main
-  printf "Do you want to continue the release using its contents?\n\n"
+if [[ ${is_resuming} == 0 ]]; then
+  printf "\n================================================================================\n"
+  printf "Starting the release %s\n" "${version}"
+  git flow release start "${version}"
+
+  # Note: in case the release is already started and the script is started again, checkout the release branch again.
+  ret=$?
+  if [[ $ret -ne 0 ]]; then
+    printf "Mmh, it seems that the release is already started. I'm displaying the changes now:\n"
+    git diff --stat "release/${version}" origin/main
+    printf "Do you want to continue the release using its contents?\n\n"
+    read -r -p "Continue (yes/no) default to yes? " doContinue
+    doContinue=${doContinue:-yes}
+    if [ "${doContinue}" == "no" ]; then
+      printf "OK, exiting, you can start the release again with the command 'git flow release start %s'\n" "${version}"
+      exit 1
+    fi
+    git checkout "release/${version}"
+  fi
+
+  # Ensure version is OK
+  # versionsFileBak="${versionsFile}.bak"
+  # cp ${versionsFile} ${versionsFileBak}
+  # sed "s/private const val versionYear = .*/private const val versionYear = ${versionYear}/" ${versionsFileBak} > ${versionsFile}
+  # sed "s/private const val versionMonth = .*/private const val versionMonth = ${versionMonthNoLeadingZero}/" ${versionsFile}    > ${versionsFileBak}
+  # sed "s/private const val versionReleaseNumber = .*/private const val versionReleaseNumber = ${versionReleaseNumber}/" ${versionsFileBak} > ${versionsFile}
+  # rm ${versionsFileBak}
+
+  versionsFileBak="${versionsFile}.bak"
+  cp ${versionsFile} ${versionsFileBak}
+  sed "s/private const val versionMajorNumber = .*/private const val versionMajorNumber = ${versionMajorNumber}/" ${versionsFileBak} > ${versionsFile}
+  sed "s/private const val versionMinorNumber = .*/private const val versionMinorNumber = ${versionMinorNumberNoLeadingZero}/" ${versionsFile}    > ${versionsFileBak}
+  sed "s/private const val versionPatchNumber = .*/private const val versionPatchNumber = ${versionPatchNumber}/" ${versionsFileBak} > ${versionsFile}
+  rm ${versionsFileBak}
+
+  printf "\n================================================================================\n"
+  tchapChangesFile="CHANGES_TCHAP.md"
+  get_release_notes "${version}" "${appName}"
+
+  printf "Changements dans ${appName} v${version}\n=============================\n\n<!-- Release notes generated using configuration in .github/release.yml at v${version} -->\n\n## Qu'est-ce qui a changé ?\n${releaseNotesContent}\n\n" > "${tchapChangesFile}.tmp"
+  cat "${tchapChangesFile}" >> "${tchapChangesFile}.tmp"
+  mv "${tchapChangesFile}.tmp" "${tchapChangesFile}"
+
+  printf "Committing version...\n"
+  git commit -a -m "Version ${version}"
+
+  # TCHAP - Disable fastlane
+  #printf "\n================================================================================\n"
+  #printf "Creating fastlane file...\n"
+  #printf -v versionPatchNumber2Digits "%02d" "${versionPatchNumber}"
+  #fastlaneFile="${versionMajorNumber}${versionMinorNumber}${versionPatchNumber2Digits}0.txt"
+  #fastlanePathFile="./fastlane/metadata/android/en-US/changelogs/${fastlaneFile}"
+  #printf "Main changes in this version: bug fixes and improvements.\nFull changelog: https://github.com/tchapgouv/tchap-x-android/releases" > "${fastlanePathFile}"
+  #
+  #read -r -p "I have created the file ${fastlanePathFile}, please edit it and press enter to continue. "
+  #git add "${fastlanePathFile}"
+  #git commit -a -m "Adding fastlane file for version ${version}"
+
+  printf "\n================================================================================\n"
+  printf "OK, finishing the release...\n"
+  git flow release finish -m "v${version}" "${version}"
+
+  printf "\n================================================================================\n"
+  read -r -p "Done, push the branch 'main' and the new tag (yes/no) default to yes? " doPush
+  doPush=${doPush:-yes}
+
+  if [ "${doPush}" == "yes" ]; then
+    printf "Pushing branch 'main' and tag 'v%s'...\n" "${version}"
+    git push origin main
+    git push origin "v${version}"
+  else
+      printf "Not pushing, do not forget to push manually!\n"
+  fi
+else
+  printf "\n================================================================================\n"
+  printf "Mmh, it seems that the release is already started and tag for version already pushed.\n"
+  printf "Do you want to continue the release using the created tag?\n\n"
   read -r -p "Continue (yes/no) default to yes? " doContinue
   doContinue=${doContinue:-yes}
   if [ "${doContinue}" == "no" ]; then
-    printf "OK, exiting, you can start the release again with the command 'git flow release start %s'\n" "${version}"
+    printf "OK, exiting\n"
     exit 1
   fi
-  git checkout "release/${version}"
-fi
 
-# Ensure version is OK
-# versionsFileBak="${versionsFile}.bak"
-# cp ${versionsFile} ${versionsFileBak}
-# sed "s/private const val versionYear = .*/private const val versionYear = ${versionYear}/" ${versionsFileBak} > ${versionsFile}
-# sed "s/private const val versionMonth = .*/private const val versionMonth = ${versionMonthNoLeadingZero}/" ${versionsFile}    > ${versionsFileBak}
-# sed "s/private const val versionReleaseNumber = .*/private const val versionReleaseNumber = ${versionReleaseNumber}/" ${versionsFileBak} > ${versionsFile}
-# rm ${versionsFileBak}
-
-versionsFileBak="${versionsFile}.bak"
-cp ${versionsFile} ${versionsFileBak}
-sed "s/private const val versionMajorNumber = .*/private const val versionMajorNumber = ${versionMajorNumber}/" ${versionsFileBak} > ${versionsFile}
-sed "s/private const val versionMinorNumber = .*/private const val versionMinorNumber = ${versionMinorNumberNoLeadingZero}/" ${versionsFile}    > ${versionsFileBak}
-sed "s/private const val versionPatchNumber = .*/private const val versionPatchNumber = ${versionPatchNumber}/" ${versionsFileBak} > ${versionsFile}
-rm ${versionsFileBak}
-
-printf "\n================================================================================\n"
-appNameURI=$(echo "$appName" | sed "s/ /%20/g")
-githubCreateReleaseLink="https://github.com/tchapgouv/tchap-x-android/releases/new?tag=v${version}&title=${appNameURI}%20v${version}"
-printf "Generating release notes...\n"
-printf -- "Open this link: %s\n" "${githubCreateReleaseLink}"
-printf "Then:\n"
-printf " - Click on the 'Generate release notes' button on GitHub.\n"
-printf " - Optionally reorder items and fix typos.\n"
-printf " - Copy the generated notes.\n"
-
-tchapChangesFile="CHANGES_TCHAP.md"
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  read -r -p "Press Enter once you have copied the notes to your clipboard (I'll read them from there)... "
-  releaseNotesContent=$(pbpaste)
-else
-  printf "Paste notes below and press Ctrl+D once finished:\n"
-  releaseNotesContent=$(cat)
-fi
-
-# TCHAP - Clean release notes: extract only what's after "## What's Changed" if it exists
-if echo "$releaseNotesContent" | grep -qi "## [Ww]hat.s [Cc]hanged"; then
-    releaseNotesContent=$(echo "$releaseNotesContent" | sed -n '/## [Ww]hat.s [Cc]hanged/,$p' | sed '1d')
-fi
-
-# Always remove leading empty lines from the beginning
-releaseNotesContent=$(echo "$releaseNotesContent" | sed '/./,$!d')
-
-printf "Changements dans ${appName} v${version}\n=============================\n\n<!-- Release notes generated using configuration in .github/release.yml at v${version} -->\n\n## Qu'est-ce qui a changé ?\n${releaseNotesContent}\n\n" > "${tchapChangesFile}.tmp"
-cat "${tchapChangesFile}" >> "${tchapChangesFile}.tmp"
-mv "${tchapChangesFile}.tmp" "${tchapChangesFile}"
-
-printf "Committing version...\n"
-git commit -a -m "Version ${version}"
-
-# TCHAP - Disable fastlane
-#printf "\n================================================================================\n"
-#printf "Creating fastlane file...\n"
-#printf -v versionPatchNumber2Digits "%02d" "${versionPatchNumber}"
-#fastlaneFile="${versionMajorNumber}${versionMinorNumber}${versionPatchNumber2Digits}0.txt"
-#fastlanePathFile="./fastlane/metadata/android/en-US/changelogs/${fastlaneFile}"
-#printf "Main changes in this version: bug fixes and improvements.\nFull changelog: https://github.com/tchapgouv/tchap-x-android/releases" > "${fastlanePathFile}"
-#
-#read -r -p "I have created the file ${fastlanePathFile}, please edit it and press enter to continue. "
-#git add "${fastlanePathFile}"
-#git commit -a -m "Adding fastlane file for version ${version}"
-
-printf "\n================================================================================\n"
-printf "OK, finishing the release...\n"
-git flow release finish -m "v${version}" "${version}"
-
-printf "\n================================================================================\n"
-read -r -p "Done, push the branch 'main' and the new tag (yes/no) default to yes? " doPush
-doPush=${doPush:-yes}
-
-if [ "${doPush}" == "yes" ]; then
-  printf "Pushing branch 'main' and tag 'v%s'...\n" "${version}"
-  git push origin main
-  git push origin "v${version}"
-else
-    printf "Not pushing, do not forget to push manually!\n"
+  printf "\n================================================================================\n"
+  printf "Resuming: please provide the release notes for the subsequent steps (Play Store notes, internal message).\n"
+  get_release_notes "${version}" "${appName}"
 fi
 
 printf "\n================================================================================\n"
@@ -512,28 +557,59 @@ printf "Create the open testing release on GooglePlay.\n\n"
 # TCHAP - Generate Google Play specific notes
 # Keep lines starting with *, remove the bullet point and space & remove everything from " by @" to the end of the line
 googlePlayNotes=$(echo "$releaseNotesContent" | grep "^* " | sed 's/^* /- /' | sed 's/ by @.*//')
-printf "<fr-FR>\nCette version de Tchap apporte les nouveautés suivantes :\n\n${googlePlayNotes}\n</fr-FR>\n\n"
+printf "Version name :\n${version}\n\n<fr-FR>\nCette version de Tchap apporte les nouveautés suivantes :\n\n${googlePlayNotes}\n</fr-FR>\n\n"
 
-printf "Go to GooglePlay console : https://play.google.com/console/u/0/developers/7057431657963963746/app/4975852839646682683/tracks/open-testing\n"
-printf "On GooglePlay console, go the the open testing section and click on \"Create new release\" button, then:\n"
+printf "Go to GooglePlay console : https://play.google.com/console/u/0/developers/7057431657963963746/app/4975852839646682683/tracks/internal-testing\n"
+printf "On GooglePlay console, go to the internal testing section and click on \"Create new release\" button, then:\n"
 printf " - upload the file %s.\n" "${signedBundlePath}"
-printf " - copy the release note displayed above.\n"
+printf " - copy the VersionName & ReleaseNotes displayed above.\n"
 printf " - download the universal APK, to be able to provide it to the GitHub release: click on the right arrow next to the \"App bundle\", then click on the \"Download\" tab, and download the \"Signed, universal APK\".\n"
-printf " - submit the release.\n"
 read -r -p "Press enter to continue. "
 
-printf "You can then go to \"Publishing overview\" and send the new release for a review by Google.\n"
+printf "Click \"next\" to go to \"Publishing overview\" and send the new release for a review by Google.\n"
 read -r -p "Press enter to continue. "
+
+# TCHAP - Try to move and rename the downloaded universal signed APK
+baseVersionCode=$((10#${versionMajorNumber} * 10000 + 10#${versionMinorNumberNoLeadingZero} * 100 + 10#${versionPatchNumber}))
+universalVersionCode=$((baseVersionCode * 10))
+universalApkName="${universalVersionCode}.apk"
+
+# Check in ~/Downloads and ~/Download
+downloadedApkPath=""
+if [[ -f "${HOME}/Downloads/${universalApkName}" ]]; then
+    downloadedApkPath="${HOME}/Downloads/${universalApkName}"
+elif [[ -f "${HOME}/Download/${universalApkName}" ]]; then
+    downloadedApkPath="${HOME}/Download/${universalApkName}"
+fi
+
+if [[ -n "${downloadedApkPath}" ]]; then
+    printf "Found universal APK at %s. Moving to %s...\n" "${downloadedApkPath}" "${signedReleaseDir}"
+    mv "${downloadedApkPath}" "${signedReleaseDir}/app-gplay-tchap-withpinning-universal-release-signed.apk"
+    universalApkInSignedReleaseDir=1
+else
+    printf "Warning: Universal APK %s not found in ~/Downloads or ~/Download. You will need to upload it manually to GitHub.\n" "${universalApkName}"
+    universalApkInSignedReleaseDir=0
+fi
 
 printf "\n================================================================================\n"
 printf "Creating the release on gitHub.\n"
+
+# TCHAP - Display again GitHub translated specific notes
+printf "<!-- Release notes generated using configuration in .github/release.yml at v${version} -->\n\n## Qu'est-ce qui a changé ?\n${releaseNotesContent}\n\n"
+
 printf -- "Return to (or re-open) this link: %s\n" "${githubCreateReleaseLink}"
 printf "Then\n"
-printf " - If needed : copy the release note from the %s file.\n" "${tchapChangesFile}"
-printf " - Add the file %s to the GitHub release.\n" "${signedBundlePath}"
-printf " - Add the universal APK, downloaded from the GooglePlay console to the GitHub release.\n"
-printf " - Add the 4 signed APKs for F-Droid, located at %s to the GitHub release.\n" "${fdroidTargetPath}"
-read -r -p ". Press enter to continue. "
+printf " - Paste the ReleaseNotes displayed above.\n"
+printf " - Upload the following 6 files from %s:\n" "${signedReleaseDir}"
+printf "    - 4 signed APKs for F-Droid (app-fdroid-tchap-withoutpinning-*-release-signed.apk)\n"
+printf "    - 1 signed AAB for Google Play (app-gplay-tchap-withpinning-release-signed.aab)\n"
+if [[ ${universalApkInSignedReleaseDir} == 1 ]]; then
+    printf "    - 1 universal APK (app-gplay-tchap-withpinning-universal-release-signed.apk)\n"
+else
+    printf "    - 1 universal APK (Note: not found automatically, you must upload it manually from your Downloads folder)\n"
+fi
+printf " - Finally, click 'Publish release'.\n"
+read -r -p "Press enter to continue. "
 
 # TCHAP - Disable "Update release notes" (done before in CHANGES_TCHAP.md)
 #printf "\n================================================================================\n"
