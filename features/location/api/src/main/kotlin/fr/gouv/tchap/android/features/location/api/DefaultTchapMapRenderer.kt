@@ -43,12 +43,16 @@ import java.io.File
 import java.security.MessageDigest
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context: Context) : TchapMapRenderer {
     companion object {
-        const val MAP_SNAPSHOT_SUBDIR: String = "tchap/map-snapshot-cache"
+        private const val MAP_SNAPSHOT_SUBDIR = "tchap/map-snapshot-cache"
+        private const val MAP_SNAPSHOT_MAX_AGE_DAYS = 30L
 
         private var isMapLibreInitialized = false
+        private var hasCleanedSnapshots = false
 
         private fun initializeMapLibre(context: Context) {
             if (!isMapLibreInitialized) {
@@ -60,6 +64,26 @@ class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context
         // Limit the number of concurrent snapshots to avoid crashing Vulkan/GPU resources,
         // especially on emulators or low-end devices.
         private val snapshotSemaphore = Semaphore(2)
+
+        private fun cleanOldSnapshots(context: Context) {
+            if (hasCleanedSnapshots) return
+            hasCleanedSnapshots = true
+            thread(name = "TchapMapSnapshotCacheCleaner") {
+                runCatchingExceptions {
+                    val snapshotDir = File(context.applicationContext.cacheDir, MAP_SNAPSHOT_SUBDIR)
+                    if (!snapshotDir.exists() || !snapshotDir.isDirectory) return@runCatchingExceptions
+
+                    val now = System.currentTimeMillis()
+                    val retentionMillis = TimeUnit.DAYS.toMillis(MAP_SNAPSHOT_MAX_AGE_DAYS)
+
+                    snapshotDir.listFiles()?.forEach { file ->
+                        if (now - file.lastModified() > retentionMillis) {
+                            file.delete()
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private val styleBuilder: Style.Builder = Style.Builder().fromUri(TileServerStyleUriBuilder().build(darkMode))
@@ -67,6 +91,7 @@ class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context
 
     init {
         initializeMapLibre(context)
+        cleanOldSnapshots(context)
     }
 
     private fun hashString(input: String): String {
