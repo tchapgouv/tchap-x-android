@@ -1,5 +1,5 @@
 appId: ${MAESTRO_APP_ID}
 ---
 - extendedWaitUntil:
-    visible: "Be in your element"
+    visible: "Bienvenue (dans|sur le nouveau) (Tchap|${MAESTRO_APP_NAME})"
     timeout: 30000

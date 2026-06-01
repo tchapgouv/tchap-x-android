@@ -1,7 +1,12 @@
 appId: ${MAESTRO_APP_ID}
 ---
 - takeScreenshot: build/maestro/520-Timeline
-- tapOn: "Add attachment"
-- tapOn: "Share location"
-- tapOn: "Share selected location"
+- tapOn: "Ajouter une pièce jointe"
+- tapOn: "Partager votre position"
+- runFlow:
+    when:
+      visible: "Lorsque vous utilisez l'appli"
+    commands:
+      - tapOn: "Lorsque vous utilisez l'appli"
+- tapOn: "Partager ma position"
 - takeScreenshot: build/maestro/521-Timeline

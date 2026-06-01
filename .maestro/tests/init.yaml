@@ -1,6 +1,8 @@
 appId: ${MAESTRO_APP_ID}
 ---
-- clearState
+- addMedia:
+    - "../media/PH1.jpg"
+    - "../media/PH2.jpg"
 - launchApp:
     clearKeychain: true
 - runFlow: ./assertions/assertInitDisplayed.yaml
