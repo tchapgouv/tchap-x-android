@@ -2,105 +2,134 @@ appId: ${MAESTRO_APP_ID}
 ---
 - tapOn:
     id: "home_screen-settings"
-- assertVisible: "Settings"
+- assertVisible: "Paramètres"
 - takeScreenshot: build/maestro/600-Settings
 
 ## Account settings
 - tapOn:
     id: "settings-user_profile"
-- assertVisible: "Edit profile"
+- tapOn: "Avatar"
+- assertVisible: "Prendre une photo"
+- assertVisible: "Choisir une photo"
+- assertVisible: "Supprimer"
 - takeScreenshot: build/maestro/610-AccountEditProfile
+- back
+- back
+
+- assertVisible: "Paramètres du compte"
+
+- tapOn:
+    text: "Gérer le compte et les appareils"
+- assertVisible: "Votre compte"
+- assertVisible: "Coordonnées"
 - back
 
 - tapOn:
     text: "Notifications"
-- assertVisible: "Enable notifications on this device"
+- assertVisible: "Activer les notifications du compte (tous les appareils)"
+- assertVisible: "Activer les notifications sur cet appareil"
 - back
 
 - tapOn:
-    text: "Encryption"
-- assertVisible: "Key storage"
+    text: "Chiffrement"
+- assertVisible: "Sauvegarde automatique des messages"
+- assertVisible: "Autoriser la sauvegarde automatique des messages"
+- tapOn:
+    text: "Changer le code de vérification"
+- assertVisible: "Changer le code de vérification ?"
+- assertVisible: "Générer un nouveau code"
+- back
 - back
 
 - tapOn:
-    text: "Moderation & safety"
-- assertVisible: "Your appearance"
+    text: "Modération & sécurité"
+- assertVisible: "Votre apparence"
+- assertVisible: "Partager la présence"
+- assertVisible: "Invitations"
+- assertVisible: "Masquer les avatars des salons dans les invitations"
+- assertVisible: "Afficher les médias dans les discussions."
 - back
 
 - tapOn:
-    text: "Report a problem"
-- assertVisible: "Report a problem"
+    text: "Foire Aux Questions"
+- assertVisible: "Comment pouvons-nous vous aider ?"
+- back
+
+- tapOn:
+    text: "Remonter un problème"
+- assertVisible: "Remonter un problème"
+- assertVisible: "Afficher les journaux"
+- assertVisible: "Autoriser à inclure les journaux techniques"
+- assertVisible: "Contactez-moi"
+- assertVisible: "Envoyer les paramètres de notification"
+- assertVisible: "Envoyer"
 - back
 
 ## App settings section
-- assertVisible: "Appearance"
+- assertVisible: "Paramètres de l’application"
+
+- assertVisible: "Apparence"
 
 - tapOn:
-    text: "Legals"
-- assertVisible: "Copyright"
-- assertVisible: "Terms of use"
-- assertVisible: "Privacy policy"
+    text: "Qualité d’envoi des médias"
+- assertVisible: "Optimisez la qualité des médias"
 - back
 
+- scrollUntilVisible:
+    direction: DOWN
+    element:
+      text: "Verrouillage d’écran"
 - tapOn:
-    text: "Media upload quality"
-- assertVisible: "Media upload quality"
-- back
-
-- tapOn:
-    text: "Screen lock"
-- assertVisible: "Choose PIN"
+    text: "Verrouillage d’écran"
+- assertVisible: "Choisissez un code PIN"
 - hideKeyboard
 - back
 
 - scrollUntilVisible:
     direction: DOWN
     element:
-      text: "Location sharing"
+      text: "Secouer pour signaler"
 - tapOn:
-    text: "Location sharing"
-- assertVisible: "Live location updates"
-- back
-
-## General section
-- scrollUntilVisible:
-    direction: DOWN
-    element:
-      text: "Analytics"
-- tapOn:
-    text: "Analytics"
-- assertVisible: "Share analytics data"
+    text: "Secouer pour signaler"
+- assertVisible: "Secouer le téléphone pour signaler un problème"
+- assertVisible: "Seuil de détection"
 - back
 
 - scrollUntilVisible:
     direction: DOWN
     element:
-      text: "Labs"
+      text: "Statistiques d’utilisation"
 - tapOn:
-    text: "Labs"
-- assertVisible: "Feeling experimental?"
+    text: "Statistiques d’utilisation"
+- assertVisible: "Partagez des données de statistiques d’utilisation"
 - back
 
 - scrollUntilVisible:
     direction: DOWN
     element:
-      text: "About"
+      text: "Expérimental"
 - tapOn:
-    text: "About"
-- assertVisible: "Copyright"
-- assertVisible: "Acceptable use policy"
-- assertVisible: "Privacy policy"
+    text: "Expérimental"
+- assertVisible: "Envie d’expérimenter?"
+- assertVisible: "Activez les fils de discussion."
 - back
 
 - scrollUntilVisible:
     direction: DOWN
     element:
-      text: "Developer options"
+      text: "Mentions légales"
 - tapOn:
-    text: "Developer options"
-- assertVisible: "Feature flags"
-- assertVisible: "View source"
+    text: "Mentions légales"
+- assertVisible: "Droits d’auteur"
+- assertVisible: "Conditions Générales d'Utilisation"
+- assertVisible: "Politique de confidentialité"
+- assertVisible: "Licences open source"
 - back
+
+- scrollUntilVisible:
+    direction: DOWN
+    element:
+      text: "Version : .*"
 
 - back
 - runFlow: ../assertions/assertHomeDisplayed.yaml

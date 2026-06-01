@@ -1,0 +1,38 @@
+appId: ${MAESTRO_APP_ID}
+---
+- takeScreenshot: build/maestro/520-Gallery
+- tapOn: "Ajouter une pièce jointe"
+- tapOn: "Galerie Photo et Vidéo"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      # Targets the modern Android SDK 33/34 Media Provider
+      - tapOn:
+          text: "Photo prise le .*|Photo taken on .*"
+          index: 0
+      # On Android 13, text doesn't change, so the 2nd photo is at index 1
+      - runFlow:
+          when:
+            visible:
+              text: "Photo prise le .*|Photo taken on .*"
+              index: 1
+          commands:
+            - tapOn:
+                text: "Photo prise le .*|Photo taken on .*"
+                index: 1
+      # On Android 14+, text changes to 'Selected', so the 2nd photo becomes index 0
+      - runFlow:
+          when:
+            notVisible:
+              text: "Photo prise le .*|Photo taken on .*"
+              index: 1
+          commands:
+            - tapOn:
+                text: "Photo prise le .*|Photo taken on .*"
+                index: 0
+- tapOn: "OK|Add.*"
+- tapOn: "Légende facultative…"
+- inputText: "I am a gallery legend!"
+- tapOn: "Envoyer un message"
+- takeScreenshot: build/maestro/521-Gallery
