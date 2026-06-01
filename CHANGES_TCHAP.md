@@ -1,7 +1,7 @@
-Changements dans Tchap beta Android v0.11.0
+Changements dans Tchap beta Android v0.11.1
 =============================
 
-<!-- Release notes generated using configuration in .github/release.yml at v0.11.0 -->
+<!-- Release notes generated using configuration in .github/release.yml at v0.11.1 -->
 
 ## Qu'est-ce qui a changé ?
 ### ✨ Nouveautés
@@ -14,6 +14,7 @@ Changements dans Tchap beta Android v0.11.0
 ### 🐛 Corrections de bugs
 * Correction pour la création de salons publiques by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/197
 * Autorisation des certificats Let's Encrypt sur l'environnement de dév by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/202
+* Correction des ID dupliqués dans le rust-sdk (BWI) by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/206
 ### ⚠️ Modifications de l'API
 * Nettoyage des access_rules à la création de salons by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/193
 ### 🧱 Build
@@ -24,7 +25,7 @@ Changements dans Tchap beta Android v0.11.0
 * Merge Element X v26.05.2 by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/204
 
 
-**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v0.10.0...v0.11.0
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v0.10.0...v0.11.1
 
 Changements dans Tchap beta Android v0.10.0
 =============================
