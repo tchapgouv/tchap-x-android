@@ -63,7 +63,7 @@ class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context
 
         // Limit the number of concurrent snapshots to avoid crashing Vulkan/GPU resources,
         // especially on emulators or low-end devices.
-        private val snapshotSemaphore = Semaphore(2)
+        private val snapshotSemaphore = Semaphore(4)
 
         private fun cleanOldSnapshots(context: Context) {
             if (hasCleanedSnapshots) return
