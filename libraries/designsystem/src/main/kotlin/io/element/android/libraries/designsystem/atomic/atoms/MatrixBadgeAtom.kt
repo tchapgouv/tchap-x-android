@@ -17,8 +17,6 @@ import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.libraries.designsystem.components.Badge
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
-import io.element.android.libraries.designsystem.theme.badgeExternalBackgroundColor
-import io.element.android.libraries.designsystem.theme.badgeExternalContentColor
 
 /**
  * https://www.figma.com/design/G1xy0HDZKJf5TCRFmKb5d5/Compound-Android-Components?node-id=1960-491
@@ -43,7 +41,7 @@ object MatrixBadgeAtom {
         data: MatrixBadgeData,
     ) {
         val backgroundColor = when (data.type) {
-            Type.External -> ElementTheme.colors.badgeExternalBackgroundColor
+            Type.External -> ElementTheme.colors.bgBadgeExternal
             Type.Positive -> ElementTheme.colors.bgBadgeAccent
             Type.Neutral -> ElementTheme.colors.bgBadgeDefault
             Type.Negative -> ElementTheme.colors.bgCriticalSubtle
@@ -57,7 +55,7 @@ object MatrixBadgeAtom {
             Type.Info -> null
         }
         val textColor = when (data.type) {
-            Type.External -> ElementTheme.colors.badgeExternalContentColor
+            Type.External -> ElementTheme.colors.textBadgeExternal
             Type.Positive -> ElementTheme.colors.textBadgeAccent
             Type.Neutral -> ElementTheme.colors.textPrimary
             Type.Negative -> ElementTheme.colors.textCriticalPrimary
