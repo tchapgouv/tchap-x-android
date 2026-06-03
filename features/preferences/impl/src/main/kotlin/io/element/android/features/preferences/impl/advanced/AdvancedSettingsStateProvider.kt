@@ -9,6 +9,8 @@
 package io.element.android.features.preferences.impl.advanced
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import io.element.android.features.rageshake.api.preferences.RageshakePreferencesState
+import io.element.android.features.rageshake.api.preferences.aRageshakePreferencesState
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.matrix.api.media.MediaPreviewValue
 import io.element.android.libraries.preferences.api.store.VideoCompressionPreset
@@ -42,6 +44,10 @@ fun aAdvancedSettingsState(
     hideInviteAvatars: Boolean = false,
     timelineMediaPreviewValue: MediaPreviewValue = MediaPreviewValue.On,
     liveLocationMinimumDistanceUpdate: Int? = 50,
+    // :tchap: AdvancedSettings - Add ClearCache & Rageshake rows
+    rageshakeConfigState: RageshakePreferencesState = aRageshakePreferencesState(),
+    clearCacheAction: AsyncAction<Unit> = AsyncAction.Uninitialized,
+    // :tchap: end
     setTimelineMediaPreviewAction: AsyncAction<Unit> = AsyncAction.Uninitialized,
     setHideInviteAvatarsAction: AsyncAction<Unit> = AsyncAction.Uninitialized,
     eventSink: (AdvancedSettingsEvents) -> Unit = {},
@@ -58,5 +64,9 @@ fun aAdvancedSettingsState(
         setHideInviteAvatarsAction = setHideInviteAvatarsAction
     ),
     liveLocationMinimumDistanceUpdate = liveLocationMinimumDistanceUpdate,
+    // :tchap: AdvancedSettings - Add ClearCache & Rageshake rows
+    rageshakeConfigState = rageshakeConfigState,
+    clearCacheAction = clearCacheAction,
+    // :tchap: end
     eventSink = eventSink
 )

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import im.vector.app.features.analytics.plan.Interaction
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.preferences.impl.R
+import io.element.android.features.rageshake.api.preferences.RageshakePreferencesView
 import io.element.android.libraries.architecture.coverage.ExcludeFromCoverage
 import io.element.android.libraries.designsystem.components.dialogs.ListDialog
 import io.element.android.libraries.designsystem.components.list.ListItemContent
@@ -43,6 +45,7 @@ import io.element.android.libraries.designsystem.preview.ElementPreviewLight
 import io.element.android.libraries.designsystem.preview.PreviewWithLargeHeight
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.text.stringWithLink
+import io.element.android.libraries.designsystem.theme.components.CircularProgressIndicator
 import io.element.android.libraries.designsystem.theme.components.ListItem
 import io.element.android.libraries.designsystem.theme.components.ListSectionHeader
 import io.element.android.libraries.designsystem.theme.components.ListSupportingText
@@ -212,8 +215,61 @@ fun AdvancedSettingsView(
                 onOpenAppPermissionsClick = onOpenAppSettingsClick,
             )
         }
+
+        // :tchap: AdvancedSettings - Add ClearCache & Rageshake rows
+        RageshakePreferencesView(state.rageshakeConfigState)
+
+        ClearCacheSection(
+            state = state,
+            onClearCacheClick = {
+                state.eventSink(AdvancedSettingsEvents.ClearCache)
+            }
+        )
+        // :tchap: end
     }
 }
+
+// :tchap: AdvancedSettings - Add ClearCache row
+@Composable
+private fun ClearCacheSection(
+    state: AdvancedSettingsState,
+    onClearCacheClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    PreferenceCategory(
+        modifier = modifier,
+        showTopDivider = true,
+    ) {
+        ListItem(
+            headlineContent = {
+                Text(
+                    text = stringResource(id = R.string.tchap_screen_advanced_settings_clear_cache),
+                    color = if (state.clearCacheAction.isLoading()) {
+                        ElementTheme.colors.textDisabled
+                    } else {
+                        ElementTheme.colors.textCriticalPrimary
+                    },
+                )
+            },
+            onClick = {
+                if (!state.clearCacheAction.isLoading()) {
+                    onClearCacheClick()
+                }
+            },
+            trailingContent = if (state.clearCacheAction.isLoading()) {
+                ListItemContent.Custom {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        strokeWidth = 2.dp,
+                    )
+                }
+            } else {
+                null
+            }
+        )
+    }
+}
+// :tchap: end
 
 @Composable
 private fun VideoQualitySelectorDialog(
