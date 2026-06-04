@@ -251,7 +251,9 @@ private fun HomeScaffold(
                                 HomeFloatingActionButton(onStartChatClick, CommonStrings.action_create_room)
                             }
                             HomeNavigationBarItem.Spaces -> {
-                                HomeFloatingActionButton(onCreateSpaceClick, CommonStrings.action_create_space)
+                                // :tchap: space-admin-limitations - Disable space creation
+//                                HomeFloatingActionButton(onCreateSpaceClick, CommonStrings.action_create_space)
+                                // :tchap: end
                             }
                         }
                     },

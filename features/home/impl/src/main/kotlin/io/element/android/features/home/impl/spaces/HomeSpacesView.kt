@@ -46,7 +46,6 @@ import io.element.android.libraries.designsystem.components.BigIcon
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
-import io.element.android.libraries.designsystem.theme.components.Button
 import io.element.android.libraries.designsystem.theme.components.HorizontalDivider
 import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.IconButton
@@ -224,15 +223,26 @@ private fun EmptySpaceHomeView(
                     color = ElementTheme.colors.textPrimary,
                     textAlign = TextAlign.Center,
                 )
+                // :tchap: space-admin-limitations - Add description
+                Spacer(modifier = Modifier.height(6.dp))
+                Text(
+                    text = stringResource(R.string.tchap_screen_space_list_empty_state_description),
+                    style = ElementTheme.typography.fontBodyLgRegular,
+                    color = ElementTheme.colors.textPrimary,
+                    textAlign = TextAlign.Center,
+                )
+                // :tchap: end
             }
         },
         footer = {
             ButtonColumnMolecule {
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(CommonStrings.action_create_space),
-                    onClick = onCreateSpaceClick,
-                )
+                // :tchap: space-admin-limitations
+//                Button(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    text = stringResource(CommonStrings.action_create_space),
+//                    onClick = onCreateSpaceClick,
+//                )
+                // :tchap: space-admin-limitations
                 if (canExploreSpaces) {
                     TextButton(
                         modifier = Modifier.fillMaxWidth(),

@@ -29,4 +29,6 @@
     <string name="tchap_home_offline_banner_title">Connection failed</string>
     <string name="tchap_home_offline_banner_description">Check the service status to ensure the problem is not related to your device.</string>
     <string name="tchap_home_offline_banner_button">View service status</string>
+    <string name="tchap_screen_space_list_empty_state_description">"On mobile, view your spaces and accept invitations.
+Creation and management are done on a computer."</string>
 </resources>

@@ -517,7 +517,7 @@ Raison : %1$s."</string>
   <string name="screen_sharing_location_option_sheet_title">"Options de partage"</string>
   <string name="screen_space_list_description">"Sélectionnez un espace pour filtrer vos conversations ou cliquez l’icone à droite pour afficher ses informations."</string><!-- Tchap: Custom string -->
   <string name="screen_space_list_details">"%1$s • %2$s"</string>
-  <string name="screen_space_list_empty_state_title">"Créer des espaces pour organiser les salons"</string>
+  <string name="screen_space_list_empty_state_title">"Espaces"</string><!-- Tchap: Custom string -->
   <string name="screen_space_list_parent_space">"Espace %1$s"</string>
   <string name="screen_space_list_title">"Espaces"</string>
   <string name="screen_static_location_sheet_timestamp_description">"Partagé %1$s"</string>

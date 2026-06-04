@@ -15,7 +15,7 @@
   <string name="screen_leave_space_title_last_owner">"Transfert de propriété"</string>
   <string name="screen_space_add_room_action">"Salon"</string>
   <string name="screen_space_add_rooms_room_access_description">"Ajouter un salon ne changera pas l’accès au salon. Pour modifier l’accès, aller dans les paramètres du salon puis dans Sécurité &amp; confidentialité."</string>
-  <string name="screen_space_empty_state_title">"Ajoutez votre premier salon"</string>
+  <string name="screen_space_empty_state_title">"Aucun salon dans cet espace"</string><!-- Tchap: Custom string -->
   <string name="screen_space_menu_action_members">"Voir les membres"</string>
   <string name="screen_space_remove_rooms_confirmation_content">"Supprimer un salon n’affectera pas ses paramètres d’accès. Pour modifier l’accès, aller dans les settings du salon puis \"Sécurité &amp; confidentialité\"."</string>
   <plurals name="screen_space_remove_rooms_confirmation_title">
