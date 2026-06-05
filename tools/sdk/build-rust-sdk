@@ -217,12 +217,13 @@ printf "\n## Building the SDK for ${target_arch}...\n\n"
     -p "${rustSdkPath}" \
     -m sdk \
     -t "${target_arch}" \
-    -o "${elementPwd}/libraries/rustsdk"
+    -o "${elementPwd}/libraries/rustsdk" \
+    -r
 
 cd "${elementPwd}"
 
 mv \
-    ./libraries/rustsdk/sdk-android-debug.aar \
+    ./libraries/rustsdk/sdk-android-release.aar \
     ./libraries/rustsdk/matrix-rust-sdk.aar
 
 mkdir -p ./libraries/rustsdk/sdks
