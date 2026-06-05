@@ -1,3 +1,22 @@
+Changements dans Tchap beta Android v0.11.2
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v0.11.2 -->
+
+## Qu'est-ce qui a changé ?
+### ✨ Nouveautés
+* Ajouter les sections Rageshake & ClearCache dans les paramètres avancés by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/210
+### 🙌 Améliorations
+* Cartes : Amélioration de la génération des snapshots & nettoyage auto des anciennes by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/209
+### 🐛 Corrections de bugs
+* Correction de la compilation du rust-sdk by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/213
+* Correction des badges de mentions by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/214
+### ⬆️ Mise à jour des dépendances
+* Mise à jour des thèmes (compound-design-tokens) by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/208
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v0.11.1...v0.11.2
+
 Changements dans Tchap beta Android v0.11.1
 =============================
 
