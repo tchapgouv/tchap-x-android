@@ -18,7 +18,7 @@ object BuildTimeConfig {
     const val URL_PRIVACY = "https://tchap.numerique.gouv.fr/politique-de-confidentialite"
     const val SERVICES_MAPTILER_BASE_URL = "https://openmaptiles.geo.data.gouv.fr/styles"
     const val SERVICES_MAPTILER_LIGHT_MAPID = "osm-bright"
-    const val SERVICES_MAPTILER_DARK_MAPID = "dark-matter"
+    const val SERVICES_MAPTILER_DARK_MAPID = "fiord-color"
 
     val METADATA_HOST_REVERSED: String? = null
     val URL_WEBSITE: String? = null

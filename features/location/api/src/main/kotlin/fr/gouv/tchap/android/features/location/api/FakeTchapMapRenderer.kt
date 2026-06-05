@@ -31,9 +31,8 @@ class FakeTchapMapRenderer : TchapMapRenderer {
         return File("snapshot")
     }
 
-    override fun generateMapSnapshot(
-        locationUiData: LocationUiData,
-        onComplete: () -> Unit
+    override suspend fun generateMapSnapshot(
+        locationUiData: LocationUiData
     ) {
         return
     }

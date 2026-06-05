@@ -65,10 +65,7 @@ class AndroidMediaPreProcessor(
          * *Note*: Ideally, this should result in images of up to (but not included) 1280x1280 being sent. However, images with very different width and height
          * values may surpass this limit. (i.e.: an image of `480x3000px` would have `inSampleSize=1` and be sent as is).
          */
-        // :tchap: Increase optimized image size for Tchap
-//        private const val IMAGE_SCALE_REF_SIZE = 640
-        private const val IMAGE_SCALE_REF_SIZE = 1280
-        // :tchap: end
+        private const val IMAGE_SCALE_REF_SIZE = 1280 // :tchap: Increase optimized image size for Tchap
 
         private val notCompressibleImageTypes = listOf(MimeTypes.Gif, MimeTypes.WebP, MimeTypes.Svg)
     }

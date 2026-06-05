@@ -12,8 +12,13 @@ import app.cash.molecule.RecompositionMode
 import app.cash.molecule.moleculeFlow
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import fr.gouv.tchap.android.features.preferences.impl.advanced.FakeRageshakePreferencesPresenter
 import io.element.android.compound.theme.Theme
+import io.element.android.features.preferences.impl.tasks.ClearCacheUseCase
+import io.element.android.features.preferences.impl.tasks.FakeClearCacheUseCase
+import io.element.android.features.rageshake.api.preferences.RageshakePreferencesState
 import io.element.android.libraries.architecture.AsyncAction
+import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.media.MediaPreviewValue
@@ -50,6 +55,10 @@ class AdvancedSettingsPresenterTest {
                 assertThat(mediaPreviewConfigState.timelineMediaPreviewValue).isEqualTo(MediaPreviewValue.On)
                 assertThat(mediaPreviewConfigState.setHideInviteAvatarsAction).isEqualTo(AsyncAction.Uninitialized)
                 assertThat(mediaPreviewConfigState.setTimelineMediaPreviewAction).isEqualTo(AsyncAction.Uninitialized)
+                // :tchap: AdvancedSettings - Add ClearCache & Rageshake rows
+                assertThat(rageshakeConfigState).isNotNull()
+                assertThat(clearCacheAction).isNotNull()
+                // :tchap: end
             }
 
             // After the initial state, we expect the media optimization state to be set
@@ -383,11 +392,19 @@ class AdvancedSettingsPresenterTest {
         sessionPreferencesStore: InMemorySessionPreferencesStore = InMemorySessionPreferencesStore(),
         mediaPreviewConfigStateStore: MediaPreviewConfigStateStore = FakeMediaPreviewConfigStateStore(),
         featureFlagService: FakeFeatureFlagService = FakeFeatureFlagService(),
+        // :tchap: AdvancedSettings - Add ClearCache & Rageshake rows
+        rageshakePresenter: Presenter<RageshakePreferencesState> = FakeRageshakePreferencesPresenter(),
+        clearCacheUseCase: ClearCacheUseCase = FakeClearCacheUseCase(),
+        // :tchap: end
     ) = AdvancedSettingsPresenter(
         appPreferencesStore = appPreferencesStore,
         sessionPreferencesStore = sessionPreferencesStore,
         mediaPreviewConfigStateStore = mediaPreviewConfigStateStore,
         featureFlagService = featureFlagService,
         sessionCoroutineScope = this,
+        // :tchap: AdvancedSettings - Add ClearCache & Rageshake rows
+        rageshakePresenter = rageshakePresenter,
+        clearCacheUseCase = clearCacheUseCase,
+        // :tchap: end
     )
 }

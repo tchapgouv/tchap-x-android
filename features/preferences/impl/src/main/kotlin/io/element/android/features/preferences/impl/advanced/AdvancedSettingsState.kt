@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.res.stringResource
 import io.element.android.features.preferences.impl.R
+import io.element.android.features.rageshake.api.preferences.RageshakePreferencesState
+import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.designsystem.components.preferences.DropdownOption
 import io.element.android.libraries.preferences.api.store.VideoCompressionPreset
 import kotlinx.collections.immutable.ImmutableList
@@ -24,6 +26,10 @@ data class AdvancedSettingsState(
     val availableThemeOptions: ImmutableList<ThemeOption>,
     val mediaPreviewConfigState: MediaPreviewConfigState,
     val liveLocationMinimumDistanceUpdate: Int?,
+    // :tchap: AdvancedSettings - Add ClearCache & Rageshake rows
+    val rageshakeConfigState: RageshakePreferencesState,
+    val clearCacheAction: AsyncAction<Unit>,
+    // :tchap: end
     val eventSink: (AdvancedSettingsEvents) -> Unit
 )
 

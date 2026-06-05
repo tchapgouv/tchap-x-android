@@ -13,7 +13,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
-import io.element.android.libraries.core.bool.orFalse
+import io.element.android.libraries.core.bool.orTrue
 import io.element.android.libraries.preferences.api.store.PreferenceDataStoreFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -29,7 +29,10 @@ class PreferencesRageshakeDataStore(
 
     override fun isEnabled(): Flow<Boolean> {
         return store.data.map { prefs ->
-            prefs[enabledKey].orFalse()
+            // :tchap: AdvancedSettings - Activate by default
+//            prefs[enabledKey].orFalse()
+            prefs[enabledKey].orTrue()
+            // :tchap: end
         }
     }
 

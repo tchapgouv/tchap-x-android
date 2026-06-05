@@ -39,7 +39,6 @@ interface TchapMapRenderer {
      * Generates a map snapshot for the given LocationUiData.
      *
      * @param locationUiData LocationUiData to generate the snapshot for
-     * @param onComplete Callback to be called when the snapshot generation is complete
      */
-    fun generateMapSnapshot(locationUiData: LocationUiData, onComplete: () -> Unit)
+    suspend fun generateMapSnapshot(locationUiData: LocationUiData)
 }
