@@ -46,8 +46,6 @@ import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.designsystem.components.avatar.AvatarType
 import io.element.android.libraries.designsystem.text.toPx
-import io.element.android.libraries.designsystem.theme.badgeExternalBackgroundColor
-import io.element.android.libraries.designsystem.theme.badgeExternalContentColor
 import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.Surface
 import io.element.android.libraries.designsystem.theme.components.Text
@@ -120,8 +118,8 @@ fun SelectedItem(
             // TCHAP external user
             if (isExternalTchapUser) {
                 Surface(
-                    color = ElementTheme.colors.badgeExternalBackgroundColor,
-                    contentColor = ElementTheme.colors.badgeExternalContentColor,
+                    color = ElementTheme.colors.bgBadgeExternal,
+                    contentColor = ElementTheme.colors.textBadgeExternal,
                     shape = RoundedCornerShape(9.dp),
                 ) {
                     Text(

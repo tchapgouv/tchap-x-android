@@ -49,8 +49,10 @@ data class SemanticColors(
     val bgActionTertiaryRest: Color,
     /** Background colour for tertiary actions. State: Selected */
     val bgActionTertiarySelected: Color,
+    /** Badge accent background colour */
     val bgBadgeAccent: Color,
     val bgBadgeCritical: Color,
+    /** Badge default background colour */
     val bgBadgeDefault: Color,
     /** Badge default background colour */
     val bgBadgeExternal: Color,
@@ -150,13 +152,13 @@ data class SemanticColors(
     val iconAccentPrimary: Color,
     /** Lowest contrast accessible accent icons. */
     val iconAccentTertiary: Color,
-    /** Badge accent text colour */
+    /** Badge accent icon colour */
     val iconBadgeAccent: Color,
-    /** Badge info text colour */
+    /** Badge default icon colour */
     val iconBadgeDefault: Color,
-    /** Badge info text colour */
+    /** Badge external icon colour */
     val iconBadgeExternal: Color,
-    /** Badge info text colour */
+    /** Badge info icon colour */
     val iconBadgeInfo: Color,
     /** High-contrast icon for critical state. State: Rest. */
     val iconCriticalPrimary: Color,
@@ -192,9 +194,9 @@ data class SemanticColors(
     val textActionPrimary: Color,
     /** Badge accent text colour */
     val textBadgeAccent: Color,
-    /** Badge info text colour */
+    /** Badge default text colour */
     val textBadgeDefault: Color,
-    /** Badge info text colour */
+    /** Badge external text colour */
     val textBadgeExternal: Color,
     /** Badge info text colour */
     val textBadgeInfo: Color,
