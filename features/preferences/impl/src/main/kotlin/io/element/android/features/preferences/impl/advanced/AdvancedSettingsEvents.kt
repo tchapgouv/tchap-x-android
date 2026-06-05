@@ -21,4 +21,8 @@ sealed interface AdvancedSettingsEvents {
     data class SetTimelineMediaPreviewValue(val value: MediaPreviewValue) : AdvancedSettingsEvents
     data class SetHideInviteAvatars(val value: Boolean) : AdvancedSettingsEvents
     data class SetLiveLocationMinimumDistanceUpdate(val value: Int) : AdvancedSettingsEvents
+
+    // :tchap: AdvancedSettings - Add ClearCache row
+    data object ClearCache : AdvancedSettingsEvents
+    // :tchap: end
 }

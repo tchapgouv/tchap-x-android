@@ -12,12 +12,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import dev.zacsweers.metro.Inject
 import io.element.android.compound.theme.Theme
 import io.element.android.compound.theme.mapToTheme
+import io.element.android.features.preferences.impl.tasks.ClearCacheUseCase
+import io.element.android.features.rageshake.api.preferences.RageshakePreferencesState
+import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
+import io.element.android.libraries.architecture.runCatchingUpdatingState
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
@@ -37,6 +43,10 @@ class AdvancedSettingsPresenter(
     @SessionCoroutineScope
     private val sessionCoroutineScope: CoroutineScope,
     private val featureFlagService: FeatureFlagService,
+    // :tchap: AdvancedSettings - Add ClearCache & Rageshake rows
+    private val rageshakePresenter: Presenter<RageshakePreferencesState>,
+    private val clearCacheUseCase: ClearCacheUseCase,
+    // :tchap: end
 ) : Presenter<AdvancedSettingsState> {
     @Composable
     override fun present(): AdvancedSettingsState {
@@ -58,6 +68,12 @@ class AdvancedSettingsPresenter(
         }
 
         val mediaPreviewConfigState = mediaPreviewConfigStateStore.state()
+
+        // :tchap: AdvancedSettings - Add ClearCache & Rageshake rows
+        val rageshakeConfigState = rageshakePresenter.present()
+        val clearCacheAction = remember { mutableStateOf<AsyncAction<Unit>>(AsyncAction.Uninitialized) }
+        val localCoroutineScope = rememberCoroutineScope()
+        // :tchap: end
 
         val themeOption by remember {
             derivedStateOf {
@@ -130,6 +146,13 @@ class AdvancedSettingsPresenter(
                 is AdvancedSettingsEvents.SetVideoUploadQuality -> sessionCoroutineScope.launch {
                     sessionPreferencesStore.setVideoCompressionPreset(event.videoPreset)
                 }
+                // :tchap: AdvancedSettings - Add ClearCache & Rageshake rows
+                is AdvancedSettingsEvents.ClearCache -> localCoroutineScope.launch {
+                    suspend {
+                        clearCacheUseCase()
+                    }.runCatchingUpdatingState(clearCacheAction)
+                }
+                // :tchap: end
             }
         }
 
@@ -141,6 +164,10 @@ class AdvancedSettingsPresenter(
             availableThemeOptions = availableThemeOptions,
             mediaPreviewConfigState = mediaPreviewConfigState,
             liveLocationMinimumDistanceUpdate = liveLocationMinimumDistanceUpdate,
+            // :tchap: AdvancedSettings - Add ClearCache & Rageshake rows
+            rageshakeConfigState = rageshakeConfigState,
+            clearCacheAction = clearCacheAction.value,
+            // :tchap: end
             eventSink = ::handleEvent,
         )
     }
