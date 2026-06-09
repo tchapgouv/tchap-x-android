@@ -95,6 +95,7 @@ class RoomListPresenter(
     private val syncService: SyncService,
     private val coldStartWatcher: AnalyticsColdStartWatcher,
     private val spaceFiltersPresenter: Presenter<SpaceFiltersState>,
+    private val featureFlagService: FeatureFlagService,
 ) : Presenter<RoomListState> {
     private val encryptionService = client.encryptionService
 
@@ -170,12 +171,16 @@ class RoomListPresenter(
             roomListDataSource.updateFilter(allFilters)
         }
 
+        val canReportRoom by produceState(false) { value = client.canReportRoom() }
+        val showUnreadCount by produceState(false) {
+            value = featureFlagService.isFeatureEnabled(FeatureFlags.UnreadIndicatorCount)
+        }
+
         val contentState = roomListContentState(
             securityBannerDismissed,
             showNewNotificationSoundBanner,
+            showUnreadCount,
         )
-
-        val canReportRoom by produceState(false) { value = client.canReportRoom() }
 
         return RoomListState(
             contextMenu = contextMenu.value,
@@ -231,6 +236,7 @@ class RoomListPresenter(
     private fun roomListContentState(
         securityBannerDismissed: Boolean,
         showNewNotificationSoundBanner: Boolean,
+        showUnreadCount: Boolean,
     ): RoomListContentState {
         val roomSummaries by produceState(initialValue = AsyncData.Loading()) {
             roomListDataSource.roomSummariesFlow.collect { value = AsyncData.Success(it) }
@@ -280,6 +286,7 @@ class RoomListPresenter(
                     // TCHAP : Display banner when sync is offline
                     offlineBannerState = offlineBannerState,
                     showNewNotificationSoundBanner = showNewNotificationSoundBanner,
+                    showUnreadCount = showUnreadCount,
                     fullScreenIntentPermissionsState = fullScreenIntentPermissionsPresenter.present(),
                     batteryOptimizationState = batteryOptimizationPresenter.present(),
                     summaries = roomSummaries.dataOrNull().orEmpty().toImmutableList(),

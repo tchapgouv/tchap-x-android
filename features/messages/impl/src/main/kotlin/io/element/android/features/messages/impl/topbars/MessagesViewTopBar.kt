@@ -83,7 +83,8 @@ internal fun MessagesViewTopBar(
             Row(
                 modifier = Modifier
                     .clip(roundedCornerShape)
-                    .clickable { onRoomDetailsClick() },
+                    .clickable { onRoomDetailsClick() }
+                    .semantics { heading() },
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -161,6 +162,7 @@ private fun RoomAvatarAndNameRow(
                 isTombstoned = isTombstoned,
             ),
         )
+<<<<<<< HEAD
         Column(
             modifier = Modifier.padding(horizontal = 8.dp)
         ) {
@@ -180,6 +182,17 @@ private fun RoomAvatarAndNameRow(
                 roomBadge = roomBadges,
             )
         }
+=======
+        Text(
+            modifier = Modifier
+                .padding(start = 8.dp),
+            text = roomName ?: stringResource(CommonStrings.common_no_room_name),
+            style = ElementTheme.typography.fontBodyLgMedium,
+            fontStyle = FontStyle.Italic.takeIf { roomName == null },
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+>>>>>>> main-element
     }
 }
 
