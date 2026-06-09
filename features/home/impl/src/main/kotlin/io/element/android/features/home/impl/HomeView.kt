@@ -83,7 +83,9 @@ fun HomeView(
     // TCHAP : Display banner when sync is offline
     onViewServiceStatusClick: () -> Unit,
     onStartChatClick: () -> Unit,
-    onCreateSpaceClick: () -> Unit,
+    // :tchap: space-admin-limitations
+//    onCreateSpaceClick: () -> Unit,
+    // :tchap: end
     onRoomSettingsClick: (roomId: RoomId) -> Unit,
     onMenuActionClick: (RoomListMenuAction) -> Unit,
     onReportRoomClick: (roomId: RoomId) -> Unit,
@@ -125,7 +127,9 @@ fun HomeView(
             onRoomClick = { if (firstThrottler.canHandle()) onRoomClick(it) },
             onOpenSettings = { if (firstThrottler.canHandle()) onSettingsClick() },
             onStartChatClick = { if (firstThrottler.canHandle()) onStartChatClick() },
-            onCreateSpaceClick = { if (firstThrottler.canHandle()) onCreateSpaceClick() },
+            // :tchap: space-admin-limitations
+//            onCreateSpaceClick = { if (firstThrottler.canHandle()) onCreateSpaceClick() },
+            // :tchap: end
             onMenuActionClick = onMenuActionClick,
         )
         // This overlaid view will only be visible when state.displaySearchResults is true
@@ -153,7 +157,9 @@ private fun HomeScaffold(
     onRoomClick: (RoomId) -> Unit,
     onOpenSettings: () -> Unit,
     onStartChatClick: () -> Unit,
-    onCreateSpaceClick: () -> Unit,
+    // :tchap: space-admin-limitations
+//    onCreateSpaceClick: () -> Unit,
+    // :tchap: end
     onMenuActionClick: (RoomListMenuAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -322,7 +328,9 @@ private fun HomeScaffold(
                         onTrailingSpaceClick = { spaceId ->
                             onRoomClick(spaceId)
                         },
-                        onCreateSpaceClick = onCreateSpaceClick,
+                        // :tchap: space-admin-limitations
+//                        onCreateSpaceClick = onCreateSpaceClick,
+                        // :tchap: end
                         // TODO use actual callbacks for this
                         onExploreClick = {},
                     )
@@ -389,7 +397,9 @@ internal fun HomeViewPreview(@PreviewParameter(HomeStateProvider::class) state: 
         // TCHAP : Display banner when sync is offline
         onViewServiceStatusClick = {},
         onStartChatClick = {},
-        onCreateSpaceClick = {},
+        // :tchap: space-admin-limitations
+//        onCreateSpaceClick = {},
+        // :tchap: end
         onRoomSettingsClick = {},
         onReportRoomClick = {},
         onMenuActionClick = {},
@@ -411,7 +421,9 @@ internal fun HomeViewA11yPreview() = ElementPreview {
         // TCHAP : Display banner when sync is offline
         onViewServiceStatusClick = {},
         onStartChatClick = {},
-        onCreateSpaceClick = {},
+        // :tchap: space-admin-limitations
+//        onCreateSpaceClick = {},
+        // :tchap: end
         onRoomSettingsClick = {},
         onReportRoomClick = {},
         onMenuActionClick = {},

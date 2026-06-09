@@ -103,8 +103,10 @@ fun SpaceView(
     onLeaveSpaceClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onViewMembersClick: () -> Unit,
-    onCreateRoomClick: () -> Unit,
-    onAddRoomClick: () -> Unit,
+    // :tchap: space-admin-limitations
+//    onCreateRoomClick: () -> Unit,
+//    onAddRoomClick: () -> Unit,
+    // :tchap: end
     modifier: Modifier = Modifier,
     acceptDeclineInviteView: @Composable () -> Unit,
 ) {
@@ -142,16 +144,20 @@ fun SpaceView(
                     SpaceViewTopBar(
                         spaceInfo = state.spaceInfo,
                         canAccessSpaceSettings = state.canAccessSpaceSettings,
-                        canEditSpaceGraph = state.canEditSpaceGraph,
-                        showManageRoomsAction = state.showManageRoomsAction,
+                        // :tchap: space-admin-limitations
+//                        canEditSpaceGraph = state.canEditSpaceGraph,
+//                        showManageRoomsAction = state.showManageRoomsAction,
+                        // :tchap: end
                         onBackClick = onBackClick,
                         onLeaveSpaceClick = onLeaveSpaceClick,
                         onSettingsClick = onSettingsClick,
                         onShareSpace = onShareSpace,
                         onViewMembersClick = onViewMembersClick,
-                        onManageRoomsClick = { state.eventSink(SpaceEvents.EnterManageMode) },
-                        onAddRoomClick = onAddRoomClick,
-                        onCreateRoomClick = onCreateRoomClick,
+                        // :tchap: space-admin-limitations
+//                        onManageRoomsClick = { state.eventSink(SpaceEvents.EnterManageMode) },
+//                        onAddRoomClick = onAddRoomClick,
+//                        onCreateRoomClick = onCreateRoomClick,
+                        // :tchap: end
                     )
                 }
             }
@@ -172,8 +178,10 @@ fun SpaceView(
                     onTopicClick = { topic ->
                         state.eventSink(SpaceEvents.ShowTopicViewer(topic))
                     },
-                    onCreateRoomClick = onCreateRoomClick,
-                    onAddRoomClick = onAddRoomClick,
+                    // :tchap: space-admin-limitations
+//                    onCreateRoomClick = onCreateRoomClick,
+//                    onAddRoomClick = onAddRoomClick,
+                    // :tchap: end
                 )
                 JoinFailuresEffect(
                     hasAnyFailure = state.hasAnyJoinFailures,
@@ -246,8 +254,10 @@ private fun SpaceViewContent(
     state: SpaceState,
     onRoomClick: (spaceRoom: SpaceRoom) -> Unit,
     onTopicClick: (String) -> Unit,
-    onCreateRoomClick: () -> Unit,
-    onAddRoomClick: () -> Unit,
+    // :tchap: space-admin-limitations
+//    onCreateRoomClick: () -> Unit,
+//    onAddRoomClick: () -> Unit,
+    // :tchap: end
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier.fillMaxSize()) {
@@ -278,8 +288,10 @@ private fun SpaceViewContent(
         if (state.children.isEmpty() && state.canEditSpaceGraph && !state.hasMoreToLoad) {
             item {
                 EmptySpaceView(
-                    onCreateRoomClick = onCreateRoomClick,
-                    onAddRoomClick = onAddRoomClick,
+                    // :tchap: space-admin-limitations
+//                    onCreateRoomClick = onCreateRoomClick,
+//                    onAddRoomClick = onAddRoomClick,
+                    // :tchap: end
                 )
             }
         } else {
@@ -342,8 +354,10 @@ private fun SpaceViewContent(
 
 @Composable
 private fun EmptySpaceView(
-    onCreateRoomClick: () -> Unit,
-    onAddRoomClick: () -> Unit,
+    // :tchap: space-admin-limitations
+//    onCreateRoomClick: () -> Unit,
+//    onAddRoomClick: () -> Unit,
+    // :tchap: end
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -410,16 +424,20 @@ private fun LoadingMoreIndicator(
 private fun SpaceViewTopBar(
     spaceInfo: RoomInfo,
     canAccessSpaceSettings: Boolean,
-    canEditSpaceGraph: Boolean,
-    showManageRoomsAction: Boolean,
+    // :tchap: space-admin-limitations
+//    canEditSpaceGraph: Boolean,
+//    showManageRoomsAction: Boolean,
+    // :tchap: end
     onBackClick: () -> Unit,
     onLeaveSpaceClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onShareSpace: () -> Unit,
     onViewMembersClick: () -> Unit,
-    onManageRoomsClick: () -> Unit,
-    onAddRoomClick: () -> Unit,
-    onCreateRoomClick: () -> Unit,
+    // :tchap: space-admin-limitations
+//    onManageRoomsClick: () -> Unit,
+//    onAddRoomClick: () -> Unit,
+//    onCreateRoomClick: () -> Unit,
+    // :tchap: end
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
@@ -698,8 +716,10 @@ internal fun SpaceViewPreview(
         acceptDeclineInviteView = {},
         onSettingsClick = {},
         onViewMembersClick = {},
-        onCreateRoomClick = {},
-        onAddRoomClick = {},
+        // :tchap: space-admin-limitations
+//        onCreateRoomClick = {},
+//        onAddRoomClick = {},
+        // :tchap: end
         onBackClick = {},
     )
 }

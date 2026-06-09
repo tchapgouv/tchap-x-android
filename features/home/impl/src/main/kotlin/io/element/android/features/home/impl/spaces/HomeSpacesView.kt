@@ -67,14 +67,18 @@ fun HomeSpacesView(
     // TCHAP : Space default action is now conversation filtering
     onSpaceClick: (RoomId?) -> Unit,
     onTrailingSpaceClick: (RoomId) -> Unit,
-    onCreateSpaceClick: () -> Unit,
+    // :tchap: space-admin-limitations
+//    onCreateSpaceClick: () -> Unit,
+    // :tchap: end
     onExploreClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (state.spaceRooms.isEmpty()) {
         EmptySpaceHomeView(
             modifier = modifier.padding(contentPadding),
-            onCreateSpaceClick = onCreateSpaceClick,
+            // :tchap: space-admin-limitations
+//            onCreateSpaceClick = onCreateSpaceClick,
+            // :tchap: end
             onExploreClick = onExploreClick,
             canExploreSpaces = state.canExploreSpaces,
         )
@@ -199,7 +203,9 @@ fun HomeSpacesView(
  */
 @Composable
 private fun EmptySpaceHomeView(
-    onCreateSpaceClick: () -> Unit,
+    // :tchap: space-admin-limitations
+//    onCreateSpaceClick: () -> Unit,
+    // :tchap: end
     onExploreClick: () -> Unit,
     canExploreSpaces: Boolean,
     modifier: Modifier = Modifier,
@@ -242,7 +248,7 @@ private fun EmptySpaceHomeView(
 //                    text = stringResource(CommonStrings.action_create_space),
 //                    onClick = onCreateSpaceClick,
 //                )
-                // :tchap: space-admin-limitations
+                // :tchap: end
                 if (canExploreSpaces) {
                     TextButton(
                         modifier = Modifier.fillMaxWidth(),
@@ -266,7 +272,9 @@ internal fun HomeSpacesViewPreview(
         onSpaceClick = {},
         // TCHAP : Space default action is now conversation filtering (add trailing action)
         onTrailingSpaceClick = {},
-        onCreateSpaceClick = {},
+        // :tchap: space-admin-limitations
+//        onCreateSpaceClick = {},
+        // :tchap: end
         onExploreClick = {},
         contentPadding = PaddingValues(bottom = 112.dp),
     )
