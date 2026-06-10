@@ -28,9 +28,12 @@
         android:theme="@style/Theme.ElementX"
         tools:targetApi="33">
 
+        <!-- :tchap: disable-android-auto
+        Notes : Google needs access to Tchap contacts to enable sending messages in Google Car/Auto
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
+         :tchap: end -->
 
         <provider
             android:name="androidx.startup.InitializationProvider"
