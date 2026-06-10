@@ -64,7 +64,10 @@ internal fun SendButtonIcon(
             // Note: accessibility is managed in TextComposer.
             contentDescription = null,
             tint = if (canSendMessage) {
-                ElementTheme.colors.iconOnSolidPrimary
+                // :tchap: Tchap UI
+//                ElementTheme.colors.iconOnSolidPrimary
+                ElementTheme.iconOnSolidBlueTchap
+                // :tchap: end
             } else {
                 ElementTheme.colors.iconQuaternary
             }
