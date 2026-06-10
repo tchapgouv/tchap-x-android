@@ -162,15 +162,10 @@ private fun RoomAvatarAndNameRow(
                 isTombstoned = isTombstoned,
             ),
         )
-<<<<<<< HEAD
-        Column(
-            modifier = Modifier.padding(horizontal = 8.dp)
-        ) {
+        Column {
             Text(
                 modifier = Modifier
-                    .semantics {
-                        heading()
-                    },
+                    .padding(start = 8.dp),
                 text = roomName ?: stringResource(CommonStrings.common_no_room_name),
                 style = ElementTheme.typography.fontBodyLgMedium,
                 fontStyle = FontStyle.Italic.takeIf { roomName == null },
@@ -178,21 +173,12 @@ private fun RoomAvatarAndNameRow(
                 overflow = TextOverflow.Ellipsis
             )
             BadgeList(
-                modifier = Modifier.padding(vertical = 2.dp),
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .padding(vertical = 2.dp),
                 roomBadge = roomBadges,
             )
         }
-=======
-        Text(
-            modifier = Modifier
-                .padding(start = 8.dp),
-            text = roomName ?: stringResource(CommonStrings.common_no_room_name),
-            style = ElementTheme.typography.fontBodyLgMedium,
-            fontStyle = FontStyle.Italic.takeIf { roomName == null },
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
->>>>>>> main-element
     }
 }
 

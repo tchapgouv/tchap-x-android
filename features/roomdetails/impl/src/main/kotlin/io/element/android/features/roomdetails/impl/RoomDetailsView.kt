@@ -12,6 +12,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -50,6 +51,7 @@ import io.element.android.features.userprofile.shared.blockuser.BlockUserSection
 import io.element.android.libraries.androidutils.system.copyToClipboard
 import io.element.android.libraries.architecture.coverage.ExcludeFromCoverage
 import io.element.android.libraries.designsystem.atomic.atoms.MatrixBadgeAtom
+import io.element.android.libraries.designsystem.atomic.molecules.MatrixBadgeRowMolecule
 import io.element.android.libraries.designsystem.components.ClickableLinkText
 import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
@@ -65,12 +67,8 @@ import io.element.android.libraries.designsystem.modifiers.niceClickable
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.ElementPreviewDark
 import io.element.android.libraries.designsystem.preview.ElementPreviewLight
-<<<<<<< HEAD
-import io.element.android.libraries.designsystem.preview.PreviewWithLargeHeight
-import io.element.android.libraries.designsystem.theme.components.ButtonSize
-=======
 import io.element.android.libraries.designsystem.preview.PreviewWithExtraLargeHeight
->>>>>>> main-element
+import io.element.android.libraries.designsystem.theme.components.ButtonSize
 import io.element.android.libraries.designsystem.theme.components.CircularProgressIndicator
 import io.element.android.libraries.designsystem.theme.components.DropdownMenu
 import io.element.android.libraries.designsystem.theme.components.DropdownMenuItem
@@ -254,57 +252,7 @@ fun RoomDetailsView(
                     )
                 }
             }
-<<<<<<< HEAD
-
-            state.roomMemberDetailsState?.let { dmMemberDetails ->
-                if (state.canInvite) {
-                    PreferenceCategory {
-                        InviteItem(onClick = invitePeople)
-                    }
-                }
-                PreferenceCategory {
-                    ProfileItem(
-                        verificationState = dmMemberDetails.verificationState,
-                        onClick = { onProfileClick(dmMemberDetails.userId) }
-                    )
-                }
-            }
-
-            if (state.roomType is RoomDetailsType.Room) {
-                PreferenceCategory {
-                    MembersItem(
-                        memberCount = state.memberCount,
-                        hasVerificationViolations = state.hasMemberVerificationViolations,
-                        openRoomMemberList = openRoomMemberList,
-                    )
-                    if (state.canShowKnockRequests) {
-                        KnockRequestsItem(
-                            knockRequestsCount = state.knockRequestsCount,
-                            onKnockRequestsClick = onKnockRequestsClick
-                        )
-                    }
-                    if (state.displayRolesAndPermissionsSettings) {
-                        ListItem(
-                            headlineContent = { Text(stringResource(R.string.screen_room_details_roles_and_permissions)) },
-                            leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Admin())),
-                            onClick = openAdminSettings,
-                        )
-                    }
-                    // TCHAP : Room access link feature
-                    if (state.canShowSecurityAndPrivacy) {
-                        AccessByLinkItem(
-                            canDisableAccessLink = !state.isPublic,
-                            isLinkAccessEnabled = state.isLinkAccessEnabled,
-                            onLinkAccessToggle = { state.eventSink(RoomDetailsEvent.OnLinkAccessToggle) },
-                            onCopyRoomAccessLink = { state.eventSink(RoomDetailsEvent.CopyRoomPermalinkToClipboard) },
-                        )
-                    }
-                }
-            }
-
-=======
             // Room content
->>>>>>> main-element
             PreferenceCategory {
                 MediaGalleryItem(
                     onClick = openMediaGallery
@@ -338,6 +286,16 @@ fun RoomDetailsView(
                                 onClick = openAdminSettings,
                             )
                         }
+                        // :tchap: Room access link feature
+                        if (state.canShowSecurityAndPrivacy) {
+                            AccessByLinkItem(
+                                canDisableAccessLink = !state.isPublic,
+                                isLinkAccessEnabled = state.isLinkAccessEnabled,
+                                onLinkAccessToggle = { state.eventSink(RoomDetailsEvent.OnLinkAccessToggle) },
+                                onCopyRoomAccessLink = { state.eventSink(RoomDetailsEvent.CopyRoomPermalinkToClipboard) },
+                            )
+                        }
+                        // :tchap: end
                     }
                 }
                 is RoomDetailsType.Dm -> {
@@ -641,15 +599,24 @@ private fun TitleAndSubtitle(
 }
 
 @Composable
-fun RoomBadge.toMatrixBadgeData(): MatrixBadgeAtom.MatrixBadgeData {
-    return when (this) {
-        RoomBadge.EXTERNAL -> {
-            MatrixBadgeAtom.MatrixBadgeData(
-                text = stringResource(R.string.tchap_screen_room_details_badge_external),
-                icon = CompoundIcons.UserSolid(),
-                type = MatrixBadgeAtom.Type.External,
+fun BadgeList(
+    roomBadge: ImmutableList<RoomBadge>,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier) {
+        if (roomBadge.isNotEmpty()) {
+            MatrixBadgeRowMolecule(
+                data = roomBadge.map {
+                    it.toMatrixBadgeData()
+                }.toImmutableList(),
             )
         }
+    }
+}
+
+@Composable
+private fun RoomBadge.toMatrixBadgeData(): MatrixBadgeAtom.MatrixBadgeData {
+    return when (this) {
         RoomBadge.ENCRYPTED -> {
             MatrixBadgeAtom.MatrixBadgeData(
                 text = stringResource(R.string.screen_room_details_badge_encrypted),
@@ -692,6 +659,15 @@ fun RoomBadge.toMatrixBadgeData(): MatrixBadgeAtom.MatrixBadgeData {
                 type = MatrixBadgeAtom.Type.Info
             )
         }
+        // :tchap: external-users
+        RoomBadge.EXTERNAL -> {
+            MatrixBadgeAtom.MatrixBadgeData(
+                text = stringResource(R.string.tchap_screen_room_details_badge_external),
+                icon = CompoundIcons.UserSolid(),
+                type = MatrixBadgeAtom.Type.External,
+            )
+        }
+        // :tchap: end
     }
 }
 
@@ -954,7 +930,6 @@ private fun DebugInfoSection(
     }
 }
 
-<<<<<<< HEAD
 // TCHAP : Room access link feature
 @Composable
 private fun AccessByLinkItem(
@@ -987,10 +962,7 @@ private fun AccessByLinkItem(
     )
 }
 
-@PreviewWithLargeHeight
-=======
 @PreviewWithExtraLargeHeight
->>>>>>> main-element
 @Composable
 internal fun RoomDetailsPreview(@PreviewParameter(RoomDetailsStateProvider::class) state: RoomDetailsState) =
     ElementPreviewLight { ContentToPreview(state) }

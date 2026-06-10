@@ -108,12 +108,8 @@ val compoundColorsLight = SemanticColors(
     iconTertiary = LightColorTokens.colorGray800,
     iconTertiaryAlpha = LightColorTokens.colorAlphaGray800,
     separatorPrimary = LightColorTokens.colorGray400,
-<<<<<<< HEAD
     textActionAccent = LightColorTokens.colorBlue900,
-=======
     separatorSecondary = LightColorTokens.colorGray300,
-    textActionAccent = LightColorTokens.colorGreen900,
->>>>>>> main-element
     textActionPrimary = LightColorTokens.colorGray1400,
     textBadgeAccent = LightColorTokens.colorGreen1200,
     textBadgeDefault = LightColorTokens.colorGray1200,

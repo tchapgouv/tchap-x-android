@@ -19,14 +19,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-<<<<<<< HEAD
 import androidx.compose.runtime.setValue
-import dev.zacsweers.metro.Inject
-=======
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
->>>>>>> main-element
 import im.vector.app.features.analytics.plan.Interaction
 import io.element.android.features.knockrequests.api.KnockRequestPermissions
 import io.element.android.features.knockrequests.api.knockRequestPermissions
@@ -58,11 +54,8 @@ import io.element.android.libraries.matrix.api.room.join.JoinRule
 import io.element.android.libraries.matrix.api.room.powerlevels.canEditRolesAndPermissions
 import io.element.android.libraries.matrix.api.room.powerlevels.permissionsAsState
 import io.element.android.libraries.matrix.api.room.roomNotificationSettings
-<<<<<<< HEAD
 import io.element.android.libraries.matrix.api.roomdirectory.RoomVisibility
-=======
 import io.element.android.libraries.matrix.api.timeline.ReceiptType
->>>>>>> main-element
 import io.element.android.libraries.matrix.ui.room.getDirectRoomMember
 import io.element.android.libraries.matrix.ui.room.roomMemberIdentityStateChange
 import io.element.android.libraries.preferences.api.store.AppPreferencesStore
@@ -91,12 +84,9 @@ class RoomDetailsPresenter(
     private val analyticsService: AnalyticsService,
     private val clipboardHelper: ClipboardHelper,
     private val appPreferencesStore: AppPreferencesStore,
-<<<<<<< HEAD
     private val featureFlagService: FeatureFlagService,
-=======
     private val sessionPreferencesStore: SessionPreferencesStore,
     private val notificationCleaner: NotificationCleaner,
->>>>>>> main-element
 ) : Presenter<RoomDetailsState> {
     @AssistedFactory
     interface Factory {
@@ -346,13 +336,13 @@ class RoomDetailsPresenter(
             }
     }
 
-<<<<<<< HEAD
     // TCHAP : Show public badge only when the room is visible in the room directory
     private fun CoroutineScope.isRoomVisibleInRoomDirectory(isRoomVisible: MutableState<AsyncData<Boolean>>) = launch {
         isRoomVisible.runUpdatingState {
             room.getRoomVisibility().map { it == RoomVisibility.Public }
         }
-=======
+    }
+
     private fun CoroutineScope.markAsRead() = launch {
         notificationCleaner.clearMessagesForRoom(client.sessionId, room.roomId)
         room.setUnreadFlag(isUnread = false)
@@ -373,6 +363,5 @@ class RoomDetailsPresenter(
                 analyticsService.captureInteraction(name = Interaction.Name.MobileRoomListRoomContextMenuUnreadToggle)
                 navigator.onDone()
             }
->>>>>>> main-element
     }
 }

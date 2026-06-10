@@ -76,7 +76,6 @@ import kotlinx.coroutines.launch
 
 @Inject
 class RoomListPresenter(
-    private val featureFlagService: FeatureFlagService,
     private val client: MatrixClient,
     private val leaveRoomPresenter: Presenter<LeaveRoomState>,
     private val roomListDataSource: RoomListDataSource,

@@ -10,12 +10,9 @@ package io.element.android.libraries.matrix.impl
 
 import android.content.Context
 import dev.zacsweers.metro.Inject
-<<<<<<< HEAD
 import fr.gouv.tchap.android.appcertificates.BuildConfig
 import fr.gouv.tchap.android.appcertificates.R
-=======
 import io.element.android.libraries.androidutils.crypto.ClientSecret
->>>>>>> main-element
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.data.ByteUnit
 import io.element.android.libraries.core.data.megaBytes

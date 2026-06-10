@@ -70,13 +70,9 @@ class RustMatrixAuthenticationService(
     private val coroutineDispatchers: CoroutineDispatchers,
     private val sessionStore: SessionStore,
     private val rustMatrixClientFactory: RustMatrixClientFactory,
-<<<<<<< HEAD
-    private val passphraseGenerator: PassphraseGenerator,
     private val userAgentProvider: UserAgentProvider,
     private val buildMeta: BuildMeta,
-=======
     private val secretGenerator: SecretGenerator,
->>>>>>> main-element
     private val oAuthConfigurationProvider: OAuthConfigurationProvider,
     private val enterpriseService: EnterpriseService,
 ) : MatrixAuthenticationService {
