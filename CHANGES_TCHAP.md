@@ -1,3 +1,18 @@
+Changements dans Tchap beta Android v0.11.3
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v0.11.3 -->
+
+## Qu'est-ce qui a changé ?
+### 🙌 Améliorations
+* Support pour Android Auto (mode voiture) retiré by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/219
+* Renommer la section "Direct" en "Personnes" by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/218
+### 🐛 Corrections de bugs
+* Correction de l'icône d'envoi de message en DarkMode by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/217
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v0.11.2...v0.11.3
+
 Changements dans Tchap beta Android v0.11.2
 =============================
 
