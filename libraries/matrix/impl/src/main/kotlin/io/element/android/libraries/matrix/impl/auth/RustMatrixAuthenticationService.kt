@@ -12,6 +12,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
 import io.element.android.features.enterprise.api.EnterpriseService
+import io.element.android.libraries.androidutils.crypto.ClientSecret
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.extensions.mapFailure
 import io.element.android.libraries.core.extensions.runCatchingExceptions
@@ -36,7 +37,7 @@ import io.element.android.libraries.matrix.impl.auth.qrlogin.QrErrorMapper
 import io.element.android.libraries.matrix.impl.auth.qrlogin.SdkQrCodeLoginData
 import io.element.android.libraries.matrix.impl.auth.qrlogin.toStep
 import io.element.android.libraries.matrix.impl.exception.mapClientException
-import io.element.android.libraries.matrix.impl.keys.PassphraseGenerator
+import io.element.android.libraries.matrix.impl.keys.SecretGenerator
 import io.element.android.libraries.matrix.impl.mapper.toSessionData
 import io.element.android.libraries.matrix.impl.paths.SessionPaths
 import io.element.android.libraries.matrix.impl.paths.SessionPathsFactory
@@ -69,9 +70,9 @@ class RustMatrixAuthenticationService(
     private val coroutineDispatchers: CoroutineDispatchers,
     private val sessionStore: SessionStore,
     private val rustMatrixClientFactory: RustMatrixClientFactory,
-    private val passphraseGenerator: PassphraseGenerator,
     private val userAgentProvider: UserAgentProvider,
     private val buildMeta: BuildMeta,
+    private val secretGenerator: SecretGenerator,
     private val oAuthConfigurationProvider: OAuthConfigurationProvider,
     private val enterpriseService: EnterpriseService,
 ) : MatrixAuthenticationService {
@@ -80,7 +81,7 @@ class RustMatrixAuthenticationService(
 
     // Passphrase which will be used for new sessions. Existing sessions will use the passphrase
     // stored in the SessionData.
-    private val pendingPassphrase = getDatabasePassphrase()
+    private val pendingKey by lazy { getDatabaseKey() }
 
     // Need to keep a copy of the current session path to eventually delete it.
     // Ideally it would be possible to get the sessionPath from the Client to avoid doing this.
@@ -121,12 +122,9 @@ class RustMatrixAuthenticationService(
         }
     }
 
-    private fun getDatabasePassphrase(): String? {
-        val passphrase = passphraseGenerator.generatePassphrase()
-        if (passphrase != null) {
-            Timber.w("New sessions will be encrypted with a passphrase")
-        }
-        return passphrase
+    private fun getDatabaseKey(): ClientSecret {
+        Timber.d("New sessions will be encrypted with a raw key")
+        return secretGenerator.generateKey()
     }
 
     override suspend fun getHomeserverFromLoginHint(defaultHomeserver: String, loginHint: String): Result<String> =
@@ -185,7 +183,7 @@ class RustMatrixAuthenticationService(
                     .toSessionData(
                         isTokenValid = true,
                         loginType = LoginType.PASSWORD,
-                        passphrase = pendingPassphrase,
+                        passphrase = pendingKey.formattedAsString(),
                         sessionPaths = currentSessionPaths,
                     )
                 val matrixClient = rustMatrixClientFactory.create(client)
@@ -257,7 +255,7 @@ class RustMatrixAuthenticationService(
                 val sessionData = externalSession.toSessionData(
                     isTokenValid = true,
                     loginType = LoginType.PASSWORD,
-                    passphrase = pendingPassphrase,
+                    passphrase = pendingKey.formattedAsString(),
                     sessionPaths = currentSessionPaths,
                 )
 
@@ -350,7 +348,7 @@ class RustMatrixAuthenticationService(
                 val sessionData = client.session().toSessionData(
                     isTokenValid = true,
                     loginType = LoginType.OIDC,
-                    passphrase = pendingPassphrase,
+                    passphrase = pendingKey.formattedAsString(),
                     sessionPaths = currentSessionPaths,
                 )
                 val matrixClient = rustMatrixClientFactory.create(client)
@@ -415,7 +413,7 @@ class RustMatrixAuthenticationService(
                     .toSessionData(
                         isTokenValid = true,
                         loginType = LoginType.QR,
-                        passphrase = pendingPassphrase,
+                        passphrase = pendingKey.formattedAsString(),
                         sessionPaths = emptySessionPaths,
                     )
                 val matrixClient = rustMatrixClientFactory.create(client)
@@ -448,7 +446,7 @@ class RustMatrixAuthenticationService(
         return rustMatrixClientFactory
             .getBaseClientBuilder(
                 sessionPaths = sessionPaths,
-                passphrase = pendingPassphrase,
+                clientSecret = pendingKey,
                 slidingSyncType = ClientBuilderSlidingSync.Discovered,
             )
             .config()
@@ -480,7 +478,7 @@ class RustMatrixAuthenticationService(
         return rustMatrixClientFactory
             .getBaseClientBuilder(
                 sessionPaths = sessionPaths,
-                passphrase = pendingPassphrase,
+                clientSecret = pendingKey,
                 slidingSyncType = ClientBuilderSlidingSync.Discovered,
             )
             .serverNameOrHomeserverUrl(baseUrlOrServerName)

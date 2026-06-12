@@ -28,7 +28,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.Size
 import io.element.android.features.location.api.Location
-import io.element.android.features.location.api.internal.TileServerStyleUriBuilder
+import io.element.android.features.location.api.internal.MapTilerTileServerStyleUriBuilder
 import io.element.android.libraries.core.extensions.runCatchingExceptions
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Semaphore
@@ -86,7 +86,7 @@ class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context
         }
     }
 
-    private val styleBuilder: Style.Builder = Style.Builder().fromUri(TileServerStyleUriBuilder().build(darkMode))
+    private val styleBuilder: Style.Builder = Style.Builder().fromUri(MapTilerTileServerStyleUriBuilder().build(null, darkMode))
     private val pendingGenerationSnapshot = Collections.newSetFromMap(ConcurrentHashMap<String, Boolean>())
 
     init {

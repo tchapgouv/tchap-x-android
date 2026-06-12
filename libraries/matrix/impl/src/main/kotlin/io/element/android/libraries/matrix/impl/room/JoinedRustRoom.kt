@@ -437,6 +437,8 @@ class JoinedRustRoom(
                 roomAvatar = roomPowerLevelsValues.roomAvatar,
                 roomTopic = roomPowerLevelsValues.roomTopic,
                 spaceChild = roomPowerLevelsValues.spaceChild,
+                beacon = roomPowerLevelsValues.beacon,
+                beaconInfo = roomPowerLevelsValues.beaconInfo,
             )
             innerRoom.applyPowerLevelChanges(changes)
         }

@@ -80,7 +80,7 @@ fun SecurityAndPrivacyView(
                 .consumeWindowInsets(padding),
             verticalArrangement = Arrangement.spacedBy(32.dp),
         ) {
-            // TCHAP - Disable room security and privacy options
+            // :tchap: security-privacy - Disable room security and privacy options
 //            if (state.showRoomAccessSection) {
 //                RoomAccessSection(
 //                    state = state,
@@ -110,6 +110,7 @@ fun SecurityAndPrivacyView(
 //                    onConfirmEncryption = { state.eventSink(SecurityAndPrivacyEvent.ConfirmEnableEncryption) },
 //                )
 //            }
+            // :tchap: end
             if (state.showHistoryVisibilitySection) {
                 HistoryVisibilitySection(
                     editedOption = state.editedSettings.historyVisibility,

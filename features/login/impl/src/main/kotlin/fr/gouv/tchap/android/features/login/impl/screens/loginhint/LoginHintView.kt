@@ -229,7 +229,7 @@ private fun LoginForm(
                 .semantics {
                     contentType = ContentType.Username
                 },
-            placeholder = stringResource(CommonStrings.common_username),
+            placeholder = stringResource(R.string.tchap_screen_login_hint_label),
             onValueChange = {
                 val sanitized = it.sanitize()
                 loginFieldState = sanitized
