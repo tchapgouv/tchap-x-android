@@ -21,6 +21,7 @@ import io.element.android.libraries.androidutils.clipboard.ClipboardHelper
 import io.element.android.libraries.androidutils.clipboard.FakeClipboardHelper
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
+import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.SessionId
 import io.element.android.libraries.matrix.api.core.UserId
@@ -39,7 +40,6 @@ import io.element.android.libraries.matrix.test.A_SESSION_ID
 import io.element.android.libraries.matrix.test.A_USER_ID_2
 import io.element.android.libraries.matrix.test.A_USER_NAME
 import io.element.android.libraries.matrix.test.FakeMatrixClient
-import io.element.android.libraries.matrix.test.core.aBuildMeta
 import io.element.android.libraries.matrix.test.encryption.FakeEncryptionService
 import io.element.android.libraries.matrix.test.notificationsettings.FakeNotificationSettingsService
 import io.element.android.libraries.matrix.test.room.aRoomInfo
@@ -93,27 +93,27 @@ class RoomDetailsPresenterTest {
         sessionPreferencesStore: SessionPreferencesStore = InMemorySessionPreferencesStore(),
     ): RoomDetailsPresenter {
         val matrixClient = FakeMatrixClient(notificationSettingsService = notificationSettingsService)
-        val buildMeta = aBuildMeta()
+        val featureFlagService = FakeFeatureFlagService(
+            getAvailableFeaturesResult = { _, _ ->
+                emptyList()
+            }
+        )
         val roomMemberDetailsPresenterFactory = object : RoomMemberDetailsPresenter.Factory {
             override fun create(roomMemberId: UserId): RoomMemberDetailsPresenter {
                 return RoomMemberDetailsPresenter(
                     roomMemberId = roomMemberId,
-                    buildMeta = buildMeta,
                     room = room,
                     userProfilePresenterFactory = {
                         Presenter { aUserProfileState() }
                     },
                     encryptionService = encryptionService,
                     clipboardHelper = clipboardHelper,
+                    featureFlagService = featureFlagService,
                 )
             }
         }
         return RoomDetailsPresenter(
-<<<<<<< HEAD
-            buildMeta = buildMeta,
-=======
             navigator = navigator,
->>>>>>> main-element
             client = matrixClient,
             room = room,
             notificationSettingsService = matrixClient.notificationSettingsService,
@@ -126,6 +126,7 @@ class RoomDetailsPresenterTest {
             appPreferencesStore = appPreferencesStore,
             notificationCleaner = notificationCleaner,
             sessionPreferencesStore = sessionPreferencesStore,
+            featureFlagService = featureFlagService,
         )
     }
 
