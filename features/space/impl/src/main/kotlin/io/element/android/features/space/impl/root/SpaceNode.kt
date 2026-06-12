@@ -92,9 +92,11 @@ class SpaceNode(
             onViewMembersClick = {
                 callback.navigateToRoomMemberList()
             },
-            onAddRoomClick = {
-                callback.navigateToAddRoom()
-            },
+            // :tchap: space-admin-limitations
+//            onAddRoomClick = {
+//                callback.navigateToAddRoom()
+//            },
+            // :tchap: end
             acceptDeclineInviteView = {
                 acceptDeclineInviteView.Render(
                     state = state.acceptDeclineInviteState,
@@ -107,7 +109,9 @@ class SpaceNode(
                     modifier = Modifier
                 )
             },
-            onCreateRoomClick = callback::onCreateRoom,
+            // :tchap: space-admin-limitations
+//            onCreateRoomClick = callback::onCreateRoom,
+            // :tchap: end
             modifier = modifier
         )
     }

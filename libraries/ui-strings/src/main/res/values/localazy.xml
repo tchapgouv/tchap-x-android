@@ -521,7 +521,7 @@ Are you sure you want to continue?"</string>
   <string name="screen_sharing_location_option_sheet_title">"Sharing options"</string>
   <string name="screen_space_list_description">"Spaces you have created or joined."</string>
   <string name="screen_space_list_details">"%1$s • %2$s"</string>
-  <string name="screen_space_list_empty_state_title">"Create spaces to organize rooms"</string>
+  <string name="screen_space_list_empty_state_title">"Spaces"</string><!-- Tchap: Custom string -->
   <string name="screen_space_list_parent_space">"%1$s space"</string>
   <string name="screen_space_list_title">"Spaces"</string>
   <string name="screen_static_location_sheet_timestamp_description">"Shared %1$s"</string>

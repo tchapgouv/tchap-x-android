@@ -46,7 +46,6 @@ import io.element.android.libraries.designsystem.components.BigIcon
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
-import io.element.android.libraries.designsystem.theme.components.Button
 import io.element.android.libraries.designsystem.theme.components.HorizontalDivider
 import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.IconButton
@@ -68,14 +67,18 @@ fun HomeSpacesView(
     // TCHAP : Space default action is now conversation filtering
     onSpaceClick: (RoomId?) -> Unit,
     onTrailingSpaceClick: (RoomId) -> Unit,
-    onCreateSpaceClick: () -> Unit,
+    // :tchap: space-admin-limitations
+//    onCreateSpaceClick: () -> Unit,
+    // :tchap: end
     onExploreClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (state.spaceRooms.isEmpty()) {
         EmptySpaceHomeView(
             modifier = modifier.padding(contentPadding),
-            onCreateSpaceClick = onCreateSpaceClick,
+            // :tchap: space-admin-limitations
+//            onCreateSpaceClick = onCreateSpaceClick,
+            // :tchap: end
             onExploreClick = onExploreClick,
             canExploreSpaces = state.canExploreSpaces,
         )
@@ -200,7 +203,9 @@ fun HomeSpacesView(
  */
 @Composable
 private fun EmptySpaceHomeView(
-    onCreateSpaceClick: () -> Unit,
+    // :tchap: space-admin-limitations
+//    onCreateSpaceClick: () -> Unit,
+    // :tchap: end
     onExploreClick: () -> Unit,
     canExploreSpaces: Boolean,
     modifier: Modifier = Modifier,
@@ -224,15 +229,26 @@ private fun EmptySpaceHomeView(
                     color = ElementTheme.colors.textPrimary,
                     textAlign = TextAlign.Center,
                 )
+                // :tchap: space-admin-limitations - Add description
+                Spacer(modifier = Modifier.height(6.dp))
+                Text(
+                    text = stringResource(R.string.tchap_screen_space_list_empty_state_description),
+                    style = ElementTheme.typography.fontBodyLgRegular,
+                    color = ElementTheme.colors.textPrimary,
+                    textAlign = TextAlign.Center,
+                )
+                // :tchap: end
             }
         },
         footer = {
             ButtonColumnMolecule {
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(CommonStrings.action_create_space),
-                    onClick = onCreateSpaceClick,
-                )
+                // :tchap: space-admin-limitations
+//                Button(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    text = stringResource(CommonStrings.action_create_space),
+//                    onClick = onCreateSpaceClick,
+//                )
+                // :tchap: end
                 if (canExploreSpaces) {
                     TextButton(
                         modifier = Modifier.fillMaxWidth(),
@@ -256,7 +272,9 @@ internal fun HomeSpacesViewPreview(
         onSpaceClick = {},
         // TCHAP : Space default action is now conversation filtering (add trailing action)
         onTrailingSpaceClick = {},
-        onCreateSpaceClick = {},
+        // :tchap: space-admin-limitations
+//        onCreateSpaceClick = {},
+        // :tchap: end
         onExploreClick = {},
         contentPadding = PaddingValues(bottom = 112.dp),
     )
