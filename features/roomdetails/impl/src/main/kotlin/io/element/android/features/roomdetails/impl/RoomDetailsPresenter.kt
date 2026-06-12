@@ -163,7 +163,14 @@ class RoomDetailsPresenter(
             derivedStateOf { permissions.knockRequestsPermissions.hasAny && joinRule == JoinRule.Knock }
         }
         val canShowSecurityAndPrivacy by remember {
-            derivedStateOf { !isDm && permissions.securityAndPrivacyPermissions.hasAny(isSpace = false, joinRule = joinRule) }
+            // :tchap: security-privacy - Disable room security and privacy options
+//            derivedStateOf { !isDm && permissions.securityAndPrivacyPermissions.hasAny(isSpace = false, joinRule = joinRule) }
+            derivedStateOf {
+                !isDm &&
+                    permissions.securityAndPrivacyPermissions.hasAny(isSpace = false, joinRule = joinRule) &&
+                    permissions.securityAndPrivacyPermissions.canChangeHistoryVisibility
+            }
+            // :tchap: end
         }
         val isDeveloperModeEnabled by remember {
             appPreferencesStore.isDeveloperModeEnabledFlow()
