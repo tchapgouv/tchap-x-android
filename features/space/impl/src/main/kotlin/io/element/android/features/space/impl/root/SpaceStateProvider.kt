@@ -142,6 +142,7 @@ private fun aSpaceInfo(
         // TCHAP external user
         isOpenToExternalUsers = false,
         activeCallIntentConsensus = CallIntentConsensus.None,
+        fullyReadEventId = null,
     )
 }
 

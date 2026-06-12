@@ -569,7 +569,7 @@ class MessagesPresenter(
             val replyToDetails = loadReplyDetails(targetEvent.eventId).map(permalinkParser)
             val composerMode = MessageComposerMode.Reply(
                 replyToDetails = replyToDetails,
-                hideImage = timelineProtectionState.hideMediaContent(targetEvent.eventId),
+                hideImage = timelineProtectionState.hideMediaContent(targetEvent.eventId, targetEvent.isMine),
             )
             composerState.eventSink(
                 MessageComposerEvent.SetMode(composerMode)
