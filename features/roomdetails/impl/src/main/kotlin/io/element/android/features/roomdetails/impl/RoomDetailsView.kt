@@ -51,7 +51,6 @@ import io.element.android.features.userprofile.shared.blockuser.BlockUserSection
 import io.element.android.libraries.androidutils.system.copyToClipboard
 import io.element.android.libraries.architecture.coverage.ExcludeFromCoverage
 import io.element.android.libraries.designsystem.atomic.atoms.MatrixBadgeAtom
-import io.element.android.libraries.designsystem.atomic.molecules.MatrixBadgeRowMolecule
 import io.element.android.libraries.designsystem.components.ClickableLinkText
 import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
@@ -598,24 +597,28 @@ private fun TitleAndSubtitle(
     }
 }
 
+// :tchap: BadgeList must be public & in its own file for use in MessagesViewTopBar
+// @Composable
+// fun BadgeList(
+//     roomBadge: ImmutableList<RoomBadge>,
+//     modifier: Modifier = Modifier,
+// ) {
+//     Box(modifier = modifier) {
+//         if (roomBadge.isNotEmpty()) {
+//             MatrixBadgeRowMolecule(
+//                 data = roomBadge.map {
+//                     it.toMatrixBadgeData()
+//                 }.toImmutableList(),
+//             )
+//         }
+//     }
+// }
+//
+// @Composable
+// private fun RoomBadge.toMatrixBadgeData(): MatrixBadgeAtom.MatrixBadgeData {
 @Composable
-fun BadgeList(
-    roomBadge: ImmutableList<RoomBadge>,
-    modifier: Modifier = Modifier,
-) {
-    Box(modifier = modifier) {
-        if (roomBadge.isNotEmpty()) {
-            MatrixBadgeRowMolecule(
-                data = roomBadge.map {
-                    it.toMatrixBadgeData()
-                }.toImmutableList(),
-            )
-        }
-    }
-}
-
-@Composable
-private fun RoomBadge.toMatrixBadgeData(): MatrixBadgeAtom.MatrixBadgeData {
+fun RoomBadge.toMatrixBadgeData(): MatrixBadgeAtom.MatrixBadgeData {
+// :tchap: end
     return when (this) {
         RoomBadge.ENCRYPTED -> {
             MatrixBadgeAtom.MatrixBadgeData(

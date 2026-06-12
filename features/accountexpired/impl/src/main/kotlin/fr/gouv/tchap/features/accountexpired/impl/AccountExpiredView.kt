@@ -55,8 +55,8 @@ import io.element.android.libraries.ui.strings.CommonStrings
 @Composable
 fun AccountExpiredView(
     state: AccountExpiredState,
-    modifier: Modifier = Modifier,
     onClickLearnMore: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     OnBoardingPage(
         modifier = modifier,
