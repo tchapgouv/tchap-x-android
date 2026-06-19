@@ -308,9 +308,9 @@ private fun RoomNameWithAvatar(
 private fun RoomTopic(
     topic: String,
     onTopicChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
     // TCHAP : specific values when isSpace
     isSpace: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     TextField(
         modifier = modifier,

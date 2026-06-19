@@ -367,7 +367,8 @@ private fun EmptySpaceView(
             title = stringResource(R.string.screen_space_empty_state_title),
             subTitle = null,
             iconStyle = BigIcon.Style.Default(vectorIcon = CompoundIcons.Room(), usePrimaryTint = true),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 40.dp, start = 24.dp, end = 24.dp, bottom = 24.dp),
         )
         // :tchap: space-admin-limitations - Add description
@@ -453,6 +454,7 @@ private fun SpaceViewTopBar(
                 modifier = Modifier
                     .clip(roundedCornerShape)
                     .clickable(enabled = canAccessSpaceSettings, onClick = onSettingsClick)
+                    .semantics { heading() }
             )
         },
         actions = {
@@ -564,6 +566,7 @@ private fun ManageModeTopBar(
             Text(
                 text = pluralStringResource(CommonPlurals.common_selected_count, selectedCount, selectedCount),
                 style = ElementTheme.typography.fontBodyLgMedium,
+                modifier = Modifier.semantics { heading() },
             )
         },
         actions = {
@@ -617,10 +620,7 @@ private fun SpaceAvatarAndNameRow(
         )
         Text(
             modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .semantics {
-                    heading()
-                },
+                .padding(horizontal = 8.dp),
             text = name ?: stringResource(CommonStrings.common_no_space_name),
             style = ElementTheme.typography.fontBodyLgMedium,
             fontStyle = FontStyle.Italic.takeIf { name == null },

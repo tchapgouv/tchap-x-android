@@ -378,7 +378,7 @@ internal object CertificateVerifier {
                 //  - https://github.com/rustls/rustls-platform-verifier/issues/221
                 //  - https://github.com/matrix-org/matrix-rust-sdk/issues/6319
 //                if (BuildConfig.TEST && e.reason == CertPathValidatorException.BasicReason.UNSPECIFIED) {
-                if ((BuildConfig.FLAVOR_target == "tchapDev" || BuildConfig.TEST) &&
+                if ((BuildConfig.FLAVOR_target == "tchapDev" || BuildConfig.BUILD_TYPE == "debug" || BuildConfig.TEST) &&
                     e.reason == CertPathValidatorException.BasicReason.UNSPECIFIED &&
                     isLetsEncrypt(endEntity)) {
                 // :tchap: end

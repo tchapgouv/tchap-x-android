@@ -19,4 +19,6 @@ sealed interface RoomDetailsEvent {
     data object DismissLinkAccessDialog : RoomDetailsEvent
     data object OnLinkAccessToggle : RoomDetailsEvent
     data object CopyRoomPermalinkToClipboard : RoomDetailsEvent
+    data object MarkAsRead : RoomDetailsEvent
+    data object MarkAsUnread : RoomDetailsEvent
 }
