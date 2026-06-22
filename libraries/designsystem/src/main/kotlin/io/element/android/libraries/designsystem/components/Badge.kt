@@ -35,7 +35,10 @@ import io.element.android.libraries.designsystem.theme.components.Text
 @Composable
 fun Badge(
     text: String,
-    icon: ImageVector,
+    // :tchap: Optional for PrivateEncrypted "Suggested" badge
+//    icon: ImageVector,
+    icon: ImageVector?,
+    // :tchap: end
     backgroundColor: Color,
     textColor: Color,
     iconColor: Color,
