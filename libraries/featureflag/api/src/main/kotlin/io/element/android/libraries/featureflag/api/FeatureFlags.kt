@@ -107,7 +107,7 @@ enum class FeatureFlags(
     PrivateNotEncryptedRooms(
         key = "feature.private_not_encrypted_rooms",
         title = "Active Private Not Encrypted rooms",
-        defaultValue = { false },
+        defaultValue = { true },
         isFinished = false,
     ),
     AllowBlackTheme(
