@@ -29,14 +29,17 @@ internal class MapTilerTileServerStyleUriBuilder(
         customMapStyleUrl: String?,
         darkMode: Boolean,
     ): String {
-        return buildString {
-            if (customMapStyleUrl.isNullOrBlank()) {
-                val mapId = if (darkMode) darkMapId else lightMapId
-                append("$baseUrl/$mapId/style.json")
-            } else {
-                append(customMapStyleUrl)
-            }
-            append("?key=$apiKey")
-        }
+//        return buildString {
+//            if (customMapStyleUrl.isNullOrBlank()) {
+//                val mapId = if (darkMode) darkMapId else lightMapId
+//                append("$baseUrl/$mapId/style.json")
+//            } else {
+//                append(customMapStyleUrl)
+//            }
+//            append("?key=$apiKey")
+//        }
+//        return "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/osm-etranger.json"
+//        return "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/standard.json"
+        return "asset://style_superpose.json"
     }
 }
