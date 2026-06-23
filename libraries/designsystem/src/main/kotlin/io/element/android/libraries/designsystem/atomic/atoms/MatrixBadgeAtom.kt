@@ -24,7 +24,10 @@ import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 object MatrixBadgeAtom {
     data class MatrixBadgeData(
         val text: String,
-        val icon: ImageVector,
+        // :tchap: Optional for PrivateEncrypted "Suggested" badge
+//        val icon: ImageVector,
+        val icon: ImageVector? = null,
+        // :tchap: end
         val type: Type,
     )
 
