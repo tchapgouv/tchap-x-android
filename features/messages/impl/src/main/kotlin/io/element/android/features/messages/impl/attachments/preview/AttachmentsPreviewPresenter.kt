@@ -11,6 +11,7 @@ package io.element.android.features.messages.impl.attachments.preview
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +40,8 @@ import io.element.android.libraries.core.mimetype.MimeTypes.isMimeTypeVideo
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.permalink.PermalinkBuilder
+import io.element.android.libraries.matrix.api.room.JoinedRoom
+import io.element.android.libraries.matrix.api.room.join.JoinRule
 import io.element.android.libraries.matrix.api.timeline.Timeline
 import io.element.android.libraries.mediaupload.api.MediaOptimizationConfig
 import io.element.android.libraries.mediaupload.api.MediaOptimizationConfigProvider
@@ -63,6 +66,9 @@ class AttachmentsPreviewPresenter(
     @Assisted private val onDoneListener: OnDoneListener,
     @Assisted private val timelineMode: Timeline.Mode,
     @Assisted private val inReplyToEventId: EventId?,
+    // :tchap: Warning on file upload when room is not encrypted
+    private val room: JoinedRoom,
+    // :tchap: end
     mediaSenderFactory: MediaSenderFactory,
     private val permalinkBuilder: PermalinkBuilder,
     private val temporaryUriDeleter: TemporaryUriDeleter,
@@ -102,9 +108,18 @@ class AttachmentsPreviewPresenter(
         var editedTempFile by remember { mutableStateOf<File?>(null) }
 
         val markdownTextEditorState = rememberMarkdownTextEditorState(initialText = null, initialFocus = false)
+
+        // :tchap: Warning on file upload when room is not encrypted
+        val roomInfo by room.roomInfoFlow.collectAsState()
         val textEditorState by rememberUpdatedState(
-            TextEditorState.Markdown(markdownTextEditorState, isRoomEncrypted = null)
+//            TextEditorState.Markdown(markdownTextEditorState, isRoomEncrypted = null)
+            TextEditorState.Markdown(
+                markdownTextEditorState,
+                isRoomEncrypted = roomInfo.isEncrypted == true,
+                isRoomJoinRulePublic = roomInfo.joinRule == JoinRule.Public
+            )
         )
+        // :tchap: end
 
         val ongoingSendAttachmentJob = remember { mutableStateOf<Job?>(null) }
 

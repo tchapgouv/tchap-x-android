@@ -16,14 +16,24 @@ import io.element.android.wysiwyg.compose.RichTextEditorState
 sealed interface TextEditorState {
     val isRoomEncrypted: Boolean?
 
+    // :tchap: Warning on file upload when room is not encrypted
+    val isRoomJoinRulePublic: Boolean?
+    // :tchap: end
+
     data class Markdown(
         val state: MarkdownTextEditorState,
         override val isRoomEncrypted: Boolean?,
+        // :tchap: Warning on file upload when room is not encrypted
+        override val isRoomJoinRulePublic: Boolean?,
+        // :tchap: end
     ) : TextEditorState
 
     data class Rich(
         val richTextEditorState: RichTextEditorState,
         override val isRoomEncrypted: Boolean?,
+        // :tchap: Warning on file upload when room is not encrypted
+        override val isRoomJoinRulePublic: Boolean?,
+        // :tchap: end
     ) : TextEditorState
 
     fun messageHtml(): String? = when (this) {

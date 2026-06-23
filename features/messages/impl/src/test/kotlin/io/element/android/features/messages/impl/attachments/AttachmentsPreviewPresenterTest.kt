@@ -904,6 +904,9 @@ class AttachmentsPreviewPresenterTest {
         return AttachmentsPreviewPresenter(
             attachment = aMediaAttachment(localMedia, sendAsFile = sendAsFile),
             onDoneListener = onDoneListener,
+            // :tchap: Warning on file upload when room is not encrypted
+            room = room,
+            // :tchap: end
             mediaSenderFactory = MediaSenderFactory { timelineMode ->
                 DefaultMediaSender(
                     preProcessor = mediaPreProcessor,

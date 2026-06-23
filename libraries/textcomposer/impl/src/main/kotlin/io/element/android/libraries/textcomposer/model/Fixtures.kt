@@ -14,6 +14,9 @@ fun aTextEditorStateMarkdown(
     initialText: String? = "",
     initialFocus: Boolean = false,
     isRoomEncrypted: Boolean? = null,
+    // :tchap: Warning on file upload when room is not encrypted
+    isRoomJoinRulePublic: Boolean? = null,
+    // :tchap: end
 ): TextEditorState {
     return TextEditorState.Markdown(
         aMarkdownTextEditorState(
@@ -21,6 +24,9 @@ fun aTextEditorStateMarkdown(
             initialFocus = initialFocus,
         ),
         isRoomEncrypted = isRoomEncrypted,
+        // :tchap: Warning on file upload when room is not encrypted
+        isRoomJoinRulePublic = isRoomJoinRulePublic,
+        // :tchap: end
     )
 }
 
@@ -40,6 +46,9 @@ fun aTextEditorStateRich(
     initialMarkdown: String = initialText,
     initialFocus: Boolean = false,
     isRoomEncrypted: Boolean? = null,
+    // :tchap: Warning on file upload when room is not encrypted
+    isRoomJoinRulePublic: Boolean? = null,
+    // :tchap: end
 ): TextEditorState {
     return TextEditorState.Rich(
         aRichTextEditorState(
@@ -49,6 +58,9 @@ fun aTextEditorStateRich(
             initialFocus = initialFocus,
         ),
         isRoomEncrypted = isRoomEncrypted,
+        // :tchap: Warning on file upload when room is not encrypted
+        isRoomJoinRulePublic = isRoomJoinRulePublic,
+        // :tchap: end
     )
 }
 
