@@ -62,6 +62,11 @@ open class AttachmentsPreviewStateProvider : PreviewParameterProvider<Attachment
                     displayVideoPresetSelectorDialog = true,
                 )
             ),
+            // :tchap: Warning on file upload when room is not encrypted
+            anAttachmentsPreviewState(
+                textEditorState = aTextEditorStateMarkdown(isRoomEncrypted = false)
+            ),
+            // :tchap: end
         )
 }
 

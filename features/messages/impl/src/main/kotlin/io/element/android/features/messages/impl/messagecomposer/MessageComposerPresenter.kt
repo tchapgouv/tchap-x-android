@@ -57,6 +57,7 @@ import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.draft.ComposerDraft
 import io.element.android.libraries.matrix.api.room.draft.ComposerDraftType
 import io.element.android.libraries.matrix.api.room.getDirectRoomMember
+import io.element.android.libraries.matrix.api.room.join.JoinRule
 import io.element.android.libraries.matrix.api.room.powerlevels.use
 import io.element.android.libraries.matrix.api.timeline.TimelineException
 import io.element.android.libraries.matrix.api.timeline.item.event.toEventOrTransactionId
@@ -223,9 +224,15 @@ class MessageComposerPresenter(
 
         val textEditorState by rememberUpdatedState(
             if (showTextFormatting) {
-                TextEditorState.Rich(richTextEditorState, roomInfo.isEncrypted == true)
+                // :tchap: Warning on file upload when room is not encrypted
+//                TextEditorState.Rich(richTextEditorState, roomInfo.isEncrypted == true)
+                TextEditorState.Rich(richTextEditorState, roomInfo.isEncrypted == true, roomInfo.joinRule == JoinRule.Public)
+                // :tchap: end
             } else {
-                TextEditorState.Markdown(markdownTextEditorState, roomInfo.isEncrypted == true)
+                // :tchap: Warning on file upload when room is not encrypted
+//                TextEditorState.Markdown(markdownTextEditorState, roomInfo.isEncrypted == true)
+                TextEditorState.Markdown(markdownTextEditorState, roomInfo.isEncrypted == true, roomInfo.joinRule == JoinRule.Public)
+                // :tchap: end
             }
         )
 
