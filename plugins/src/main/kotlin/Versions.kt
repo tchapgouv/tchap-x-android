@@ -50,8 +50,8 @@ private const val versionReleaseNumber = 2
 
 // TCHAP - rework version number
 private const val versionMajorNumber = 0
-private const val versionMinorNumber = 11
-private const val versionPatchNumber = 3
+private const val versionMinorNumber = 12
+private const val versionPatchNumber = 0
 
 object Versions {
     /**

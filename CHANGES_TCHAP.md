@@ -1,3 +1,25 @@
+Changements dans Tchap beta Android v0.12.0
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v0.12.0 -->
+
+## Qu'est-ce qui a changé ?
+### ✨ Nouveautés
+* Texte d'alerte lors du partage d'un fichier dans un salon non chiffré by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/229
+### 🙌 Améliorations
+* Limiter les espaces au mode consultation by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/212
+* Vérifier la connexion avec le code de récupération si disponible by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/221
+* Rendu monochrome du logo Tchap dans le centre de notification by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/224
+* Activation des salons privés non-chiffrés by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/226
+* Badge "Recommandé" pour les salons privés chiffrés by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/228
+### 🐛 Corrections de bugs
+* Réduction de la taille des logs pour éviter les erreurs serveur by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/223
+### Autres
+* Merge Element X v26.06.2 by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/222
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v0.11.3...v0.12.0
+
 Changements dans Tchap beta Android v0.11.3
 =============================
 
