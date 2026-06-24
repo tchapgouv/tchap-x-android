@@ -57,6 +57,7 @@ import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.draft.ComposerDraft
 import io.element.android.libraries.matrix.api.room.draft.ComposerDraftType
 import io.element.android.libraries.matrix.api.room.getDirectRoomMember
+import io.element.android.libraries.matrix.api.room.join.JoinRule
 import io.element.android.libraries.matrix.api.room.powerlevels.use
 import io.element.android.libraries.matrix.api.timeline.TimelineException
 import io.element.android.libraries.matrix.api.timeline.item.event.toEventOrTransactionId
@@ -179,7 +180,7 @@ class MessageComposerPresenter(
             handlePickedMedia(uri, mimeType)
         }
         val filesPicker = mediaPickerProvider.registerFilePicker(AnyMimeTypes) { uri, mimeType ->
-            handlePickedMedia(uri, mimeType ?: MimeTypes.OctetStream)
+            handlePickedMedia(uri, mimeType ?: MimeTypes.OctetStream, sendAsFile = true)
         }
         val cameraPhotoPicker = mediaPickerProvider.registerCameraPhotoPicker { uri ->
             handlePickedMedia(uri, MimeTypes.Jpeg)
@@ -223,9 +224,15 @@ class MessageComposerPresenter(
 
         val textEditorState by rememberUpdatedState(
             if (showTextFormatting) {
-                TextEditorState.Rich(richTextEditorState, roomInfo.isEncrypted == true)
+                // :tchap: Warning on file upload when room is not encrypted
+//                TextEditorState.Rich(richTextEditorState, roomInfo.isEncrypted == true)
+                TextEditorState.Rich(richTextEditorState, roomInfo.isEncrypted == true, roomInfo.joinRule == JoinRule.Public)
+                // :tchap: end
             } else {
-                TextEditorState.Markdown(markdownTextEditorState, roomInfo.isEncrypted == true)
+                // :tchap: Warning on file upload when room is not encrypted
+//                TextEditorState.Markdown(markdownTextEditorState, roomInfo.isEncrypted == true)
+                TextEditorState.Markdown(markdownTextEditorState, roomInfo.isEncrypted == true, roomInfo.joinRule == JoinRule.Public)
+                // :tchap: end
             }
         )
 
@@ -571,7 +578,7 @@ class MessageComposerPresenter(
         notificationConversationService.onSendMessage(
             sessionId = room.sessionId,
             roomId = roomInfo.id,
-            roomName = roomInfo.name ?: roomInfo.id.value,
+            roomName = roomInfo.name,
             roomIsDirect = roomInfo.isDm,
             roomAvatarUrl = roomInfo.avatarUrl ?: roomMembers.getDirectRoomMember(roomInfo = roomInfo, sessionId = room.sessionId)?.avatarUrl,
         )
@@ -605,6 +612,7 @@ class MessageComposerPresenter(
     private fun handlePickedMedia(
         uri: Uri?,
         mimeType: String? = null,
+        sendAsFile: Boolean = false,
     ) {
         uri ?: return
         val localMedia = localMediaFactory.createFromUri(
@@ -613,7 +621,7 @@ class MessageComposerPresenter(
             name = null,
             formattedFileSize = null
         )
-        val mediaAttachment = Attachment.Media(localMedia)
+        val mediaAttachment = Attachment.Media(localMedia, sendAsFile = sendAsFile)
         val inReplyToEventId = (messageComposerContext.composerMode as? MessageComposerMode.Reply)?.eventId
         navigator.navigateToPreviewAttachments(persistentListOf(mediaAttachment), inReplyToEventId)
 

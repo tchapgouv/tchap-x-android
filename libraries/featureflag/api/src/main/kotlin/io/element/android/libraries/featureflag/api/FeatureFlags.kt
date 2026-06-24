@@ -107,7 +107,7 @@ enum class FeatureFlags(
     PrivateNotEncryptedRooms(
         key = "feature.private_not_encrypted_rooms",
         title = "Active Private Not Encrypted rooms",
-        defaultValue = { false },
+        defaultValue = { true },
         isFinished = false,
     ),
     AllowBlackTheme(
@@ -123,13 +123,6 @@ enum class FeatureFlags(
         description = "Only fetch events for push notifications when the device has internet connectivity. " +
             "Enabling this can be problematic in air-gapped environments.",
         defaultValue = { true },
-        isFinished = false,
-    ),
-    FloatingDateBadge(
-        key = "feature.floating_date_badge",
-        title = "Display sticky date headers in the timeline",
-        description = "When scrolling, a sticky date badge will be displayed so you can easily know on which date the messages you're seeing were sent.",
-        defaultValue = { false },
         isFinished = false,
     ),
     SlashCommand(
@@ -151,6 +144,13 @@ enum class FeatureFlags(
         title = "Automatic back pagination of rooms",
         description = "Allow the app to automatically back paginate in rooms to pre-fetch older messages in background." +
             "\nRequires an app restart to take effect.",
+        defaultValue = { false },
+        isFinished = false,
+    ),
+    UnreadIndicatorCount(
+        key = "feature.unread_indicator_count",
+        title = "Unread indicator count",
+        description = "Show the number of unread messages on the unread indicator in the room list.",
         defaultValue = { false },
         isFinished = false,
     ),

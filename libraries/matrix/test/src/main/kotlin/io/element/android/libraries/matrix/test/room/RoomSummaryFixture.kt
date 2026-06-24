@@ -83,6 +83,7 @@ fun aRoomSummary(
     // TCHAP external user
     isOpenToExternalUsers: Boolean = false,
     activeCallIntentConsensus: CallIntentConsensus = CallIntentConsensus.None,
+    fullyReadEventId: EventId? = null,
 ) = RoomSummary(
     info = RoomInfo(
         id = roomId,
@@ -125,6 +126,7 @@ fun aRoomSummary(
         isOpenToExternalUsers = isOpenToExternalUsers,
         activeCallIntentConsensus = activeCallIntentConsensus,
         isDm = false,
+        fullyReadEventId = fullyReadEventId,
     ),
     latestEvent = latestEvent,
 )

@@ -34,7 +34,7 @@ open class RoomDetailsStateProvider : PreviewParameterProvider<RoomDetailsState>
     override val values: Sequence<RoomDetailsState>
         get() = sequenceOf(
             aRoomDetailsState(displayAdminSettings = true),
-            aRoomDetailsState(roomTopic = RoomTopicState.Hidden, showDebugInfo = true),
+            aRoomDetailsState(roomTopic = RoomTopicState.Hidden, showDebugInfo = true, hasNewContent = true),
             aRoomDetailsState(roomTopic = RoomTopicState.CanAddTopic),
             aRoomDetailsState(isEncrypted = false),
             aRoomDetailsState(roomAlias = null),
@@ -107,7 +107,7 @@ fun aRoomDetailsState(
     canEdit: Boolean = false,
     roomCallState: RoomCallState = aStandByCallState(),
     roomType: RoomDetailsType = RoomDetailsType.Room,
-    roomMemberDetailsState: UserProfileState? = null,
+    dmOtherMemberDetailsState: UserProfileState? = null,
     leaveRoomState: LeaveRoomState = aLeaveRoomState(),
     roomNotificationSettings: RoomNotificationSettings = aRoomNotificationSettings(),
     isFavorite: Boolean = false,
@@ -127,6 +127,7 @@ fun aRoomDetailsState(
     isTombstoned: Boolean = false,
     showDebugInfo: Boolean = false,
     roomHistoryVisibility: RoomHistoryVisibility = RoomHistoryVisibility.Shared,
+    hasNewContent: Boolean = false,
     eventSink: (RoomDetailsEvent) -> Unit = {},
 ) = RoomDetailsState(
     showMatrixId = showMatrixId,
@@ -143,7 +144,7 @@ fun aRoomDetailsState(
     canEdit = canEdit,
     roomCallState = roomCallState,
     roomType = roomType,
-    roomMemberDetailsState = roomMemberDetailsState,
+    dmOtherMemberDetailsState = dmOtherMemberDetailsState,
     leaveRoomState = leaveRoomState,
     roomNotificationSettings = roomNotificationSettings,
     isFavorite = isFavorite,
@@ -164,6 +165,7 @@ fun aRoomDetailsState(
     showDebugInfo = showDebugInfo,
     roomVersion = "12",
     roomHistoryVisibility = roomHistoryVisibility,
+    hasNewContent = hasNewContent,
     eventSink = eventSink,
 )
 
@@ -192,7 +194,7 @@ fun aDmRoomDetailsState(
     isEncrypted = isEncrypted,
     canInvite = true,
     roomType = RoomDetailsType.Dm(otherMember = aDmRoomMember(isIgnored = isDmMemberIgnored)),
-    roomMemberDetailsState = aUserProfileState(
+    dmOtherMemberDetailsState = aUserProfileState(
         isBlocked = AsyncData.Success(isDmMemberIgnored),
         verificationState = dmRoomMemberVerificationState,
     )

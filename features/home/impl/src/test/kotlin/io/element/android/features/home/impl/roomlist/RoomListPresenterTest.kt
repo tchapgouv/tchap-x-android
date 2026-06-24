@@ -91,6 +91,7 @@ import org.junit.Rule
 import org.junit.Test
 import kotlin.time.Duration.Companion.seconds
 
+@Suppress("LargeClass")
 class RoomListPresenterTest {
     @get:Rule
     val warmUpRule = WarmUpRule()
@@ -671,6 +672,7 @@ class RoomListPresenterTest {
         appPreferencesStore: AppPreferencesStore = InMemoryAppPreferencesStore(),
         seenInvitesStore: SeenInvitesStore = InMemorySeenInvitesStore(),
         announcementService: AnnouncementService = FakeAnnouncementService(),
+        featureFlagService: FeatureFlagService = FakeFeatureFlagService(),
     ) = RoomListPresenter(
         featureFlagService = featureFlagService,
         client = client,
@@ -700,5 +702,6 @@ class RoomListPresenterTest {
         seenInvitesStore = seenInvitesStore,
         announcementService = announcementService,
         coldStartWatcher = FakeAnalyticsColdStartWatcher(),
+        featureFlagService = featureFlagService,
     )
 }

@@ -10,6 +10,9 @@ package io.element.android.features.ftue.impl.sessionverification
 
 import android.os.Parcelable
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +20,7 @@ import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.plugin.Plugin
 import com.bumble.appyx.navmodel.backstack.BackStack
+import com.bumble.appyx.navmodel.backstack.activeElement
 import com.bumble.appyx.navmodel.backstack.operation.newRoot
 import com.bumble.appyx.navmodel.backstack.operation.pop
 import com.bumble.appyx.navmodel.backstack.operation.push
@@ -25,10 +29,12 @@ import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
 import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.features.ftue.impl.sessionverification.choosemode.ChooseSelfVerificationModeNode
+import io.element.android.features.ftue.impl.sessionverification.choosemode.ChooseSelfVerificationModePresenter
 import io.element.android.features.securebackup.api.SecureBackupEntryPoint
 import io.element.android.features.verifysession.api.OutgoingVerificationEntryPoint
 import io.element.android.libraries.architecture.BackstackView
 import io.element.android.libraries.architecture.BaseFlowNode
+import io.element.android.libraries.architecture.appyx.launchMolecule
 import io.element.android.libraries.architecture.callback
 import io.element.android.libraries.architecture.createNode
 import io.element.android.libraries.designsystem.utils.OpenUrlInTabView
@@ -44,6 +50,9 @@ class FtueSessionVerificationFlowNode(
     @Assisted plugins: List<Plugin>,
     private val outgoingVerificationEntryPoint: OutgoingVerificationEntryPoint,
     private val secureBackupEntryPoint: SecureBackupEntryPoint,
+    // :tchap: verify-with-recover-key
+    private val presenter: ChooseSelfVerificationModePresenter,
+    // :tchap: end
 ) : BaseFlowNode<FtueSessionVerificationFlowNode.NavTarget>(
     backstack = BackStack(
         initialElement = NavTarget.Root,
@@ -71,6 +80,10 @@ class FtueSessionVerificationFlowNode(
     }
 
     private val callback: Callback = callback()
+
+    // :tchap: verify-with-recover-key
+    private val stateFlow = launchMolecule { presenter.present() }
+    // :tchap: end
 
     private val secureBackupEntryPointCallback = object : SecureBackupEntryPoint.Callback {
         override fun onDone() {
@@ -154,8 +167,15 @@ class FtueSessionVerificationFlowNode(
 
     @Composable
     override fun View(modifier: Modifier) {
-        // TCHAP - Verify device with recovery key : on first render, redirect to EnterRecoveryKey
-        backstack.push(NavTarget.EnterRecoveryKey)
+        // :tchap: verify-with-recover-key : On first render, redirect to EnterRecoveryKey if canUseRecoveryKey
+        val state by stateFlow.collectAsState()
+        LaunchedEffect(state.buttonsState) {
+            if (backstack.activeElement == NavTarget.Root &&
+                state.buttonsState.dataOrNull()?.canUseRecoveryKey == true) {
+                backstack.push(NavTarget.EnterRecoveryKey)
+            }
+        }
+        // :tchap: end
 
         BackstackView()
 

@@ -38,6 +38,7 @@ internal fun aRoomsContentState(
     // TCHAP : Display banner when sync is offline
     offlineBannerState: OfflineBannerState = OfflineBannerState.None,
     showNewNotificationSoundBanner: Boolean = false,
+    showUnreadCount: Boolean = false,
     summaries: ImmutableList<RoomListRoomSummary> = aRoomListRoomSummaryList(),
     fullScreenIntentPermissionsState: FullScreenIntentPermissionsState = aFullScreenIntentPermissionsState(),
     batteryOptimizationState: BatteryOptimizationState = aBatteryOptimizationState(),
@@ -48,6 +49,7 @@ internal fun aRoomsContentState(
     // TCHAP : Display banner when sync is offline
     offlineBannerState = offlineBannerState,
     showNewNotificationSoundBanner = showNewNotificationSoundBanner,
+    showUnreadCount = showUnreadCount,
     fullScreenIntentPermissionsState = fullScreenIntentPermissionsState,
     batteryOptimizationState = batteryOptimizationState,
     summaries = summaries,

@@ -40,7 +40,7 @@ private const val versionYear = 0
  * Month of the version on 2 digits. Value must be in [1,12].
  * Do not update this value. it is updated by the release script.
  */
-private const val versionMonth = 5
+private const val versionMonth = 6
 
 /**
  * Release number in the month. Value must be in [0,99].
@@ -50,8 +50,8 @@ private const val versionReleaseNumber = 2
 
 // TCHAP - rework version number
 private const val versionMajorNumber = 0
-private const val versionMinorNumber = 11
-private const val versionPatchNumber = 3
+private const val versionMinorNumber = 12
+private const val versionPatchNumber = 0
 
 object Versions {
     /**

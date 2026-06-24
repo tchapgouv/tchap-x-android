@@ -231,7 +231,9 @@ class HomeFlowNode(
                 onRoomClick = ::navigateToRoom,
                 onSettingsClick = callback::navigateToSettings,
                 onStartChatClick = callback::navigateToCreateRoom,
-                onCreateSpaceClick = callback::navigateToCreateSpace,
+                // :tchap: space-admin-limitations
+//                onCreateSpaceClick = callback::navigateToCreateSpace,
+                // :tchap: end
                 onSetUpRecoveryClick = callback::navigateToSetUpRecovery,
                 onConfirmRecoveryKeyClick = callback::navigateToEnterRecoveryKey,
                 // TCHAP : Display banner when sync is offline

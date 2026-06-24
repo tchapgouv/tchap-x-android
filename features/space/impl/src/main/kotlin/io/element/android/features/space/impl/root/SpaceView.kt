@@ -20,8 +20,10 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -43,6 +45,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -50,7 +53,6 @@ import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.space.impl.R
 import io.element.android.libraries.architecture.AsyncAction
-import io.element.android.libraries.designsystem.atomic.molecules.ButtonColumnMolecule
 import io.element.android.libraries.designsystem.atomic.molecules.IconTitleSubtitleMolecule
 import io.element.android.libraries.designsystem.atomic.molecules.InviteButtonsRowMolecule
 import io.element.android.libraries.designsystem.components.BigIcon
@@ -68,7 +70,6 @@ import io.element.android.libraries.designsystem.components.button.BackButton
 import io.element.android.libraries.designsystem.components.dialogs.ConfirmationDialog
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
-import io.element.android.libraries.designsystem.theme.components.Button
 import io.element.android.libraries.designsystem.theme.components.Checkbox
 import io.element.android.libraries.designsystem.theme.components.CircularProgressIndicator
 import io.element.android.libraries.designsystem.theme.components.DropdownMenu
@@ -76,8 +77,6 @@ import io.element.android.libraries.designsystem.theme.components.DropdownMenuIt
 import io.element.android.libraries.designsystem.theme.components.HorizontalDivider
 import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.IconButton
-import io.element.android.libraries.designsystem.theme.components.IconSource
-import io.element.android.libraries.designsystem.theme.components.OutlinedButton
 import io.element.android.libraries.designsystem.theme.components.Scaffold
 import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.designsystem.theme.components.TextButton
@@ -104,8 +103,10 @@ fun SpaceView(
     onLeaveSpaceClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onViewMembersClick: () -> Unit,
-    onCreateRoomClick: () -> Unit,
-    onAddRoomClick: () -> Unit,
+    // :tchap: space-admin-limitations
+//    onCreateRoomClick: () -> Unit,
+//    onAddRoomClick: () -> Unit,
+    // :tchap: end
     modifier: Modifier = Modifier,
     acceptDeclineInviteView: @Composable () -> Unit,
 ) {
@@ -143,16 +144,20 @@ fun SpaceView(
                     SpaceViewTopBar(
                         spaceInfo = state.spaceInfo,
                         canAccessSpaceSettings = state.canAccessSpaceSettings,
-                        canEditSpaceGraph = state.canEditSpaceGraph,
-                        showManageRoomsAction = state.showManageRoomsAction,
+                        // :tchap: space-admin-limitations
+//                        canEditSpaceGraph = state.canEditSpaceGraph,
+//                        showManageRoomsAction = state.showManageRoomsAction,
+                        // :tchap: end
                         onBackClick = onBackClick,
                         onLeaveSpaceClick = onLeaveSpaceClick,
                         onSettingsClick = onSettingsClick,
                         onShareSpace = onShareSpace,
                         onViewMembersClick = onViewMembersClick,
-                        onManageRoomsClick = { state.eventSink(SpaceEvents.EnterManageMode) },
-                        onAddRoomClick = onAddRoomClick,
-                        onCreateRoomClick = onCreateRoomClick,
+                        // :tchap: space-admin-limitations
+//                        onManageRoomsClick = { state.eventSink(SpaceEvents.EnterManageMode) },
+//                        onAddRoomClick = onAddRoomClick,
+//                        onCreateRoomClick = onCreateRoomClick,
+                        // :tchap: end
                     )
                 }
             }
@@ -173,8 +178,10 @@ fun SpaceView(
                     onTopicClick = { topic ->
                         state.eventSink(SpaceEvents.ShowTopicViewer(topic))
                     },
-                    onCreateRoomClick = onCreateRoomClick,
-                    onAddRoomClick = onAddRoomClick,
+                    // :tchap: space-admin-limitations
+//                    onCreateRoomClick = onCreateRoomClick,
+//                    onAddRoomClick = onAddRoomClick,
+                    // :tchap: end
                 )
                 JoinFailuresEffect(
                     hasAnyFailure = state.hasAnyJoinFailures,
@@ -247,8 +254,10 @@ private fun SpaceViewContent(
     state: SpaceState,
     onRoomClick: (spaceRoom: SpaceRoom) -> Unit,
     onTopicClick: (String) -> Unit,
-    onCreateRoomClick: () -> Unit,
-    onAddRoomClick: () -> Unit,
+    // :tchap: space-admin-limitations
+//    onCreateRoomClick: () -> Unit,
+//    onAddRoomClick: () -> Unit,
+    // :tchap: end
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier.fillMaxSize()) {
@@ -279,8 +288,10 @@ private fun SpaceViewContent(
         if (state.children.isEmpty() && state.canEditSpaceGraph && !state.hasMoreToLoad) {
             item {
                 EmptySpaceView(
-                    onCreateRoomClick = onCreateRoomClick,
-                    onAddRoomClick = onAddRoomClick,
+                    // :tchap: space-admin-limitations
+//                    onCreateRoomClick = onCreateRoomClick,
+//                    onAddRoomClick = onAddRoomClick,
+                    // :tchap: end
                 )
             }
         } else {
@@ -343,8 +354,10 @@ private fun SpaceViewContent(
 
 @Composable
 private fun EmptySpaceView(
-    onCreateRoomClick: () -> Unit,
-    onAddRoomClick: () -> Unit,
+    // :tchap: space-admin-limitations
+//    onCreateRoomClick: () -> Unit,
+//    onAddRoomClick: () -> Unit,
+    // :tchap: end
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -354,24 +367,36 @@ private fun EmptySpaceView(
             title = stringResource(R.string.screen_space_empty_state_title),
             subTitle = null,
             iconStyle = BigIcon.Style.Default(vectorIcon = CompoundIcons.Room(), usePrimaryTint = true),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 40.dp, start = 24.dp, end = 24.dp, bottom = 24.dp),
         )
-        ButtonColumnMolecule(
-            modifier = Modifier.padding(horizontal = 16.dp)
-        ) {
-            Button(
-                text = stringResource(CommonStrings.action_add_existing_rooms),
-                leadingIcon = IconSource.Vector(CompoundIcons.Plus()),
-                onClick = onAddRoomClick,
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedButton(
-                text = stringResource(CommonStrings.action_create_room),
-                onClick = onCreateRoomClick,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        // :tchap: space-admin-limitations - Add description
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = stringResource(R.string.tchap_screen_space_empty_state_description),
+            style = ElementTheme.typography.fontBodyLgRegular,
+            color = ElementTheme.colors.textPrimary,
+            textAlign = TextAlign.Center,
+        )
+        // :tchap: end
+        // :tchap: space-admin-limitations
+//        ButtonColumnMolecule(
+//            modifier = Modifier.padding(horizontal = 16.dp)
+//        ) {
+//            Button(
+//                text = stringResource(CommonStrings.action_add_existing_rooms),
+//                leadingIcon = IconSource.Vector(CompoundIcons.Plus()),
+//                onClick = onAddRoomClick,
+//                modifier = Modifier.fillMaxWidth()
+//            )
+//            OutlinedButton(
+//                text = stringResource(CommonStrings.action_create_room),
+//                onClick = onCreateRoomClick,
+//                modifier = Modifier.fillMaxWidth()
+//            )
+//        }
+        // :tchap: end
     }
 }
 
@@ -400,16 +425,20 @@ private fun LoadingMoreIndicator(
 private fun SpaceViewTopBar(
     spaceInfo: RoomInfo,
     canAccessSpaceSettings: Boolean,
-    canEditSpaceGraph: Boolean,
-    showManageRoomsAction: Boolean,
+    // :tchap: space-admin-limitations
+//    canEditSpaceGraph: Boolean,
+//    showManageRoomsAction: Boolean,
+    // :tchap: end
     onBackClick: () -> Unit,
     onLeaveSpaceClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onShareSpace: () -> Unit,
     onViewMembersClick: () -> Unit,
-    onManageRoomsClick: () -> Unit,
-    onAddRoomClick: () -> Unit,
-    onCreateRoomClick: () -> Unit,
+    // :tchap: space-admin-limitations
+//    onManageRoomsClick: () -> Unit,
+//    onAddRoomClick: () -> Unit,
+//    onCreateRoomClick: () -> Unit,
+    // :tchap: end
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
@@ -425,6 +454,7 @@ private fun SpaceViewTopBar(
                 modifier = Modifier
                     .clip(roundedCornerShape)
                     .clickable(enabled = canAccessSpaceSettings, onClick = onSettingsClick)
+                    .semantics { heading() }
             )
         },
         actions = {
@@ -441,35 +471,37 @@ private fun SpaceViewTopBar(
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false }
             ) {
-                if (canEditSpaceGraph) {
-                    SpaceMenuItem(
-                        titleRes = CommonStrings.action_create_room,
-                        icon = CompoundIcons.Plus(),
-                        onClick = {
-                            showMenu = false
-                            onCreateRoomClick()
-                        }
-                    )
-                    SpaceMenuItem(
-                        titleRes = CommonStrings.action_add_existing_rooms,
-                        icon = CompoundIcons.Room(),
-                        onClick = {
-                            showMenu = false
-                            onAddRoomClick()
-                        }
-                    )
-                    if (showManageRoomsAction) {
-                        SpaceMenuItem(
-                            titleRes = CommonStrings.action_manage_rooms,
-                            icon = CompoundIcons.Edit(),
-                            onClick = {
-                                showMenu = false
-                                onManageRoomsClick()
-                            }
-                        )
-                    }
-                    HorizontalDivider()
-                }
+                // :tchap: space-admin-limitations
+//                if (canEditSpaceGraph) {
+//                    SpaceMenuItem(
+//                        titleRes = CommonStrings.action_create_room,
+//                        icon = CompoundIcons.Plus(),
+//                        onClick = {
+//                            showMenu = false
+//                            onCreateRoomClick()
+//                        }
+//                    )
+//                    SpaceMenuItem(
+//                        titleRes = CommonStrings.action_add_existing_rooms,
+//                        icon = CompoundIcons.Room(),
+//                        onClick = {
+//                            showMenu = false
+//                            onAddRoomClick()
+//                        }
+//                    )
+//                    if (showManageRoomsAction) {
+//                        SpaceMenuItem(
+//                            titleRes = CommonStrings.action_manage_rooms,
+//                            icon = CompoundIcons.Edit(),
+//                            onClick = {
+//                                showMenu = false
+//                                onManageRoomsClick()
+//                            }
+//                        )
+//                    }
+//                    HorizontalDivider()
+//                }
+                // :tchap: end
                 SpaceMenuItem(
                     titleRes = R.string.screen_space_menu_action_members,
                     icon = CompoundIcons.User(),
@@ -486,16 +518,18 @@ private fun SpaceViewTopBar(
                         onShareSpace()
                     }
                 )
-                if (canAccessSpaceSettings) {
-                    SpaceMenuItem(
-                        titleRes = CommonStrings.common_settings,
-                        icon = CompoundIcons.Settings(),
-                        onClick = {
-                            showMenu = false
-                            onSettingsClick()
-                        }
-                    )
-                }
+                // :tchap: space-admin-limitations
+//                if (canAccessSpaceSettings) {
+//                    SpaceMenuItem(
+//                        titleRes = CommonStrings.common_settings,
+//                        icon = CompoundIcons.Settings(),
+//                        onClick = {
+//                            showMenu = false
+//                            onSettingsClick()
+//                        }
+//                    )
+//                }
+                // :tchap: end
                 HorizontalDivider()
                 SpaceMenuItem(
                     titleRes = CommonStrings.action_leave_space,
@@ -532,6 +566,7 @@ private fun ManageModeTopBar(
             Text(
                 text = pluralStringResource(CommonPlurals.common_selected_count, selectedCount, selectedCount),
                 style = ElementTheme.typography.fontBodyLgMedium,
+                modifier = Modifier.semantics { heading() },
             )
         },
         actions = {
@@ -585,10 +620,7 @@ private fun SpaceAvatarAndNameRow(
         )
         Text(
             modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .semantics {
-                    heading()
-                },
+                .padding(horizontal = 8.dp),
             text = name ?: stringResource(CommonStrings.common_no_space_name),
             style = ElementTheme.typography.fontBodyLgMedium,
             fontStyle = FontStyle.Italic.takeIf { name == null },
@@ -684,8 +716,10 @@ internal fun SpaceViewPreview(
         acceptDeclineInviteView = {},
         onSettingsClick = {},
         onViewMembersClick = {},
-        onCreateRoomClick = {},
-        onAddRoomClick = {},
+        // :tchap: space-admin-limitations
+//        onCreateRoomClick = {},
+//        onAddRoomClick = {},
+        // :tchap: end
         onBackClick = {},
     )
 }

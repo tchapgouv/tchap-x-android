@@ -28,8 +28,9 @@ object RageshakeConfig {
 
     /**
      * The maximum size of the upload request. Default value is just below CloudFlare's max request size.
+     * :tchap: Set MAX_LOG_UPLOAD_SIZE to 5 MB (instead of 50 MB) to avoid error 500 when sending large log files containing screenshots.
      */
-    const val MAX_LOG_UPLOAD_SIZE = 50 * 1024 * 1024L
+    const val MAX_LOG_UPLOAD_SIZE = 5 * 1024 * 1024L
 
     /**
      * The maximum size of a single log file.

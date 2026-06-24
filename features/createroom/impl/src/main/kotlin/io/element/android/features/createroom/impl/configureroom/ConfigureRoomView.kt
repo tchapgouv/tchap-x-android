@@ -43,6 +43,7 @@ import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.createroom.impl.R
 import io.element.android.libraries.architecture.coverage.ExcludeFromCoverage
+import io.element.android.libraries.designsystem.atomic.atoms.MatrixBadgeAtom
 import io.element.android.libraries.designsystem.atomic.atoms.RoundedIconAtom
 import io.element.android.libraries.designsystem.atomic.atoms.RoundedIconAtomSize
 import io.element.android.libraries.designsystem.components.ClickableLinkText
@@ -308,9 +309,9 @@ private fun RoomNameWithAvatar(
 private fun RoomTopic(
     topic: String,
     onTopicChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
     // TCHAP : specific values when isSpace
     isSpace: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     TextField(
         modifier = modifier,
@@ -367,12 +368,26 @@ private fun RoomJoinRuleOptions(
                             is JoinRuleItem.PrivateVisibility.Restricted -> CompoundIcons.Space()
                             JoinRuleItem.PublicVisibility.AskToJoin,
                             is JoinRuleItem.PrivateVisibility.AskToJoinRestricted -> CompoundIcons.UserAdd()
-                            JoinRuleItem.PrivateVisibility.Private -> CompoundIcons.Lock()
-                            // TCHAP - Enable PrivateNotEncrypted room
+                            // :tchap: Highlight Private Encrypted rooms
+//                            JoinRuleItem.PrivateVisibility.Private -> CompoundIcons.Lock()
+                            JoinRuleItem.PrivateVisibility.Private -> CompoundIcons.LockSolid()
+                            // :tchap: end
+                            // :tchap: Enable PrivateNotEncrypted room
                             JoinRuleItem.PrivateVisibility.PrivateNotEncrypted -> CompoundIcons.LockOff()
+                            // :tchap: end
                         },
-                        tint = if (isSelected) ElementTheme.colors.iconPrimary else ElementTheme.colors.iconSecondary,
-                        backgroundTint = Color.Transparent,
+                        // :tchap: Highlight Private Encrypted rooms
+//                        tint = if (isSelected) ElementTheme.colors.iconPrimary else ElementTheme.colors.iconSecondary,
+//                        backgroundTint = Color.Transparent,
+                        tint = if (item is JoinRuleItem.PrivateVisibility.Private) {
+                                ElementTheme.colors.textBadgeAccent
+                            } else if (isSelected) {
+                                ElementTheme.colors.iconPrimary
+                            } else {
+                                ElementTheme.colors.iconSecondary
+                            },
+                        backgroundTint = if (item is JoinRuleItem.PrivateVisibility.Private) ElementTheme.colors.bgBadgeAccent else Color.Transparent,
+                        // :tchap: end
                     )
                 },
                 headlineContent = {
@@ -384,12 +399,29 @@ private fun RoomJoinRuleOptions(
                             R.string.screen_create_room_room_access_section_knocking_restricted_option_title
                         )
                         JoinRuleItem.PrivateVisibility.Private -> stringResource(R.string.tchap_screen_create_room_private_encrypted_option_title)
-                        // TCHAP - Enable PrivateNotEncrypted room
+                        // :tchap: Enable PrivateNotEncrypted room
                         JoinRuleItem.PrivateVisibility.PrivateNotEncrypted -> stringResource(
                             R.string.tchap_screen_create_room_private_not_encrypted_option_title
                         )
+                        // :tchap: end
                     }
-                    Text(text = title)
+                    // :tchap: Highlight Private Encrypted rooms
+//                    Text(text = title)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(text = title)
+                        if (item is JoinRuleItem.PrivateVisibility.Private) {
+                            MatrixBadgeAtom.View(
+                                MatrixBadgeAtom.MatrixBadgeData(
+                                    text = stringResource(CommonStrings.common_suggested),
+                                    type = MatrixBadgeAtom.Type.Neutral,
+                                )
+                            )
+                        }
+                    }
+                    // :tchap: end
                 },
                 supportingContent = {
                     val description = when (item) {
@@ -404,10 +436,11 @@ private fun RoomJoinRuleOptions(
                             parentSpace?.displayName.orEmpty()
                         )
                         JoinRuleItem.PrivateVisibility.Private -> stringResource(R.string.tchap_screen_create_room_private_encrypted_option_description)
-                        // TCHAP - Enable PrivateNotEncrypted room
+                        // :tchap: Enable PrivateNotEncrypted room
                         JoinRuleItem.PrivateVisibility.PrivateNotEncrypted -> stringResource(
                             R.string.tchap_screen_create_room_private_not_encrypted_option_description
                         )
+                        // :tchap: end
                     }
                     Text(text = description)
                 },

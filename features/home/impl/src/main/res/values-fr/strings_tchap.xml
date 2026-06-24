@@ -29,4 +29,6 @@
     <string name="tchap_home_offline_banner_title">Connexion impossible</string>
     <string name="tchap_home_offline_banner_description">Vérifiez l’état du service pour vous assurer que le problème ne dépend pas de votre appareil.</string>
     <string name="tchap_home_offline_banner_button">Voir l’état du service</string>
+    <string name="tchap_screen_space_list_empty_state_description">"Sur mobile, consultez vos espaces et acceptez des invitations.
+La création et la gestion se font sur ordinateur."</string>
 </resources>
