@@ -74,6 +74,11 @@ class CommandParser(
                 )
             }
             when {
+                // :tchap: Add Visio SlashCommand
+                Command.LASUITE_VISIO.matches(slashCommand) -> {
+                    SlashCommand.SendWithPrefix(MessagePrefix.LaSuiteVisio, message)
+                }
+                // :tchap: end
                 Command.PLAIN.matches(slashCommand) -> {
                     if (message.isNotEmpty()) {
                         SlashCommand.SendPlainText(message = message)
