@@ -49,17 +49,14 @@ data class SemanticColors(
     val bgActionTertiaryRest: Color,
     /** Background colour for tertiary actions. State: Selected */
     val bgActionTertiarySelected: Color,
-    /** Badge accent background colour */
     val bgBadgeAccent: Color,
     val bgBadgeCritical: Color,
-    /** Badge default background colour */
     val bgBadgeDefault: Color,
-    /** Badge default background colour */
-    val bgBadgeExternal: Color,
-    /** Badge info background colour */
     val bgBadgeInfo: Color,
     val bgBadgePrimary: Color,
     val bgBadgeSecondary: Color,
+    val bgBadgeSuccess: Color,
+    val bgBadgeWarning: Color,
     /** Default global background for the user interface. Elevation: Default (Level 0) */
     val bgCanvasDefault: Color,
     /** Default global background for the user interface. Elevation: Level 1. */
@@ -152,14 +149,16 @@ data class SemanticColors(
     val iconAccentPrimary: Color,
     /** Lowest contrast accessible accent icons. */
     val iconAccentTertiary: Color,
-    /** Badge accent icon colour */
     val iconBadgeAccent: Color,
-    /** Badge default icon colour */
+    val iconBadgeCritical: Color,
     val iconBadgeDefault: Color,
     /** Badge external icon colour */
     val iconBadgeExternal: Color,
-    /** Badge info icon colour */
     val iconBadgeInfo: Color,
+    val iconBadgePrimary: Color,
+    val iconBadgeSecondary: Color,
+    val iconBadgeSuccess: Color,
+    val iconBadgeWarning: Color,
     /** High-contrast icon for critical state. State: Rest. */
     val iconCriticalPrimary: Color,
     /** Use for icons in disabled elements. There's no minimum contrast requirement. */
@@ -194,14 +193,14 @@ data class SemanticColors(
     val textActionAccent: Color,
     /** Default text colour for plain actions. */
     val textActionPrimary: Color,
-    /** Badge accent text colour */
     val textBadgeAccent: Color,
-    /** Badge default text colour */
+    val textBadgeCritical: Color,
     val textBadgeDefault: Color,
-    /** Badge external text colour */
-    val textBadgeExternal: Color,
-    /** Badge info text colour */
     val textBadgeInfo: Color,
+    val textBadgePrimary: Color,
+    val textBadgeSecondary: Color,
+    val textBadgeSuccess: Color,
+    val textBadgeWarning: Color,
     /** Text colour for destructive plain actions. */
     val textCriticalPrimary: Color,
     /** Decorative text colour (1, Lime) for avatars and usernames. */

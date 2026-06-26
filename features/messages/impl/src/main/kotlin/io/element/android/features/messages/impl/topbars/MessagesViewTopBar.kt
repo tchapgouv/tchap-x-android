@@ -125,13 +125,19 @@ internal fun MessagesViewTopBar(
                     SharedHistoryIcon.SHARED -> Icon(
                         modifier = iconModifier,
                         imageVector = CompoundIcons.History(),
-                        tint = ElementTheme.colors.iconInfoPrimary,
+                        // :tchap: Custom Badge color
+//                        tint = ElementTheme.colors.iconInfoPrimary,
+                        tint = ElementTheme.colors.iconBadgeDefault,
+                        // :tchap: end
                         contentDescription = stringResource(CommonStrings.common_shared_history),
                     )
                     SharedHistoryIcon.WORLD_READABLE -> Icon(
                         modifier = iconModifier,
                         imageVector = CompoundIcons.UserProfileSolid(),
-                        tint = ElementTheme.colors.iconInfoPrimary,
+                        // :tchap: Custom Badge color
+//                        tint = ElementTheme.colors.iconInfoPrimary,
+                        tint = ElementTheme.colors.iconBadgeDefault,
+                        // :tchap: end
                         contentDescription = stringResource(CommonStrings.common_world_readable_history),
                     )
                 }

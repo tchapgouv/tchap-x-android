@@ -32,7 +32,11 @@ object MatrixBadgeAtom {
     )
 
     enum class Type {
-        External,
+        // :tchap: New Custom Badge Types
+        Warning,
+        Default,
+        // :tchap: end
+
         Positive,
         Neutral,
         Negative,
@@ -43,34 +47,64 @@ object MatrixBadgeAtom {
     fun View(
         data: MatrixBadgeData,
     ) {
+        // :tchap: Custom Badge color
+//        val backgroundColor = when (data.type) {
+//            Type.Positive -> ElementTheme.colors.bgBadgeAccent
+//            Type.Neutral -> ElementTheme.colors.bgBadgeDefault
+//            Type.Negative -> ElementTheme.colors.bgCriticalSubtle
+//            Type.Info -> ElementTheme.colors.bgBadgeInfo
+//        }
+//        val borderStroke = when (data.type) {
+//            Type.Positive -> null
+//            Type.Neutral -> BorderStroke(1.dp, ElementTheme.colors.borderInteractiveSecondary)
+//            Type.Negative -> null
+//            Type.Info -> null
+//        }
+//        val textColor = when (data.type) {
+//            Type.Positive -> ElementTheme.colors.textBadgeAccent
+//            Type.Neutral -> ElementTheme.colors.textPrimary
+//            Type.Negative -> ElementTheme.colors.textCriticalPrimary
+//            Type.Info -> ElementTheme.colors.textBadgeInfo
+//        }
+//        val iconColor = when (data.type) {
+//            Type.Positive -> ElementTheme.colors.iconAccentPrimary
+//            Type.Neutral -> ElementTheme.colors.iconPrimary
+//            Type.Negative -> ElementTheme.colors.iconCriticalPrimary
+//            Type.Info -> ElementTheme.colors.iconInfoPrimary
+//        }
         val backgroundColor = when (data.type) {
-            Type.External -> ElementTheme.colors.bgBadgeExternal
-            Type.Positive -> ElementTheme.colors.bgBadgeAccent
-            Type.Neutral -> ElementTheme.colors.bgBadgeDefault
-            Type.Negative -> ElementTheme.colors.bgCriticalSubtle
+            Type.Warning -> ElementTheme.colors.bgBadgeWarning
+            Type.Default -> ElementTheme.colors.bgBadgeDefault
+            Type.Positive -> ElementTheme.colors.bgBadgeSuccess
+            Type.Neutral -> ElementTheme.colors.bgBadgeSecondary
+            Type.Negative -> ElementTheme.colors.bgBadgeCritical
             Type.Info -> ElementTheme.colors.bgBadgeInfo
         }
         val borderStroke = when (data.type) {
-            Type.External -> null
+            Type.Warning -> null
+            Type.Default -> null
             Type.Positive -> null
             Type.Neutral -> BorderStroke(1.dp, ElementTheme.colors.borderInteractiveSecondary)
             Type.Negative -> null
             Type.Info -> null
         }
         val textColor = when (data.type) {
-            Type.External -> ElementTheme.colors.textBadgeExternal
-            Type.Positive -> ElementTheme.colors.textBadgeAccent
-            Type.Neutral -> ElementTheme.colors.textPrimary
-            Type.Negative -> ElementTheme.colors.textCriticalPrimary
+            Type.Warning -> ElementTheme.colors.textBadgeWarning
+            Type.Default -> ElementTheme.colors.textBadgeDefault
+            Type.Positive -> ElementTheme.colors.textBadgeSuccess
+            Type.Neutral -> ElementTheme.colors.textBadgeSecondary
+            Type.Negative -> ElementTheme.colors.textBadgeCritical
             Type.Info -> ElementTheme.colors.textBadgeInfo
         }
         val iconColor = when (data.type) {
-            Type.External -> ElementTheme.colors.textDecorative6
-            Type.Positive -> ElementTheme.colors.iconAccentPrimary
-            Type.Neutral -> ElementTheme.colors.iconPrimary
-            Type.Negative -> ElementTheme.colors.iconCriticalPrimary
-            Type.Info -> ElementTheme.colors.iconInfoPrimary
+            Type.Warning -> ElementTheme.colors.iconBadgeWarning
+            Type.Default -> ElementTheme.colors.iconBadgeDefault
+            Type.Positive -> ElementTheme.colors.iconBadgeSuccess
+            Type.Neutral -> ElementTheme.colors.iconBadgeSecondary
+            Type.Negative -> ElementTheme.colors.iconBadgeCritical
+            Type.Info -> ElementTheme.colors.iconBadgeInfo
         }
+        // :tchap: end
         Badge(
             text = data.text.uppercase(),
             icon = data.icon,
@@ -90,7 +124,7 @@ internal fun MatrixBadgeAtomExternalPreview() = ElementPreview {
         MatrixBadgeAtom.MatrixBadgeData(
             text = "External guests",
             icon = CompoundIcons.UserSolid(),
-            type = MatrixBadgeAtom.Type.External,
+            type = MatrixBadgeAtom.Type.Warning,
         )
     )
 }
