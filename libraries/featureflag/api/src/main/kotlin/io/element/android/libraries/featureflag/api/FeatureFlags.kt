@@ -129,7 +129,10 @@ enum class FeatureFlags(
         key = "feature.slash_command",
         title = "Parse slash commands in the message composer",
         description = "Allow parsing slash commands in the message composer and perform action.",
-        defaultValue = { false },
+        // :tchap: Enable SlashCommand by default
+//        defaultValue = { false },
+        defaultValue = { true },
+        // :tchap: end
         isFinished = false,
     ),
     RoomThreadList(
