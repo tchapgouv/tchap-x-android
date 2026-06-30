@@ -27,14 +27,12 @@ class ProfileChangeContentFormatter(
         val avatarChanged = avatarUrl != prevAvatarUrl
         return when {
             avatarChanged && displayNameChanged -> {
-                val message = format(
+                format(
                     profileChangeContent = profileChangeContent.copy(avatarUrl = null, prevAvatarUrl = null),
                     senderId = senderId,
                     senderDisambiguatedDisplayName = senderDisambiguatedDisplayName,
                     senderIsYou = senderIsYou,
                 )
-                val avatarChangedToo = sp.getString(R.string.state_event_avatar_changed_too)
-                "$message\n$avatarChangedToo"
             }
             displayNameChanged -> {
                 if (displayName != null && prevDisplayName != null) {
@@ -57,13 +55,7 @@ class ProfileChangeContentFormatter(
                     }
                 }
             }
-            avatarChanged -> {
-                if (senderIsYou) {
-                    sp.getString(R.string.state_event_avatar_url_changed_by_you)
-                } else {
-                    sp.getString(R.string.state_event_avatar_url_changed, senderDisambiguatedDisplayName)
-                }
-            }
+            avatarChanged -> null
             else -> null
         }
     }

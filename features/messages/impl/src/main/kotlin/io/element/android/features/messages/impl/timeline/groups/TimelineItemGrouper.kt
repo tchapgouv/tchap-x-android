@@ -32,8 +32,21 @@ class TimelineItemGrouper {
         val result = mutableListOf<TimelineItem>()
         val currentGroup = mutableListOf<TimelineItem.Event>()
         from.forEach { timelineItem ->
-            if (timelineItem is TimelineItem.Event && timelineItem.canBeGrouped()) {
-                currentGroup.add(0, timelineItem)
+            if (timelineItem is TimelineItem.Event) {
+                if (!timelineItem.canBeDisplayed()) {
+                    return@forEach
+                }
+                if (timelineItem.canBeGrouped()) {
+                    currentGroup.add(0, timelineItem)
+                } else {
+                    // timelineItem cannot be grouped
+                    if (currentGroup.isNotEmpty()) {
+                        // There is a pending group, create a TimelineItem.GroupedEvents if there is more than 1 Event in the pending group.
+                        result.addGroup(groupIds, currentGroup)
+                        currentGroup.clear()
+                    }
+                    result.add(timelineItem)
+                }
             } else {
                 // timelineItem cannot be grouped
                 if (currentGroup.isNotEmpty()) {

@@ -33,7 +33,7 @@ class RoomMembershipContentFormatter(
             MembershipChange.JOINED -> if (memberIsYou) {
                 sp.getString(R.string.state_event_room_join_by_you)
             } else {
-                sp.getString(R.string.state_event_room_join, senderDisambiguatedDisplayName)
+                null
             }
             MembershipChange.LEFT -> if (memberIsYou) {
                 sp.getString(R.string.state_event_room_leave_by_you)
@@ -81,7 +81,7 @@ class RoomMembershipContentFormatter(
             MembershipChange.INVITATION_ACCEPTED -> if (memberIsYou) {
                 sp.getString(R.string.state_event_room_invite_accepted_by_you)
             } else {
-                sp.getString(R.string.state_event_room_invite_accepted, userDisplayNameOrId)
+                null
             }
             MembershipChange.INVITATION_REJECTED -> if (memberIsYou) {
                 sp.getString(R.string.state_event_room_reject_by_you)

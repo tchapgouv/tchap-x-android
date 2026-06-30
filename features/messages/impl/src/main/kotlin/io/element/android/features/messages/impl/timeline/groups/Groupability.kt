@@ -21,6 +21,7 @@ import io.element.android.features.messages.impl.timeline.model.event.TimelineIt
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemRoomMembershipContent
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemRtcNotificationContent
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemStateEventContent
+import io.element.android.features.messages.impl.timeline.model.event.TimelineItemStateContent
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemStickerContent
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemTextBasedContent
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemUnknownContent
@@ -41,6 +42,16 @@ import io.element.android.libraries.matrix.api.timeline.item.event.StateContent
 import io.element.android.libraries.matrix.api.timeline.item.event.StickerContent
 import io.element.android.libraries.matrix.api.timeline.item.event.UnableToDecryptContent
 import io.element.android.libraries.matrix.api.timeline.item.event.UnknownContent
+
+/**
+ * Return true if the Event can be displayed in the timeline.
+ */
+internal fun TimelineItem.Event.canBeDisplayed(): Boolean {
+    return when (val content = content) {
+        is TimelineItemStateContent -> content.body.isNotEmpty()
+        else -> true
+    }
+}
 
 /**
  * Return true if the Event can be grouped in a collapse/expand block
