@@ -23,6 +23,14 @@ enum class Command(
     val isSupported: Boolean = true,
     val isDevCommand: Boolean = false,
 ) {
+    // :tchap: Add Visio SlashCommand
+    LASUITE_VISIO(
+        command = "/visio",
+        parameters = "<message>",
+        description = R.string.tchap_slash_command_description_lasuite_visio,
+    ),
+    // :tchap: end
+
     CRASH_APP(
         command = "/crash",
         description = R.string.slash_command_description_crash_application,

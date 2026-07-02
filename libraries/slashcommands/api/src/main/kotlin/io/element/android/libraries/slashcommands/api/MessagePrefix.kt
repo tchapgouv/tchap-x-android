@@ -8,6 +8,10 @@
 package io.element.android.libraries.slashcommands.api
 
 enum class MessagePrefix {
+    // :tchap: Add Visio SlashCommand
+    LaSuiteVisio,
+    // :tchap: end
+
     Shrug,
     TableFlip,
     Unflip,

@@ -211,7 +211,19 @@ class CommandExecutor(
     }
 }
 
+// :tchap: Add Visio SlashCommand
+private const val LASUITE_VISIO_URL = "https://visio.numerique.gouv.fr/"
+private const val ROOM_ID_ALLOWED_CHARACTERS = "abcdefghijklmnopqrstuvwxyz"
+
+private fun generateSegment(length: Int) = buildString { repeat(length) { append(ROOM_ID_ALLOWED_CHARACTERS.random()) } }
+
+private fun generateVisioUrl() = "$LASUITE_VISIO_URL${generateSegment(3)}-${generateSegment(4)}-${generateSegment(3)}"
+// :tchap: end
+
 private fun MessagePrefix.toMarkdown() = when (this) {
+    // :tchap: Add Visio SlashCommand
+    MessagePrefix.LaSuiteVisio -> generateVisioUrl()
+    // :tchap: end
     MessagePrefix.Shrug -> "¯\\\\_(ツ)\\_/¯"
     MessagePrefix.TableFlip -> "(╯°□°）╯︵ ┻━┻"
     MessagePrefix.Unflip -> "┬──┬ ノ( ゜-゜ノ)"
