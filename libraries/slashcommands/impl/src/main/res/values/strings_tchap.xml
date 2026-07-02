@@ -23,5 +23,5 @@
   -->
 
 <resources>
-    <string name="tchap_slash_command_description_lasuite_vision">"Create a link to Visio with a message"</string>
+    <string name="tchap_slash_command_description_lasuite_visio">"Create a link to Visio with a message"</string>
 </resources>

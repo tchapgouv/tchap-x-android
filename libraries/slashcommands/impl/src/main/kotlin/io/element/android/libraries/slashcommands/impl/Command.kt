@@ -27,7 +27,7 @@ enum class Command(
     LASUITE_VISIO(
         command = "/visio",
         parameters = "<message>",
-        description = R.string.tchap_slash_command_description_lasuite_vision,
+        description = R.string.tchap_slash_command_description_lasuite_visio,
     ),
     // :tchap: end
 

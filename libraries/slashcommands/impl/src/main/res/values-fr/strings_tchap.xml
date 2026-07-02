@@ -23,5 +23,5 @@
   -->
 
 <resources>
-    <string name="tchap_slash_command_description_lasuite_vision">"Crée un lien Visio avec le message suivant"</string>
+    <string name="tchap_slash_command_description_lasuite_visio">"Créer un lien Visio avec le message suivant"</string>
 </resources>
