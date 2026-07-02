@@ -111,7 +111,7 @@ jobs:
 #      - name: Compile nightly sources
 #        if: ${{ matrix.variant == 'nightly' }}
 #        run: ./gradlew compileGplayTchapWithpinningNightlySources -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
-      - name: Assemble Tchap beta nightly APKs
+      - name: Assemble Tchap nightly APKs
         if: ${{ matrix.variant == 'tchap-nightly' }}
         env:
           ELEMENT_ANDROID_MAPTILER_API_KEY: ${{ secrets.MAPTILER_KEY }}
@@ -123,14 +123,14 @@ jobs:
           ELEMENT_CALL_POSTHOG_API_KEY: ${{ secrets.ELEMENT_CALL_POSTHOG_API_KEY }}
           ELEMENT_CALL_RAGESHAKE_URL: ${{ secrets.ELEMENT_CALL_RAGESHAKE_URL }}
         run: ./gradlew :app:assembleGplayTchapWithpinningNightly -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
-      - name: Upload Tchap beta nightly APKs
+      - name: Upload Tchap nightly APKs
         if: ${{ matrix.variant == 'tchap-nightly' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: Tchap.beta-nightly
+          name: Tchap-nightly
           path: |
             app/build/outputs/apk/gplayTchapWithpinning/nightly/app-gplay-tchap-withpinning-arm64-v8a-nightly.apk
-      - name: Assemble Tchap beta preprod nightly APKs
+      - name: Assemble Tchap preprod nightly APKs
         if: ${{ matrix.variant == 'tchap-preprod-nightly' }}
         env:
           ELEMENT_ANDROID_MAPTILER_API_KEY: ${{ secrets.MAPTILER_KEY }}
@@ -142,14 +142,14 @@ jobs:
           ELEMENT_CALL_POSTHOG_API_KEY: ${{ secrets.ELEMENT_CALL_POSTHOG_API_KEY }}
           ELEMENT_CALL_RAGESHAKE_URL: ${{ secrets.ELEMENT_CALL_RAGESHAKE_URL }}
         run: ./gradlew :app:assembleGplayTchapPreprodWithpinningNightly -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
-      - name: Upload Tchap beta preprod nightly APKs
+      - name: Upload Tchap preprod nightly APKs
         if: ${{ matrix.variant == 'tchap-preprod-nightly' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: Tchap.beta.preprod-nightly
+          name: Tchap.preprod-nightly
           path: |
             app/build/outputs/apk/gplayTchapPreprodWithpinning/nightly/app-gplay-tchapPreprod-withpinning-arm64-v8a-nightly.apk
-      - name: Assemble Tchap beta dev nightly APKs
+      - name: Assemble Tchap dev nightly APKs
         if: ${{ matrix.variant == 'tchap-dev-nightly' }}
         env:
           ELEMENT_ANDROID_MAPTILER_API_KEY: ${{ secrets.MAPTILER_KEY }}
@@ -161,11 +161,11 @@ jobs:
           ELEMENT_CALL_POSTHOG_API_KEY: ${{ secrets.ELEMENT_CALL_POSTHOG_API_KEY }}
           ELEMENT_CALL_RAGESHAKE_URL: ${{ secrets.ELEMENT_CALL_RAGESHAKE_URL }}
         run: ./gradlew :app:assembleGplayTchapDevWithpinningNightly -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
-      - name: Upload Tchap beta dev nightly APKs
+      - name: Upload Tchap dev nightly APKs
         if: ${{ matrix.variant == 'tchap-dev-nightly' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: Tchap.beta.dev-nightly
+          name: Tchap.dev-nightly
           path: |
             app/build/outputs/apk/gplayTchapDevWithpinning/nightly/app-gplay-tchapDev-withpinning-arm64-v8a-nightly.apk
       # end Tchap Specific
