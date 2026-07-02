@@ -162,8 +162,8 @@ class RustMatrixClientFactory(
         if (BuildConfig.ENABLE_CERTIFICATE_PINNING) {
             try {
                 val certificatesRessources = listOf(
+                    R.raw.harica_tls_root_2021_rsa,
                     R.raw.servicesca_rootca,
-                    R.raw.certignaserviceseurootca,
                 )
                 val certificatesList = mutableListOf<ByteArray>()
 
@@ -180,7 +180,7 @@ class RustMatrixClientFactory(
             } catch (e: Exception) {
                 Timber.e(
                     e,
-                    "An unexpected error occurred while processing certificate from R.raw.servicesca_rootca or R.raw.certignaserviceseurootca.",
+                    "An unexpected error occurred while processing certificate from R.raw.harica_tls_root_2021_rsa or R.raw.servicesca_rootca.",
                 )
             }
         }
