@@ -32,7 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
@@ -287,9 +286,7 @@ private fun AttachmentPreviewContent(
                     end = 16.dp,
                     bottom = 0.dp,
                 ),
-//                color = ElementTheme.colors.bgBadgeExternal,
-                // TODO Tchap : Use compound value above
-                color = Color(0xff570000),
+                color = ElementTheme.colors.bgBadgeWarning,
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Row(
@@ -302,9 +299,7 @@ private fun AttachmentPreviewContent(
                 ) {
                     Icon(
                         modifier = Modifier.size(20.dp),
-//                        tint = ElementTheme.colors.iconBadgeExternal,
-                        // TODO Tchap : Use compound value above
-                        tint = Color(0xfff59629),
+                        tint = ElementTheme.colors.iconBadgeWarning,
                         imageVector = CompoundIcons.Warning(),
                         contentDescription = null,
                     )
@@ -314,9 +309,7 @@ private fun AttachmentPreviewContent(
                         } else {
                             stringResource(R.string.tchap_screen_media_upload_unencrypted_warning)
                         },
-                        // TODO Tchap : Use compound value above
-//                        color = ElementTheme.colors.textBadgeExternal,
-                        color = Color(0xffffe0c5),
+                        color = ElementTheme.colors.textBadgeWarning,
                         style = ElementTheme.typography.fontBodyLgRegular,
                     )
                 }

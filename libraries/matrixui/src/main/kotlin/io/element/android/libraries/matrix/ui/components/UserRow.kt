@@ -81,7 +81,7 @@ internal fun UserRow(
                 MatrixBadgeAtom.View(MatrixBadgeAtom.MatrixBadgeData(
                     text = stringResource(R.string.tchap_contact_external),
                     icon = CompoundIcons.UserSolid(),
-                    type = MatrixBadgeAtom.Type.External,
+                    type = MatrixBadgeAtom.Type.Warning,
                 ))
             }
         }

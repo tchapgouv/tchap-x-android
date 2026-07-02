@@ -631,35 +631,50 @@ fun RoomBadge.toMatrixBadgeData(): MatrixBadgeAtom.MatrixBadgeData {
             MatrixBadgeAtom.MatrixBadgeData(
                 text = stringResource(R.string.screen_room_details_badge_not_encrypted),
                 icon = CompoundIcons.LockOff(),
+                // :tchap: Custom Badge color
+//                type = MatrixBadgeAtom.Type.Info,
                 type = MatrixBadgeAtom.Type.Neutral,
+                // :tchap: end
             )
         }
         RoomBadge.PUBLIC -> {
             MatrixBadgeAtom.MatrixBadgeData(
                 text = stringResource(R.string.screen_room_details_badge_public),
                 icon = CompoundIcons.Public(),
-                type = MatrixBadgeAtom.Type.Neutral,
+                // :tchap: Custom Badge color
+//                type = MatrixBadgeAtom.Type.Info,
+                type = MatrixBadgeAtom.Type.Warning,
+                // :tchap: end
             )
         }
         RoomBadge.SHARED_HISTORY_HIDDEN -> {
             MatrixBadgeAtom.MatrixBadgeData(
                 text = stringResource(R.string.crypto_history_sharing_room_info_hidden_badge_content),
                 icon = CompoundIcons.VisibilityOff(),
-                type = MatrixBadgeAtom.Type.Info
+                // :tchap: Custom Badge color
+//                type = MatrixBadgeAtom.Type.Info
+                type = MatrixBadgeAtom.Type.Default
+                // :tchap: end
             )
         }
         RoomBadge.SHARED_HISTORY_SHARED -> {
             MatrixBadgeAtom.MatrixBadgeData(
                 text = stringResource(R.string.crypto_history_sharing_room_info_shared_badge_content),
                 icon = CompoundIcons.History(),
-                type = MatrixBadgeAtom.Type.Info
+                // :tchap: Custom Badge color
+//                type = MatrixBadgeAtom.Type.Info
+                type = MatrixBadgeAtom.Type.Default
+                // :tchap: end
             )
         }
         RoomBadge.SHARED_HISTORY_WORLD_READABLE -> {
             MatrixBadgeAtom.MatrixBadgeData(
                 text = stringResource(R.string.crypto_history_sharing_room_info_world_readable_badge_content),
                 icon = CompoundIcons.UserProfileSolid(),
-                type = MatrixBadgeAtom.Type.Info
+                // :tchap: Custom Badge color
+//                type = MatrixBadgeAtom.Type.Info
+                type = MatrixBadgeAtom.Type.Default
+                // :tchap: end
             )
         }
         // :tchap: external-users
@@ -667,7 +682,7 @@ fun RoomBadge.toMatrixBadgeData(): MatrixBadgeAtom.MatrixBadgeData {
             MatrixBadgeAtom.MatrixBadgeData(
                 text = stringResource(R.string.tchap_screen_room_details_badge_external),
                 icon = CompoundIcons.UserSolid(),
-                type = MatrixBadgeAtom.Type.External,
+                type = MatrixBadgeAtom.Type.Warning,
             )
         }
         // :tchap: end
