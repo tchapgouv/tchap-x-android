@@ -203,8 +203,10 @@ android {
         create("tchapDev") {
             dimension = "target"
 
-            applicationIdSuffix = ".dev"
-            versionNameSuffix = "_dev"
+            // :tchap: Tchap PRA
+            applicationIdSuffix = ".dev.pra"
+            versionNameSuffix = "_dev-pra"
+            // :tchap: end
         }
         create("tchapPreprod") {
             dimension = "target"
@@ -223,7 +225,6 @@ android {
             dimension = "pinning"
         }
     }
-
     // :tchap: end
 
     packaging {
@@ -254,7 +255,7 @@ androidComponents {
 
         // BaseName based on "target" flavor
         val flavorBaseName = when (targetFlavor) {
-            "tchapDev" -> "${BuildTimeConfig.APPLICATION_NAME} dev"
+            "tchapDev" -> "${BuildTimeConfig.APPLICATION_NAME} PRA"
             "tchapPreprod" -> "${BuildTimeConfig.APPLICATION_NAME} preprod"
             "tchap" -> BuildTimeConfig.APPLICATION_NAME
             else -> BuildTimeConfig.APPLICATION_NAME
