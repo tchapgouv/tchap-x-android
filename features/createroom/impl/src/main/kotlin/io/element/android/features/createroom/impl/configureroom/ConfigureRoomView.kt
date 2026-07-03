@@ -380,13 +380,13 @@ private fun RoomJoinRuleOptions(
 //                        tint = if (isSelected) ElementTheme.colors.iconPrimary else ElementTheme.colors.iconSecondary,
 //                        backgroundTint = Color.Transparent,
                         tint = if (item is JoinRuleItem.PrivateVisibility.Private) {
-                                ElementTheme.colors.textBadgeAccent
+                                ElementTheme.colors.textBadgeSuccess
                             } else if (isSelected) {
                                 ElementTheme.colors.iconPrimary
                             } else {
                                 ElementTheme.colors.iconSecondary
                             },
-                        backgroundTint = if (item is JoinRuleItem.PrivateVisibility.Private) ElementTheme.colors.bgBadgeAccent else Color.Transparent,
+                        backgroundTint = if (item is JoinRuleItem.PrivateVisibility.Private) ElementTheme.colors.bgBadgeSuccess else Color.Transparent,
                         // :tchap: end
                     )
                 },

@@ -570,7 +570,10 @@ private fun MessagesViewComposerBottomSheetContents(
             Column(modifier = Modifier.fillMaxWidth()) {
                 // Do not show the identity change if user is composing a Rich message or is seeing suggestion(s).
                 if (state.composerState.suggestions.isEmpty() &&
-                    state.composerState.textEditorState is TextEditorState.Markdown) {
+                    state.composerState.textEditorState is TextEditorState.Markdown &&
+                    // :tchap: Hide Identity Change State
+                    state.showIdentityChangeStateView) {
+                    // :tchap: end
                     IdentityChangeStateView(
                         showMatrixId = state.showMatrixId,
                         state = state.identityChangeState,

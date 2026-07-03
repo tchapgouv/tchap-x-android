@@ -34,24 +34,19 @@ import org.gradle.jvm.toolchain.JavaLanguageVersion
  * Year of the version on 2 digits.
  * Do not update this value. it is updated by the release script.
  */
-private const val versionYear = 0
+private const val versionYear = 26
 
 /**
  * Month of the version on 2 digits. Value must be in [1,12].
  * Do not update this value. it is updated by the release script.
  */
-private const val versionMonth = 6
+private const val versionMonth = 7
 
 /**
  * Release number in the month. Value must be in [0,99].
  * Do not update this value. it is updated by the release script.
  */
-private const val versionReleaseNumber = 2
-
-// TCHAP - rework version number
-private const val versionMajorNumber = 0
-private const val versionMinorNumber = 12
-private const val versionPatchNumber = 0
+private const val versionReleaseNumber = 0
 
 object Versions {
     /**
@@ -61,12 +56,8 @@ object Versions {
      * See comment above for the calculation method.
      */
 
-    // TCHAP - rework version number
-    // const val VERSION_CODE = (2000 + versionYear) * 10_000 + versionMonth * 100 + versionReleaseNumber
-    // val VERSION_NAME = "$versionYear.${versionMonth.toString().padStart(2, '0')}.$versionReleaseNumber"
-    const val VERSION_CODE = versionMajorNumber * 10_000 + versionMinorNumber * 100 + versionPatchNumber
-    val VERSION_NAME = "$versionMajorNumber.$versionMinorNumber.$versionPatchNumber"
-    // end Tchap-specific
+     const val VERSION_CODE = (2000 + versionYear) * 10_000 + versionMonth * 100 + versionReleaseNumber
+     val VERSION_NAME = "$versionYear.${versionMonth.toString().padStart(2, '0')}.$versionReleaseNumber"
 
     /**
      * Compile SDK version. Must be updated when a new Android version is released.
@@ -112,10 +103,8 @@ object Versions {
 
     // Perform some checks on the values to avoid releasing with bad values
     init {
-        // TCHAP - rework version number
-//        require(versionMonth in 1..12) { "versionMonth must be in [1,12]" }
-//        require(versionReleaseNumber in 0..99) { "versionReleaseNumber must be in [0,99]" }
-        require(versionPatchNumber in 0..99) { "versionPatchNumber must be in [0,99]" }
+        require(versionMonth in 1..12) { "versionMonth must be in [1,12]" }
+        require(versionReleaseNumber in 0..99) { "versionReleaseNumber must be in [0,99]" }
         require(BUILD_TOOLS_VERSION.startsWith(COMPILE_SDK.toString())) { "When updating COMPILE_SDK, please also update BUILD_TOOLS_VERSION" }
     }
 }

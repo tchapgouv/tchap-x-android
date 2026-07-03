@@ -118,8 +118,8 @@ fun SelectedItem(
             // TCHAP external user
             if (isExternalTchapUser) {
                 Surface(
-                    color = ElementTheme.colors.bgBadgeExternal,
-                    contentColor = ElementTheme.colors.textBadgeExternal,
+                    color = ElementTheme.colors.bgBadgeWarning,
+                    contentColor = ElementTheme.colors.textBadgeWarning,
                     shape = RoundedCornerShape(9.dp),
                 ) {
                     Text(
@@ -129,7 +129,7 @@ fun SelectedItem(
                         overflow = TextOverflow.Ellipsis,
                         maxLines = maxLines,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = ElementTheme.colors.textSecondary,
+                        color = ElementTheme.colors.textBadgeWarning,
                         textAlign = TextAlign.Center,
                     )
                 }

@@ -83,12 +83,8 @@ class MentionSpanTheme(val currentUserId: UserId) {
     fun updateStyles() {
         currentUserTextColor = ElementTheme.colors.textBadgeAccent.toArgb()
         currentUserBackgroundColor = ElementTheme.colors.bgBadgeAccent.toArgb()
-        // :tchap: Custom @Others mentions : textPrimary on Gray background
-//        otherTextColor = ElementTheme.colors.textOnSolidPrimary.toArgb()
-//        otherBackgroundColor = ElementTheme.colors.bgBadgePrimary.toArgb()
-        otherTextColor = ElementTheme.colors.textPrimary.toArgb()
-        otherBackgroundColor = ElementTheme.colors.bgBadgeDefault.toArgb()
-        // :tchap: end
+        otherTextColor = ElementTheme.colors.textOnSolidPrimary.toArgb()
+        otherBackgroundColor = ElementTheme.colors.bgBadgePrimary.toArgb()
 
         typeface.value = ElementTheme.typography.fontBodyLgMedium.rememberTypeface().value
         val density = LocalDensity.current

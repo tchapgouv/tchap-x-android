@@ -110,6 +110,16 @@ enum class FeatureFlags(
         defaultValue = { true },
         isFinished = false,
     ),
+
+    // :tchap: Hide Identity Change State
+    ShowIdentityChangeStateView(
+        key = "feature.show_identity_change_state_view",
+        title = "Show Identity Change State",
+        defaultValue = { false },
+        isFinished = false,
+    ),
+    // :tchap: end
+
     AllowBlackTheme(
         key = "feature.allow_black_theme",
         title = "Black theme",
@@ -129,7 +139,10 @@ enum class FeatureFlags(
         key = "feature.slash_command",
         title = "Parse slash commands in the message composer",
         description = "Allow parsing slash commands in the message composer and perform action.",
-        defaultValue = { false },
+        // :tchap: Enable SlashCommand by default
+//        defaultValue = { false },
+        defaultValue = { true },
+        // :tchap: end
         isFinished = false,
     ),
     RoomThreadList(
