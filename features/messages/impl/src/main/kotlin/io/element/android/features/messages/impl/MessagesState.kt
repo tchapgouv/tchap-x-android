@@ -37,6 +37,9 @@ data class MessagesState(
     val isPublic: Boolean,
     // TCHAP external user
     val isOpenToExternalUsers: Boolean,
+    // :tchap: Hide Identity Change State
+    val showIdentityChangeStateView: Boolean,
+    // :tchap: end
     val roomId: RoomId,
     val roomName: String?,
     val roomAvatar: AvatarData,
