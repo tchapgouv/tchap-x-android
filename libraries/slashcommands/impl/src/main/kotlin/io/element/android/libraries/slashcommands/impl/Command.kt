@@ -110,6 +110,9 @@ enum class Command(
         command = "/nick",
         parameters = "<display-name>",
         description = R.string.slash_command_description_nick,
+        // :tchap: Not used in Tchap
+        isSupported = false,
+        // :tchap: end
     ),
     CHANGE_DISPLAY_NAME_FOR_ROOM(
         command = "/myroomnick",
@@ -150,11 +153,17 @@ enum class Command(
         command = "/rainbow",
         parameters = "<message>",
         description = R.string.slash_command_description_rainbow,
+        // :tchap: Wrong display on mobile, disable it
+        isSupported = false,
+        // :tchap: end
     ),
     RAINBOW_EMOTE(
         command = "/rainbowme",
         parameters = "<message>",
         description = R.string.slash_command_description_rainbow_emote,
+        // :tchap: Wrong display on mobile, disable it
+        isSupported = false,
+        // :tchap: end
     ),
     DEVTOOLS(
         command = "/devtools",
@@ -165,6 +174,9 @@ enum class Command(
         command = "/spoiler",
         parameters = "<message>",
         description = R.string.slash_command_description_spoiler,
+        // :tchap: Wrong display on mobile, disable it
+        isSupported = false,
+        // :tchap: end
     ),
     SHRUG(
         command = "/shrug",
@@ -180,11 +192,17 @@ enum class Command(
         command = "/plain",
         parameters = "<message>",
         description = R.string.slash_command_description_plain,
+        // :tchap: Not used in Tchap
+        isSupported = false,
+        // :tchap: end
     ),
     WHOIS(
         command = "/whois",
         parameters = "<user-id>",
         description = R.string.slash_command_description_whois,
+        // :tchap: Only for debug on Tchap
+        isDevCommand = true,
+        // :tchap: end
     ),
     DISCARD_SESSION(
         command = "/discardsession",
