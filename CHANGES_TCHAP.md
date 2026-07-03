@@ -1,3 +1,24 @@
+Changements dans Tchap Android v26.07.0
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v26.07.0 -->
+
+## Qu'est-ce qui a changé ?
+### ✨ Nouveautés
+* Ajout de la commande /visio by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/231
+* Activation des commandes dans les messages by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/232
+### 🙌 Améliorations
+* Renommer l'application Tchap beta en Tchap by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/234
+* Mise à Jour de Compound & Amélioration des badges by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/230
+* Masquer le bandeau de réinitialisation d'identité d'un membre by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/237
+* Changement du format de numéro de version by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/238
+### Autres
+* Mise à jour des certificats de juillet 2026 by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/233
+* Suppression des noms de domaine Element non utilisés by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/236
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v0.12.0...v26.07.0
+
 Changements dans Tchap beta Android v0.12.0
 =============================
 
