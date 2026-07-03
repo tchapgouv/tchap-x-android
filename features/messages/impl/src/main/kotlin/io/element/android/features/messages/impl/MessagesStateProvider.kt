@@ -136,6 +136,9 @@ fun aMessagesState(
     isPublic = true,
     // TCHAP external user
     isOpenToExternalUsers = true,
+    // :tchap: Hide Identity Change State
+    showIdentityChangeStateView = false,
+    // :tchap: end
     roomId = RoomId("!id:domain"),
     roomName = roomName,
     roomAvatar = roomAvatar,

@@ -110,6 +110,16 @@ enum class FeatureFlags(
         defaultValue = { true },
         isFinished = false,
     ),
+
+    // :tchap: Hide Identity Change State
+    ShowIdentityChangeStateView(
+        key = "feature.show_identity_change_state_view",
+        title = "Show Identity Change State",
+        defaultValue = { false },
+        isFinished = false,
+    ),
+    // :tchap: end
+
     AllowBlackTheme(
         key = "feature.allow_black_theme",
         title = "Black theme",

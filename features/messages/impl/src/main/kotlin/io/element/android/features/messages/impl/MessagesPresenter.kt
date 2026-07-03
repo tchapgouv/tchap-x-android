@@ -179,6 +179,10 @@ class MessagesPresenter(
         val canOpenThreadList by featureFlagService.isFeatureEnabledFlow(FeatureFlags.RoomThreadList).collectAsState(initial = false)
         val isCurrentlySharingLiveLocationInRoom by remember { liveLocationShareManager.isCurrentlySharing(room.roomId) }.collectAsState()
 
+        // :tchap: Hide Identity Change State
+        val showIdentityChangeStateView by featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowIdentityChangeStateView).collectAsState(initial = false)
+        // :tchap: end
+
         val userEventPermissions by room.permissionsAsState(UserEventPermissions.DEFAULT) { perms ->
             perms.userEventPermissions()
         }
@@ -315,6 +319,9 @@ class MessagesPresenter(
             isPublic = room.roomInfoFlow.collectAsState().value.isPublic == true && savedIsVisibleInRoomDirectory.value.dataOrNull() == true,
             // TCHAP external user
             isOpenToExternalUsers = roomInfo.isOpenToExternalUsers,
+            // :tchap: Hide Identity Change State
+            showIdentityChangeStateView = showIdentityChangeStateView,
+            // :tchap: end
             roomId = room.roomId,
             roomName = roomInfo.name,
             roomAvatar = roomAvatar,
