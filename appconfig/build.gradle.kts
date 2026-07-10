@@ -47,7 +47,25 @@ android {
                     ?: "element-x-android"
             },
         )
+
+        // :tchap: Dynamic PUSHER_APP_ID depending on env
+        buildConfigFieldStr("PUSHER_APP_ID", BuildTimeConfig.APPLICATION_ID)
+        // :tchap: end
     }
+
+    // :tchap: Dynamic PUSHER_APP_ID depending on env
+    libraryVariants.configureEach {
+        val targetFlavor = productFlavors.find { it.dimension == "target" }?.name
+
+        val flavorSuffix = when (targetFlavor) {
+            "tchapDev" -> ".dev"
+            "tchapPreprod" -> ".staging"
+            else -> ""
+        }
+
+        buildConfigField("String", "PUSHER_APP_ID", "\"${BuildTimeConfig.APPLICATION_ID}$flavorSuffix\"")
+    }
+    // :tchap: end
 }
 
 dependencies {
