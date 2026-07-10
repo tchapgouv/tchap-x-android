@@ -1,3 +1,16 @@
+Changements dans Tchap Android v26.07.2
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v26.07.2 -->
+
+## Qu'est-ce qui a changé ?
+### Autres
+* Lien du Play Store dans le script de release by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/243
+* Désactivation de la Protection automatique Google Play
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v26.07.1...v26.07.2
+
 Changements dans Tchap Android v26.07.1
 =============================
 
