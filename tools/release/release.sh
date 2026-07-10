@@ -621,7 +621,7 @@ fi
 
 printf "\n================================================================================\n"
 printf "Message for the Android internal room:\n\n"
-printf "# ${appName} v${version}\n\n## Qu'est-ce qui a changé ?\n${releaseNotesContent}\n\n[🚀 Voir la version sur GitHub](https://github.com/tchapgouv/tchap-x-android/releases/tag/v${version})\n\n"
+printf "# ${appName} v${version}\n\n## Qu'est-ce qui a changé ?\n${releaseNotesContent}\n\n[🧑‍💻 Voir la version sur GitHub](https://github.com/tchapgouv/tchap-x-android/releases/tag/v${version})\n[🚀 Forcer la mise à jour manuelle via le Play Store](https://play.google.com/store/apps/details?id=fr.gouv.tchap.android.x)\n\n"
 
 # TCHAP - Disable matrix Bot token
 read -r -p "Send the message manually, and press enter to continue. "
