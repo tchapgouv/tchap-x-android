@@ -19,32 +19,89 @@ plugins {
 android {
     namespace = "io.element.android.libraries.pushproviders.firebase"
 
+    // :tchap: Push config for Gateway URL & Variants
+//    buildTypes {
+//        getByName("release") {
+//            consumerProguardFiles("consumer-proguard-rules.pro")
+//            resValue(
+//                type = "string",
+//                name = "google_app_id",
+//                value = BuildTimeConfig.GOOGLE_APP_ID_RELEASE,
+//            )
+//        }
+//        getByName("debug") {
+//            resValue(
+//                type = "string",
+//                name = "google_app_id",
+//                value = BuildTimeConfig.GOOGLE_APP_ID_DEBUG,
+//            )
+//        }
+//        register("nightly") {
+//            consumerProguardFiles("consumer-proguard-rules.pro")
+//            matchingFallbacks += listOf("release")
+//            resValue(
+//                type = "string",
+//                name = "google_app_id",
+//                value = BuildTimeConfig.GOOGLE_APP_ID_NIGHTLY,
+//            )
+//        }
+//    }
+
     buildTypes {
         getByName("release") {
             consumerProguardFiles("consumer-proguard-rules.pro")
-            resValue(
-                type = "string",
-                name = "google_app_id",
-                value = BuildTimeConfig.GOOGLE_APP_ID_RELEASE,
-            )
-        }
-        getByName("debug") {
-            resValue(
-                type = "string",
-                name = "google_app_id",
-                value = BuildTimeConfig.GOOGLE_APP_ID_DEBUG,
-            )
         }
         register("nightly") {
             consumerProguardFiles("consumer-proguard-rules.pro")
             matchingFallbacks += listOf("release")
-            resValue(
-                type = "string",
-                name = "google_app_id",
-                value = BuildTimeConfig.GOOGLE_APP_ID_NIGHTLY,
-            )
         }
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    defaultConfig {
+        buildConfigField("String", "pushConfigGatewayURL", "\"\"")
+    }
+
+    libraryVariants.configureEach {
+        val targetFlavor = productFlavors.find { it.dimension == "target" }?.name
+
+        var appId = ""
+        var gatewayUrl = ""
+
+        when (targetFlavor) {
+            "tchap" -> {
+                appId = when (buildType.name) {
+                    "release" -> BuildTimeConfig.GOOGLE_APP_ID_PROD
+                    "nightly" -> BuildTimeConfig.GOOGLE_APP_ID_PROD_NIGHTLY
+                    else -> BuildTimeConfig.GOOGLE_APP_ID_PROD_DEBUG
+                }
+                gatewayUrl = BuildTimeConfig.PUSH_CONFIG_GATEWAY_URL_PROD
+            }
+            "tchapPreprod" -> {
+                appId = when (buildType.name) {
+                    "release" -> BuildTimeConfig.GOOGLE_APP_ID_PREPROD
+                    "nightly" -> BuildTimeConfig.GOOGLE_APP_ID_PREPROD_NIGHTLY
+                    else -> BuildTimeConfig.GOOGLE_APP_ID_PREPROD_DEBUG
+                }
+                gatewayUrl = BuildTimeConfig.PUSH_CONFIG_GATEWAY_URL_PREPROD
+            }
+            "tchapDev" -> {
+                appId = when (buildType.name) {
+                    "release" -> BuildTimeConfig.GOOGLE_APP_ID_DEV
+                    "nightly" -> BuildTimeConfig.GOOGLE_APP_ID_DEV_NIGHTLY
+                    else -> BuildTimeConfig.GOOGLE_APP_ID_DEV_DEBUG
+                }
+                gatewayUrl = BuildTimeConfig.PUSH_CONFIG_GATEWAY_URL_DEV
+            }
+        }
+
+        resValue("string", "google_app_id", appId)
+        buildConfigField("String", "pushConfigGatewayURL", "\"$gatewayUrl\"")
+    }
+    // :tchap: end
 }
 
 setupDependencyInjection()

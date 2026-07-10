@@ -8,10 +8,8 @@
 
 package io.element.android.libraries.designsystem.atomic.atoms
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.dp
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.libraries.designsystem.components.Badge
@@ -84,7 +82,7 @@ object MatrixBadgeAtom {
             Type.Warning -> null
             Type.Default -> null
             Type.Positive -> null
-            Type.Neutral -> BorderStroke(1.dp, ElementTheme.colors.borderInteractiveSecondary)
+            Type.Neutral -> null
             Type.Negative -> null
             Type.Info -> null
         }
