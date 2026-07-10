@@ -1,3 +1,16 @@
+Changements dans Tchap Android v26.07.1
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v26.07.1 -->
+
+## Qu'est-ce qui a changé ?
+### 🙌 Améliorations
+* Suppression de la bordure pour les badges neutres by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/241
+* Configuration des URL de Push en fonction de l'environnement by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/242
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v26.07.0...v26.07.1
+
 Changements dans Tchap Android v26.07.0
 =============================
 
