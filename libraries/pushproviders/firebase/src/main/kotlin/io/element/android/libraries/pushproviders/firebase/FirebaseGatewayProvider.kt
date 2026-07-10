@@ -21,6 +21,11 @@ class DefaultFirebaseGatewayProvider(
     private val enterpriseService: EnterpriseService,
 ) : FirebaseGatewayProvider {
     override fun getFirebaseGateway(): String {
-        return enterpriseService.firebasePushGateway() ?: FirebaseConfig.PUSHER_HTTP_URL
+        // :tchap: Push config for Gateway URL
+//        return enterpriseService.firebasePushGateway() ?: FirebaseConfig.PUSHER_HTTP_URL
+        return BuildConfig.pushConfigGatewayURL.takeIf { it.isNotEmpty() }
+            ?: enterpriseService.firebasePushGateway()
+            ?: FirebaseConfig.PUSHER_HTTP_URL
+        // :tchap: end
     }
 }
