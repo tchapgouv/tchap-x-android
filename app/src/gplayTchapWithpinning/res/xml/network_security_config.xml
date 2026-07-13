@@ -7,7 +7,6 @@
 
             <!-- Allow only Tchap intermediate certificate authority -->
             <certificates src="@raw/harica_tls_root_2021_rsa" />
-            <certificates src="@raw/servicesca_rootca" />
         </trust-anchors>
     </base-config>
 

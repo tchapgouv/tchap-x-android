@@ -163,7 +163,6 @@ class RustMatrixClientFactory(
             try {
                 val certificatesRessources = listOf(
                     R.raw.harica_tls_root_2021_rsa,
-                    R.raw.servicesca_rootca,
                 )
                 val certificatesList = mutableListOf<ByteArray>()
 
@@ -180,7 +179,7 @@ class RustMatrixClientFactory(
             } catch (e: Exception) {
                 Timber.e(
                     e,
-                    "An unexpected error occurred while processing certificate from R.raw.harica_tls_root_2021_rsa or R.raw.servicesca_rootca.",
+                    "An unexpected error occurred while processing certificate from R.raw.harica_tls_root_2021_rsa.",
                 )
             }
         }
