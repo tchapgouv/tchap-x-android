@@ -1,3 +1,15 @@
+Changements dans Tchap Android v26.07.3
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v26.07.3 -->
+
+## Qu'est-ce qui a changé ?
+### 🗣 Textes & Traductions
+* Instructions pour activer la sauvegarde automatique dans Tchap Classique by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/244
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v26.07.2...v26.07.3
+
 Changements dans Tchap Android v26.07.2
 =============================
 
