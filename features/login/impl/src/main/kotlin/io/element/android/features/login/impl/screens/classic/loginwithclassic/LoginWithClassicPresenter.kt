@@ -77,12 +77,28 @@ class LoginWithClassicPresenter(
                                 // Ensure that the current account provider is set
                                 val elementClassicUserId = currentState.elementClassicSession.userId
                                 val accountProvider = elementClassicUserId.domainName.orEmpty().ensureProtocol()
+
+                                // :tchap: extract email from MXID if it matches a simple pattern
+                                val mxidLocalPart = elementClassicUserId.value
+                                    .substringAfter('@')
+                                    .substringBefore(':')
+                                val emailFromMxID = if (mxidLocalPart.count { it == '-' } == 1 &&
+                                    (mxidLocalPart.endsWith(".fr") || mxidLocalPart.endsWith(".com"))) {
+                                    mxidLocalPart.replace('-', '@')
+                                } else {
+                                    null
+                                }
+                                // :tchap: end
+
                                 accountProviderDataSource.setUrl(accountProvider)
                                 loginHelper.submit(
                                     isAccountCreation = false,
                                     homeserverUrl = accountProvider,
                                     resolvedHomeserverUrl = currentState.elementClassicSession.homeserverUrl,
-                                    loginHint = "mxid:" + elementClassicUserId.value,
+                                    // :tchap: Use email from MXID as loginHint
+//                                    loginHint = "mxid:" + elementClassicUserId.value,
+                                    loginHint = emailFromMxID,
+                                    // :tchap: end
                                 )
                             }
                         }
