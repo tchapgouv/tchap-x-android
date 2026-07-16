@@ -78,5 +78,6 @@ data class NotificationSettingsState(
      * Whether the advanced settings should be shown.
      * This is true if the current push distributor is in a failure state or if there are multiple push distributors available.
      */
-    val showAdvancedSettings: Boolean = currentPushDistributor.isFailure() || availablePushDistributors.size > 1
+    val showAdvancedSettings: Boolean = currentPushDistributor.isFailure()
+        // || availablePushDistributors.size > 0 :tchap: disable PushDistributor selection
 }
