@@ -1,3 +1,17 @@
+Changements dans Tchap Android v26.07.4
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v26.07.4 -->
+
+## Qu'est-ce qui a changé ?
+### 🙌 Améliorations
+* Désactivation de Unified Push - Non fonctionnel pour le moment by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/246
+### 🐛 Corrections de bugs
+* Correction pour la connexion via Tchap Classique avec ProConnect by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/245
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v26.07.3...v26.07.4
+
 Changements dans Tchap Android v26.07.3
 =============================
 
