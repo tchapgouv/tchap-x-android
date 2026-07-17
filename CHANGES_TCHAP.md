@@ -1,3 +1,15 @@
+Changements dans Tchap Android v26.07.6
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v26.07.6 -->
+
+## Qu'est-ce qui a changé ?
+### 🐛 Corrections de bugs
+* Correction pour les appareils 32 bits by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/248
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v26.07.5...v26.07.6
+
 Changements dans Tchap Android v26.07.5
 =============================
 
