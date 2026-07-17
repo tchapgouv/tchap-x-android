@@ -31,11 +31,7 @@ rustSdkUrl="https://github.com/matrix-org/matrix-rust-sdk.git"
 rustSdkBranch="main"
 buildApp=1
 
-default_arch="$(uname -m)-linux-android"
-# On ARM MacOS, `uname -m` returns arm64, but the toolchain is called aarch64
-default_arch="${default_arch/arm64/aarch64}"
-
-target_arch="${default_arch}"
+target_arch=""
 
 sdkArg=""
 
@@ -108,12 +104,12 @@ ARGUMENTS
         The local path of the SDK to build, or the URL of the remote repo if --remote is provided.
 
     -t --target-arch
-        The architecture for which to build the app. Defaults to the architecture of this machine (${default_arch}).
+        The architecture for which to build the app. If not supplied, the app is built for all architectures.
 
 EXAMPLES
 
     $0
-        Build the default local rust SDK (../matrix-rust-sdk)
+        Build the default local rust SDK (../matrix-rust-sdk) for all architectures
 
     $0 --sdk=/home/andy/code/matrix-rust-sdk
         Build the supplied local rust SDK
@@ -211,12 +207,20 @@ git pull
 
 ## Build the SDK
 
-printf "\n## Building the SDK for ${target_arch}...\n\n"
+if [ -z "${target_arch}" ]; then
+    arch_args=""
+    target_info="all architectures"
+else
+    arch_args="-t ${target_arch}"
+    target_info="${target_arch}"
+fi
+
+printf "\n## Building the SDK for ${target_info}...\n\n"
 
 ./scripts/build.sh \
     -p "${rustSdkPath}" \
     -m sdk \
-    -t "${target_arch}" \
+    ${arch_args} \
     -o "${elementPwd}/libraries/rustsdk" \
     -r
 
