@@ -214,8 +214,10 @@ android {
         create("tchapDev") {
             dimension = "target"
 
-            applicationIdSuffix = ".dev"
-            versionNameSuffix = "_dev"
+            // :tchap: Tchap PRA
+            applicationIdSuffix = ".dev.pra"
+            versionNameSuffix = "_dev-pra"
+            // :tchap: end
         }
         create("tchapPreprod") {
             dimension = "target"
@@ -241,7 +243,9 @@ android {
 
         // BaseName based on "target" flavor
         val flavorBaseName = when (targetFlavor) {
-            "tchapDev" -> "$baseAppName dev"
+            // :tchap: Tchap PRA
+            "tchapDev" -> "$baseAppName PRA"
+            // :tchap: end
             "tchapPreprod" -> "$baseAppName preprod"
             "tchap" -> baseAppName
             else -> baseAppName

@@ -60,6 +60,7 @@ object BuildTimeConfig {
     const val GOOGLE_APP_ID_PREPROD_DEBUG = "1:1092909174787:android:5dea9c3d42482c132a7e36"
     const val GOOGLE_APP_ID_DEV = "1:1092909174787:android:4f1445fd40d73ebf2a7e36"
     const val GOOGLE_APP_ID_DEV_NIGHTLY = "1:1092909174787:android:190ed65bcb2965002a7e36"
-    const val GOOGLE_APP_ID_DEV_DEBUG = "1:1092909174787:android:ab600c14603565a62a7e36"
+    // :tchap: Tchap PRA
+    const val GOOGLE_APP_ID_DEV_DEBUG = "1:1092909174787:android:3ca585b16cd292972a7e36"
     // :tchap: end
 }
