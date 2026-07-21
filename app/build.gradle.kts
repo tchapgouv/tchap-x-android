@@ -103,7 +103,10 @@ android {
     logger.warnInBox("Building ${defaultConfig.applicationId} ($baseAppName) [$buildType]")
 
     buildTypes {
-        val oAuthRedirectSchemeBase = BuildTimeConfig.METADATA_HOST_REVERSED ?: "io.element.android"
+        // :tchap: Fix OAuth redirect scheme
+//        val oAuthRedirectSchemeBase = BuildTimeConfig.METADATA_HOST_REVERSED ?: "io.element.android"
+        val oAuthRedirectSchemeBase = BuildTimeConfig.APPLICATION_ID ?: "io.element.android"
+        // :tchap: end
         getByName("debug") {
             // TCHAP : app_name defined in applicationVariants.configureEach bellow
 //            resValue("string", "app_name", "$baseAppName dbg")
