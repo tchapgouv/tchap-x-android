@@ -22,10 +22,10 @@ object BuildTimeConfig {
     const val SERVICES_MAPTILER_DARK_MAPID = "fiord-color"
 
     val METADATA_HOST_REVERSED: String? = null
-    val URL_WEBSITE: String? = null
+    val URL_WEBSITE: String = "https://tchap.gouv.fr"
 
     // TCHAP : specific URL
-    const val URL_LOGO: String = "https://www.tchap.gouv.fr/vector-icons/300.png"
+    const val URL_LOGO: String = "https://tchap.gouv.fr/vector-icons/300.png"
 
     val URL_COPYRIGHT: String? = null
 

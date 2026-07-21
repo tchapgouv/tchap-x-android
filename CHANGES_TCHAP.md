@@ -1,3 +1,18 @@
+Changements dans Tchap Android v26.07.7
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v26.07.7 -->
+
+## Qu'est-ce qui a changé ?
+### 🙌 Améliorations
+* Autorisation des certificats CRL-only (sans OCSP) by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/253
+* Amélioration de la connexion OAuth - Détection du package de l'app by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/252
+### 🧱 Build
+* Lister les hash des APKs lors de la génération de la release by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/250
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v26.07.6...v26.07.7
+
 Changements dans Tchap Android v26.07.6
 =============================
 
