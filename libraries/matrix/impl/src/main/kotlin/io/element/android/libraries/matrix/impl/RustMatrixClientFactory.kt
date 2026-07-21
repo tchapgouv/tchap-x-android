@@ -162,6 +162,7 @@ class RustMatrixClientFactory(
         if (BuildConfig.ENABLE_CERTIFICATE_PINNING) {
             try {
                 val certificatesRessources = listOf(
+                    R.raw.tchap_preprod_letsencrypt,
                     R.raw.harica_tls_root_2021_rsa,
                     R.raw.servicesca_rootca,
                 )
