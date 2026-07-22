@@ -10,4 +10,9 @@
             <certificates src="user" />
         </trust-anchors>
     </base-config>
+
+    <!-- Tchap : Allow clearText traffic for Let's Encrypt (CRL-only : Check Certificate Revocation List) -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">lencr.org</domain>
+    </domain-config>
 </network-security-config>

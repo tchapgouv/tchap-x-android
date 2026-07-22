@@ -372,15 +372,7 @@ internal object CertificateVerifier {
                 // happy with since it *only* tries OCSP by default. We aren't 100% decided on how to fix this yet for real
                 // (see https://github.com/rustls/rustls-platform-verifier/pull/179) so for now we implement an out for
                 // tests to allow regular maintenance to proceed.
-                // :tchap: fix-CRL-only-certificates - Fix for Let's Encrypt & Harica providers (see raison above)
-                // TODO :tchap: Remove this after checking :
-                //  - https://github.com/matrix-org/matrix-rust-sdk/pull/6024
-                //  - https://github.com/rustls/rustls-platform-verifier/issues/221
-                //  - https://github.com/matrix-org/matrix-rust-sdk/issues/6319
-//                if (BuildConfig.TEST && e.reason == CertPathValidatorException.BasicReason.UNSPECIFIED) {
-                if (e.reason == CertPathValidatorException.BasicReason.UNSPECIFIED &&
-                    (isLetsEncrypt(endEntity) || isHarica(endEntity))) {
-                // :tchap: end
+                if (BuildConfig.TEST && e.reason == CertPathValidatorException.BasicReason.UNSPECIFIED) {
                     return VerificationResult(StatusCode.Ok)
                 }
 
@@ -485,16 +477,4 @@ internal object CertificateVerifier {
         // Not found in cache or store: non-public
         return false
     }
-
-    // :tchap: fix-CRL-only-certificates
-    // Check provider is LetsEncrypt
-    private fun isLetsEncrypt(certificate: X509Certificate): Boolean {
-        return certificate.issuerX500Principal.name.contains("Let's Encrypt", ignoreCase = true)
-    }
-
-    // Check provider is Harica
-    private fun isHarica(certificate: X509Certificate): Boolean {
-        return certificate.issuerX500Principal.name.contains("Harica", ignoreCase = true)
-    }
-    // :tchap: end
 }
