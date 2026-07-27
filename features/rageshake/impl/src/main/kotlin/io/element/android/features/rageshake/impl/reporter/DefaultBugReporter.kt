@@ -196,6 +196,12 @@ class DefaultBugReporter(
 
                 userId?.let {
                     matrixClientProvider.getOrNull(it)?.let { client ->
+                        // :tchap: Add verification & backup states in report
+                        builder
+                            .addFormDataPart("verification_status", client.sessionVerificationService.sessionVerifiedStatus.value.toString())
+                            .addFormDataPart("backup_status", client.encryptionService.recoveryStateStateFlow.value.name)
+                        // :tchap: end
+
                         val curveKey = client.encryptionService.deviceCurve25519()
                         val edKey = client.encryptionService.deviceEd25519()
                         if (curveKey != null && edKey != null) {
