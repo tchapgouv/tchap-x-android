@@ -138,7 +138,7 @@ class RustMatrixAuthenticationService(
                 val certificatesList = mutableListOf<ByteArray>()
                 if (BuildConfig.ENABLE_CERTIFICATE_PINNING) {
                     val certificatesResources = listOf(
-                        R.raw.harica_tls_root_2021_rsa,
+                        R.raw.harica_qwac_sub_r1_cross,
                         R.raw.servicesca_rootca,
                     )
 
