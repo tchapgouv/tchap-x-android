@@ -1,3 +1,17 @@
+Changements dans Tchap Android v26.07.9
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v26.07.9 -->
+
+## Qu'est-ce qui a changé ?
+### 🙌 Améliorations
+* Remplacement du certificat Harica root par l'intermédiaire by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/260
+### 🐛 Corrections de bugs
+* Ajout des certificats pour autoriser les anciennes version Android à se connecter by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/259
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v26.07.8...v26.07.9
+
 Changements dans Tchap Android v26.07.8
 =============================
 
