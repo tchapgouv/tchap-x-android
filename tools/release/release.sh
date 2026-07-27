@@ -644,7 +644,7 @@ read -r -p "Send the message manually, and press enter to continue. "
 printf "\n================================================================================\n"
 printf "Generate SHA256 of all signed APKs :\n\n"
 
-printf "Bonjour,\nLa dernière version de ${appName} v${version} est disponible.\n\nVoici la liste des hash SHA256 :\n\n"
+printf "Bonjour,\nLa dernière version de ${appName} v${version} est disponible.\n\nVoici la liste des hash SHA256 :\n\n\`\`\`\n"
 # Generate SHA256 of all apk in signedReleaseDir
   (
     cd "${signedReleaseDir}" || exit
@@ -656,7 +656,7 @@ printf "Bonjour,\nLa dernière version de ${appName} v${version} est disponible.
       fi
     done
   )
-printf "\n[🧑‍💻 Voir la version sur GitHub](https://github.com/tchapgouv/tchap-x-android/releases/tag/v${version})\n\n"
+printf "\`\`\`\n\n[🧑‍💻 Voir la version sur GitHub](https://github.com/tchapgouv/tchap-x-android/releases/tag/v${version})\n\n"
 
 read -r -p "Send the message manually in \"Tchap - Appareils sécurisés\", and press enter to continue. "
 

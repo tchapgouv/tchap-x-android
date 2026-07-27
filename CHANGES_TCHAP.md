@@ -1,3 +1,17 @@
+Changements dans Tchap Android v26.07.8
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v26.07.8 -->
+
+## Qu'est-ce qui a changé ?
+### 🙌 Améliorations
+* Autoriser le trafic en clair pour les certificats CRL-only by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/254
+* Ajout de logs d'erreur lors de l'appel à get_instance by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/256
+* Le rapport contient les statuts de vérification et de sauvegarde by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/258
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v26.07.7...v26.07.8
+
 Changements dans Tchap Android v26.07.7
 =============================
 
