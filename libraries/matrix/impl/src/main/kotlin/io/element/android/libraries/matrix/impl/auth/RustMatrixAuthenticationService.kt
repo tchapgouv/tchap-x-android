@@ -142,10 +142,11 @@ class RustMatrixAuthenticationService(
                         R.raw.servicesca_rootca,
                     )
 
-                    certificatesResources.forEach {
-                        certificatesList.add(context.resources.openRawResource(it).use { inputStream ->
+                    certificatesResources.forEach { resId ->
+                        val bytes = context.resources.openRawResource(resId).use { inputStream ->
                             inputStream.readBytes()
-                        })
+                        }
+                        certificatesList.add(bytes)
                     }
                 }
 
