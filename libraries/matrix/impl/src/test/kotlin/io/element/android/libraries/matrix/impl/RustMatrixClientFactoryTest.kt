@@ -8,6 +8,7 @@
 
 package io.element.android.libraries.matrix.impl
 
+import android.content.Context
 import com.google.common.truth.Truth.assertThat
 import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.core.SessionId
@@ -25,6 +26,7 @@ import io.element.android.services.analytics.test.FakeAnalyticsService
 import io.element.android.services.toolbox.test.systemclock.FakeSystemClock
 import io.element.android.tests.testutils.lambda.lambdaRecorder
 import io.element.android.tests.testutils.testCoroutineDispatchers
+import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -46,6 +48,7 @@ class RustMatrixClientFactoryTest {
 }
 
 fun TestScope.createRustMatrixClientFactory(
+    context: Context = mockk(),
     cacheDirectory: File = File("/cache"),
     sessionStore: SessionStore = InMemorySessionStore(
         updateUserProfileResult = { _, _, _ -> },
@@ -53,6 +56,7 @@ fun TestScope.createRustMatrixClientFactory(
     clientBuilderProvider: ClientBuilderProvider = FakeClientBuilderProvider(),
     workManagerScheduler: FakeWorkManagerScheduler = FakeWorkManagerScheduler(),
 ) = RustMatrixClientFactory(
+    context = context,
     cacheDirectory = cacheDirectory,
     appCoroutineScope = backgroundScope,
     coroutineDispatchers = testCoroutineDispatchers(),

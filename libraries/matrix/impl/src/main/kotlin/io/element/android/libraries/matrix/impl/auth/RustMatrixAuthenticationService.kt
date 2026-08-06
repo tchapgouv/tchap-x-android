@@ -45,6 +45,7 @@ import io.element.android.libraries.matrix.impl.keys.SecretGenerator
 import io.element.android.libraries.matrix.impl.mapper.toSessionData
 import io.element.android.libraries.matrix.impl.paths.SessionPaths
 import io.element.android.libraries.matrix.impl.paths.SessionPathsFactory
+import io.element.android.libraries.matrix.impl.proxy.ProxyProvider
 import io.element.android.libraries.matrix.impl.toSession
 import io.element.android.libraries.network.useragent.UserAgentProvider
 import io.element.android.libraries.sessionstorage.api.LoginType
@@ -80,6 +81,9 @@ class RustMatrixAuthenticationService(
     private val secretGenerator: SecretGenerator,
     private val oAuthConfigurationProvider: OAuthConfigurationProvider,
     private val enterpriseService: EnterpriseService,
+    // :tchap: Add proxy config in rust http client
+    private val proxyProvider: ProxyProvider,
+    // :tchap: end
 ) : MatrixAuthenticationService {
     // Any existing Element Classic session that we want to try to import secrets from during login.
     private var elementClassicSession: ElementClassicSession? = null
@@ -156,6 +160,9 @@ class RustMatrixAuthenticationService(
                         userAgent = userAgentProvider.provide(),
                         disableBuiltInRootCertificates = BuildConfig.ENABLE_CERTIFICATE_PINNING,
                         additionalRawRootCertificates = certificatesList,
+                        // :tchap: Add proxy config in rust http client
+                        proxy = proxyProvider.provides(),
+                        // :tchap: end
                     ),
                     loginHint
                 )

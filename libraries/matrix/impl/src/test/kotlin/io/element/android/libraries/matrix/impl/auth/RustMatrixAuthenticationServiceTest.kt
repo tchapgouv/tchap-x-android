@@ -20,9 +20,11 @@ import io.element.android.libraries.matrix.impl.fixtures.fakes.FakeFfiHomeserver
 import io.element.android.libraries.matrix.impl.paths.SessionPathsFactory
 import io.element.android.libraries.matrix.test.auth.FakeOAuthRedirectUrlProvider
 import io.element.android.libraries.matrix.test.core.aBuildMeta
+import io.element.android.libraries.network.useragent.SimpleUserAgentProvider
 import io.element.android.libraries.sessionstorage.api.SessionStore
 import io.element.android.libraries.sessionstorage.test.InMemorySessionStore
 import io.element.android.tests.testutils.testCoroutineDispatchers
+import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -52,26 +54,31 @@ class RustMatrixAuthenticationServiceTest {
     private fun TestScope.createRustMatrixAuthenticationService(
         sessionStore: SessionStore = InMemorySessionStore(),
         clientBuilderProvider: ClientBuilderProvider = FakeClientBuilderProvider(),
-        enterpriseService: EnterpriseService = FakeEnterpriseService(),
+        enterpriseService: EnterpriseService = FakeEnterpriseService(selectedHomeserver = 0),
     ): RustMatrixAuthenticationService {
         val baseDirectory = File("/base")
         val cacheDirectory = File("/cache")
         val rustMatrixClientFactory = createRustMatrixClientFactory(
+            context = mockk(),
             cacheDirectory = cacheDirectory,
             sessionStore = sessionStore,
             clientBuilderProvider = clientBuilderProvider,
         )
         return RustMatrixAuthenticationService(
+            context = mockk(),
             sessionPathsFactory = SessionPathsFactory(baseDirectory, cacheDirectory),
             coroutineDispatchers = testCoroutineDispatchers(),
             sessionStore = sessionStore,
             rustMatrixClientFactory = rustMatrixClientFactory,
+            userAgentProvider = SimpleUserAgentProvider(),
+            buildMeta = aBuildMeta(),
             secretGenerator = FakeSecretGenerator(),
             oAuthConfigurationProvider = OAuthConfigurationProvider(
                 buildMeta = aBuildMeta(),
                 oAuthRedirectUrlProvider = FakeOAuthRedirectUrlProvider(),
             ),
             enterpriseService = enterpriseService,
+            proxyProvider = FakeProxyProvider(),
         )
     }
 }
