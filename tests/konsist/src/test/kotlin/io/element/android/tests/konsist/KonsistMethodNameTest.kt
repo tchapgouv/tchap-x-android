@@ -9,7 +9,6 @@
 package io.element.android.tests.konsist
 
 import com.lemonappdev.konsist.api.Konsist
-import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.verify.assertTrue
 import org.junit.Test
 
@@ -18,9 +17,6 @@ class KonsistMethodNameTest {
     fun `Ensure that method name does not start or end with spaces`() {
         Konsist.scopeFromProject()
             .functions()
-            .withoutPackage(
-                "de.bwi.messenger.features.messages.impl.timeline.components.event"
-            )
             .assertTrue {
                 it.name.trim() == it.name
             }

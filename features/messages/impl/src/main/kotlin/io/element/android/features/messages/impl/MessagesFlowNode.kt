@@ -23,7 +23,6 @@ import com.bumble.appyx.core.plugin.Plugin
 import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.pop
 import com.bumble.appyx.navmodel.backstack.operation.push
-import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import im.vector.app.features.analytics.plan.Interaction
@@ -238,11 +237,6 @@ class MessagesFlowNode(
                     }
 
                     override fun handleEventClick(timelineMode: Timeline.Mode, event: TimelineItem.Event, canUseOverlay: Boolean): Boolean {
-                        // TCHAP content scanner
-                        if (event.content is TimelineItemEventContentWithAttachment &&
-                            event.content.scanState != BwiContentScannerScanState.TRUSTED) {
-                            return false
-                        }
                         return processEventClick(
                             timelineMode = timelineMode,
                             event = event,

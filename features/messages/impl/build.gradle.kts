@@ -36,7 +36,6 @@ dependencies {
     implementation(projects.features.poll.api)
     implementation(projects.features.roomcall.api)
     implementation(projects.features.roomdetails.impl)
-    implementation(projects.libraries.bwi.api)
     implementation(projects.libraries.androidutils)
     implementation(projects.libraries.core)
     implementation(projects.libraries.architecture)

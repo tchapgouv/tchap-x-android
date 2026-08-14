@@ -10,7 +10,6 @@ package io.element.android.tests.konsist
 
 import com.lemonappdev.konsist.api.Konsist
 import com.lemonappdev.konsist.api.ext.list.withParameter
-import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.verify.assertEmpty
 import org.junit.Test
 
@@ -22,9 +21,6 @@ class KonsistParameterNameTest {
             .withParameter { parameter ->
                 parameter.name.endsWith("Press")
             }
-            .withoutPackage(
-                "de.bwi.messenger.features.messages.impl.timeline.components.event"
-            )
             .assertEmpty(additionalMessage = "Please rename the parameter, for instance from 'onBackPress' to 'onBackClick'.")
     }
 }

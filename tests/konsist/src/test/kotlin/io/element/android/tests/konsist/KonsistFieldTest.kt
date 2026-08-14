@@ -10,7 +10,6 @@ package io.element.android.tests.konsist
 
 import com.lemonappdev.konsist.api.Konsist
 import com.lemonappdev.konsist.api.ext.list.properties
-import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.verify.assertFalse
 import org.junit.Test
 
@@ -20,9 +19,6 @@ class KonsistFieldTest {
         Konsist
             .scopeFromProject()
             .classes()
-            .withoutPackage(
-                "de.bwi.messenger.features.messages.impl.timeline.components.event"
-            )
             .properties()
             .assertFalse {
                 val secondCharacterIsUppercase = it.name.getOrNull(1)?.isUpperCase() ?: false

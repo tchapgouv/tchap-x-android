@@ -21,7 +21,6 @@ class VirtualItemFactory(
 ) {
     fun create(timelineItem: MatrixTimelineItem.Virtual): MediaItem? {
         return when (val virtual = timelineItem.virtual) {
-            is VirtualTimelineItem.BwiScanStateChanged -> null
             is VirtualTimelineItem.DayDivider -> MediaItem.DateSeparator(
                 id = timelineItem.uniqueId,
                 formattedDate = dateFormatter.format(

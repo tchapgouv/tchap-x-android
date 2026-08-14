@@ -15,7 +15,6 @@ import com.lemonappdev.konsist.api.ext.list.withAllAnnotationsOf
 import com.lemonappdev.konsist.api.ext.list.withName
 import com.lemonappdev.konsist.api.ext.list.withNameEndingWith
 import com.lemonappdev.konsist.api.ext.list.withoutName
-import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.verify.assertEmpty
 import com.lemonappdev.konsist.api.verify.assertTrue
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
@@ -196,9 +195,6 @@ class KonsistPreviewTest {
             .functions()
             .withAllAnnotationsOf(PreviewsDayNight::class)
             .withoutName(previewNameExceptions)
-            .withoutPackage(
-                "de.bwi.messenger.features.messages.impl.timeline.components.event"
-            )
             .assertTrue(
                 additionalMessage = "Functions for Preview should be named like this: <ViewUnderPreview>Preview. " +
                     "Exception can be added to the test, for multiple Previews of the same view",

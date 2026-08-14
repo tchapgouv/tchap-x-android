@@ -11,7 +11,6 @@ package io.element.android.tests.konsist
 import androidx.compose.runtime.Composable
 import com.lemonappdev.konsist.api.Konsist
 import com.lemonappdev.konsist.api.ext.list.withAnnotationOf
-import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.verify.assertFalse
 import org.junit.Test
 
@@ -29,9 +28,6 @@ class KonsistFlowTest {
             .scopeFromProject()
             .functions()
             .withAnnotationOf(Composable::class)
-            .withoutPackage(
-                "de.bwi.messenger.features.messages.impl.timeline.components.event"
-            )
             .assertFalse(
                 additionalMessage = "Please check that the flow is remembered when it is collected as state." +
                     " Only val flows can be not remembered.",
