@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
@@ -34,14 +33,6 @@ import io.element.android.features.messages.impl.timeline.factories.TimelineItem
 import io.element.android.features.messages.impl.timeline.factories.TimelineItemsFactoryConfig
 import io.element.android.features.messages.impl.timeline.model.NewEventState
 import io.element.android.features.messages.impl.timeline.model.TimelineItem
-import io.element.android.features.messages.impl.timeline.model.TimelineItem.Virtual
-import io.element.android.features.messages.impl.timeline.model.event.TimelineItemAudioContent
-import io.element.android.features.messages.impl.timeline.model.event.TimelineItemEventContentWithAttachment
-import io.element.android.features.messages.impl.timeline.model.event.TimelineItemFileContent
-import io.element.android.features.messages.impl.timeline.model.event.TimelineItemImageContent
-import io.element.android.features.messages.impl.timeline.model.event.TimelineItemVideoContent
-import io.element.android.features.messages.impl.timeline.model.event.TimelineItemVoiceContent
-import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemBwiScanStateChangedModel
 import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemTypingNotificationModel
 import io.element.android.features.messages.impl.typing.TypingNotificationState
 import io.element.android.features.messages.impl.userEventPermissions
@@ -72,7 +63,6 @@ import io.element.android.services.analytics.api.finishLongRunningTransaction
 import io.element.android.services.analyticsproviders.api.AnalyticsUserData
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
@@ -320,7 +310,7 @@ class TimelinePresenter(
         }
 
         return TimelineState(
-            timelineItems = applyBwiScanStateChangedEvents(timelineItems),
+            timelineItems = timelineItems,
             timelineMode = timelineMode,
             timelineRoomInfo = timelineRoomInfo,
             renderReadReceipts = renderReadReceipts,
@@ -332,106 +322,6 @@ class TimelinePresenter(
             displayThreadSummaries = displayThreadSummaries,
             eventSink = ::handleEvent,
         )
-    }
-
-    private fun TimelineItem.getBwiScanStateModel(): TimelineItemBwiScanStateChangedModel? {
-        if (this !is Virtual || model !is TimelineItemBwiScanStateChangedModel) return null
-        return model
-    }
-
-    private fun applyBwiScanStateChangedEvents(items: ImmutableList<TimelineItem>): ImmutableList<TimelineItem> {
-        val list = items.filter { item -> item.getBwiScanStateModel() == null }.toTypedArray()
-
-        // merge scan state to items
-        for (item in items) {
-            val scanStateChangedModel = item.getBwiScanStateModel()
-            if (scanStateChangedModel != null && scanStateChangedModel.newScanState != BwiContentScannerScanState.IN_PROGRESS) {
-                val event = list.find { it.identifier().toString() == scanStateChangedModel.eventId }
-                if (event is TimelineItem.Event && event.content is TimelineItemEventContentWithAttachment) {
-                    val index = list.indexOf(event)
-                    val content = when (event.content) {
-                        is TimelineItemImageContent -> event.content.copy(scanState = scanStateChangedModel.newScanState)
-                        is TimelineItemVideoContent -> event.content.copy(scanState = scanStateChangedModel.newScanState)
-                        is TimelineItemFileContent -> event.content.copy(scanState = scanStateChangedModel.newScanState)
-                        is TimelineItemAudioContent -> event.content.copy(scanState = scanStateChangedModel.newScanState)
-                        is TimelineItemVoiceContent -> event.content.copy(scanState = scanStateChangedModel.newScanState)
-                        else -> null
-                    }
-                    if (content != null) {
-                        list[index] = event.copy(content = content)
-                    }
-                    Timber.i("###BWI### newScanState ${event.id} ${scanStateChangedModel.newScanState}")
-                } else {
-                    Timber.e("###BWI### newScanState could not be applied on event ${scanStateChangedModel.eventId}! ")
-                }
-            }
-        }
-        return list.toImmutableList()
-
-//        if (items.isEmpty()) return items
-//        val (scanStateItems, regularItems) = items.partition { item -> item.getBwiScanStateModel() == null }
-//
-//        return scanStateItems.map { scanStateItem ->
-//            regularItems.firstOrNull { it.getBwiScanStateModel()?.eventId == scanStateItem.identifier().toString() }.let { event ->
-//                event?.getBwiScanStateModel()?.newScanState?.let { scanState ->
-//                    if (event is TimelineItem.Event && event.content is TimelineItemEventContentWithAttachment) {
-//                        val updatedContent = when (val content = event.content) {
-//                            is TimelineItemImageContent -> content.copy(scanState = scanState)
-//                            is TimelineItemVideoContent -> content.copy(scanState = scanState)
-//                            is TimelineItemFileContent -> content.copy(scanState = scanState)
-//                            is TimelineItemAudioContent -> content.copy(scanState = scanState)
-//                            is TimelineItemVoiceContent -> content.copy(scanState = scanState)
-//                            else -> content
-//                        }
-//                        if (updatedContent === event.content) {
-//                            event
-//                        } else {
-//                            event.copy(content = updatedContent)
-//                        }
-//                    } else {
-//                        event
-//                    }
-//                }
-//            } ?: scanStateItem
-//        }.toImmutableList()
-
-//        if (items.isEmpty()) return items
-//        val (scanStateItems, regularItems) = items.partition { it.getBwiScanStateModel() != null }
-//        val scanStateChanges = scanStateItems
-//            .mapNotNull { it.getBwiScanStateModel() }
-//            .filter { it.newScanState != BwiContentScannerScanState.IN_PROGRESS }
-//            .associateBy { it.eventId }
-//
-//        if (scanStateChanges.isEmpty()) {
-//            return regularItems.toImmutableList()
-//        }
-//
-//        // Process items and apply scan states
-//        return regularItems.map { item ->
-//            if (item is TimelineItem.Event && item.content is TimelineItemEventContentWithAttachment) {
-//                val scanState = scanStateChanges[item.identifier().toString()]?.newScanState
-//                if (scanState == null) {
-//                    item
-//                } else {
-//                    val updatedContent = when (val content = item.content) {
-//                        is TimelineItemImageContent -> content.copy(scanState = scanState)
-//                        is TimelineItemVideoContent -> content.copy(scanState = scanState)
-//                        is TimelineItemFileContent -> content.copy(scanState = scanState)
-//                        is TimelineItemAudioContent -> content.copy(scanState = scanState)
-//                        is TimelineItemVoiceContent -> content.copy(scanState = scanState)
-//                        else -> content
-//                    }
-//                    if (updatedContent === item.content) {
-//                        item
-//                    } else {
-//                        Timber.i("###BWI### Applied scanState ${scanState} to event ${item.id}")
-//                        item.copy(content = updatedContent)
-//                    }
-//                }
-//            } else {
-//                item
-//            }
-//        }.toImmutableList()
     }
 
     private suspend fun focusOnEvent(

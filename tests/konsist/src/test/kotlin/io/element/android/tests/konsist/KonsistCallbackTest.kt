@@ -9,7 +9,6 @@
 package io.element.android.tests.konsist
 
 import com.lemonappdev.konsist.api.Konsist
-import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.verify.assertFalse
 import org.junit.Test
 
@@ -19,9 +18,6 @@ class KonsistCallbackTest {
         Konsist
             .scopeFromProduction()
             .files
-            .withoutPackage(
-                "de.bwi.messenger.features.messages.impl.timeline.components.event"
-            )
             .assertFalse {
                 it.text.contains("callback?.")
             }
