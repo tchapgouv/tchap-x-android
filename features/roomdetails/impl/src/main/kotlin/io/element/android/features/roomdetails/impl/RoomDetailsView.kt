@@ -524,21 +524,15 @@ private fun RoomHeaderSection(
                 }
                 .testTag(TestTags.roomDetailAvatar)
         )
-<<<<<<< HEAD
-        TitleAndSubtitle(
-            title = roomName,
-            // TCHAP hide the Matrix Id depending of showMatrixId feature flag
-            subtitle = roomAlias?.value.takeIf { showMatrixId },
-            onSubtitleClick = onSubtitleClick,
-=======
         Spacer(modifier = Modifier.height(24.dp))
         Text(
             text = roomName,
             style = ElementTheme.typography.fontHeadingLgBold,
             textAlign = TextAlign.Center,
->>>>>>> main-element
         )
-        if (roomAlias != null) {
+        // :tchap: Hide the Matrix Id depending of showMatrixId feature flag
+//        if (roomAlias != null) {
+        if (roomAlias != null && showMatrixId) {
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 modifier = Modifier.niceClickable { onSubtitleClick(roomAlias.value) },
@@ -587,25 +581,7 @@ private fun DmHeaderSection(
                 }
                 .testTag(TestTags.roomDetailAvatar)
         )
-<<<<<<< HEAD
-        TitleAndSubtitle(
-            title = roomName,
-            // TCHAP hide the Matrix Id depending of showMatrixId feature flag
-            subtitle = otherMember.userId.value.takeIf { showMatrixId },
-            onSubtitleClick = onSubtitleClick,
-        )
-    }
-}
 
-@Composable
-private fun TitleAndSubtitle(
-    title: String,
-    subtitle: String?,
-    onSubtitleClick: (String) -> Unit,
-) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-=======
->>>>>>> main-element
         Spacer(modifier = Modifier.height(24.dp))
         Text(
             text = roomName,
@@ -625,16 +601,20 @@ private fun TitleAndSubtitle(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-        Spacer(modifier = Modifier.height(12.dp))
-        Text(
-            modifier = Modifier.niceClickable { onSubtitleClick(otherMember.userId.value) },
-            text = otherMember.userId.value,
-            style = ElementTheme.typography.fontBodyLgRegular,
-            color = ElementTheme.colors.textSecondary,
-            textAlign = TextAlign.Center,
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-    }
+        // :tchap: Hide the Matrix Id depending of showMatrixId feature flag
+        if (showMatrixId) {
+            // :tchap: end
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                modifier = Modifier.niceClickable { onSubtitleClick(otherMember.userId.value) },
+                text = otherMember.userId.value,
+                style = ElementTheme.typography.fontBodyLgRegular,
+                color = ElementTheme.colors.textSecondary,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+     }
 }
 
 // :tchap: BadgeList must be public & in its own file for use in MessagesViewTopBar
@@ -998,7 +978,7 @@ private fun AccessByLinkItem(
 ) {
     ListItem(
         onClick = onLinkAccessToggle.takeIf { canDisableAccessLink }?.let { { onLinkAccessToggle() } },
-        headlineContent = { Text(stringResource(R.string.tchap_screen_room_details_access_via_link_title)) },
+        content = { Text(stringResource(R.string.tchap_screen_room_details_access_via_link_title)) },
         supportingContent = {
             Column {
                 Text(stringResource(R.string.tchap_screen_room_details_access_via_link_description))

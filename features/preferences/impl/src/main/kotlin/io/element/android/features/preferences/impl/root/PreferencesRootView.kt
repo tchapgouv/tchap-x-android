@@ -80,68 +80,6 @@ fun PreferencesRootView(
 ) {
     val snackbarHostState = rememberSnackbarHostState(snackbarMessage = state.snackbarMessage)
 
-<<<<<<< HEAD
-    // Include pref from other modules
-    PreferencePage(
-        modifier = modifier,
-        onBackClick = onBackClick,
-        title = stringResource(id = CommonStrings.common_settings),
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) {
-        UserPreferences(
-            showMatrixId = state.showMatrixId,
-            modifier = Modifier.clickable {
-                onOpenUserProfile(state.myUser)
-            },
-            matrixUser = state.myUser,
-        )
-        if (state.isMultiAccountEnabled) {
-            MultiAccountSection(
-                state = state,
-                onAddAccountClick = onAddAccountClick,
-                showMatrixId = showMatrixId,
-            )
-        } else {
-            HorizontalDivider()
-        }
-        // User status will be added here
-        // 'Account' section
-        ManageAccountSection(
-            state = state,
-            onManageAccountClick = onManageAccountClick,
-            onLinkNewDeviceClick = onLinkNewDeviceClick,
-            onOpenBlockedUsers = onOpenBlockedUsers
-        )
-        // 'Manage my app' section
-        ManageAppSection(
-            state = state,
-            onOpenNotificationSettings = onOpenNotificationSettings,
-            onOpenLockScreenSettings = onOpenLockScreenSettings,
-            onSecureBackupClick = onSecureBackupClick,
-        )
-
-        // General section
-        GeneralSection(
-            state = state,
-            onOpenFAQ = onOpenFAQ,
-            onOpenAbout = onOpenAbout,
-            onOpenAnalytics = onOpenAnalytics,
-            onOpenRageShake = onOpenRageShake,
-            onOpenAdvancedSettings = onOpenAdvancedSettings,
-            onOpenDeveloperSettings = onOpenDeveloperSettings,
-            onOpenLabs = onOpenLabs,
-            onSignOutClick = onSignOutClick,
-            onDeactivateClick = onDeactivateClick,
-        )
-        // Version
-        Footer(
-            version = state.version,
-            deviceId = state.deviceId,
-            onClick = if (!state.showDeveloperSettings) {
-                { state.eventSink(PreferencesRootEvent.OnVersionInfoClick) }
-            } else {
-                null
-=======
     Box(modifier = modifier) {
         // Include pref from other modules
         PreferencePage(
@@ -150,6 +88,7 @@ fun PreferencesRootView(
             snackbarHost = { SnackbarHost(snackbarHostState) }
         ) {
             UserPreferences(
+                showMatrixId = state.showMatrixId,
                 modifier = Modifier.clickable {
                     onOpenUserProfile(state.myUser)
                 },
@@ -159,8 +98,8 @@ fun PreferencesRootView(
                 MultiAccountSection(
                     state = state,
                     onAddAccountClick = onAddAccountClick,
+                    showMatrixId = state.showMatrixId,
                 )
->>>>>>> main-element
             }
             if (state.userStatusState != null) {
                 UserStatusSection(
@@ -187,6 +126,9 @@ fun PreferencesRootView(
             // General section
             GeneralSection(
                 state = state,
+                // :tchap: Add open FAQ
+                onOpenFAQ = onOpenFAQ,
+                // :tchap: end
                 onOpenAbout = onOpenAbout,
                 onOpenAnalytics = onOpenAnalytics,
                 onOpenRageShake = onOpenRageShake,
@@ -212,6 +154,7 @@ fun PreferencesRootView(
     }
 }
 
+        
 @Composable
 private fun BoxScope.UserStatusUpdateIndicator(updateStatusAction: AsyncAction<Unit>) {
     AsyncActionIndicator(
@@ -370,16 +313,15 @@ private fun ColumnScope.GeneralSection(
         )
     }
     ListItem(
-<<<<<<< HEAD
-        headlineContent = { Text(stringResource(id = CommonStrings.tchap_common_faq)) },
-=======
-        content = { Text(stringResource(id = CommonStrings.common_about)) },
->>>>>>> main-element
+        // :tchap: Replace about item by FAQ
+//        content = { Text(stringResource(id = CommonStrings.common_about)) },
+        content = { Text(stringResource(id = CommonStrings.tchap_common_faq)) },
+        // :tchap: end
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Info())),
         onClick = { onOpenFAQ() },
     )
     ListItem(
-        headlineContent = { Text(stringResource(id = CommonStrings.tchap_common_legals)) },
+        content = { Text(stringResource(id = CommonStrings.tchap_common_legals)) },
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.ListBulleted())),
         onClick = onOpenAbout,
     )

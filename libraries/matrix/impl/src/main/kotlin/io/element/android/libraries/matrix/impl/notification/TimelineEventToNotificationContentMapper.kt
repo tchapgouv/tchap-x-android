@@ -71,15 +71,12 @@ private fun StateEventContent.toContent(senderId: UserId): NotificationContent.S
         is StateEventContent.RoomTopic -> NotificationContent.StateEvent.RoomTopic(topic)
         StateEventContent.SpaceChild -> NotificationContent.StateEvent.SpaceChild
         StateEventContent.SpaceParent -> NotificationContent.StateEvent.SpaceParent
-<<<<<<< HEAD
+        StateEventContent.BeaconInfo -> NotificationContent.StateEvent.BeaconInfo(senderId)
         is StateEventContent.RoomAccessRules -> {
             NotificationContent.StateEvent.RoomAccessRule(
                 rule = rule,
             )
         }
-=======
-        StateEventContent.BeaconInfo -> NotificationContent.StateEvent.BeaconInfo(senderId)
->>>>>>> main-element
     }
 }
 

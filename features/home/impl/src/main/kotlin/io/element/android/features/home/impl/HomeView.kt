@@ -233,11 +233,13 @@ private fun HomeScaffold(
             )
         },
         floatingActionButton = {
-<<<<<<< HEAD
             // TCHAP : Disable navigation bar for external users
             if (!currentUserIsExternal) {
                 val coroutineScope = rememberCoroutineScope()
                 HomeBottomBar(
+                    // The Scaffold uses top-only insets so the scrollable content can go edge-to-edge behind the
+                    // navigation bar, so the floating toolbar has to apply the bottom inset itself to avoid overlapping it.
+                    modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars),
                     currentHomeNavigationBarItem = state.currentHomeNavigationBarItem,
                     onItemClick = { item ->
                         // scroll to top if selecting the same item
@@ -245,24 +247,6 @@ private fun HomeScaffold(
                             val lazyListStateTarget = when (item) {
                                 HomeNavigationBarItem.Chats -> roomsLazyListState
                                 HomeNavigationBarItem.Spaces -> spacesLazyListState
-=======
-            val coroutineScope = rememberCoroutineScope()
-            HomeBottomBar(
-                // The Scaffold uses top-only insets so the scrollable content can go edge-to-edge behind the
-                // navigation bar, so the floating toolbar has to apply the bottom inset itself to avoid overlapping it.
-                modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars),
-                currentHomeNavigationBarItem = state.currentHomeNavigationBarItem,
-                onItemClick = { item ->
-                    // scroll to top if selecting the same item
-                    if (item == state.currentHomeNavigationBarItem) {
-                        val lazyListStateTarget = when (item) {
-                            HomeNavigationBarItem.Chats -> roomsLazyListState
-                            HomeNavigationBarItem.Spaces -> spacesLazyListState
-                        }
-                        coroutineScope.launch {
-                            if (lazyListStateTarget.firstVisibleItemIndex > 10) {
-                                lazyListStateTarget.scrollToItem(10)
->>>>>>> main-element
                             }
                             coroutineScope.launch {
                                 if (lazyListStateTarget.firstVisibleItemIndex > 10) {

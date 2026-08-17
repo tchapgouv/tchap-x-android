@@ -23,26 +23,15 @@ import io.element.android.compound.tokens.generated.internal.LightColorTokens
  */
 @OptIn(CoreColorToken::class)
 val compoundColorsLight = SemanticColors(
-<<<<<<< HEAD
     bgAccentHovered = LightColorTokens.colorBlue1000,
     bgAccentPressed = LightColorTokens.colorBlue1100,
     bgAccentRest = LightColorTokens.colorBlue900,
     bgAccentSelected = LightColorTokens.colorBlue700,
+    bgAccentSubtle = LightColorTokens.colorGreen200,
     bgActionPrimaryDisabled = LightColorTokens.colorBlue700,
     bgActionPrimaryHovered = LightColorTokens.colorBlue800,
     bgActionPrimaryPressed = LightColorTokens.colorBlue700,
     bgActionPrimaryRest = LightColorTokens.colorBlue900,
-=======
-    bgAccentHovered = LightColorTokens.colorGreen1000,
-    bgAccentPressed = LightColorTokens.colorGreen1100,
-    bgAccentRest = LightColorTokens.colorGreen900,
-    bgAccentSelected = LightColorTokens.colorAlphaGreen300,
-    bgAccentSubtle = LightColorTokens.colorGreen200,
-    bgActionPrimaryDisabled = LightColorTokens.colorGray700,
-    bgActionPrimaryHovered = LightColorTokens.colorGray1200,
-    bgActionPrimaryPressed = LightColorTokens.colorGray1100,
-    bgActionPrimaryRest = LightColorTokens.colorGray1400,
->>>>>>> main-element
     bgActionSecondaryHovered = LightColorTokens.colorAlphaGray200,
     bgActionSecondaryPressed = LightColorTokens.colorAlphaGray300,
     bgActionSecondaryRest = LightColorTokens.colorThemeBg,
@@ -74,15 +63,11 @@ val compoundColorsLight = SemanticColors(
     bgSubtlePrimary = LightColorTokens.colorBlue400,
     bgSubtleSecondary = LightColorTokens.colorGray300,
     bgSubtleSecondaryLevel0 = LightColorTokens.colorGray300,
-<<<<<<< HEAD
-    bgSuccessSubtle = LightColorTokens.colorGreen400,
-=======
     bgSubtleTertiary = LightColorTokens.colorGray100,
     bgSuccessHovered = LightColorTokens.colorGreen1000,
     bgSuccessPressed = LightColorTokens.colorGreen1100,
     bgSuccessRest = LightColorTokens.colorGreen900,
     bgSuccessSubtle = LightColorTokens.colorGreen200,
->>>>>>> main-element
     borderAccentPrimary = LightColorTokens.colorGreen900,
     borderAccentSubtle = LightColorTokens.colorBlue700,
     borderCriticalHovered = LightColorTokens.colorRed1000,
@@ -139,14 +124,10 @@ val compoundColorsLight = SemanticColors(
     separatorSecondary = LightColorTokens.colorGray300,
     textActionAccent = LightColorTokens.colorBlue900,
     textActionPrimary = LightColorTokens.colorGray1400,
-<<<<<<< HEAD
+    textActionSuccess = LightColorTokens.colorGreen900,
     textBadgeAccent = LightColorTokens.colorThemeBg,
     textBadgeCritical = LightColorTokens.colorRed1100,
     textBadgeDefault = LightColorTokens.colorGray1100,
-=======
-    textActionSuccess = LightColorTokens.colorGreen900,
-    textBadgeAccent = LightColorTokens.colorGreen1100,
->>>>>>> main-element
     textBadgeInfo = LightColorTokens.colorBlue1100,
     textBadgePrimary = LightColorTokens.colorThemeBg,
     textBadgeSecondary = LightColorTokens.colorGray1100,
@@ -165,11 +146,7 @@ val compoundColorsLight = SemanticColors(
     textOnSolidPrimary = LightColorTokens.colorThemeBg,
     textPrimary = LightColorTokens.colorGray1400,
     textSecondary = LightColorTokens.colorGray900,
-<<<<<<< HEAD
     textSuccessPrimary = LightColorTokens.colorGreen1000,
-=======
-    textSuccessPrimary = LightColorTokens.colorGreen900,
     textWarningPrimary = LightColorTokens.colorOrange900,
->>>>>>> main-element
     isLight = true,
 )

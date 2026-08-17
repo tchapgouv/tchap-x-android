@@ -30,11 +30,11 @@ class DefaultEnterpriseService(
     override var selectedHomeserver: Int = -1
 
     override suspend fun isEnterpriseUser(sessionId: SessionId) = false
-<<<<<<< HEAD
+    override suspend fun tweakMasUrl(url: String, homeserver: String, urlContentFetcher: UrlContentFetcher) = url
 
-    override suspend fun tweakMasUrl(url: String, homeserver: String) = url
-
-    override fun defaultHomeserverList(): List<String> = homeserverConfiguration.defaultHomeserverList
+    // :tchap: Get a random HomeServeur from a known list to determine account HomeServer
+//    override fun defaultHomeserverList(): List<String> = emptyList()
+    override fun defaultHomeserverList(): List<String> = homeserverConfiguration.defaultHomeserverList // TODO : Check rebase
 
     override fun getNextRandomHomeserver(): String {
         val homeservers = homeserverConfiguration.defaultHomeserverList
@@ -46,11 +46,8 @@ class DefaultEnterpriseService(
 
         return homeservers[selectedHomeserver]
     }
+    // :tchap: end
 
-=======
-    override suspend fun tweakMasUrl(url: String, homeserver: String, urlContentFetcher: UrlContentFetcher) = url
-    override fun defaultHomeserverList(): List<String> = emptyList()
->>>>>>> main-element
     override suspend fun isAllowedToConnectToHomeserver(homeserverUrl: String) = true
 
     override suspend fun overrideBrandColor(sessionId: SessionId?, brandColor: String?) = Unit

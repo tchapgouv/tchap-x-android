@@ -27,12 +27,9 @@ import io.element.android.features.logout.api.direct.DirectLogoutView
 import io.element.android.libraries.androidutils.browser.openUrlInChromeCustomTab
 import io.element.android.libraries.architecture.callback
 import io.element.android.libraries.di.SessionScope
-<<<<<<< HEAD
+import io.element.android.libraries.emoji.api.picker.EmojiPickerRenderer
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
-=======
-import io.element.android.libraries.emoji.api.picker.EmojiPickerRenderer
->>>>>>> main-element
 import io.element.android.libraries.matrix.api.user.MatrixUser
 
 @ContributesNode(SessionScope::class)

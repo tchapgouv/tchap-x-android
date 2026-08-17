@@ -8,6 +8,8 @@
 
 @file:Suppress("UnstableApiUsage")
 
+import com.android.build.api.variant.BuildConfigField
+import com.android.build.api.variant.ResValue
 import config.BuildTimeConfig
 import extension.setupDependencyInjection
 import extension.testCommonDependencies
@@ -21,7 +23,13 @@ plugins {
 android {
     namespace = "io.element.android.libraries.pushproviders.firebase"
 
-<<<<<<< HEAD
+    buildFeatures {
+        resValues = true
+        // :tchap: Push config depending of buildConfig
+        buildConfig = true
+        // :tchap: end
+    }
+
     // :tchap: Push config for Gateway URL & Variants
 //    buildTypes {
 //        getByName("release") {
@@ -49,11 +57,6 @@ android {
 //            )
 //        }
 //    }
-=======
-    buildFeatures {
-        resValues = true
-    }
->>>>>>> main-element
 
     buildTypes {
         getByName("release") {
@@ -65,23 +68,23 @@ android {
         }
     }
 
-    buildFeatures {
-        buildConfig = true
-    }
-
     defaultConfig {
         buildConfigField("String", "pushConfigGatewayURL", "\"\"")
     }
+    // :tchap: end
+}
 
-    libraryVariants.configureEach {
-        val targetFlavor = productFlavors.find { it.dimension == "target" }?.name
+// :tchap: Push config for Gateway URL & Variants
+androidComponents {
+    onVariants { variant ->
+        val targetFlavor = variant.productFlavors.find { it.first == "target" }?.second
 
         var appId = ""
         var gatewayUrl = ""
 
         when (targetFlavor) {
             "tchap" -> {
-                appId = when (buildType.name) {
+                appId = when (variant.buildType) {
                     "release" -> BuildTimeConfig.GOOGLE_APP_ID_PROD
                     "nightly" -> BuildTimeConfig.GOOGLE_APP_ID_PROD_NIGHTLY
                     else -> BuildTimeConfig.GOOGLE_APP_ID_PROD_DEBUG
@@ -89,7 +92,7 @@ android {
                 gatewayUrl = BuildTimeConfig.PUSH_CONFIG_GATEWAY_URL_PROD
             }
             "tchapPreprod" -> {
-                appId = when (buildType.name) {
+                appId = when (variant.buildType) {
                     "release" -> BuildTimeConfig.GOOGLE_APP_ID_PREPROD
                     "nightly" -> BuildTimeConfig.GOOGLE_APP_ID_PREPROD_NIGHTLY
                     else -> BuildTimeConfig.GOOGLE_APP_ID_PREPROD_DEBUG
@@ -97,7 +100,7 @@ android {
                 gatewayUrl = BuildTimeConfig.PUSH_CONFIG_GATEWAY_URL_PREPROD
             }
             "tchapDev" -> {
-                appId = when (buildType.name) {
+                appId = when (variant.buildType) {
                     "release" -> BuildTimeConfig.GOOGLE_APP_ID_DEV
                     "nightly" -> BuildTimeConfig.GOOGLE_APP_ID_DEV_NIGHTLY
                     else -> BuildTimeConfig.GOOGLE_APP_ID_DEV_DEBUG
@@ -106,11 +109,15 @@ android {
             }
         }
 
-        resValue("string", "google_app_id", appId)
-        buildConfigField("String", "pushConfigGatewayURL", "\"$gatewayUrl\"")
+        variant.resValues.put(variant.makeResValueKey("string", "google_app_id"),
+            ResValue(appId, null)
+        )
+        variant.buildConfigFields?.put("pushConfigGatewayURL",
+            BuildConfigField("String", "\"$gatewayUrl\"", null)
+        )
     }
-    // :tchap: end
 }
+// :tchap: end
 
 // Configure the SonarQube plugin to wait for the resource generation tasks to complete before running the analysis.
 tasks.withType<SonarResolverTask>().configureEach {

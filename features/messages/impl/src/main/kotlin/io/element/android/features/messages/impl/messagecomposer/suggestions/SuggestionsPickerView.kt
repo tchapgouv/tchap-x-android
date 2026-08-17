@@ -42,10 +42,7 @@ import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.RoomMembershipState
 import io.element.android.libraries.matrix.api.room.getBestName
-<<<<<<< HEAD
-=======
 import io.element.android.libraries.matrix.ui.components.DisplayNameWithStatus
->>>>>>> main-element
 import io.element.android.libraries.matrix.ui.model.getAvatarData
 import io.element.android.libraries.slashcommands.api.SlashCommandSuggestion
 import io.element.android.libraries.textcomposer.mentions.ResolvedSuggestion
@@ -122,11 +119,7 @@ private fun SuggestionItemView(
         }
         val title: String? = when (suggestion) {
             is ResolvedSuggestion.AtRoom -> stringResource(R.string.screen_room_mentions_at_room_title)
-<<<<<<< HEAD
-            is ResolvedSuggestion.Member -> suggestion.roomMember.getBestName() // TCHAP TODO should be applied in Element X
-=======
             is ResolvedSuggestion.Member -> suggestion.roomMember.getBestName()
->>>>>>> main-element
             is ResolvedSuggestion.Alias -> suggestion.roomName
             is ResolvedSuggestion.Command -> suggestion.command.command
         }

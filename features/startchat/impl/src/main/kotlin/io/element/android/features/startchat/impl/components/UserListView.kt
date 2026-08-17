@@ -55,13 +55,9 @@ fun UserListView(
     ) {
         val contentPaddingValues = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal).asPaddingValues()
         SearchUserBar(
-<<<<<<< HEAD
             showMatrixId = state.showMatrixId,
-            modifier = Modifier.fillMaxWidth(),
-=======
             modifier = Modifier.fillMaxWidth()
                 .padding(contentPaddingValues),
->>>>>>> main-element
             queryState = state.searchQuery,
             resultState = state.searchResults,
             selectedUsers = state.selectedUsers,

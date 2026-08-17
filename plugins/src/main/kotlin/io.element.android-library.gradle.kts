@@ -21,8 +21,7 @@ plugins {
 }
 
 android {
-<<<<<<< HEAD
-    androidConfig(project)
+    androidLibraryConfig(project)
 
     flavorDimensions += listOf("target", "pinning")
     productFlavors {
@@ -34,9 +33,6 @@ android {
         create("withoutpinning") { dimension = "pinning" }
     }
 
-=======
-    androidLibraryConfig(project)
->>>>>>> main-element
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
     }

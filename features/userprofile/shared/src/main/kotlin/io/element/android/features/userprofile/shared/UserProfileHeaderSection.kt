@@ -105,9 +105,9 @@ fun UserProfileHeaderSection(
             )
             Spacer(modifier = Modifier.height(12.dp))
         }
-<<<<<<< HEAD
-        // TCHAP show the Matrix Id depending of feature flag showMatrixId
+        // :tchap: Show the Matrix Id depending of feature flag showMatrixId
         if (showMatrixId) {
+            // :tchap: end
             Text(
                 modifier = Modifier.niceClickable { onUserIdClick() },
                 text = userId.value,
@@ -115,17 +115,8 @@ fun UserProfileHeaderSection(
                 color = ElementTheme.colors.textSecondary,
                 textAlign = TextAlign.Center,
             )
+            Spacer(modifier = Modifier.height(12.dp))
         }
-=======
-        Text(
-            modifier = Modifier.niceClickable { onUserIdClick() },
-            text = userId.value,
-            style = ElementTheme.typography.fontBodyLgRegular,
-            color = ElementTheme.colors.textSecondary,
-            textAlign = TextAlign.Center,
-        )
-        Spacer(modifier = Modifier.height(12.dp))
->>>>>>> main-element
         when (verificationState) {
             UserProfileVerificationState.UNKNOWN, UserProfileVerificationState.UNVERIFIED -> Unit
             UserProfileVerificationState.VERIFIED -> {

@@ -188,7 +188,7 @@ fun ConfigureRoomView(
             // TCHAP : Add toggle to enable/disable public room federation
             if (!isSpace && state.config.visibilityState is RoomVisibilityState.Public) {
                 ListItem(
-                    headlineContent = {
+                    content = {
                         Text(text = stringResource(R.string.tchap_screen_create_room_public_federation_limited_title))
                     },
                     supportingContent = {

@@ -183,19 +183,16 @@ private fun ButtonInternal(
         ButtonSize.LargeLowPadding -> PaddingValues(horizontal = lowHorizontalPaddingValue, vertical = 13.dp)
     }
 
-<<<<<<< HEAD
-    val shape = when (style) {
-        // TCHAP : Filled & Outlined buttons are square
+    // TODO : Check with Angelo
+    // Old style (tchap)
+//    val shape = when (style) {
 //        ButtonStyle.Filled,
-//        ButtonStyle.Outlined -> RoundedCornerShape(percent = 50)
-        ButtonStyle.Filled,
-        ButtonStyle.Outlined -> RoundedCornerShape(size = 4.dp)
-        ButtonStyle.Text -> RectangleShape
-    }
-=======
+//        ButtonStyle.Outlined -> RoundedCornerShape(size = 4.dp)
+//        ButtonStyle.Text -> RectangleShape
+//    }
+    // New Element Style
     // Apply the same shape to all buttons, so that the focus ring is consistent across styles.
     val shape = RoundedCornerShape(percent = 50)
->>>>>>> main-element
 
     val border = when (style) {
         ButtonStyle.Filled -> null

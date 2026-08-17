@@ -11,11 +11,8 @@ package io.element.android.features.messages.impl.attachments.preview
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-<<<<<<< HEAD
-import androidx.compose.runtime.collectAsState
-=======
 import androidx.compose.runtime.derivedStateOf
->>>>>>> main-element
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf

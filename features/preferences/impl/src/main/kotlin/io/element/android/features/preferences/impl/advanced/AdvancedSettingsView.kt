@@ -245,7 +245,7 @@ private fun ClearCacheSection(
         showTopDivider = true,
     ) {
         ListItem(
-            headlineContent = {
+            content = {
                 Text(
                     text = stringResource(id = R.string.tchap_screen_advanced_settings_clear_cache),
                     color = if (state.clearCacheAction.isLoading()) {

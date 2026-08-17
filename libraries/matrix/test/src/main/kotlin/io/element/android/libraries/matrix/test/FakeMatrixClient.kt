@@ -132,13 +132,11 @@ class FakeMatrixClient(
     private val getMapStyleUrlResult: () -> Result<String?> = { lambdaError() },
     private val getDatabaseSizesLambda: () -> Result<SdkStoreSizes> = { lambdaError() },
     private val resetWellKnownConfigLambda: () -> Result<Unit> = { lambdaError() },
-<<<<<<< HEAD
-    // TCHAP account-expiration
-    private val accountExpiredSendEmailLambda: () -> Result<Unit> = { lambdaError() },
-=======
     private val enableAutomaticCallStatusLambda: (Boolean) -> Unit = { },
     override val contentScanner: ContentScanner? = null,
->>>>>>> main-element
+    // :tchap: account-expiration
+    private val accountExpiredSendEmailLambda: () -> Result<Unit> = { lambdaError() },
+    // :tchap: end
 ) : MatrixClient {
     var setDisplayNameCalled: Boolean = false
         private set

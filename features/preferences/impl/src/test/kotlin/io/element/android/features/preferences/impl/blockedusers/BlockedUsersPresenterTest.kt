@@ -14,11 +14,8 @@ import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import io.element.android.libraries.androidutils.clipboard.FakeClipboardHelper
 import io.element.android.libraries.architecture.AsyncAction
-<<<<<<< HEAD
-import io.element.android.libraries.core.meta.BuildMeta
-=======
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarDispatcher
->>>>>>> main-element
+import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
@@ -27,11 +24,8 @@ import io.element.android.libraries.matrix.test.AN_EXCEPTION
 import io.element.android.libraries.matrix.test.A_USER_ID
 import io.element.android.libraries.matrix.test.A_USER_ID_2
 import io.element.android.libraries.matrix.test.FakeMatrixClient
-<<<<<<< HEAD
 import io.element.android.libraries.matrix.test.core.aBuildMeta
-=======
 import io.element.android.libraries.ui.strings.CommonStrings
->>>>>>> main-element
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest

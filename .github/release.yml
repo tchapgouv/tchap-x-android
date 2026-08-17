@@ -28,15 +28,11 @@ changelog:
       labels:
         - PR-Dependencies
 
-<<<<<<< HEAD
-    - title: Autres
-=======
     - title: 💼 Element Pro
       labels:
         - PR-Element-Pro
 
-    - title: Others
->>>>>>> main-element
+    - title: Autres
       labels:
         - PR-misc
         - "*"

@@ -207,12 +207,9 @@ data class SemanticColors(
     val textActionAccent: Color,
     /** Default text colour for plain actions. */
     val textActionPrimary: Color,
-<<<<<<< HEAD
-=======
     /** Text label success state */
     val textActionSuccess: Color,
     /** Badge accent text colour */
->>>>>>> main-element
     val textBadgeAccent: Color,
     val textBadgeCritical: Color,
     val textBadgeDefault: Color,

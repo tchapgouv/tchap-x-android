@@ -99,13 +99,11 @@ internal fun MessagesViewTopBar(
                     roomAvatar = roomAvatar,
                     isTombstoned = isTombstoned,
                     heroes = heroes,
-<<<<<<< HEAD
-                    modifier = titleModifier,
-                    roomBadges = roomBadges
-=======
                     dmUserStatus = dmUserStatus,
-                    modifier = titleModifier
->>>>>>> main-element
+                    modifier = titleModifier,
+                    // :tchap: Add RoomBadge in top bar
+                    roomBadges = roomBadges,
+                    // :tchap: end
                 )
 
                 val iconModifier = Modifier.size(16.dp)
@@ -179,16 +177,14 @@ private fun RoomAvatarAndNameRow(
                 isTombstoned = isTombstoned,
             ),
         )
-<<<<<<< HEAD
         Column {
-            Text(
-                modifier = Modifier
-                    .padding(start = 8.dp),
-                text = roomName ?: stringResource(CommonStrings.common_no_room_name),
+            DisplayNameWithStatus(
+                name = roomName ?: stringResource(CommonStrings.common_no_room_name),
+                status = dmUserStatus,
+                modifier = Modifier.padding(start = 8.dp),
                 style = ElementTheme.typography.fontBodyLgMedium,
-                fontStyle = FontStyle.Italic.takeIf { roomName == null },
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                nameColor = ElementTheme.colors.textPrimary,
+                nameFontStyle = FontStyle.Italic.takeIf { roomName == null },
             )
             BadgeList(
                 modifier = Modifier
@@ -197,16 +193,6 @@ private fun RoomAvatarAndNameRow(
                 roomBadge = roomBadges,
             )
         }
-=======
-        DisplayNameWithStatus(
-            name = roomName ?: stringResource(CommonStrings.common_no_room_name),
-            status = dmUserStatus,
-            modifier = Modifier.padding(start = 8.dp),
-            style = ElementTheme.typography.fontBodyLgMedium,
-            nameColor = ElementTheme.colors.textPrimary,
-            nameFontStyle = FontStyle.Italic.takeIf { roomName == null },
-        )
->>>>>>> main-element
     }
 }
 

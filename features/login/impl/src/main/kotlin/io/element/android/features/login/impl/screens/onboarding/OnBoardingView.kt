@@ -236,17 +236,13 @@ private fun OnBoardingContent(state: OnBoardingState) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-<<<<<<< HEAD
+                    // :tchap: Custom welcome text
+//                    text = stringResource(id = R.string.screen_onboarding_welcome_message, state.productionApplicationName),
                     text = stringResource(id = R.string.tchap_screen_onboarding_welcome_message),
-                    color = ElementTheme.colors.textSecondary,
-                    style = ElementTheme.typography.fontBodyLgRegular.copy(fontSize = 17.sp),
-                    textAlign = TextAlign.Center
-=======
-                    text = stringResource(id = R.string.screen_onboarding_welcome_message, state.productionApplicationName),
+                    // :tchap: end
                     color = ElementTheme.colors.textPrimary,
                     style = ElementTheme.typography.fontBodyLgRegular,
                     textAlign = TextAlign.Center,
->>>>>>> main-element
                 )
             }
         }

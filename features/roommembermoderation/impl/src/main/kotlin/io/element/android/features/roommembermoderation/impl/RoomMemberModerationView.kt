@@ -269,12 +269,6 @@ private fun RoomMemberActionsBottomSheet(
                     .padding(start = 16.dp, end = 16.dp, bottom = 12.dp)
                     .fillMaxWidth()
             )
-<<<<<<< HEAD
-//            // Show user ID only if it's different from the display name
-//            if (bestName != user.userId.value) {
-            // TCHAP show the Matrix Id depending of feature flag showMatrixId
-            if (showMatrixId && bestName != user.userId.value) {
-=======
             val userStatus = user.displayedStatus?.toText()
             if (userStatus != null) {
                 Text(
@@ -290,8 +284,10 @@ private fun RoomMemberActionsBottomSheet(
                 )
             }
             // Show user ID only if it's different from the display name
-            if (bestName != user.userId.value) {
->>>>>>> main-element
+            // :tchap: Show the Matrix Id depending of feature flag showMatrixId
+//            if (bestName != user.userId.value) {
+            if (showMatrixId && bestName != user.userId.value) {
+                // :tchap: end
                 Text(
                     text = user.userId.value,
                     style = ElementTheme.typography.fontBodyMdRegular,

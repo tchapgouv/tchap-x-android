@@ -80,15 +80,9 @@ jobs:
         with:
           name: elementx-debug
           path: |
-<<<<<<< HEAD
             app/build/outputs/apk/gplayTchapWithpinning/debug/*-universal-debug.apk
             app/build/outputs/apk/fdroidTchapWithpinning/debug/*-universal-debug.apk
-      - uses: rnkdsh/action-upload-diawi@4e1421305be7cfc510d05f47850262eeaf345108 # v1.5.12
-=======
-            app/build/outputs/apk/gplay/debug/*-universal-debug.apk
-            app/build/outputs/apk/fdroid/debug/*-universal-debug.apk
       - uses: rnkdsh/action-upload-diawi@76778fcd1f9f589efaaa62f63d5f03430bbb1306 # v1.5.13
->>>>>>> main-element
         id: diawi
         # Do not fail the whole build if Diawi upload fails
         continue-on-error: true
@@ -112,12 +106,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Compile release sources
         if: ${{ matrix.variant == 'release' }}
-<<<<<<< HEAD
-        run: ./gradlew bundleGplayTchapWithpinningRelease -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
+        run: |
+          ./gradlew assembleGplayTchapWithpinningRelease -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
+          ./gradlew bundleGplayTchapWithpinningRelease -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
+      - name: Run aapt dump
+        if: ${{ matrix.variant == 'release' }}
+        run: |
+          $ANDROID_HOME/build-tools/37.0.0/aapt dump badging \
+            ./app/build/outputs/apk/gplayTchapWithpinning/release/app-gplay-tchap-withpinning-universal-release.apk \
+            > /tmp/currentAaptDump.txt
+      - name: Check manifest has not changed
+        if: ${{ matrix.variant == 'release' }}
+        run: diff /tmp/currentAaptDump.txt ./tools/manifest/gplay/release/aaptDump.txt
       # Tchap Specific - Auto build nightly tchap & tchap-preprod (disable compile nightly)
 #      - name: Compile nightly sources
 #        if: ${{ matrix.variant == 'nightly' }}
-#        run: ./gradlew compileGplayTchapWithpinningNightlySources -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
+#        run: ./gradlew compileGplayNightlySources -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
       - name: Assemble Tchap nightly APKs
         if: ${{ matrix.variant == 'tchap-nightly' }}
         env:
@@ -176,20 +180,3 @@ jobs:
           path: |
             app/build/outputs/apk/gplayTchapDevWithpinning/nightly/app-gplay-tchapDev-withpinning-arm64-v8a-nightly.apk
       # end Tchap Specific
-=======
-        run: |
-          ./gradlew assembleGplayRelease -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
-          ./gradlew bundleGplayRelease -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
-      - name: Run aapt dump
-        if: ${{ matrix.variant == 'release' }}
-        run: |
-          $ANDROID_HOME/build-tools/37.0.0/aapt dump badging \
-            ./app/build/outputs/apk/gplay/release/app-gplay-universal-release.apk \
-            > /tmp/currentAaptDump.txt
-      - name: Check manifest has not changed
-        if: ${{ matrix.variant == 'release' }}
-        run: diff /tmp/currentAaptDump.txt ./tools/manifest/gplay/release/aaptDump.txt
-      - name: Compile nightly sources
-        if: ${{ matrix.variant == 'nightly' }}
-        run: ./gradlew compileGplayNightlySources -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
->>>>>>> main-element

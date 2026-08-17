@@ -26,13 +26,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-<<<<<<< HEAD
-import androidx.compose.foundation.layout.size
-=======
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
->>>>>>> main-element
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -73,10 +70,7 @@ import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.ElementPreviewDark
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.components.Icon
-<<<<<<< HEAD
-=======
 import io.element.android.libraries.designsystem.theme.components.IconButton
->>>>>>> main-element
 import io.element.android.libraries.designsystem.theme.components.ListItem
 import io.element.android.libraries.designsystem.theme.components.Scaffold
 import io.element.android.libraries.designsystem.theme.components.Surface
@@ -355,7 +349,6 @@ private fun AttachmentPreviewContent(
                 }
             }
         }
-<<<<<<< HEAD
 
         // :tchap: Warning on file upload when room is not encrypted
         if (state.textEditorState.isRoomEncrypted?.orFalse() == false) {
@@ -397,10 +390,7 @@ private fun AttachmentPreviewContent(
         }
         // :tchap: end
 
-        val mediaInfo = (state.attachment as? Attachment.Media)?.localMedia?.info
-=======
         val mediaInfo = (state.attachments[state.currentIndex] as? Attachment.Media)?.localMedia?.info
->>>>>>> main-element
         if (mediaInfo?.isImageAttachment() == true) {
             ImageOptimizationSelector(state.mediaOptimizationSelectorState)
         } else if (mediaInfo?.mimeType?.isMimeTypeVideo() == true) {

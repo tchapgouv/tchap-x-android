@@ -270,13 +270,9 @@ class ConfigureRoomPresenter(
                     CreateRoomParameters(
                         name = config.roomName,
                         topic = config.topic,
-<<<<<<< HEAD
                         // TCHAP - Enable PrivateNotEncrypted room
-//                        isEncrypted = true,
+//                        isEncrypted = !sessionEnterpriseService.isEncryptionDisabledByHomeserver(),
                         isEncrypted = config.visibilityState.joinRuleItem != JoinRuleItem.PrivateVisibility.PrivateNotEncrypted,
-=======
-                        isEncrypted = !sessionEnterpriseService.isEncryptionDisabledByHomeserver(),
->>>>>>> main-element
                         isDirect = false,
                         visibility = RoomVisibility.Private,
                         historyVisibilityOverride = RoomHistoryVisibility.Invited,

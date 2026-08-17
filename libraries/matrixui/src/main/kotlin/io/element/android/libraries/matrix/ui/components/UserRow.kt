@@ -18,11 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
-<<<<<<< HEAD
-import androidx.compose.ui.res.stringResource
-=======
 import androidx.compose.ui.text.AnnotatedString
->>>>>>> main-element
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -40,6 +37,7 @@ internal fun UserRow(
     avatarData: AvatarData,
     name: AnnotatedString,
     subtext: String?,
+    isExternalTchapUser: Boolean,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     verticalSpaceWidth: Dp = 12.dp,
@@ -58,6 +56,7 @@ internal fun UserRow(
             )
         },
         subtext = subtext,
+        isExternalTchapUser = isExternalTchapUser,
         modifier = modifier,
         enabled = enabled,
         verticalSpaceWidth = verticalSpaceWidth,

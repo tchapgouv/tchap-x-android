@@ -117,16 +117,12 @@ private fun BlockedUserItem(
     onLongClick: (UserId) -> Unit,
 ) {
     MatrixUserRow(
-<<<<<<< HEAD
         showMatrixId = showMatrixId,
-        modifier = Modifier.clickable { onClick(matrixUser.userId) },
-=======
         modifier = Modifier.combinedClickable(
             onClick = { onClick(matrixUser.userId) },
             onLongClick = { onLongClick(matrixUser.userId) },
             onLongClickLabel = stringResource(CommonStrings.action_copy),
         ),
->>>>>>> main-element
         matrixUser = matrixUser,
     )
 }

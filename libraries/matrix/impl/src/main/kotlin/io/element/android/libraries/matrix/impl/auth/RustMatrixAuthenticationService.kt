@@ -19,13 +19,10 @@ import io.element.android.libraries.androidutils.crypto.ClientSecret
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.extensions.mapFailure
 import io.element.android.libraries.core.extensions.runCatchingExceptions
-<<<<<<< HEAD
-import io.element.android.libraries.core.meta.BuildMeta
-import io.element.android.libraries.di.annotations.ApplicationContext
-=======
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
->>>>>>> main-element
+import io.element.android.libraries.core.meta.BuildMeta
+import io.element.android.libraries.di.annotations.ApplicationContext
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.auth.AuthenticationException
 import io.element.android.libraries.matrix.api.auth.ElementClassicSession
@@ -87,13 +84,10 @@ class RustMatrixAuthenticationService(
     private val secretGenerator: SecretGenerator,
     private val oAuthConfigurationProvider: OAuthConfigurationProvider,
     private val enterpriseService: EnterpriseService,
-<<<<<<< HEAD
+    private val featureFlagService: FeatureFlagService,
     // :tchap: Add proxy config in rust http client
     private val proxyProvider: ProxyProvider,
     // :tchap: end
-=======
-    private val featureFlagService: FeatureFlagService,
->>>>>>> main-element
 ) : MatrixAuthenticationService {
     // Any existing Element Classic session that we want to try to import secrets from during login.
     private var elementClassicSession: ElementClassicSession? = null
@@ -177,7 +171,7 @@ class RustMatrixAuthenticationService(
                     loginHint
                 )
             }.onFailure {
-                clear()
+                clear(destroyClient = true)
             }.mapFailure { failure ->
                 Timber.e(failure, "Failed to get homeserver from $defaultHomeserver for login hint $loginHint")
                 failure.mapAuthenticationException()

@@ -14,11 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-<<<<<<< HEAD
-=======
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
->>>>>>> main-element
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -42,20 +40,21 @@ fun AddPeopleView(
     modifier: Modifier = Modifier,
     invitePeopleView: @Composable () -> Unit,
 ) {
-<<<<<<< HEAD
-    // TCHAP external user
-    LaunchedEffect(onFinish, state.sendInvitesAction.isReady()) {
-        if (state.sendInvitesAction.isReady()) {
-            onFinish()
-=======
     val currentOnFinish by rememberUpdatedState(onFinish)
     LaunchedEffect(state.sendInvitesAction, state.createRoomFromDmAction) {
         if (state.sendInvitesAction.isSuccess() || state.createRoomFromDmAction.isSuccess()) {
             currentOnFinish()
->>>>>>> main-element
         }
     }
 
+    // TODO : Check if we use the Element code abaove or modify some custom Tchap bellow
+//    // TCHAP external user
+//    LaunchedEffect(onFinish, state.sendInvitesAction.isReady()) {
+//        if (state.sendInvitesAction.isReady()) {
+//            onFinish()
+//        }
+//    }
+//
     HeaderFooterPage(
         modifier = modifier,
         contentPadding = PaddingValues(0.dp),
@@ -66,12 +65,10 @@ fun AddPeopleView(
             Button(
                 text = stringResource(CommonStrings.action_finish),
                 onClick = {
-<<<<<<< HEAD
-                    // TCHAP external user
-                    state.eventSink(InvitePeopleEvents.CheckExternalsAndSendInvites)
-=======
                     state.eventSink(InvitePeopleEvents.SendInvites)
->>>>>>> main-element
+                    // TODO : New Element code above, Tchap custom bellow
+                    // TCHAP external user
+//                    state.eventSink(InvitePeopleEvents.CheckExternalsAndSendInvites)
                 },
                 enabled = state.canInvite,
                 modifier = Modifier

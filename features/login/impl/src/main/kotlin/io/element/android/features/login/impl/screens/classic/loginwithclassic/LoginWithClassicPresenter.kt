@@ -35,12 +35,8 @@ import kotlinx.coroutines.launch
 class LoginWithClassicPresenter(
     @Assisted private val userId: UserId,
     @Assisted private val navigator: LoginWithClassicNavigator,
-<<<<<<< HEAD
     private val featureFlagService: FeatureFlagService,
-    private val loginHelper: LoginHelper,
-=======
     private val loginModePresenter: Presenter<LoginModeState>,
->>>>>>> main-element
     private val elementClassicConnection: ElementClassicConnection,
     private val accountProviderDataSource: AccountProviderDataSource,
     private val buildMeta: BuildMeta,
@@ -96,24 +92,16 @@ class LoginWithClassicPresenter(
                                 // :tchap: end
 
                                 accountProviderDataSource.setUrl(accountProvider)
-<<<<<<< HEAD
-                                loginHelper.submit(
-                                    isAccountCreation = false,
-                                    homeserverUrl = accountProvider,
-                                    resolvedHomeserverUrl = currentState.elementClassicSession.homeserverUrl,
-                                    // :tchap: Use email from MXID as loginHint
-//                                    loginHint = "mxid:" + elementClassicUserId.value,
-                                    loginHint = emailFromMxID,
-                                    // :tchap: end
-=======
                                 loginModeState.eventSink(
                                     LoginModeEvent.Submit(
                                         isAccountCreation = false,
                                         homeserverUrl = accountProvider,
                                         resolvedHomeserverUrl = currentState.elementClassicSession.homeserverUrl,
-                                        loginHint = "mxid:" + elementClassicUserId.value,
+                                        // :tchap: Use email from MXID as loginHint
+//                                        loginHint = "mxid:" + elementClassicUserId.value,
+                                        loginHint = emailFromMxID,
+                                        // :tchap: end
                                     )
->>>>>>> main-element
                                 )
                             }
                         }

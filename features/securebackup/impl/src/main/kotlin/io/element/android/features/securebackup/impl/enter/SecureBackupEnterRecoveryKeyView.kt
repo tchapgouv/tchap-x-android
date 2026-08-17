@@ -11,20 +11,14 @@ package io.element.android.features.securebackup.impl.enter
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-<<<<<<< HEAD
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
-=======
->>>>>>> main-element
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-<<<<<<< HEAD
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-=======
->>>>>>> main-element
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp

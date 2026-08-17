@@ -29,12 +29,8 @@ fun aLoggedInState(
     showSyncSpinner: Boolean = false,
     pusherRegistrationState: AsyncData<Unit> = AsyncData.Uninitialized,
     forceNativeSlidingSyncMigration: Boolean = false,
-<<<<<<< HEAD
     appName: String = "Tchap",
-=======
-    appName: String = "Element X",
     localNetworkPermissionDialog: LocalNetworkPermissionDialog = LocalNetworkPermissionDialog.None,
->>>>>>> main-element
 ) = LoggedInState(
     showSyncSpinner = showSyncSpinner,
     pusherRegistrationState = pusherRegistrationState,

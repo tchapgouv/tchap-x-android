@@ -544,11 +544,7 @@ Raison : %1$s."</string>
   <string name="timeline_decryption_failure_historical_event_unverified_device">"Vous devez vérifier cet appareil pour accéder à l’historique des messages"</string>
   <string name="timeline_decryption_failure_historical_event_user_not_joined">"Vous ne pouvez pas voir ce message"</string>
   <string name="timeline_decryption_failure_unable_to_decrypt">"Impossible de déchiffrer le message"</string>
-<<<<<<< HEAD
   <string name="timeline_decryption_failure_withheld_unverified">"Ce message a été bloqué soit parce que vous n’avez pas vérifié votre appareil, soit parce que l’expéditeur doit vérifier votre identité numérique."</string><!-- Tchap: Custom string -->
-=======
-  <string name="timeline_decryption_failure_withheld_unverified">"Ce message a été bloqué soit parce que vous n’avez pas vérifié votre session, soit parce que l’expéditeur doit vérifier votre identité numérique."</string>
   <string name="vulkan_not_supported_dialog_content_android">"Votre appareil est trop ancien, un appareil fonctionnant sous Android 8 ou une version plus récente est requis."</string>
   <string name="vulkan_not_supported_dialog_title_android">"Affichage des cartes non supporté"</string>
->>>>>>> main-element
 </resources>

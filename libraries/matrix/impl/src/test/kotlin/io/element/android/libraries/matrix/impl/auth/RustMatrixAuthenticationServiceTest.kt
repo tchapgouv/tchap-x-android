@@ -103,11 +103,8 @@ class RustMatrixAuthenticationServiceTest {
                 oAuthRedirectUrlProvider = FakeOAuthRedirectUrlProvider(),
             ),
             enterpriseService = enterpriseService,
-<<<<<<< HEAD
-            proxyProvider = FakeProxyProvider(),
-=======
             featureFlagService = FakeFeatureFlagService(),
->>>>>>> main-element
+            proxyProvider = FakeProxyProvider(),
         )
     }
 }

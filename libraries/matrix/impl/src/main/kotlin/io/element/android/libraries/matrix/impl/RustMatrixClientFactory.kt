@@ -196,8 +196,7 @@ class RustMatrixClientFactory(
             }
             .setSessionDelegate(sessionDelegate)
             .userAgent(userAgentProvider.provide())
-<<<<<<< HEAD
-            .addRootCertificates(userCertificatesProvider.provides())
+            //.addRootCertificates(userCertificatesProvider.provides()) // TODO : Removed in Element, check if we need to re-enable it
 
         // TCHAP : Disable Root Certificates & add in-app Certificates when ENABLE_CERTIFICATE_PINNING (withpinning) is enabled
         if (BuildConfig.ENABLE_CERTIFICATE_PINNING) {
@@ -227,9 +226,6 @@ class RustMatrixClientFactory(
         }
 
         return builder.autoEnableBackups(true)
-=======
-            .autoEnableBackups(true)
->>>>>>> main-element
             .autoEnableCrossSigning(true)
             .roomKeyRecipientStrategy(
                 strategy = if (featureFlagService.isFeatureEnabled(FeatureFlags.OnlySignedDeviceIsolationMode)) {
