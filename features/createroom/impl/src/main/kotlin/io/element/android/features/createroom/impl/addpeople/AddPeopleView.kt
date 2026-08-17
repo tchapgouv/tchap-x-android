@@ -47,14 +47,6 @@ fun AddPeopleView(
         }
     }
 
-    // TODO : Check if we use the Element code abaove or modify some custom Tchap bellow
-//    // TCHAP external user
-//    LaunchedEffect(onFinish, state.sendInvitesAction.isReady()) {
-//        if (state.sendInvitesAction.isReady()) {
-//            onFinish()
-//        }
-//    }
-//
     HeaderFooterPage(
         modifier = modifier,
         contentPadding = PaddingValues(0.dp),
@@ -65,10 +57,10 @@ fun AddPeopleView(
             Button(
                 text = stringResource(CommonStrings.action_finish),
                 onClick = {
-                    state.eventSink(InvitePeopleEvents.SendInvites)
-                    // TODO : New Element code above, Tchap custom bellow
-                    // TCHAP external user
-//                    state.eventSink(InvitePeopleEvents.CheckExternalsAndSendInvites)
+                    // :tchap: Open the room to external users if needed, before sending invites
+//                    state.eventSink(InvitePeopleEvents.SendInvites)
+                    state.eventSink(InvitePeopleEvents.CheckExternalsAndSendInvites)
+                    // :tchap: end
                 },
                 enabled = state.canInvite,
                 modifier = Modifier

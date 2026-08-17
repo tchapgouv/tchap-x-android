@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -183,16 +184,11 @@ private fun ButtonInternal(
         ButtonSize.LargeLowPadding -> PaddingValues(horizontal = lowHorizontalPaddingValue, vertical = 13.dp)
     }
 
-    // TODO : Check with Angelo
-    // Old style (tchap)
-//    val shape = when (style) {
-//        ButtonStyle.Filled,
-//        ButtonStyle.Outlined -> RoundedCornerShape(size = 4.dp)
-//        ButtonStyle.Text -> RectangleShape
-//    }
-    // New Element Style
     // Apply the same shape to all buttons, so that the focus ring is consistent across styles.
-    val shape = RoundedCornerShape(percent = 50)
+    // :tchap: Buttons are square in Tchap
+//    val shape = RoundedCornerShape(percent = 50)
+    val shape = RoundedCornerShape(size = 4.dp)
+    // :tchap: end
 
     val border = when (style) {
         ButtonStyle.Filled -> null

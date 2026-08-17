@@ -153,7 +153,7 @@ class RustMatrixClientFactory(
                     client = client,
                     rustScanner = contentScanner,
                 )
-        }
+            }
 
         val syncService = client.syncService()
             .withSharePos(true)
@@ -196,9 +196,8 @@ class RustMatrixClientFactory(
             }
             .setSessionDelegate(sessionDelegate)
             .userAgent(userAgentProvider.provide())
-            //.addRootCertificates(userCertificatesProvider.provides()) // TODO : Removed in Element, check if we need to re-enable it
 
-        // TCHAP : Disable Root Certificates & add in-app Certificates when ENABLE_CERTIFICATE_PINNING (withpinning) is enabled
+        // :tchap: Disable Root Certificates & add in-app Certificates when ENABLE_CERTIFICATE_PINNING (withpinning) is enabled
         if (BuildConfig.ENABLE_CERTIFICATE_PINNING) {
             try {
                 val certificatesRessources = listOf(
@@ -224,6 +223,7 @@ class RustMatrixClientFactory(
                 )
             }
         }
+        // :tchap: end
 
         return builder.autoEnableBackups(true)
             .autoEnableCrossSigning(true)
@@ -231,7 +231,7 @@ class RustMatrixClientFactory(
                 strategy = if (featureFlagService.isFeatureEnabled(FeatureFlags.OnlySignedDeviceIsolationMode)) {
                     CollectStrategy.IDENTITY_BASED_STRATEGY
                 } else {
-                    CollectStrategy.ALL_DEVICES // TCHAP accepts all devices for room key sharing
+                    CollectStrategy.ALL_DEVICES // :tchap: Accepts all devices for room key sharing
                 }
             )
             .decryptionSettings(
