@@ -10,6 +10,7 @@ package io.element.android.appnav.loggedin
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.element.android.libraries.architecture.AsyncData
+import io.element.android.libraries.permissions.api.localnetwork.LocalNetworkPermissionDialog
 import io.element.android.libraries.push.api.PusherRegistrationFailure
 
 open class LoggedInStateProvider : PreviewParameterProvider<LoggedInState> {
@@ -19,6 +20,8 @@ open class LoggedInStateProvider : PreviewParameterProvider<LoggedInState> {
             aLoggedInState(showSyncSpinner = true),
             aLoggedInState(pusherRegistrationState = AsyncData.Failure(PusherRegistrationFailure.NoDistributorsAvailable())),
             aLoggedInState(forceNativeSlidingSyncMigration = true),
+            aLoggedInState(localNetworkPermissionDialog = LocalNetworkPermissionDialog.Rationale),
+            aLoggedInState(localNetworkPermissionDialog = LocalNetworkPermissionDialog.Settings),
         )
 }
 
@@ -26,12 +29,18 @@ fun aLoggedInState(
     showSyncSpinner: Boolean = false,
     pusherRegistrationState: AsyncData<Unit> = AsyncData.Uninitialized,
     forceNativeSlidingSyncMigration: Boolean = false,
+<<<<<<< HEAD
     appName: String = "Tchap",
+=======
+    appName: String = "Element X",
+    localNetworkPermissionDialog: LocalNetworkPermissionDialog = LocalNetworkPermissionDialog.None,
+>>>>>>> main-element
 ) = LoggedInState(
     showSyncSpinner = showSyncSpinner,
     pusherRegistrationState = pusherRegistrationState,
     ignoreRegistrationError = false,
     forceNativeSlidingSyncMigration = forceNativeSlidingSyncMigration,
     appName = appName,
+    localNetworkPermissionDialog = localNetworkPermissionDialog,
     eventSink = {},
 )

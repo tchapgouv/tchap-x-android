@@ -8,11 +8,15 @@
 
 package io.element.android.features.preferences.impl.root
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,7 +27,12 @@ import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.preferences.impl.R
 import io.element.android.features.preferences.impl.user.UserPreferences
+import io.element.android.features.preferences.impl.userstatus.UserStatusState
+import io.element.android.features.preferences.impl.userstatus.UserStatusView
+import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.coverage.ExcludeFromCoverage
+import io.element.android.libraries.designsystem.components.async.AsyncActionIndicator
+import io.element.android.libraries.designsystem.components.async.AsyncIndicator
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
 import io.element.android.libraries.designsystem.components.list.ListItemContent
 import io.element.android.libraries.designsystem.components.preferences.PreferencePage
@@ -38,7 +47,8 @@ import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.designsystem.utils.CommonDrawables
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarHost
 import io.element.android.libraries.designsystem.utils.snackbar.rememberSnackbarHostState
-import io.element.android.libraries.matrix.api.core.DeviceId
+import io.element.android.libraries.emoji.api.picker.EmojiPickerRenderer
+import io.element.android.libraries.emoji.api.picker.NoOpEmojiPickerRenderer
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.matrix.ui.components.MatrixUserRow
 import io.element.android.libraries.ui.strings.CommonStrings
@@ -46,6 +56,7 @@ import io.element.android.libraries.ui.strings.CommonStrings
 @Composable
 fun PreferencesRootView(
     state: PreferencesRootState,
+    emojiPickerRenderer: EmojiPickerRenderer,
     onBackClick: () -> Unit,
     onAddAccountClick: () -> Unit,
     onSecureBackupClick: () -> Unit,
@@ -69,6 +80,7 @@ fun PreferencesRootView(
 ) {
     val snackbarHostState = rememberSnackbarHostState(snackbarMessage = state.snackbarMessage)
 
+<<<<<<< HEAD
     // Include pref from other modules
     PreferencePage(
         modifier = modifier,
@@ -129,9 +141,110 @@ fun PreferencesRootView(
                 { state.eventSink(PreferencesRootEvent.OnVersionInfoClick) }
             } else {
                 null
+=======
+    Box(modifier = modifier) {
+        // Include pref from other modules
+        PreferencePage(
+            onBackClick = onBackClick,
+            title = stringResource(id = CommonStrings.common_settings),
+            snackbarHost = { SnackbarHost(snackbarHostState) }
+        ) {
+            UserPreferences(
+                modifier = Modifier.clickable {
+                    onOpenUserProfile(state.myUser)
+                },
+                matrixUser = state.myUser,
+            )
+            if (state.isMultiAccountEnabled) {
+                MultiAccountSection(
+                    state = state,
+                    onAddAccountClick = onAddAccountClick,
+                )
+>>>>>>> main-element
             }
+            if (state.userStatusState != null) {
+                UserStatusSection(
+                    userStatusState = state.userStatusState,
+                    emojiPickerRenderer = emojiPickerRenderer,
+                    showTopDivider = !state.isMultiAccountEnabled,
+                )
+            }
+            // 'Account' section
+            ManageAccountSection(
+                state = state,
+                onManageAccountClick = onManageAccountClick,
+                onLinkNewDeviceClick = onLinkNewDeviceClick,
+                onOpenBlockedUsers = onOpenBlockedUsers
+            )
+            // 'Manage my app' section
+            ManageAppSection(
+                state = state,
+                onOpenNotificationSettings = onOpenNotificationSettings,
+                onOpenLockScreenSettings = onOpenLockScreenSettings,
+                onSecureBackupClick = onSecureBackupClick,
+            )
+
+            // General section
+            GeneralSection(
+                state = state,
+                onOpenAbout = onOpenAbout,
+                onOpenAnalytics = onOpenAnalytics,
+                onOpenRageShake = onOpenRageShake,
+                onOpenAdvancedSettings = onOpenAdvancedSettings,
+                onOpenDeveloperSettings = onOpenDeveloperSettings,
+                onOpenLabs = onOpenLabs,
+                onSignOutClick = onSignOutClick,
+                onDeactivateClick = onDeactivateClick,
+            )
+            // Version
+            Footer(
+                version = state.version,
+                onClick = if (!state.showDeveloperSettings) {
+                    { state.eventSink(PreferencesRootEvent.OnVersionInfoClick) }
+                } else {
+                    null
+                }
+            )
+        }
+        state.userStatusState?.let {
+            UserStatusUpdateIndicator(it.updateStatusAction)
+        }
+    }
+}
+
+@Composable
+private fun BoxScope.UserStatusUpdateIndicator(updateStatusAction: AsyncAction<Unit>) {
+    AsyncActionIndicator(
+        asyncAction = updateStatusAction,
+        modifier = Modifier
+            .align(Alignment.TopCenter)
+            .statusBarsPadding(),
+        loading = { AsyncIndicator.Loading(text = stringResource(CommonStrings.common_saving)) },
+        failure = { _ -> AsyncIndicator.Failure(text = stringResource(CommonStrings.common_failed)) },
+    )
+}
+
+@Composable
+private fun ColumnScope.UserStatusSection(
+    userStatusState: UserStatusState,
+    emojiPickerRenderer: EmojiPickerRenderer,
+    showTopDivider: Boolean,
+) {
+    if (showTopDivider) {
+        HorizontalDivider(
+            thickness = 8.dp,
+            color = ElementTheme.colors.bgSubtleSecondary,
         )
     }
+    UserStatusView(
+        state = userStatusState,
+        emojiPickerRenderer = emojiPickerRenderer,
+        modifier = Modifier.fillMaxWidth(),
+    )
+    HorizontalDivider(
+        thickness = 1.dp,
+        color = ElementTheme.colors.bgSubtleSecondary,
+    )
 }
 
 @Composable
@@ -157,7 +270,7 @@ private fun ColumnScope.MultiAccountSection(
     }
     ListItem(
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Plus())),
-        headlineContent = {
+        content = {
             Text(stringResource(CommonStrings.common_add_another_account))
         },
         onClick = onAddAccountClick,
@@ -176,18 +289,18 @@ private fun ColumnScope.ManageAppSection(
     onSecureBackupClick: () -> Unit,
 ) {
     ListItem(
-        headlineContent = { Text(stringResource(id = R.string.screen_notification_settings_title)) },
+        content = { Text(stringResource(id = R.string.screen_notification_settings_title)) },
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Notifications())),
         onClick = onOpenNotificationSettings,
     )
     ListItem(
-        headlineContent = { Text(stringResource(id = CommonStrings.common_screen_lock)) },
+        content = { Text(stringResource(id = CommonStrings.common_screen_lock)) },
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Lock())),
         onClick = onOpenLockScreenSettings,
     )
     if (state.showSecureBackup) {
         ListItem(
-            headlineContent = { Text(stringResource(id = CommonStrings.common_encryption)) },
+            content = { Text(stringResource(id = CommonStrings.common_encryption)) },
             leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Key())),
             trailingContent = ListItemContent.Badge.takeIf { state.showSecureBackupBadge },
             onClick = onSecureBackupClick,
@@ -205,7 +318,7 @@ private fun ColumnScope.ManageAccountSection(
 ) {
     state.accountManagementUrl?.let { url ->
         ListItem(
-            headlineContent = { Text(stringResource(id = CommonStrings.action_manage_account_and_devices)) },
+            content = { Text(stringResource(id = CommonStrings.action_manage_account_and_devices)) },
             leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.UserProfile())),
             trailingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.PopOut())),
             onClick = { onManageAccountClick(url) },
@@ -213,14 +326,14 @@ private fun ColumnScope.ManageAccountSection(
     }
     if (state.showLinkNewDevice) {
         ListItem(
-            headlineContent = { Text(stringResource(id = CommonStrings.common_link_new_device)) },
+            content = { Text(stringResource(id = CommonStrings.common_link_new_device)) },
             leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Devices())),
             onClick = onLinkNewDeviceClick,
         )
     }
     if (state.showBlockedUsersItem) {
         ListItem(
-            headlineContent = { Text(stringResource(id = CommonStrings.common_blocked_users)) },
+            content = { Text(stringResource(id = CommonStrings.common_blocked_users)) },
             leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Block())),
             onClick = onOpenBlockedUsers,
             trailingContent = ListItemContent.Text(state.nbOfBlockedUsers.toString()),
@@ -245,19 +358,23 @@ private fun ColumnScope.GeneralSection(
     onDeactivateClick: () -> Unit,
 ) {
     ListItem(
-        headlineContent = { Text(stringResource(id = CommonStrings.common_advanced_settings)) },
+        content = { Text(stringResource(id = CommonStrings.common_advanced_settings)) },
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Settings())),
         onClick = onOpenAdvancedSettings,
     )
     if (state.showLabsItem) {
         ListItem(
-            headlineContent = { Text(stringResource(id = R.string.screen_labs_title)) },
+            content = { Text(stringResource(id = R.string.screen_labs_title)) },
             leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Labs())),
             onClick = onOpenLabs,
         )
     }
     ListItem(
+<<<<<<< HEAD
         headlineContent = { Text(stringResource(id = CommonStrings.tchap_common_faq)) },
+=======
+        content = { Text(stringResource(id = CommonStrings.common_about)) },
+>>>>>>> main-element
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Info())),
         onClick = { onOpenFAQ() },
     )
@@ -268,35 +385,37 @@ private fun ColumnScope.GeneralSection(
     )
     if (state.canReportBug) {
         ListItem(
-            headlineContent = { Text(stringResource(id = CommonStrings.common_report_a_problem)) },
+            content = { Text(stringResource(id = CommonStrings.common_report_a_problem)) },
             leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.ChatProblem())),
             onClick = onOpenRageShake
         )
     }
     if (state.showAnalyticsSettings) {
         ListItem(
-            headlineContent = { Text(stringResource(id = CommonStrings.common_analytics)) },
+            content = { Text(stringResource(id = CommonStrings.common_analytics)) },
             leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Chart())),
             onClick = onOpenAnalytics,
         )
     }
     HorizontalDivider()
     ListItem(
-        headlineContent = { Text(stringResource(id = CommonStrings.action_signout)) },
+        content = { Text(stringResource(id = CommonStrings.action_signout)) },
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Close())),
         style = ListItemStyle.Destructive,
         onClick = onSignOutClick,
     )
     if (state.canDeactivateAccount) {
         ListItem(
-            headlineContent = { Text(stringResource(id = CommonStrings.action_delete_account)) },
+            content = { Text(stringResource(id = CommonStrings.action_delete_account)) },
             leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Delete())),
             style = ListItemStyle.Destructive,
             onClick = onDeactivateClick,
         )
     }
     // Put developer settings at the end, so nothing bad happens if the user clicks 8 times to enable the entry
-    if (state.showDeveloperSettings) {
+    AnimatedVisibility(
+        visible = state.showDeveloperSettings,
+    ) {
         DeveloperPreferencesView(onOpenDeveloperSettings)
     }
 }
@@ -304,25 +423,15 @@ private fun ColumnScope.GeneralSection(
 @Composable
 private fun ColumnScope.Footer(
     version: String,
-    deviceId: DeviceId?,
     onClick: (() -> Unit)?,
 ) {
-    val text = remember(version, deviceId) {
-        buildString {
-            append(version)
-            if (deviceId != null) {
-                append("\n")
-                append(deviceId)
-            }
-        }
-    }
     Text(
         modifier = Modifier
             .align(Alignment.CenterHorizontally)
             .clickable(enabled = onClick != null, onClick = onClick ?: {})
             .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 24.dp),
         textAlign = TextAlign.Center,
-        text = text,
+        text = version,
         style = ElementTheme.typography.fontBodySmRegular,
         color = ElementTheme.colors.textSecondary,
     )
@@ -331,7 +440,7 @@ private fun ColumnScope.Footer(
 @Composable
 private fun DeveloperPreferencesView(onOpenDeveloperSettings: () -> Unit) {
     ListItem(
-        headlineContent = { Text(stringResource(id = CommonStrings.common_developer_options)) },
+        content = { Text(stringResource(id = CommonStrings.common_developer_options)) },
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Code())),
         onClick = onOpenDeveloperSettings
     )
@@ -356,6 +465,7 @@ internal fun PreferencesRootViewDarkPreview(@PreviewParameter(PreferencesRootSta
 private fun ContentToPreview(state: PreferencesRootState) {
     PreferencesRootView(
         state = state,
+        emojiPickerRenderer = NoOpEmojiPickerRenderer,
         onBackClick = {},
         onAddAccountClick = {},
         onOpenAnalytics = {},

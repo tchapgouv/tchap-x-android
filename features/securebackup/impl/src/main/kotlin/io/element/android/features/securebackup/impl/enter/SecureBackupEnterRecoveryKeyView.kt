@@ -9,25 +9,22 @@
 package io.element.android.features.securebackup.impl.enter
 
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
+<<<<<<< HEAD
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
+=======
+>>>>>>> main-element
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+<<<<<<< HEAD
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+=======
+>>>>>>> main-element
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -39,15 +36,13 @@ import io.element.android.libraries.designsystem.atomic.molecules.IconTitleSubti
 import io.element.android.libraries.designsystem.atomic.pages.HeaderFooterPage
 import io.element.android.libraries.designsystem.components.BigIcon
 import io.element.android.libraries.designsystem.components.async.AsyncActionView
+import io.element.android.libraries.designsystem.modifiers.bringIntoViewOnImeVisible
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.components.Button
 import io.element.android.libraries.designsystem.theme.components.TextButton
 import io.element.android.libraries.designsystem.theme.components.TopAppBar
 import io.element.android.libraries.ui.strings.CommonStrings
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -119,29 +114,13 @@ fun SecureBackupEnterRecoveryKeyView(
     )
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun Content(
     state: SecureBackupEnterRecoveryKeyState,
 ) {
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
-    var isFocused by remember { mutableStateOf(false) }
-    val isImeVisible = WindowInsets.isImeVisible
-    val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(isImeVisible, isFocused) {
-        // When the keyboard is shown, we want to scroll the text field into view
-        if (isImeVisible && isFocused) {
-            coroutineScope.launch {
-                // Delay to ensure the keyboard is fully shown
-                delay(100.milliseconds)
-                bringIntoViewRequester.bringIntoView()
-            }
-        }
-    }
     RecoveryKeyView(
         modifier = Modifier
-            .onFocusChanged { isFocused = it.isFocused }
-            .bringIntoViewRequester(bringIntoViewRequester)
+            .bringIntoViewOnImeVisible()
             .padding(top = 52.dp, bottom = 32.dp),
         state = state.recoveryKeyViewState,
         onClick = null,

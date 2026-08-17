@@ -11,6 +11,8 @@
 import config.BuildTimeConfig
 import extension.setupDependencyInjection
 import extension.testCommonDependencies
+import org.gradle.kotlin.dsl.withType
+import org.sonarqube.gradle.SonarResolverTask
 
 plugins {
     id("io.element.android-library")
@@ -19,6 +21,7 @@ plugins {
 android {
     namespace = "io.element.android.libraries.pushproviders.firebase"
 
+<<<<<<< HEAD
     // :tchap: Push config for Gateway URL & Variants
 //    buildTypes {
 //        getByName("release") {
@@ -46,6 +49,11 @@ android {
 //            )
 //        }
 //    }
+=======
+    buildFeatures {
+        resValues = true
+    }
+>>>>>>> main-element
 
     buildTypes {
         getByName("release") {
@@ -102,6 +110,11 @@ android {
         buildConfigField("String", "pushConfigGatewayURL", "\"$gatewayUrl\"")
     }
     // :tchap: end
+}
+
+// Configure the SonarQube plugin to wait for the resource generation tasks to complete before running the analysis.
+tasks.withType<SonarResolverTask>().configureEach {
+    dependsOn("generateDebugResValues", "generateDebugAndroidTestResValues")
 }
 
 setupDependencyInjection()

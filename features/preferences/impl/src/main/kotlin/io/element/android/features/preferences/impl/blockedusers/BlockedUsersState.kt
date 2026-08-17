@@ -9,6 +9,7 @@
 package io.element.android.features.preferences.impl.blockedusers
 
 import io.element.android.libraries.architecture.AsyncAction
+import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import kotlinx.collections.immutable.ImmutableList
 
@@ -16,5 +17,6 @@ data class BlockedUsersState(
     val showMatrixId: Boolean,
     val blockedUsers: ImmutableList<MatrixUser>,
     val unblockUserAction: AsyncAction<Unit>,
+    val snackbarMessage: SnackbarMessage?,
     val eventSink: (BlockedUsersEvents) -> Unit,
 )

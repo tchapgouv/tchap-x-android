@@ -23,6 +23,7 @@ import io.element.android.compound.tokens.generated.internal.DarkHcColorTokens
  */
 @OptIn(CoreColorToken::class)
 val compoundColorsHcDark = SemanticColors(
+<<<<<<< HEAD
     bgAccentHovered = DarkHcColorTokens.colorBlue500,
     bgAccentPressed = DarkHcColorTokens.colorAlphaBlue500,
     bgAccentRest = DarkHcColorTokens.colorBlue600,
@@ -31,6 +32,17 @@ val compoundColorsHcDark = SemanticColors(
     bgActionPrimaryHovered = DarkHcColorTokens.colorBlue500,
     bgActionPrimaryPressed = DarkHcColorTokens.colorAlphaBlue500,
     bgActionPrimaryRest = DarkHcColorTokens.colorBlue600,
+=======
+    bgAccentHovered = DarkHcColorTokens.colorGreen1000,
+    bgAccentPressed = DarkHcColorTokens.colorGreen1100,
+    bgAccentRest = DarkHcColorTokens.colorGreen900,
+    bgAccentSelected = DarkHcColorTokens.colorAlphaGreen300,
+    bgAccentSubtle = DarkHcColorTokens.colorGreen200,
+    bgActionPrimaryDisabled = DarkHcColorTokens.colorGray700,
+    bgActionPrimaryHovered = DarkHcColorTokens.colorGray1200,
+    bgActionPrimaryPressed = DarkHcColorTokens.colorGray1100,
+    bgActionPrimaryRest = DarkHcColorTokens.colorGray1400,
+>>>>>>> main-element
     bgActionSecondaryHovered = DarkHcColorTokens.colorAlphaGray200,
     bgActionSecondaryPressed = DarkHcColorTokens.colorAlphaGray300,
     bgActionSecondaryRest = DarkHcColorTokens.colorThemeBg,
@@ -62,7 +74,15 @@ val compoundColorsHcDark = SemanticColors(
     bgSubtlePrimary = DarkHcColorTokens.colorBlue300,
     bgSubtleSecondary = DarkHcColorTokens.colorGray300,
     bgSubtleSecondaryLevel0 = DarkHcColorTokens.colorThemeBg,
+<<<<<<< HEAD
     bgSuccessSubtle = DarkHcColorTokens.colorGreen400,
+=======
+    bgSubtleTertiary = DarkHcColorTokens.colorGray100,
+    bgSuccessHovered = DarkHcColorTokens.colorGreen1000,
+    bgSuccessPressed = DarkHcColorTokens.colorGreen1100,
+    bgSuccessRest = DarkHcColorTokens.colorGreen900,
+    bgSuccessSubtle = DarkHcColorTokens.colorGreen200,
+>>>>>>> main-element
     borderAccentPrimary = DarkHcColorTokens.colorGreen900,
     borderAccentSubtle = DarkHcColorTokens.colorBlue700,
     borderCriticalHovered = DarkHcColorTokens.colorRed1000,
@@ -74,6 +94,7 @@ val compoundColorsHcDark = SemanticColors(
     borderInteractiveHovered = DarkHcColorTokens.colorGray1100,
     borderInteractivePrimary = DarkHcColorTokens.colorGray800,
     borderInteractiveSecondary = DarkHcColorTokens.colorGray600,
+    borderSuccessPrimary = DarkHcColorTokens.colorGreen900,
     borderSuccessSubtle = DarkHcColorTokens.colorGreen500,
     gradientActionStop1 = DarkHcColorTokens.colorBlue1200,
     gradientActionStop2 = DarkHcColorTokens.colorBlue1200,
@@ -113,13 +134,19 @@ val compoundColorsHcDark = SemanticColors(
     iconSuccessPrimary = DarkHcColorTokens.colorBlue1200,
     iconTertiary = DarkHcColorTokens.colorGray800,
     iconTertiaryAlpha = DarkHcColorTokens.colorAlphaGray800,
+    iconWarningPrimary = DarkHcColorTokens.colorOrange900,
     separatorPrimary = DarkHcColorTokens.colorGray400,
     separatorSecondary = DarkHcColorTokens.colorGray300,
     textActionAccent = DarkHcColorTokens.colorBlue600,
     textActionPrimary = DarkHcColorTokens.colorGray1400,
+<<<<<<< HEAD
     textBadgeAccent = DarkHcColorTokens.colorGray1400,
     textBadgeCritical = DarkHcColorTokens.colorRed1200,
     textBadgeDefault = DarkHcColorTokens.colorGray1200,
+=======
+    textActionSuccess = DarkHcColorTokens.colorGreen900,
+    textBadgeAccent = DarkHcColorTokens.colorGreen1100,
+>>>>>>> main-element
     textBadgeInfo = DarkHcColorTokens.colorBlue1100,
     textBadgePrimary = DarkHcColorTokens.colorThemeBg,
     textBadgeSecondary = DarkHcColorTokens.colorGray1200,
@@ -138,6 +165,11 @@ val compoundColorsHcDark = SemanticColors(
     textOnSolidPrimary = DarkHcColorTokens.colorGray1400,
     textPrimary = DarkHcColorTokens.colorGray1400,
     textSecondary = DarkHcColorTokens.colorGray900,
+<<<<<<< HEAD
     textSuccessPrimary = DarkHcColorTokens.colorGreen1000,
+=======
+    textSuccessPrimary = DarkHcColorTokens.colorGreen900,
+    textWarningPrimary = DarkHcColorTokens.colorOrange900,
+>>>>>>> main-element
     isLight = false,
 )

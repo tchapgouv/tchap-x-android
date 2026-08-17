@@ -39,6 +39,7 @@ fun RageshakePreferencesView(
 //        if (state.isFeatureEnabled) {
         if (state.isFeatureEnabled && state.isSupported) {
             PreferenceCategory(title = stringResource(id = R.string.settings_rageshake)) {
+<<<<<<< HEAD
 //                if (state.isSupported) {
                 PreferenceSwitch(
                     title = stringResource(id = CommonStrings.preference_rageshake),
@@ -61,6 +62,30 @@ fun RageshakePreferencesView(
 //                        },
 //                    )
 //                }
+=======
+                if (state.isSupported) {
+                    PreferenceSwitch(
+                        title = stringResource(id = CommonStrings.preference_rageshake),
+                        isChecked = state.isEnabled,
+                        onCheckedChange = ::onEnabledChanged
+                    )
+                    PreferenceSlide(
+                        title = stringResource(id = R.string.settings_rageshake_detection_threshold),
+                        // summary = stringResource(id = CommonStrings.settings_rageshake_detection_threshold_summary),
+                        value = state.sensitivity,
+                        enabled = state.isEnabled,
+                        // 5 possible values - steps are in ]0, 1[
+                        steps = 3,
+                        onValueChange = ::onSensitivityChanged
+                    )
+                } else {
+                    ListItem(
+                        content = {
+                            Text("Rageshaking is not supported by your device")
+                        },
+                    )
+                }
+>>>>>>> main-element
             }
         }
         // :tchap: end

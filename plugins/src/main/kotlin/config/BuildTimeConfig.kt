@@ -28,10 +28,18 @@ object BuildTimeConfig {
     const val URL_LOGO: String = "https://tchap.gouv.fr/vector-icons/300.png"
 
     val URL_COPYRIGHT: String? = null
+<<<<<<< HEAD
 
     // TCHAP : specific URL
     const val URL_POLICY = "https://tchap.numerique.gouv.fr/politique-de-confidentialite"
 
+=======
+    val URL_ACCEPTABLE_USE: String? = null
+    val URL_PRIVACY: String? = null
+    val URL_POLICY: String? = null
+    val OAUTH_CLIENT_URL_PATH: String? = "apps/android"
+    val SERVICES_MAPTILER_BASE_URL: String? = null
+>>>>>>> main-element
     val SERVICES_MAPTILER_APIKEY: String? = null
     val SERVICES_POSTHOG_HOST: String? = null
     val SERVICES_POSTHOG_APIKEY: String? = null

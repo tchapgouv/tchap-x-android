@@ -23,10 +23,15 @@ fun MatrixBadgeRowMolecule(
     modifier: Modifier = Modifier,
 ) {
     FlowRow(
+<<<<<<< HEAD
         // TCHAP : Remove padding and add top = 8.dp in parent if necessary
 //        modifier = modifier
 //            .padding(start = 16.dp, end = 16.dp, top = 8.dp),
         modifier = modifier,
+=======
+        modifier = modifier
+            .padding(start = 16.dp, end = 16.dp),
+>>>>>>> main-element
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {

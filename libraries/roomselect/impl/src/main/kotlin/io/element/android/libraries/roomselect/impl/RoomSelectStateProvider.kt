@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
 import io.element.android.libraries.matrix.api.core.RoomAlias
 import io.element.android.libraries.matrix.api.core.RoomId
+import io.element.android.libraries.matrix.ui.components.aMatrixUser
 import io.element.android.libraries.matrix.ui.components.aSelectRoomInfo
 import io.element.android.libraries.matrix.ui.model.SelectRoomInfo
 import io.element.android.libraries.roomselect.api.RoomSelectMode
@@ -40,18 +41,26 @@ open class RoomSelectStateProvider : PreviewParameterProvider<RoomSelectState> {
                 mode = RoomSelectMode.Share,
                 resultState = SearchBarResultState.Results(aRoomSelectRoomList()),
             ),
+            aRoomSelectState(
+                mode = RoomSelectMode.Share,
+                resultState = SearchBarResultState.Results(aRoomSelectRoomList()),
+                selectedRooms = aRoomSelectRoomList().subList(0, 1),
+                maxNumberOfRooms = 1,
+            ),
         )
 }
 
 internal fun aRoomSelectState(
     mode: RoomSelectMode = RoomSelectMode.Forward,
-    resultState: SearchBarResultState<ImmutableList<SelectRoomInfo>> = SearchBarResultState.Initial(),
+    maxNumberOfRooms: Int = 10,
+    resultState: SearchBarResultState<ImmutableList<SelectRoomInfo>> = SearchBarResultState.Initial,
     searchQuery: String = "",
     isSearchActive: Boolean = false,
     selectedRooms: ImmutableList<SelectRoomInfo> = persistentListOf(),
-    eventSink: (RoomSelectEvents) -> Unit = {},
+    eventSink: (RoomSelectEvent) -> Unit = {},
 ) = RoomSelectState(
     mode = mode,
+    maxNumberOfRooms = maxNumberOfRooms,
     resultState = resultState,
     searchQuery = TextFieldState(initialText = searchQuery),
     isSearchActive = isSearchActive,
@@ -71,5 +80,13 @@ internal fun aRoomSelectRoomList() = persistentListOf(
     ),
     aSelectRoomInfo(
         roomId = RoomId("!room3:domain"),
+        name = "Alice",
+        heroes = persistentListOf(
+            aMatrixUser(id = "@alice:example.org", displayName = "Alice"),
+        ),
+        isDm = true,
+    ),
+    aSelectRoomInfo(
+        roomId = RoomId("!room4:domain"),
     ),
 )

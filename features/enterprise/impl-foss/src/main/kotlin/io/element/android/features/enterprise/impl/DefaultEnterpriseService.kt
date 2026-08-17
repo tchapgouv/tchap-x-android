@@ -15,7 +15,9 @@ import fr.gouv.tchap.android.features.enterprise.api.HomeserverConfiguration
 import io.element.android.compound.colors.SemanticColorsLightDark
 import io.element.android.features.enterprise.api.BugReportUrl
 import io.element.android.features.enterprise.api.EnterpriseService
+import io.element.android.libraries.matrix.api.UrlContentFetcher
 import io.element.android.libraries.matrix.api.core.SessionId
+import io.element.android.libraries.wellknown.api.ElementWellKnown
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlin.random.Random
@@ -28,6 +30,7 @@ class DefaultEnterpriseService(
     override var selectedHomeserver: Int = -1
 
     override suspend fun isEnterpriseUser(sessionId: SessionId) = false
+<<<<<<< HEAD
 
     override suspend fun tweakMasUrl(url: String, homeserver: String) = url
 
@@ -44,6 +47,10 @@ class DefaultEnterpriseService(
         return homeservers[selectedHomeserver]
     }
 
+=======
+    override suspend fun tweakMasUrl(url: String, homeserver: String, urlContentFetcher: UrlContentFetcher) = url
+    override fun defaultHomeserverList(): List<String> = emptyList()
+>>>>>>> main-element
     override suspend fun isAllowedToConnectToHomeserver(homeserverUrl: String) = true
 
     override suspend fun overrideBrandColor(sessionId: SessionId?, brandColor: String?) = Unit
@@ -64,4 +71,8 @@ class DefaultEnterpriseService(
     }
 
     override fun getNoisyNotificationChannelId(sessionId: SessionId): String? = null
+
+    override fun overriddenElementWellKnown(): ElementWellKnown? = null
+
+    override fun essConfigEndpointUrl(domain: String): String? = null
 }

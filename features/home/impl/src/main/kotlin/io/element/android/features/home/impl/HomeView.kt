@@ -14,11 +14,15 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.plus
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -67,6 +71,8 @@ import io.element.android.libraries.designsystem.theme.components.HorizontalFloa
 import io.element.android.libraries.designsystem.theme.components.HorizontalFloatingToolbarSeparator
 import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.Scaffold
+import io.element.android.libraries.designsystem.utils.lazyColumnContentPadding
+import io.element.android.libraries.designsystem.utils.scaffoldScrollableContentInsets
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarHost
 import io.element.android.libraries.designsystem.utils.snackbar.rememberSnackbarHostState
 import io.element.android.libraries.matrix.api.core.RoomId
@@ -227,6 +233,7 @@ private fun HomeScaffold(
             )
         },
         floatingActionButton = {
+<<<<<<< HEAD
             // TCHAP : Disable navigation bar for external users
             if (!currentUserIsExternal) {
                 val coroutineScope = rememberCoroutineScope()
@@ -238,6 +245,24 @@ private fun HomeScaffold(
                             val lazyListStateTarget = when (item) {
                                 HomeNavigationBarItem.Chats -> roomsLazyListState
                                 HomeNavigationBarItem.Spaces -> spacesLazyListState
+=======
+            val coroutineScope = rememberCoroutineScope()
+            HomeBottomBar(
+                // The Scaffold uses top-only insets so the scrollable content can go edge-to-edge behind the
+                // navigation bar, so the floating toolbar has to apply the bottom inset itself to avoid overlapping it.
+                modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars),
+                currentHomeNavigationBarItem = state.currentHomeNavigationBarItem,
+                onItemClick = { item ->
+                    // scroll to top if selecting the same item
+                    if (item == state.currentHomeNavigationBarItem) {
+                        val lazyListStateTarget = when (item) {
+                            HomeNavigationBarItem.Chats -> roomsLazyListState
+                            HomeNavigationBarItem.Spaces -> spacesLazyListState
+                        }
+                        coroutineScope.launch {
+                            if (lazyListStateTarget.firstVisibleItemIndex > 10) {
+                                lazyListStateTarget.scrollToItem(10)
+>>>>>>> main-element
                             }
                             coroutineScope.launch {
                                 if (lazyListStateTarget.firstVisibleItemIndex > 10) {
@@ -267,7 +292,15 @@ private fun HomeScaffold(
             }
         },
         floatingActionButtonPosition = FabPosition.Center,
+        contentWindowInsets = scaffoldScrollableContentInsets,
         content = { padding ->
+            val outerPadding = PaddingValues(
+                start = padding.calculateStartPadding(LocalLayoutDirection.current),
+                end = padding.calculateEndPadding(LocalLayoutDirection.current),
+                // Remove these two lines once https://issuetracker.google.com/issues/436432313 has been fixed
+                bottom = padding.calculateBottomPadding(),
+                top = padding.calculateTopPadding()
+            )
             val contentPadding = PaddingValues(
                 bottom = 96.dp,
             )
@@ -286,18 +319,10 @@ private fun HomeScaffold(
                         onViewServiceStatusClick = onViewServiceStatusClick,
                         onRoomClick = ::onRoomClick,
                         onCreateRoomClick = onStartChatClick,
-                        contentPadding = contentPadding,
+                        contentPadding = lazyColumnContentPadding + contentPadding,
                         modifier = Modifier
-                            .padding(
-                                PaddingValues(
-                                    start = padding.calculateStartPadding(LocalLayoutDirection.current),
-                                    end = padding.calculateEndPadding(LocalLayoutDirection.current),
-                                    // Remove these two lines once https://issuetracker.google.com/issues/436432313 has been fixed
-                                    bottom = padding.calculateBottomPadding(),
-                                    top = padding.calculateTopPadding()
-                                )
-                            )
-                            .consumeWindowInsets(padding)
+                            .padding(outerPadding)
+                            .consumeWindowInsets(outerPadding)
                             .hazeSource(state = hazeState)
                     )
                     SpaceFiltersView(roomListState.spaceFiltersState)
@@ -306,10 +331,10 @@ private fun HomeScaffold(
                     HomeSpacesView(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(padding)
-                            .consumeWindowInsets(padding)
+                            .padding(outerPadding)
+                            .consumeWindowInsets(outerPadding)
                             .hazeSource(state = hazeState),
-                        contentPadding = contentPadding,
+                        contentPadding = lazyColumnContentPadding + contentPadding,
                         state = state.homeSpacesState,
                         lazyListState = spacesLazyListState,
                         // TCHAP : Space default action is now conversation filtering

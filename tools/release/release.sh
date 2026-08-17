@@ -318,9 +318,55 @@ else
     exit 1
   fi
 
+<<<<<<< HEAD
   printf "\n================================================================================\n"
   printf "Resuming: please provide the release notes for the subsequent steps (Play Store notes, internal message).\n"
   get_release_notes "${version}" "${appName}"
+=======
+# Ensure version is OK
+versionsFileBak="${versionsFile}.bak"
+cp ${versionsFile} ${versionsFileBak}
+sed "s/private const val versionYear = .*/private const val versionYear = ${versionYear}/" ${versionsFileBak} > ${versionsFile}
+sed "s/private const val versionMonth = .*/private const val versionMonth = ${versionMonthNoLeadingZero}/" ${versionsFile}    > ${versionsFileBak}
+sed "s/private const val versionReleaseNumber = .*/private const val versionReleaseNumber = ${versionReleaseNumber}/" ${versionsFileBak} > ${versionsFile}
+rm ${versionsFileBak}
+
+printf -v versionReleaseNumber2Digits "%02d" "${versionReleaseNumber}"
+versionCode="20${versionYear}${versionMonth}${versionReleaseNumber2Digits}0"
+
+# Update the file aaptDump.txt with the new version
+aaptDumpFile="./tools/manifest/gplay/release/aaptDump.txt"
+sed "s/versionCode='[0-9]*'/versionCode='${versionCode}'/" ${aaptDumpFile} > ${aaptDumpFile}.bak
+sed "s/versionName='[0-9]*\.[0-9]*\.[0-9]*'/versionName='${version}'/" ${aaptDumpFile}.bak > ${aaptDumpFile}
+rm ${aaptDumpFile}.bak
+
+git commit -a -m "Setting version for the release ${version}"
+
+printf "\n================================================================================\n"
+printf "Creating fastlane file...\n"
+fastlaneFile="${versionCode}.txt"
+fastlanePathFile="./fastlane/metadata/android/en-US/changelogs/${fastlaneFile}"
+printf "Main changes in this version: bug fixes and improvements.\nFull changelog: https://github.com/element-hq/element-x-android/releases" > "${fastlanePathFile}"
+
+read -r -p "I have created the file ${fastlanePathFile}, please edit it and press enter to continue. "
+git add "${fastlanePathFile}"
+git commit -a -m "Adding fastlane file for version ${version}"
+
+printf "\n================================================================================\n"
+printf "OK, finishing the release...\n"
+git flow release finish "${version}"
+
+printf "\n================================================================================\n"
+read -r -p "Done, push the branch 'main' and the new tag (yes/no) default to yes? " doPush
+doPush=${doPush:-yes}
+
+if [ "${doPush}" == "yes" ]; then
+  printf "Pushing branch 'main' and tag 'v%s'...\n" "${version}"
+  git push origin main
+  git push origin "v${version}"
+else
+    printf "Not pushing, do not forget to push manually!\n"
+>>>>>>> main-element
 fi
 
 printf "\n================================================================================\n"

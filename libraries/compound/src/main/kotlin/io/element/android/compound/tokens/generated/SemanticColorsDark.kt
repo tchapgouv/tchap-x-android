@@ -23,6 +23,7 @@ import io.element.android.compound.tokens.generated.internal.DarkColorTokens
  */
 @OptIn(CoreColorToken::class)
 val compoundColorsDark = SemanticColors(
+<<<<<<< HEAD
     bgAccentHovered = DarkColorTokens.colorBlue500,
     bgAccentPressed = DarkColorTokens.colorAlphaBlue500,
     bgAccentRest = DarkColorTokens.colorBlue600,
@@ -31,6 +32,17 @@ val compoundColorsDark = SemanticColors(
     bgActionPrimaryHovered = DarkColorTokens.colorBlue500,
     bgActionPrimaryPressed = DarkColorTokens.colorAlphaGray700,
     bgActionPrimaryRest = DarkColorTokens.colorBlue600,
+=======
+    bgAccentHovered = DarkColorTokens.colorGreen1000,
+    bgAccentPressed = DarkColorTokens.colorGreen1100,
+    bgAccentRest = DarkColorTokens.colorGreen900,
+    bgAccentSelected = DarkColorTokens.colorAlphaGreen300,
+    bgAccentSubtle = DarkColorTokens.colorGreen200,
+    bgActionPrimaryDisabled = DarkColorTokens.colorGray700,
+    bgActionPrimaryHovered = DarkColorTokens.colorGray1200,
+    bgActionPrimaryPressed = DarkColorTokens.colorGray1100,
+    bgActionPrimaryRest = DarkColorTokens.colorGray1400,
+>>>>>>> main-element
     bgActionSecondaryHovered = DarkColorTokens.colorAlphaGray200,
     bgActionSecondaryPressed = DarkColorTokens.colorAlphaGray300,
     bgActionSecondaryRest = DarkColorTokens.colorThemeBg,
@@ -62,7 +74,15 @@ val compoundColorsDark = SemanticColors(
     bgSubtlePrimary = DarkColorTokens.colorBlue200,
     bgSubtleSecondary = DarkColorTokens.colorGray200,
     bgSubtleSecondaryLevel0 = DarkColorTokens.colorThemeBg,
+<<<<<<< HEAD
     bgSuccessSubtle = DarkColorTokens.colorGreen400,
+=======
+    bgSubtleTertiary = DarkColorTokens.colorGray100,
+    bgSuccessHovered = DarkColorTokens.colorGreen1000,
+    bgSuccessPressed = DarkColorTokens.colorGreen1100,
+    bgSuccessRest = DarkColorTokens.colorGreen900,
+    bgSuccessSubtle = DarkColorTokens.colorGreen200,
+>>>>>>> main-element
     borderAccentPrimary = DarkColorTokens.colorGreen900,
     borderAccentSubtle = DarkColorTokens.colorBlue700,
     borderCriticalHovered = DarkColorTokens.colorRed1000,
@@ -74,6 +94,7 @@ val compoundColorsDark = SemanticColors(
     borderInteractiveHovered = DarkColorTokens.colorGray1100,
     borderInteractivePrimary = DarkColorTokens.colorGray800,
     borderInteractiveSecondary = DarkColorTokens.colorGray600,
+    borderSuccessPrimary = DarkColorTokens.colorGreen900,
     borderSuccessSubtle = DarkColorTokens.colorGreen500,
     gradientActionStop1 = DarkColorTokens.colorBlue600,
     gradientActionStop2 = DarkColorTokens.colorBlue600,
@@ -113,13 +134,19 @@ val compoundColorsDark = SemanticColors(
     iconSuccessPrimary = DarkColorTokens.colorBlue1200,
     iconTertiary = DarkColorTokens.colorGray800,
     iconTertiaryAlpha = DarkColorTokens.colorAlphaGray800,
+    iconWarningPrimary = DarkColorTokens.colorOrange900,
     separatorPrimary = DarkColorTokens.colorGray400,
     separatorSecondary = DarkColorTokens.colorGray300,
     textActionAccent = DarkColorTokens.colorBlue600,
     textActionPrimary = DarkColorTokens.colorGray1400,
+<<<<<<< HEAD
     textBadgeAccent = DarkColorTokens.colorGray1400,
     textBadgeCritical = DarkColorTokens.colorRed1200,
     textBadgeDefault = DarkColorTokens.colorGray1200,
+=======
+    textActionSuccess = DarkColorTokens.colorGreen900,
+    textBadgeAccent = DarkColorTokens.colorGreen1100,
+>>>>>>> main-element
     textBadgeInfo = DarkColorTokens.colorBlue1100,
     textBadgePrimary = DarkColorTokens.colorThemeBg,
     textBadgeSecondary = DarkColorTokens.colorGray1200,
@@ -138,6 +165,11 @@ val compoundColorsDark = SemanticColors(
     textOnSolidPrimary = DarkColorTokens.colorGray1400,
     textPrimary = DarkColorTokens.colorGray1400,
     textSecondary = DarkColorTokens.colorGray900,
+<<<<<<< HEAD
     textSuccessPrimary = DarkColorTokens.colorGreen1000,
+=======
+    textSuccessPrimary = DarkColorTokens.colorGreen900,
+    textWarningPrimary = DarkColorTokens.colorOrange900,
+>>>>>>> main-element
     isLight = false,
 )

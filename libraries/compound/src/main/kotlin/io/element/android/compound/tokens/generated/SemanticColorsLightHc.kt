@@ -23,6 +23,7 @@ import io.element.android.compound.tokens.generated.internal.LightHcColorTokens
  */
 @OptIn(CoreColorToken::class)
 val compoundColorsHcLight = SemanticColors(
+<<<<<<< HEAD
     bgAccentHovered = LightHcColorTokens.colorBlue1000,
     bgAccentPressed = LightHcColorTokens.colorBlue1100,
     bgAccentRest = LightHcColorTokens.colorBlue900,
@@ -31,6 +32,17 @@ val compoundColorsHcLight = SemanticColors(
     bgActionPrimaryHovered = LightHcColorTokens.colorBlue800,
     bgActionPrimaryPressed = LightHcColorTokens.colorBlue700,
     bgActionPrimaryRest = LightHcColorTokens.colorBlue900,
+=======
+    bgAccentHovered = LightHcColorTokens.colorGreen1000,
+    bgAccentPressed = LightHcColorTokens.colorGreen1100,
+    bgAccentRest = LightHcColorTokens.colorGreen900,
+    bgAccentSelected = LightHcColorTokens.colorAlphaGreen300,
+    bgAccentSubtle = LightHcColorTokens.colorGreen200,
+    bgActionPrimaryDisabled = LightHcColorTokens.colorGray700,
+    bgActionPrimaryHovered = LightHcColorTokens.colorGray1200,
+    bgActionPrimaryPressed = LightHcColorTokens.colorGray1100,
+    bgActionPrimaryRest = LightHcColorTokens.colorGray1400,
+>>>>>>> main-element
     bgActionSecondaryHovered = LightHcColorTokens.colorAlphaGray200,
     bgActionSecondaryPressed = LightHcColorTokens.colorAlphaGray300,
     bgActionSecondaryRest = LightHcColorTokens.colorThemeBg,
@@ -62,7 +74,15 @@ val compoundColorsHcLight = SemanticColors(
     bgSubtlePrimary = LightHcColorTokens.colorBlue400,
     bgSubtleSecondary = LightHcColorTokens.colorGray300,
     bgSubtleSecondaryLevel0 = LightHcColorTokens.colorGray300,
+<<<<<<< HEAD
     bgSuccessSubtle = LightHcColorTokens.colorGreen400,
+=======
+    bgSubtleTertiary = LightHcColorTokens.colorGray100,
+    bgSuccessHovered = LightHcColorTokens.colorGreen1000,
+    bgSuccessPressed = LightHcColorTokens.colorGreen1100,
+    bgSuccessRest = LightHcColorTokens.colorGreen900,
+    bgSuccessSubtle = LightHcColorTokens.colorGreen200,
+>>>>>>> main-element
     borderAccentPrimary = LightHcColorTokens.colorGreen900,
     borderAccentSubtle = LightHcColorTokens.colorBlue700,
     borderCriticalHovered = LightHcColorTokens.colorRed1000,
@@ -74,6 +94,7 @@ val compoundColorsHcLight = SemanticColors(
     borderInteractiveHovered = LightHcColorTokens.colorGray1100,
     borderInteractivePrimary = LightHcColorTokens.colorGray800,
     borderInteractiveSecondary = LightHcColorTokens.colorGray600,
+    borderSuccessPrimary = LightHcColorTokens.colorGreen900,
     borderSuccessSubtle = LightHcColorTokens.colorGreen500,
     gradientActionStop1 = LightHcColorTokens.colorBlue1200,
     gradientActionStop2 = LightHcColorTokens.colorBlue1200,
@@ -113,13 +134,19 @@ val compoundColorsHcLight = SemanticColors(
     iconSuccessPrimary = LightHcColorTokens.colorBlue1200,
     iconTertiary = LightHcColorTokens.colorGray800,
     iconTertiaryAlpha = LightHcColorTokens.colorAlphaGray800,
+    iconWarningPrimary = LightHcColorTokens.colorOrange900,
     separatorPrimary = LightHcColorTokens.colorGray400,
     separatorSecondary = LightHcColorTokens.colorGray300,
     textActionAccent = LightHcColorTokens.colorBlue900,
     textActionPrimary = LightHcColorTokens.colorGray1400,
+<<<<<<< HEAD
     textBadgeAccent = LightHcColorTokens.colorThemeBg,
     textBadgeCritical = LightHcColorTokens.colorRed1100,
     textBadgeDefault = LightHcColorTokens.colorGray1100,
+=======
+    textActionSuccess = LightHcColorTokens.colorGreen900,
+    textBadgeAccent = LightHcColorTokens.colorGreen1100,
+>>>>>>> main-element
     textBadgeInfo = LightHcColorTokens.colorBlue1100,
     textBadgePrimary = LightHcColorTokens.colorThemeBg,
     textBadgeSecondary = LightHcColorTokens.colorGray1100,
@@ -138,6 +165,11 @@ val compoundColorsHcLight = SemanticColors(
     textOnSolidPrimary = LightHcColorTokens.colorThemeBg,
     textPrimary = LightHcColorTokens.colorGray1400,
     textSecondary = LightHcColorTokens.colorGray900,
+<<<<<<< HEAD
     textSuccessPrimary = LightHcColorTokens.colorGreen1000,
+=======
+    textSuccessPrimary = LightHcColorTokens.colorGreen900,
+    textWarningPrimary = LightHcColorTokens.colorOrange900,
+>>>>>>> main-element
     isLight = true,
 )
