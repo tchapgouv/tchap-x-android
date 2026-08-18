@@ -109,10 +109,13 @@ androidComponents {
             }
         }
 
-        variant.resValues.put(variant.makeResValueKey("string", "google_app_id"),
+        variant.resValues.put(
+            variant.makeResValueKey("string", "google_app_id"),
             ResValue(appId, null)
         )
-        variant.buildConfigFields?.put("pushConfigGatewayURL",
+
+        variant.buildConfigFields?.put(
+            "pushConfigGatewayURL",
             BuildConfigField("String", "\"$gatewayUrl\"", null)
         )
     }

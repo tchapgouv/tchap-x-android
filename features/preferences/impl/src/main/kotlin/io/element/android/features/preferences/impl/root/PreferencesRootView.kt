@@ -154,7 +154,6 @@ fun PreferencesRootView(
     }
 }
 
-        
 @Composable
 private fun BoxScope.UserStatusUpdateIndicator(updateStatusAction: AsyncAction<Unit>) {
     AsyncActionIndicator(

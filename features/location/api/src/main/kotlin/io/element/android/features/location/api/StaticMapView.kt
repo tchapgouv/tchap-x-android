@@ -8,8 +8,8 @@
 
 package io.element.android.features.location.api
 
-import android.util.Size
 import android.graphics.Bitmap
+import android.util.Size
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -27,8 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -38,11 +36,11 @@ import coil3.asImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
+import coil3.request.SuccessResult
 import fr.gouv.tchap.android.features.location.api.DefaultTchapMapRenderer
 import fr.gouv.tchap.android.features.location.api.FakeTchapMapRenderer
 import fr.gouv.tchap.android.features.location.api.LocationUiData
 import fr.gouv.tchap.android.features.location.api.TchapMapRenderer
-import coil3.request.SuccessResult
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.location.api.internal.StaticMapPlaceholder
 import io.element.android.features.location.api.internal.StaticMapUrlBuilder

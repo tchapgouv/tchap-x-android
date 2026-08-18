@@ -1,7 +1,6 @@
 import com.android.build.api.variant.BuildConfigField
 import config.BuildTimeConfig
 import extension.buildConfigFieldStr
-import org.gradle.language.nativeplatform.internal.Dimensions.libraryVariants
 
 /*
  * Copyright (c) 2025 Element Creations Ltd.
@@ -67,7 +66,8 @@ androidComponents {
             else -> ""
         }
 
-        variant.buildConfigFields?.put("PUSHER_APP_ID",
+        variant.buildConfigFields?.put(
+            "PUSHER_APP_ID",
             BuildConfigField("String", "\"${BuildTimeConfig.APPLICATION_ID}$flavorSuffix\"", null)
         )
     }
