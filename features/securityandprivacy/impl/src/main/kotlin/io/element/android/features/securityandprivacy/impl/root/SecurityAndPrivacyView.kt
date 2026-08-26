@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import io.element.android.appconfig.LearnMoreConfig
@@ -416,11 +417,14 @@ private fun HistoryVisibilitySection(
 ) {
     SecurityAndPrivacySection(
         title = stringResource(R.string.screen_security_and_privacy_room_history_section_header),
-        subtitle = stringWithLink(
-            textRes = R.string.screen_security_and_privacy_room_history_section_footer,
-            url = LearnMoreConfig.HISTORY_VISIBLE_URL,
-            onLinkClick = onLinkClick,
-        ),
+        // :tchap: Hide unnecessary "Learn more" link
+//        subtitle = stringWithLink(
+//            textRes = R.string.screen_security_and_privacy_room_history_section_footer,
+//            url = LearnMoreConfig.HISTORY_VISIBLE_URL,
+//            onLinkClick = onLinkClick,
+//        ),
+        subtitle = buildAnnotatedString { append(stringResource(R.string.screen_security_and_privacy_room_history_section_footer)) },
+        // :tchap: end
         modifier = modifier,
     ) {
         for (availableOption in availableOptions) {
