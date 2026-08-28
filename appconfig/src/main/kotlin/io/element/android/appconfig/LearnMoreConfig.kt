@@ -10,17 +10,19 @@ package io.element.android.appconfig
 
 object LearnMoreConfig {
     const val ENCRYPTION_URL: String = "https://element.io/help#encryption"
-    const val DEVICE_VERIFICATION_URL: String = "https://element.io/help#encryption-device-verification"
-    const val SECURE_BACKUP_URL: String = "https://element.io/help#encryption5"
+
+    // :tchap: Change DEVICE_VERIFICATION_URL & SECURE_BACKUP_URL URLS
+    const val DEVICE_VERIFICATION_URL: String = "https://aide.tchap.numerique.gouv.fr/fr/article/comment-verifier-un-nouvel-appareil-sur-tchap-xm0b0y/"
+    const val SECURE_BACKUP_URL: String = "https://aide.tchap.numerique.gouv.fr/fr/article/quest-ce-que-la-sauvegarde-automatique-des-messages-1sdg43v/"
+    // :tchap: end
+
     const val IDENTITY_CHANGE_URL: String = "https://element.io/help#encryption18"
 
-    // TCHAP - Add FAQ_URL in Preferences
+    // :tchap: Change FAQ_URL, HOW_TO_CREATE_SPACE & HOW_TO_RENEW_MY_ACCOUNT URLS
     const val FAQ_URL: String = "https://aide.tchap.numerique.gouv.fr"
-
-    // TCHAP - Add HOW_TO_CREATE_SPACE on create space header
     const val HOW_TO_CREATE_SPACE: String = "https://aide.tchap.numerique.gouv.fr/fr/article/comment-creer-un-espace-sur-tchap-web-1wmlenx/"
-
-    // TCHAP - Add HOW_TO_RENEW_MY_ACCOUNT on account expired view
     const val HOW_TO_RENEW_MY_ACCOUNT = "https://aide.tchap.numerique.gouv.fr/fr/article/renouvellement-de-votre-compte-tchap-expiration-1g4e6xh/"
+    // :tchap: end
+
     const val HISTORY_VISIBLE_URL: String = "https://element.io/en/help#e2ee-history-sharing"
 }

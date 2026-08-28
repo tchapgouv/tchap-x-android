@@ -164,7 +164,7 @@ Nous ne recommandons pas d’activer le chiffrement pour les salons que tout le 
   <string name="screen_security_and_privacy_room_directory_visibility_toggle_description">"Permet d’être trouvé en recherchant dans l’annuaire public."</string>
   <string name="screen_security_and_privacy_room_directory_visibility_toggle_title">"Visible dans l’annuaire public"</string>
   <string name="screen_security_and_privacy_room_history_anyone_option_title">"Tout le monde (l’historique est public)"</string>
-  <string name="screen_security_and_privacy_room_history_section_footer">"Les changements n’affecteront pas les anciens messages, seulement les nouveaux. %1$s"</string>
+  <string name="screen_security_and_privacy_room_history_section_footer">"Les changements n’affecteront pas les anciens messages, seulement les nouveaux."</string><!-- Tchap: Custom string -->
   <string name="screen_security_and_privacy_room_history_section_header">"Qui peux lire l’historique"</string>
   <string name="screen_security_and_privacy_room_history_since_invite_option_title">"Seulement les membres, depuis leur invitation"</string>
   <string name="screen_security_and_privacy_room_history_since_selecting_option_title">"Membres (historique complet)"</string>
