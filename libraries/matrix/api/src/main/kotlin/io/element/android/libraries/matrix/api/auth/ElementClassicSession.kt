@@ -11,6 +11,9 @@ import io.element.android.libraries.matrix.api.core.UserId
 
 data class ElementClassicSession(
     val userId: UserId,
+    // :tchap: Retrieve email from Tchap Classique
+    val email: String?,
+    // :tchap: end
     val homeserverUrl: String?,
     val secrets: String?,
     val roomKeysVersion: String?,
