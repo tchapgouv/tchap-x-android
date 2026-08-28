@@ -16,16 +16,14 @@ import androidx.core.text.inSpans
 import androidx.core.text.toSpannable
 import com.google.common.truth.Truth.assertThat
 import io.element.android.tests.testutils.WarmUpRule
+import io.element.android.tests.testutils.robolectric.RobolectricTest
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.shadow.api.Shadow.newInstanceOf
 
-@RunWith(RobolectricTestRunner::class)
-class LinkifierHelperTest {
+class LinkifierHelperTest : RobolectricTest() {
     @get:Rule
     val warmUpRule = WarmUpRule()
 
@@ -87,6 +85,45 @@ class LinkifierHelperTest {
         val urlSpans = result.toSpannable().getSpans<URLSpan>()
         assertThat(urlSpans.size).isEqualTo(1)
         assertThat(urlSpans.first().url).isEqualTo("tel:1234")
+    }
+
+    @Test
+    fun `linkification ignores fediverse handle`() {
+        val text = "Follow me at @name@server.tld"
+        val result = LinkifyHelper.linkify(text)
+        val urlSpans = result.toSpannable().getSpans<URLSpan>()
+        assertThat(urlSpans).isEmpty()
+    }
+
+    @Test
+    fun `linkification ignores fediverse handle at the start of the text`() {
+        val text = "@name@server.tld posted this"
+        val result = LinkifyHelper.linkify(text)
+        val urlSpans = result.toSpannable().getSpans<URLSpan>()
+        assertThat(urlSpans).isEmpty()
+    }
+
+    @Test
+    fun `linkification finds email next to a fediverse handle`() {
+        val text = "@name@server.tld and john@doe.com"
+        val result = LinkifyHelper.linkify(text)
+        val urlSpans = result.toSpannable().getSpans<URLSpan>()
+        assertThat(urlSpans.size).isEqualTo(1)
+        assertThat(urlSpans.first().url).isEqualTo("mailto:john@doe.com")
+    }
+
+    @Test
+    fun `linkification keeps an existing mailto span preceded by an at sign`() {
+        val text = buildSpannedString {
+            append("Mail me @")
+            inSpans(URLSpan("mailto:john@doe.com")) {
+                append("john@doe.com")
+            }
+        }
+        val result = LinkifyHelper.linkify(text)
+        val urlSpans = result.toSpannable().getSpans<URLSpan>()
+        assertThat(urlSpans.size).isEqualTo(1)
+        assertThat(urlSpans.first().url).isEqualTo("mailto:john@doe.com")
     }
 
     @Test

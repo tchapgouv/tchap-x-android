@@ -97,7 +97,7 @@ internal class DefaultInvitePeoplePresenterTest {
             resultState.searchQuery.setTextAndPlaceCursorAtEnd("some query")
             assertThat(awaitItemAsDefault().searchQuery.text.toString()).isEqualTo("some query")
             resultState.eventSink(InvitePeopleEvents.CloseSearch)
-            skipItems(2)
+            skipItems(1)
             awaitItemAsDefault().also {
                 assertThat(it.isSearchActive).isFalse()
                 assertThat(it.searchQuery.text.toString()).isEmpty()
@@ -118,7 +118,7 @@ internal class DefaultInvitePeoplePresenterTest {
             initialState.searchQuery.setTextAndPlaceCursorAtEnd("some query")
             assertThat(repository.providedQuery).isEqualTo("some query")
             repository.emitState(UserSearchResultState(results = emptyList(), isSearching = true))
-            skipItems(3)
+            skipItems(2)
             awaitItemAsDefault().also { state ->
                 assertThat(state.searchResults).isInstanceOf(SearchBarResultState.Initial::class.java)
                 assertThat(state.showSearchLoader).isTrue()
@@ -147,7 +147,6 @@ internal class DefaultInvitePeoplePresenterTest {
 
             assertThat(repository.providedQuery).isEqualTo("some query")
             repository.emitStateWithUsers(users = aMatrixUserList())
-            skipItems(1)
 
             val resultState = awaitItemAsDefault()
             assertThat(resultState.searchResults).isInstanceOf(SearchBarResultState.Results::class.java)
@@ -200,7 +199,6 @@ internal class DefaultInvitePeoplePresenterTest {
 
             assertThat(repository.providedQuery).isEqualTo("some query")
             repository.emitStateWithUsers(users = aMatrixUserList())
-            skipItems(1)
 
             val resultState = awaitItemAsDefault()
             assertThat(resultState.searchResults).isInstanceOf(SearchBarResultState.Results::class.java)
@@ -267,7 +265,6 @@ internal class DefaultInvitePeoplePresenterTest {
                     it
                 )
             })
-            skipItems(1)
 
             val resultState = awaitItemAsDefault()
             assertThat(resultState.searchResults).isInstanceOf(SearchBarResultState.Results::class.java)
@@ -331,7 +328,7 @@ internal class DefaultInvitePeoplePresenterTest {
 
             assertThat(repository.providedQuery).isEqualTo("some query")
             repository.emitStateWithUsers(users = aMatrixUserList() + selectedUser)
-            skipItems(2)
+            skipItems(1)
 
             val resultState = awaitItemAsDefault()
             assertThat(resultState.searchResults).isInstanceOf(SearchBarResultState.Results::class.java)
@@ -368,7 +365,6 @@ internal class DefaultInvitePeoplePresenterTest {
 
             assertThat(repository.providedQuery).isEqualTo("some query")
             repository.emitStateWithUsers(users = aMatrixUserList() + selectedUser)
-            skipItems(1)
             awaitItemAsDefault().also { state ->
                 // selectedUser is not selected
                 assertThat(state.searchResults).isInstanceOf(SearchBarResultState.Results::class.java)
@@ -734,7 +730,7 @@ internal class DefaultInvitePeoplePresenterTest {
                     isSearching = true
                 )
             )
-            skipItems(3)
+            skipItems(2)
 
             awaitItemAsDefault().run {
                 assertThat(selectedUsers).containsExactly(alice, bob, charlie)

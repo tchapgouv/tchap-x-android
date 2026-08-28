@@ -262,12 +262,21 @@ if [[ ${is_resuming} == 0 ]]; then
   fi
 
   # Ensure version is OK
-   versionsFileBak="${versionsFile}.bak"
-   cp ${versionsFile} ${versionsFileBak}
-   sed "s/private const val versionYear = .*/private const val versionYear = ${versionYear}/" ${versionsFileBak} > ${versionsFile}
-   sed "s/private const val versionMonth = .*/private const val versionMonth = ${versionMonthNoLeadingZero}/" ${versionsFile}    > ${versionsFileBak}
-   sed "s/private const val versionReleaseNumber = .*/private const val versionReleaseNumber = ${versionReleaseNumber}/" ${versionsFileBak} > ${versionsFile}
-   rm ${versionsFileBak}
+  versionsFileBak="${versionsFile}.bak"
+  cp ${versionsFile} ${versionsFileBak}
+  sed "s/private const val versionYear = .*/private const val versionYear = ${versionYear}/" ${versionsFileBak} > ${versionsFile}
+  sed "s/private const val versionMonth = .*/private const val versionMonth = ${versionMonthNoLeadingZero}/" ${versionsFile}    > ${versionsFileBak}
+  sed "s/private const val versionReleaseNumber = .*/private const val versionReleaseNumber = ${versionReleaseNumber}/" ${versionsFileBak} > ${versionsFile}
+  rm ${versionsFileBak}
+
+  printf -v versionReleaseNumber2Digits "%02d" "${versionReleaseNumber}"
+  versionCode="20${versionYear}${versionMonth}${versionReleaseNumber2Digits}0"
+
+  # Update the file aaptDump.txt with the new version
+  aaptDumpFile="./tools/manifest/gplay/release/aaptDump.txt"
+  sed "s/versionCode='[0-9]*'/versionCode='${versionCode}'/" ${aaptDumpFile} > ${aaptDumpFile}.bak
+  sed "s/versionName='[0-9]*\.[0-9]*\.[0-9]*'/versionName='${version}'/" ${aaptDumpFile}.bak > ${aaptDumpFile}
+  rm ${aaptDumpFile}.bak
 
   printf "\n================================================================================\n"
   tchapChangesFile="CHANGES_TCHAP.md"
@@ -283,10 +292,9 @@ if [[ ${is_resuming} == 0 ]]; then
   # TCHAP - Disable fastlane
   #printf "\n================================================================================\n"
   #printf "Creating fastlane file...\n"
-  #printf -v versionReleaseNumber2Digits "%02d" "${versionReleaseNumber}"
-  #fastlaneFile="20${versionYear}${versionMonth}${versionReleaseNumber2Digits}0.txt"
+  #fastlaneFile="${versionCode}.txt"
   #fastlanePathFile="./fastlane/metadata/android/en-US/changelogs/${fastlaneFile}"
-  #printf "Main changes in this version: bug fixes and improvements.\nFull changelog: https://github.com/tchapgouv/tchap-x-android/releases" > "${fastlanePathFile}"
+  #printf "Main changes in this version: bug fixes and improvements.\nFull changelog: https://github.com/element-hq/element-x-android/releases" > "${fastlanePathFile}"
   #
   #read -r -p "I have created the file ${fastlanePathFile}, please edit it and press enter to continue. "
   #git add "${fastlanePathFile}"

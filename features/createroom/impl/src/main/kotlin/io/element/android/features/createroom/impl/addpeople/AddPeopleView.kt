@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -37,10 +39,10 @@ fun AddPeopleView(
     modifier: Modifier = Modifier,
     invitePeopleView: @Composable () -> Unit,
 ) {
-    // TCHAP external user
-    LaunchedEffect(onFinish, state.sendInvitesAction.isReady()) {
-        if (state.sendInvitesAction.isReady()) {
-            onFinish()
+    val currentOnFinish by rememberUpdatedState(onFinish)
+    LaunchedEffect(state.sendInvitesAction, state.createRoomFromDmAction) {
+        if (state.sendInvitesAction.isSuccess() || state.createRoomFromDmAction.isSuccess()) {
+            currentOnFinish()
         }
     }
 
@@ -54,8 +56,10 @@ fun AddPeopleView(
             Button(
                 text = stringResource(CommonStrings.action_finish),
                 onClick = {
-                    // TCHAP external user
+                    // :tchap: Open the room to external users if needed, before sending invites
+//                    state.eventSink(InvitePeopleEvents.SendInvites)
                     state.eventSink(InvitePeopleEvents.CheckExternalsAndSendInvites)
+                    // :tchap: end
                 },
                 enabled = state.canInvite,
                 modifier = Modifier

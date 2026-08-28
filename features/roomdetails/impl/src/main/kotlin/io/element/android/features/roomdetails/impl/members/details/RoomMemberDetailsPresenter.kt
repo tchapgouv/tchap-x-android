@@ -137,6 +137,7 @@ class RoomMemberDetailsPresenter(
             showMatrixId = showMatrixId,
             userName = roomUserName ?: userProfileState.userName,
             avatarUrl = roomUserAvatar ?: userProfileState.avatarUrl,
+            displayedStatus = roomMember?.displayedStatus ?: userProfileState.displayedStatus,
             verificationState = verificationState,
             snackbarMessage = snackbarMessage,
             eventSink = ::handleEvent,

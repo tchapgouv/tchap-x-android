@@ -20,7 +20,8 @@ import dev.zacsweers.metro.AssistedInject
 import io.element.android.features.login.impl.accountprovider.AccountProviderDataSource
 import io.element.android.features.login.impl.classic.ElementClassicConnection
 import io.element.android.features.login.impl.classic.ElementClassicConnectionState
-import io.element.android.features.login.impl.login.LoginHelper
+import io.element.android.features.login.impl.login.LoginModeEvent
+import io.element.android.features.login.impl.login.LoginModeState
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.meta.BuildMeta
@@ -35,7 +36,7 @@ class LoginWithClassicPresenter(
     @Assisted private val userId: UserId,
     @Assisted private val navigator: LoginWithClassicNavigator,
     private val featureFlagService: FeatureFlagService,
-    private val loginHelper: LoginHelper,
+    private val loginModePresenter: Presenter<LoginModeState>,
     private val elementClassicConnection: ElementClassicConnection,
     private val accountProviderDataSource: AccountProviderDataSource,
     private val buildMeta: BuildMeta,
@@ -54,7 +55,7 @@ class LoginWithClassicPresenter(
         var loginWithClassicAction by remember {
             mutableStateOf<AsyncAction<Unit>>(AsyncAction.Uninitialized)
         }
-        val loginMode by loginHelper.collectLoginMode()
+        val loginModeState = loginModePresenter.present()
         val elementClassicConnectionState by elementClassicConnection.stateFlow.collectAsState()
 
         // :tchap: tchap-legacy-connection
@@ -91,14 +92,16 @@ class LoginWithClassicPresenter(
                                 // :tchap: end
 
                                 accountProviderDataSource.setUrl(accountProvider)
-                                loginHelper.submit(
-                                    isAccountCreation = false,
-                                    homeserverUrl = accountProvider,
-                                    resolvedHomeserverUrl = currentState.elementClassicSession.homeserverUrl,
-                                    // :tchap: Use email from MXID as loginHint
-//                                    loginHint = "mxid:" + elementClassicUserId.value,
-                                    loginHint = emailFromMxID,
-                                    // :tchap: end
+                                loginModeState.eventSink(
+                                    LoginModeEvent.Submit(
+                                        isAccountCreation = false,
+                                        homeserverUrl = accountProvider,
+                                        resolvedHomeserverUrl = currentState.elementClassicSession.homeserverUrl,
+                                        // :tchap: Use email from MXID as loginHint
+//                                        loginHint = "mxid:" + elementClassicUserId.value,
+                                        loginHint = emailFromMxID,
+                                        // :tchap: end
+                                    )
                                 )
                             }
                         }
@@ -108,7 +111,7 @@ class LoginWithClassicPresenter(
                 }
                 LoginWithClassicEvent.ClearError -> {
                     loginWithClassicAction = AsyncAction.Uninitialized
-                    loginHelper.clearError()
+                    loginModeState.eventSink(LoginModeEvent.ClearError)
                 }
             }
         }
@@ -122,7 +125,7 @@ class LoginWithClassicPresenter(
             userId = userId,
             displayName = elementClassicReady?.displayName,
             avatar = elementClassicReady?.avatar,
-            loginMode = loginMode,
+            loginModeState = loginModeState,
             loginWithClassicAction = loginWithClassicAction,
             eventSink = ::handleEvent,
         )

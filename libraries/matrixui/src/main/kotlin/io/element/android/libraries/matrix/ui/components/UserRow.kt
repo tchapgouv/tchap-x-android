@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -34,7 +35,39 @@ import io.element.android.libraries.matrix.ui.R
 @Composable
 internal fun UserRow(
     avatarData: AvatarData,
-    name: String,
+    name: AnnotatedString,
+    subtext: String?,
+    isExternalTchapUser: Boolean,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    verticalSpaceWidth: Dp = 12.dp,
+    trailingContent: @Composable (() -> Unit)? = null,
+) {
+    UserRow(
+        avatarData = avatarData,
+        nameContent = {
+            Text(
+                modifier = Modifier.clipToBounds(),
+                text = name,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = if (enabled) ElementTheme.colors.textPrimary else ElementTheme.colors.textDisabled,
+                style = ElementTheme.typography.fontBodyLgRegular,
+            )
+        },
+        subtext = subtext,
+        isExternalTchapUser = isExternalTchapUser,
+        modifier = modifier,
+        enabled = enabled,
+        verticalSpaceWidth = verticalSpaceWidth,
+        trailingContent = trailingContent,
+    )
+}
+
+@Composable
+internal fun UserRow(
+    avatarData: AvatarData,
+    nameContent: @Composable () -> Unit,
     subtext: String?,
     isExternalTchapUser: Boolean,
     modifier: Modifier = Modifier,
@@ -58,14 +91,7 @@ internal fun UserRow(
             modifier = Modifier.weight(1f),
         ) {
             // Name
-            Text(
-                modifier = Modifier.clipToBounds(),
-                text = name,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = if (enabled) ElementTheme.colors.textPrimary else ElementTheme.colors.textDisabled,
-                style = ElementTheme.typography.fontBodyLgRegular,
-            )
+            nameContent()
             // Id
             subtext?.let {
                 Text(

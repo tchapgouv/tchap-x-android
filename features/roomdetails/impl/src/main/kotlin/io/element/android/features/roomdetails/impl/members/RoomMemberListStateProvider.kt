@@ -28,6 +28,7 @@ import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityState
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.RoomMembershipState
+import io.element.android.libraries.matrix.api.user.DisplayedStatus
 import kotlinx.collections.immutable.persistentListOf
 
 internal class RoomMemberListStateProvider : PreviewParameterProvider<RoomMemberListState> {
@@ -77,7 +78,7 @@ private fun aLoadedRoomMembers() = AsyncData.Success(
         joined = persistentListOf(
             anAlice().withIdentity(identityState = IdentityState.Verified),
             aBob().withIdentity(identityState = IdentityState.PinViolation),
-            aCarol().withIdentity(),
+            aCarol().withIdentity(isInCall = true),
             aDavid().withIdentity(),
             anEve().withIdentity(identityState = IdentityState.VerificationViolation)
         ),
@@ -130,6 +131,7 @@ fun aRoomMember(
     role: RoomMember.Role = RoomMember.Role.User,
     membershipChangeReason: String? = null,
     isServiceMember: Boolean = false,
+    displayedStatus: DisplayedStatus? = null,
 ) = RoomMember(
     userId = userId,
     displayName = displayName,
@@ -141,6 +143,7 @@ fun aRoomMember(
     role = role,
     membershipChangeReason = membershipChangeReason,
     isServiceMember = isServiceMember,
+    displayedStatus = displayedStatus,
 )
 
 fun aRoomMemberList() = persistentListOf(
@@ -172,4 +175,8 @@ fun aBannedSusie(): RoomMember = aRoomMember(UserId("@susie:server.org"), USER_N
 
 fun aBannedMallory(): RoomMember = aRoomMember(UserId("@mallory:server.org"), USER_NAME_MALLORY, membership = RoomMembershipState.BAN)
 
-private fun RoomMember.withIdentity(identityState: IdentityState? = null) = RoomMemberWithIdentityState(this, identityState)
+private fun RoomMember.withIdentity(identityState: IdentityState? = null, isInCall: Boolean = false) = RoomMemberWithIdentityState(
+    this,
+    identityState,
+    isInCall
+)

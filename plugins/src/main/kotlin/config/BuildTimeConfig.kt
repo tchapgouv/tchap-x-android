@@ -15,12 +15,6 @@ object BuildTimeConfig {
 //    const val GOOGLE_APP_ID_DEBUG = "1:912726360885:android:def0a4e454042e9b00427c"
 //    const val GOOGLE_APP_ID_NIGHTLY = "1:912726360885:android:e17435e0beb0303000427c"
 
-    const val URL_ACCEPTABLE_USE = "https://tchap.numerique.gouv.fr/cgu"
-    const val URL_PRIVACY = "https://tchap.numerique.gouv.fr/politique-de-confidentialite"
-    const val SERVICES_MAPTILER_BASE_URL = "https://openmaptiles.geo.data.gouv.fr/styles"
-    const val SERVICES_MAPTILER_LIGHT_MAPID = "osm-bright"
-    const val SERVICES_MAPTILER_DARK_MAPID = "fiord-color"
-
     val METADATA_HOST_REVERSED: String? = null
     val URL_WEBSITE: String = "https://tchap.gouv.fr"
 
@@ -30,9 +24,24 @@ object BuildTimeConfig {
     val URL_COPYRIGHT: String? = null
 
     // TCHAP : specific URL
-    const val URL_POLICY = "https://tchap.numerique.gouv.fr/politique-de-confidentialite"
+    val URL_ACCEPTABLE_USE = "https://tchap.numerique.gouv.fr/cgu"
+
+    // TCHAP : specific URL
+    val URL_PRIVACY = "https://tchap.numerique.gouv.fr/politique-de-confidentialite"
+
+    // TCHAP : specific URL
+    val URL_POLICY = "https://tchap.numerique.gouv.fr/politique-de-confidentialite"
+
+    val OAUTH_CLIENT_URL_PATH: String? = "apps/android"
+
+    // TCHAP : specific URL
+    val SERVICES_MAPTILER_BASE_URL = "https://openmaptiles.geo.data.gouv.fr/styles"
 
     val SERVICES_MAPTILER_APIKEY: String? = null
+
+    // TCHAP : specific MapID
+    const val SERVICES_MAPTILER_LIGHT_MAPID = "osm-bright"
+    const val SERVICES_MAPTILER_DARK_MAPID = "fiord-color"
     val SERVICES_POSTHOG_HOST: String? = null
     val SERVICES_POSTHOG_APIKEY: String? = null
     val SERVICES_SENTRY_DSN: String? = null

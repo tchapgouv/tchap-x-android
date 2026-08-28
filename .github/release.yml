@@ -28,6 +28,10 @@ changelog:
       labels:
         - PR-Dependencies
 
+    - title: 💼 Element Pro
+      labels:
+        - PR-Element-Pro
+
     - title: Autres
       labels:
         - PR-misc

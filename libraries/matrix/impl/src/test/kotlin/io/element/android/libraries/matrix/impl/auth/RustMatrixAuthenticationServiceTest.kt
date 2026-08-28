@@ -11,6 +11,7 @@ package io.element.android.libraries.matrix.impl.auth
 import com.google.common.truth.Truth.assertThat
 import io.element.android.features.enterprise.api.EnterpriseService
 import io.element.android.features.enterprise.test.FakeEnterpriseService
+import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.impl.ClientBuilderProvider
 import io.element.android.libraries.matrix.impl.FakeClientBuilderProvider
 import io.element.android.libraries.matrix.impl.createRustMatrixClientFactory
@@ -23,6 +24,7 @@ import io.element.android.libraries.matrix.test.core.aBuildMeta
 import io.element.android.libraries.network.useragent.SimpleUserAgentProvider
 import io.element.android.libraries.sessionstorage.api.SessionStore
 import io.element.android.libraries.sessionstorage.test.InMemorySessionStore
+import io.element.android.tests.testutils.lambda.lambdaRecorder
 import io.element.android.tests.testutils.testCoroutineDispatchers
 import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
@@ -49,6 +51,29 @@ class RustMatrixAuthenticationServiceTest {
             ),
         )
         assertThat(sut.setHomeserver("matrix.org").isSuccess).isTrue()
+    }
+
+    @Test
+    fun `setHomeserver can fail gracefully and clean up the temporary client`() = runTest {
+        val closeResult = lambdaRecorder<Unit> {}
+        val sut = createRustMatrixAuthenticationService(
+            clientBuilderProvider = FakeClientBuilderProvider(
+                provideResult = {
+                    FakeFfiClientBuilder(
+                        buildResult = {
+                            FakeFfiClient(
+                                homeserverLoginDetailsResult = {
+                                    throw IllegalStateException("Failed to get homeserver login details")
+                                },
+                                closeResult = closeResult,
+                            )
+                        },
+                    )
+                },
+            ),
+        )
+        assertThat(sut.setHomeserver("matrix.org").isFailure).isTrue()
+        closeResult.assertions().isCalledOnce()
     }
 
     private fun TestScope.createRustMatrixAuthenticationService(
@@ -78,6 +103,7 @@ class RustMatrixAuthenticationServiceTest {
                 oAuthRedirectUrlProvider = FakeOAuthRedirectUrlProvider(),
             ),
             enterpriseService = enterpriseService,
+            featureFlagService = FakeFeatureFlagService(),
             proxyProvider = FakeProxyProvider(),
         )
     }

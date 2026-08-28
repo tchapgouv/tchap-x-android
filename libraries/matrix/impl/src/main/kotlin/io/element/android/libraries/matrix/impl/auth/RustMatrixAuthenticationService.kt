@@ -21,6 +21,8 @@ import io.element.android.libraries.core.extensions.mapFailure
 import io.element.android.libraries.core.extensions.runCatchingExceptions
 import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.di.annotations.ApplicationContext
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.auth.AuthenticationException
 import io.element.android.libraries.matrix.api.auth.ElementClassicSession
@@ -34,16 +36,17 @@ import io.element.android.libraries.matrix.api.auth.qrlogin.MatrixQrCodeLoginDat
 import io.element.android.libraries.matrix.api.auth.qrlogin.QrCodeLoginStep
 import io.element.android.libraries.matrix.api.core.SessionId
 import io.element.android.libraries.matrix.api.core.UserId
+import io.element.android.libraries.matrix.api.paths.SessionPaths
 import io.element.android.libraries.matrix.api.verification.SessionVerifiedStatus
 import io.element.android.libraries.matrix.impl.ClientBuilderSlidingSync
 import io.element.android.libraries.matrix.impl.RustMatrixClientFactory
+import io.element.android.libraries.matrix.impl.RustTemporaryMatrixClient
 import io.element.android.libraries.matrix.impl.auth.qrlogin.QrErrorMapper
 import io.element.android.libraries.matrix.impl.auth.qrlogin.SdkQrCodeLoginData
 import io.element.android.libraries.matrix.impl.auth.qrlogin.toStep
 import io.element.android.libraries.matrix.impl.exception.mapClientException
 import io.element.android.libraries.matrix.impl.keys.SecretGenerator
 import io.element.android.libraries.matrix.impl.mapper.toSessionData
-import io.element.android.libraries.matrix.impl.paths.SessionPaths
 import io.element.android.libraries.matrix.impl.paths.SessionPathsFactory
 import io.element.android.libraries.matrix.impl.proxy.ProxyProvider
 import io.element.android.libraries.matrix.impl.toSession
@@ -81,6 +84,7 @@ class RustMatrixAuthenticationService(
     private val secretGenerator: SecretGenerator,
     private val oAuthConfigurationProvider: OAuthConfigurationProvider,
     private val enterpriseService: EnterpriseService,
+    private val featureFlagService: FeatureFlagService,
     // :tchap: Add proxy config in rust http client
     private val proxyProvider: ProxyProvider,
     // :tchap: end
@@ -167,7 +171,7 @@ class RustMatrixAuthenticationService(
                     loginHint
                 )
             }.onFailure {
-                clear()
+                clear(destroyClient = true)
             }.mapFailure { failure ->
                 Timber.e(failure, "Failed to get homeserver from $defaultHomeserver for login hint $loginHint")
                 failure.mapAuthenticationException()
@@ -183,9 +187,10 @@ class RustMatrixAuthenticationService(
                 }
 
                 currentClient = client
+
                 client.homeserverLoginDetails().map()
             }.onFailure {
-                clear()
+                clear(destroyClient = true)
             }.mapFailure { failure ->
                 Timber.e(failure, "Failed to set homeserver to $homeserver")
                 failure.mapAuthenticationException()
@@ -215,12 +220,12 @@ class RustMatrixAuthenticationService(
                         passphrase = pendingKey.formattedAsString(),
                         sessionPaths = currentSessionPaths,
                     )
-                val matrixClient = rustMatrixClientFactory.create(client)
+                val matrixClient = rustMatrixClientFactory.create(client, sessionData, isMessageSearchAvailable())
                 newMatrixClientObservers.forEach { it.invoke(matrixClient) }
                 sessionStore.addSession(sessionData)
 
                 // Clean up the strong reference held here since it's no longer necessary
-                currentClient = null
+                clear(destroyClient = false)
 
                 SessionId(sessionData.userId)
             }.mapFailure { failure ->
@@ -290,7 +295,7 @@ class RustMatrixAuthenticationService(
 
                 // We restore the client using the just retrieved session data
                 client.restoreSession(sessionData.toSession())
-                val matrixClient = rustMatrixClientFactory.create(client)
+                val matrixClient = rustMatrixClientFactory.create(client, sessionData, isMessageSearchAvailable())
 
                 // We wait for the verification state to be known
                 matrixClient.waitForKnownVerificationState()
@@ -300,7 +305,7 @@ class RustMatrixAuthenticationService(
                 sessionStore.addSession(sessionData)
 
                 // Clean up the strong reference held here since it's no longer necessary
-                currentClient = null
+                clear(destroyClient = false)
 
                 SessionId(sessionData.userId)
             }
@@ -323,11 +328,13 @@ class RustMatrixAuthenticationService(
                     deviceId = null,
                     additionalScopes = emptyList(),
                 )
+                val getUrlResolver = RustTemporaryMatrixClient(client, sessionPaths)
                 val url = oAuthAuthorizationData.loginUrl()
                     .let {
                         enterpriseService.tweakMasUrl(
                             url = it,
                             homeserver = client.server() ?: client.homeserver(),
+                            urlContentFetcher = getUrlResolver,
                         )
                     }
                 pendingOAuthAuthorizationData = oAuthAuthorizationData
@@ -380,14 +387,14 @@ class RustMatrixAuthenticationService(
                     passphrase = pendingKey.formattedAsString(),
                     sessionPaths = currentSessionPaths,
                 )
-                val matrixClient = rustMatrixClientFactory.create(client)
+                val matrixClient = rustMatrixClientFactory.create(client, sessionData, isMessageSearchAvailable())
                 matrixClient.waitForKnownVerificationState()
 
                 newMatrixClientObservers.forEach { it.invoke(matrixClient) }
                 sessionStore.addSession(sessionData)
 
                 // Clean up the strong reference held here since it's no longer necessary
-                currentClient = null
+                clear(destroyClient = false)
 
                 SessionId(sessionData.userId)
             }.mapFailure { failure ->
@@ -445,12 +452,12 @@ class RustMatrixAuthenticationService(
                         passphrase = pendingKey.formattedAsString(),
                         sessionPaths = emptySessionPaths,
                     )
-                val matrixClient = rustMatrixClientFactory.create(client)
+                val matrixClient = rustMatrixClientFactory.create(client, sessionData, isMessageSearchAvailable())
                 newMatrixClientObservers.forEach { it.invoke(matrixClient) }
                 sessionStore.addSession(sessionData)
 
                 // Clean up the strong reference held here since it's no longer necessary
-                currentClient = null
+                clear(destroyClient = false)
 
                 SessionId(sessionData.userId)
             }.mapFailure {
@@ -477,6 +484,7 @@ class RustMatrixAuthenticationService(
                 sessionPaths = sessionPaths,
                 clientSecret = pendingKey,
                 slidingSyncType = ClientBuilderSlidingSync.Discovered,
+                isMessageSearchAvailable = isMessageSearchAvailable(),
             )
             .config()
             .build()
@@ -509,15 +517,21 @@ class RustMatrixAuthenticationService(
                 sessionPaths = sessionPaths,
                 clientSecret = pendingKey,
                 slidingSyncType = ClientBuilderSlidingSync.Discovered,
+                isMessageSearchAvailable = isMessageSearchAvailable(),
             )
             .serverNameOrHomeserverUrl(baseUrlOrServerName)
             .build()
     }
 
-    private fun clear() {
-        currentClient?.close()
+    private fun clear(destroyClient: Boolean) {
+        if (destroyClient) {
+            currentClient?.close()
+        }
         currentClient = null
     }
+
+    private suspend fun isMessageSearchAvailable(): Boolean =
+        featureFlagService.isFeatureEnabled(FeatureFlags.MessageSearch)
 
     private suspend fun MatrixClient.waitForKnownVerificationState() {
         withTimeoutOrNull(10.seconds) {
