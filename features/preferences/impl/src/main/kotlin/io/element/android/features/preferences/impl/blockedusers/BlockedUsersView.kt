@@ -8,7 +8,7 @@
 
 package io.element.android.features.preferences.impl.blockedusers
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -31,6 +31,8 @@ import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.components.Scaffold
 import io.element.android.libraries.designsystem.theme.components.TopAppBar
+import io.element.android.libraries.designsystem.utils.snackbar.SnackbarHost
+import io.element.android.libraries.designsystem.utils.snackbar.rememberSnackbarHostState
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.matrix.ui.components.MatrixUserRow
@@ -43,6 +45,7 @@ fun BlockedUsersView(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val snackbarHostState = rememberSnackbarHostState(snackbarMessage = state.snackbarMessage)
     Box(modifier = modifier) {
         Scaffold(
             topBar = {
@@ -52,7 +55,8 @@ fun BlockedUsersView(
                         BackButton(onClick = onBackClick)
                     }
                 )
-            }
+            },
+            snackbarHost = { SnackbarHost(snackbarHostState) },
         ) { padding ->
             LazyColumn(
                 modifier = Modifier.padding(padding)
@@ -61,7 +65,8 @@ fun BlockedUsersView(
                     BlockedUserItem(
                         showMatrixId = state.showMatrixId,
                         matrixUser = matrixUser,
-                        onClick = { state.eventSink(BlockedUsersEvents.Unblock(it)) }
+                        onClick = { state.eventSink(BlockedUsersEvents.Unblock(it)) },
+                        onLongClick = { state.eventSink(BlockedUsersEvents.CopyToClipboard(it)) },
                     )
                 }
             }
@@ -109,10 +114,15 @@ private fun BlockedUserItem(
     showMatrixId: Boolean,
     matrixUser: MatrixUser,
     onClick: (UserId) -> Unit,
+    onLongClick: (UserId) -> Unit,
 ) {
     MatrixUserRow(
         showMatrixId = showMatrixId,
-        modifier = Modifier.clickable { onClick(matrixUser.userId) },
+        modifier = Modifier.combinedClickable(
+            onClick = { onClick(matrixUser.userId) },
+            onLongClick = { onLongClick(matrixUser.userId) },
+            onLongClickLabel = stringResource(CommonStrings.action_copy),
+        ),
         matrixUser = matrixUser,
     )
 }

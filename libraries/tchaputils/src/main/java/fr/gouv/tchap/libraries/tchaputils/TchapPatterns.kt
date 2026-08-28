@@ -31,6 +31,16 @@ object TchapPatterns {
     private val EMAIL_REGEX = "^[a-zA-Z0-9_!#\$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#\$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*\$".toRegex()
 
     /**
+     * Check if the provided string is an email.
+     *
+     * @param value the string to check.
+     * @return true if it is an email.
+     */
+    fun isEmail(value: String?): Boolean {
+        return value != null && EMAIL_REGEX.matches(value)
+    }
+
+    /**
      * Get the homeserver name of a matrix identifier.
      * The identifier type may be any matrix identifier type: user id, room id, ...
      * For example in case of "@jean-philippe.martin-modernisation.fr:matrix.test.org", this will return "matrix.test.org".

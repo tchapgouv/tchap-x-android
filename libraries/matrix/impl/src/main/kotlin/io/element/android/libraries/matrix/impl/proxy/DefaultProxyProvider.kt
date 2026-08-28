@@ -41,6 +41,18 @@ class DefaultProxyProvider(
             Timber.d("No default proxy")
             return null
         }
+
+        // :tchap: Add proxy config in rust http client
+        val host = defaultProxy.host
+        val port = defaultProxy.port
+
+        if (!host.isNullOrBlank() && port > 0) {
+            val proxyUrl = "http://$host:$port"
+            Timber.d("Using system proxy: $proxyUrl")
+            return proxyUrl
+        }
+        // :tchap: end
+
         return Settings.Global.getString(context.contentResolver, Settings.Global.HTTP_PROXY)
             ?.also {
                 Timber.d("Using global proxy")

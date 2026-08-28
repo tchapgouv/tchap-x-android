@@ -8,17 +8,18 @@
 
 package io.element.android.libraries.matrix.ui.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
@@ -40,8 +41,8 @@ fun CheckableUserRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(role = Role.Checkbox, enabled = enabled) {
-                onCheckedChange(!checked)
+            .toggleable(value = checked, role = Role.Checkbox, enabled = enabled) {
+                onCheckedChange(it)
             },
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -51,7 +52,7 @@ fun CheckableUserRow(
                 UserRow(
                     modifier = rowModifier,
                     avatarData = data.avatarData,
-                    name = data.name,
+                    name = AnnotatedString(data.name),
                     subtext = data.subtext,
                     isExternalTchapUser = data.isExternalTchapUser,
                     enabled = enabled,
@@ -67,7 +68,7 @@ fun CheckableUserRow(
             }
         }
         Checkbox(
-            onCheckedChange = onCheckedChange,
+            onCheckedChange = null,
             checked = checked,
             enabled = enabled,
         )

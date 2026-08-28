@@ -8,7 +8,6 @@
 
 package io.element.android.features.messages.impl.timeline.model.event
 
-import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
 import io.element.android.libraries.core.mimetype.MimeTypes.isMimeTypeAnimatedImage
 import io.element.android.libraries.matrix.api.media.MediaSource
 import io.element.android.libraries.matrix.ui.media.MAX_THUMBNAIL_HEIGHT
@@ -16,7 +15,6 @@ import io.element.android.libraries.matrix.ui.media.MAX_THUMBNAIL_WIDTH
 import io.element.android.libraries.matrix.ui.media.MediaRequestData
 
 data class TimelineItemImageContent(
-    override val scanState: BwiContentScannerScanState = BwiContentScannerScanState.UNKNOWN,
     override val filename: String,
     override val fileSize: Long?,
     override val caption: String?,

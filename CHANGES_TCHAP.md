@@ -1,3 +1,23 @@
+Changements dans Tchap Android v26.08.0
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v26.08.0 -->
+
+## Qu'est-ce qui a changé ?
+### 🙌 Améliorations
+* Utilisation de la configuration système pour le proxy by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/262
+* Suppression du scan antivirus BWI by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/264
+* Intégration du scan anti-virus by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/268
+* Connexion à partir de l'email partagé par Tchap Classique by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/269
+* Remplacer les liens Element par la FAQ Tchap by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/271
+### 🧱 Build
+* Activation du sync parallel sur Gradle by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/265
+### Autres
+* Merge Element X v26.08.1 by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/272
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v26.07.9...v26.08.0
+
 Changements dans Tchap Android v26.07.9
 =============================
 

@@ -269,7 +269,7 @@ class ConfigureRoomPresenter(
                         name = config.roomName,
                         topic = config.topic,
                         // TCHAP - Enable PrivateNotEncrypted room
-//                        isEncrypted = true,
+//                        isEncrypted = !sessionEnterpriseService.isEncryptionDisabledByHomeserver(),
                         isEncrypted = config.visibilityState.joinRuleItem != JoinRuleItem.PrivateVisibility.PrivateNotEncrypted,
                         isDirect = false,
                         visibility = RoomVisibility.Private,

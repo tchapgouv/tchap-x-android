@@ -67,4 +67,5 @@ data class RoomMembers(
 data class RoomMemberWithIdentityState(
     val roomMember: RoomMember,
     val identityState: IdentityState?,
+    val isInCall: Boolean
 )

@@ -8,11 +8,12 @@
 
 package io.element.android.libraries.matrix.impl
 
+import android.content.Context
 import com.google.common.truth.Truth.assertThat
 import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.api.core.SessionId
+import io.element.android.libraries.matrix.api.scanner.ContentScannerUrlProvider
 import io.element.android.libraries.matrix.impl.auth.FakeProxyProvider
-import io.element.android.libraries.matrix.impl.auth.FakeUserCertificatesProvider
 import io.element.android.libraries.matrix.impl.room.FakeTimelineEventFilterFactory
 import io.element.android.libraries.matrix.impl.storage.FakeSqliteStoreBuilderProvider
 import io.element.android.libraries.network.useragent.SimpleUserAgentProvider
@@ -25,6 +26,7 @@ import io.element.android.services.analytics.test.FakeAnalyticsService
 import io.element.android.services.toolbox.test.systemclock.FakeSystemClock
 import io.element.android.tests.testutils.lambda.lambdaRecorder
 import io.element.android.tests.testutils.testCoroutineDispatchers
+import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -46,19 +48,21 @@ class RustMatrixClientFactoryTest {
 }
 
 fun TestScope.createRustMatrixClientFactory(
+    context: Context = mockk(),
     cacheDirectory: File = File("/cache"),
     sessionStore: SessionStore = InMemorySessionStore(
         updateUserProfileResult = { _, _, _ -> },
     ),
     clientBuilderProvider: ClientBuilderProvider = FakeClientBuilderProvider(),
     workManagerScheduler: FakeWorkManagerScheduler = FakeWorkManagerScheduler(),
+    contentScannerUrlProviderFactory: ContentScannerUrlProvider.Factory = { ContentScannerUrlProvider { Result.success(null) } },
 ) = RustMatrixClientFactory(
+    context = context,
     cacheDirectory = cacheDirectory,
     appCoroutineScope = backgroundScope,
     coroutineDispatchers = testCoroutineDispatchers(),
     sessionStore = sessionStore,
     userAgentProvider = SimpleUserAgentProvider(),
-    userCertificatesProvider = FakeUserCertificatesProvider(),
     proxyProvider = FakeProxyProvider(),
     clock = FakeSystemClock(),
     analyticsService = FakeAnalyticsService(),
@@ -67,4 +71,5 @@ fun TestScope.createRustMatrixClientFactory(
     clientBuilderProvider = clientBuilderProvider,
     sqliteStoreBuilderProvider = FakeSqliteStoreBuilderProvider(),
     workManagerScheduler = workManagerScheduler,
+    contentScannerUrlProviderFactory = contentScannerUrlProviderFactory,
 )

@@ -42,6 +42,8 @@ import io.element.android.libraries.designsystem.theme.components.ButtonSize
 import io.element.android.libraries.designsystem.theme.components.OutlinedButton
 import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.matrix.api.core.UserId
+import io.element.android.libraries.matrix.api.user.DisplayedStatus
+import io.element.android.libraries.matrix.ui.model.toText
 import io.element.android.libraries.testtags.TestTags
 import io.element.android.libraries.testtags.testTag
 import io.element.android.libraries.ui.strings.CommonStrings
@@ -57,6 +59,7 @@ fun UserProfileHeaderSection(
     openAvatarPreview: (url: String) -> Unit,
     onUserIdClick: () -> Unit,
     withdrawVerificationClick: () -> Unit,
+    displayedStatus: DisplayedStatus?,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -91,10 +94,20 @@ fun UserProfileHeaderSection(
                 style = ElementTheme.typography.fontHeadingLgBold,
                 textAlign = TextAlign.Center,
             )
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(12.dp))
         }
-        // TCHAP show the Matrix Id depending of feature flag showMatrixId
+        displayedStatus?.let { status ->
+            Text(
+                text = status.toText(),
+                style = ElementTheme.typography.fontBodyLgMedium,
+                color = ElementTheme.colors.textSecondary,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+        // :tchap: Show the Matrix Id depending of feature flag showMatrixId
         if (showMatrixId) {
+            // :tchap: end
             Text(
                 modifier = Modifier.niceClickable { onUserIdClick() },
                 text = userId.value,
@@ -102,6 +115,7 @@ fun UserProfileHeaderSection(
                 color = ElementTheme.colors.textSecondary,
                 textAlign = TextAlign.Center,
             )
+            Spacer(modifier = Modifier.height(12.dp))
         }
         when (verificationState) {
             UserProfileVerificationState.UNKNOWN, UserProfileVerificationState.UNVERIFIED -> Unit
@@ -149,6 +163,7 @@ internal fun UserProfileHeaderSectionPreview() = ElementPreview {
         userId = UserId("@alice:example.com"),
         userName = USER_NAME_ALICE,
         verificationState = UserProfileVerificationState.VERIFIED,
+        displayedStatus = DisplayedStatus.InCall(0L),
         openAvatarPreview = {},
         onUserIdClick = {},
         withdrawVerificationClick = {},
@@ -164,6 +179,7 @@ internal fun UserProfileHeaderSectionWithVerificationViolationPreview() = Elemen
         userId = UserId("@alice:example.com"),
         userName = USER_NAME_ALICE,
         verificationState = UserProfileVerificationState.VERIFICATION_VIOLATION,
+        displayedStatus = DisplayedStatus.InCall(0L),
         openAvatarPreview = {},
         onUserIdClick = {},
         withdrawVerificationClick = {},

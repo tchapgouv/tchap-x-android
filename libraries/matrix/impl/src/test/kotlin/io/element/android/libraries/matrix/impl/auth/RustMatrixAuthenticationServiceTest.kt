@@ -11,6 +11,7 @@ package io.element.android.libraries.matrix.impl.auth
 import com.google.common.truth.Truth.assertThat
 import io.element.android.features.enterprise.api.EnterpriseService
 import io.element.android.features.enterprise.test.FakeEnterpriseService
+import io.element.android.libraries.featureflag.test.FakeFeatureFlagService
 import io.element.android.libraries.matrix.impl.ClientBuilderProvider
 import io.element.android.libraries.matrix.impl.FakeClientBuilderProvider
 import io.element.android.libraries.matrix.impl.createRustMatrixClientFactory
@@ -20,9 +21,12 @@ import io.element.android.libraries.matrix.impl.fixtures.fakes.FakeFfiHomeserver
 import io.element.android.libraries.matrix.impl.paths.SessionPathsFactory
 import io.element.android.libraries.matrix.test.auth.FakeOAuthRedirectUrlProvider
 import io.element.android.libraries.matrix.test.core.aBuildMeta
+import io.element.android.libraries.network.useragent.SimpleUserAgentProvider
 import io.element.android.libraries.sessionstorage.api.SessionStore
 import io.element.android.libraries.sessionstorage.test.InMemorySessionStore
+import io.element.android.tests.testutils.lambda.lambdaRecorder
 import io.element.android.tests.testutils.testCoroutineDispatchers
+import io.mockk.mockk
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -49,29 +53,58 @@ class RustMatrixAuthenticationServiceTest {
         assertThat(sut.setHomeserver("matrix.org").isSuccess).isTrue()
     }
 
+    @Test
+    fun `setHomeserver can fail gracefully and clean up the temporary client`() = runTest {
+        val closeResult = lambdaRecorder<Unit> {}
+        val sut = createRustMatrixAuthenticationService(
+            clientBuilderProvider = FakeClientBuilderProvider(
+                provideResult = {
+                    FakeFfiClientBuilder(
+                        buildResult = {
+                            FakeFfiClient(
+                                homeserverLoginDetailsResult = {
+                                    throw IllegalStateException("Failed to get homeserver login details")
+                                },
+                                closeResult = closeResult,
+                            )
+                        },
+                    )
+                },
+            ),
+        )
+        assertThat(sut.setHomeserver("matrix.org").isFailure).isTrue()
+        closeResult.assertions().isCalledOnce()
+    }
+
     private fun TestScope.createRustMatrixAuthenticationService(
         sessionStore: SessionStore = InMemorySessionStore(),
         clientBuilderProvider: ClientBuilderProvider = FakeClientBuilderProvider(),
-        enterpriseService: EnterpriseService = FakeEnterpriseService(),
+        enterpriseService: EnterpriseService = FakeEnterpriseService(selectedHomeserver = 0),
     ): RustMatrixAuthenticationService {
         val baseDirectory = File("/base")
         val cacheDirectory = File("/cache")
         val rustMatrixClientFactory = createRustMatrixClientFactory(
+            context = mockk(),
             cacheDirectory = cacheDirectory,
             sessionStore = sessionStore,
             clientBuilderProvider = clientBuilderProvider,
         )
         return RustMatrixAuthenticationService(
+            context = mockk(),
             sessionPathsFactory = SessionPathsFactory(baseDirectory, cacheDirectory),
             coroutineDispatchers = testCoroutineDispatchers(),
             sessionStore = sessionStore,
             rustMatrixClientFactory = rustMatrixClientFactory,
+            userAgentProvider = SimpleUserAgentProvider(),
+            buildMeta = aBuildMeta(),
             secretGenerator = FakeSecretGenerator(),
             oAuthConfigurationProvider = OAuthConfigurationProvider(
                 buildMeta = aBuildMeta(),
                 oAuthRedirectUrlProvider = FakeOAuthRedirectUrlProvider(),
             ),
             enterpriseService = enterpriseService,
+            featureFlagService = FakeFeatureFlagService(),
+            proxyProvider = FakeProxyProvider(),
         )
     }
 }

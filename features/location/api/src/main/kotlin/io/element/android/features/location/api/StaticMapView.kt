@@ -8,6 +8,7 @@
 
 package io.element.android.features.location.api
 
+import android.graphics.Bitmap
 import android.util.Size
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -29,10 +30,13 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.createBitmap
 import coil3.Extras
+import coil3.asImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
+import coil3.request.SuccessResult
 import fr.gouv.tchap.android.features.location.api.DefaultTchapMapRenderer
 import fr.gouv.tchap.android.features.location.api.FakeTchapMapRenderer
 import fr.gouv.tchap.android.features.location.api.LocationUiData
@@ -45,6 +49,7 @@ import io.element.android.libraries.designsystem.components.LocationPin
 import io.element.android.libraries.designsystem.components.PinVariant
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
+import io.element.android.libraries.designsystem.utils.CommonDrawables
 
 /**
  * Shows a static map image downloaded via a third party service's static maps API.
@@ -135,58 +140,74 @@ private fun BoxWithConstraintsScope.LoadableMapContent(
     var retryHash by remember { mutableIntStateOf(0) }
     val builder = remember { StaticMapUrlBuilder() }
 
-    // Tchap: Create the map renderer or Fake it in preview context
-    val tchapMapRenderer: TchapMapRenderer = remember(darkMode, isInspectionMode) {
-        if (isInspectionMode) {
-            FakeTchapMapRenderer()
-        } else {
-            DefaultTchapMapRenderer(darkMode, context)
+    val (painter, state, contentScale) = if (LocalInspectionMode.current) {
+        val painter = painterResource(CommonDrawables.sample_map)
+        val state = AsyncImagePainter.State.Success(
+            painter = painter,
+            result = SuccessResult(
+                image = createBitmap(1, 1, Bitmap.Config.ALPHA_8).asImage(),
+                request = ImageRequest.Builder(context).build()
+            )
+        )
+        Triple(painter, state, ContentScale.Crop)
+    } else {
+        val tchapMapRenderer: TchapMapRenderer = remember(darkMode, isInspectionMode) {
+         if (isInspectionMode) {
+             FakeTchapMapRenderer()
+            } else {
+                DefaultTchapMapRenderer(darkMode, context)
+            }
         }
-    }
+        // :tchap end
 
-    // Tchap: Try to retrieve the imageFile that was created earlier
-    val locationUiData = remember(location, zoom, constraints.maxWidth, constraints.maxHeight) {
-        LocationUiData(location, zoom, Size(constraints.maxWidth, constraints.maxHeight))
-    }
-    val imageFile = remember(locationUiData) {
-        tchapMapRenderer.getStaticMapFileFromLocation(locationUiData)
-    }
+        // :tchap: Try to retrieve the imageFile that was created earlier
+        val locationUiData = remember(location, zoom, constraints.maxWidth, constraints.maxHeight) {
+            LocationUiData(location, zoom, Size(constraints.maxWidth, constraints.maxHeight))
+        }
+        val imageFile = remember(locationUiData) {
+            tchapMapRenderer.getStaticMapFileFromLocation(locationUiData)
+        }
+        // :tchap end
 
-    val painter = rememberAsyncImagePainter(
-        model = if (constraints.isZero) {
-            // Avoid building a URL if any of the size constraints is zero
-            null
-        } else {
-            ImageRequest.Builder(context)
-//                .data(
-//                    builder.build(
-//                        lat = location.lat,
-//                        lon = location.lon,
-//                        zoom = zoom,
-//                        darkMode = darkMode,
-//                        width = constraints.maxWidth,
-//                        height = constraints.maxHeight,
-//                        density = LocalDensity.current.density,
+        val painter = rememberAsyncImagePainter(
+            model = if (constraints.isZero) {
+                // Avoid building a URL if any of the size constraints is zero
+                null
+            } else {
+                ImageRequest.Builder(context)
+//                    .data(
+//                        builder.build(
+//                            lat = location.lat,
+//                            lon = location.lon,
+//                            zoom = zoom,
+//                            darkMode = darkMode,
+//                            width = constraints.maxWidth,
+//                            height = constraints.maxHeight,
+//                            density = LocalDensity.current.density,
+//                        )
 //                    )
-//                )
-                .data(imageFile) // Tchap: use the locally generated snapshot of location (instead of request call)
-                .size(width = constraints.maxWidth, height = constraints.maxHeight)
-                .apply {
-                    extras.set(Extras.Key("retry_hash"), retryHash).build()
-                }
-                .build()
-        }
-    )
+                    .data(imageFile) // :tchap: Use the locally generated snapshot of location (instead of request call)
+                    .size(width = constraints.maxWidth, height = constraints.maxHeight)
+                    .apply {
+                        extras.set(Extras.Key("retry_hash"), retryHash).build()
+                    }
+                    .build()
+            }
+        )
 
-    // Tchap: Generate locally snapshot of location if it doesn't exist
-    LaunchedEffect(imageFile, locationUiData) {
-        if (!imageFile.exists()) {
-            tchapMapRenderer.generateMapSnapshot(locationUiData)
-            painter.restart()
+        // :tchap: Generate locally snapshot of location if it doesn't exist
+        LaunchedEffect(imageFile, locationUiData) {
+            if (!imageFile.exists()) {
+             tchapMapRenderer.generateMapSnapshot(locationUiData)
+             painter.restart()
+            }
         }
+        // :tchap: end
+
+        val state by painter.state.collectAsState()
+        Triple(painter, state, ContentScale.Fit)
     }
 
-    val state by painter.state.collectAsState()
     when (state) {
         is AsyncImagePainter.State.Success -> {
             Image(
@@ -195,7 +216,7 @@ private fun BoxWithConstraintsScope.LoadableMapContent(
                 modifier = Modifier.size(width = maxWidth, height = maxHeight),
                 // The returned image can be smaller than the requested size due to the static maps API having
                 // a max width and height of 2048 px. We apply ContentScale.Fit to handle this.
-                contentScale = ContentScale.Fit,
+                contentScale = contentScale,
             )
             LocationPin(variant = pinVariant, modifier = Modifier.centerBottomEdge(this))
         }

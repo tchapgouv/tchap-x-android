@@ -1,3 +1,4 @@
+import com.android.build.api.variant.BuildConfigField
 import config.BuildTimeConfig
 import extension.buildConfigFieldStr
 
@@ -52,10 +53,12 @@ android {
         buildConfigFieldStr("PUSHER_APP_ID", BuildTimeConfig.APPLICATION_ID)
         // :tchap: end
     }
+}
 
-    // :tchap: Dynamic PUSHER_APP_ID depending on env
-    libraryVariants.configureEach {
-        val targetFlavor = productFlavors.find { it.dimension == "target" }?.name
+// :tchap: Dynamic PUSHER_APP_ID depending on env
+androidComponents {
+    onVariants { variant ->
+        val targetFlavor = variant.productFlavors.find { it.first == "target" }?.second
 
         val flavorSuffix = when (targetFlavor) {
             "tchapDev" -> ".dev"
@@ -63,10 +66,13 @@ android {
             else -> ""
         }
 
-        buildConfigField("String", "PUSHER_APP_ID", "\"${BuildTimeConfig.APPLICATION_ID}$flavorSuffix\"")
+        variant.buildConfigFields?.put(
+            "PUSHER_APP_ID",
+            BuildConfigField("String", "\"${BuildTimeConfig.APPLICATION_ID}$flavorSuffix\"", null)
+        )
     }
-    // :tchap: end
 }
+// :tchap: end
 
 dependencies {
     implementation(libs.coroutines.core)

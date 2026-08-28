@@ -42,6 +42,7 @@ import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.RoomMembershipState
 import io.element.android.libraries.matrix.api.room.getBestName
+import io.element.android.libraries.matrix.ui.components.DisplayNameWithStatus
 import io.element.android.libraries.matrix.ui.model.getAvatarData
 import io.element.android.libraries.slashcommands.api.SlashCommandSuggestion
 import io.element.android.libraries.textcomposer.mentions.ResolvedSuggestion
@@ -116,11 +117,15 @@ private fun SuggestionItemView(
             is ResolvedSuggestion.Member -> AvatarType.User
             is ResolvedSuggestion.Command -> null
         }
-        val title = when (suggestion) {
+        val title: String? = when (suggestion) {
             is ResolvedSuggestion.AtRoom -> stringResource(R.string.screen_room_mentions_at_room_title)
-            is ResolvedSuggestion.Member -> suggestion.roomMember.getBestName() // TCHAP TODO should be applied in Element X
+            is ResolvedSuggestion.Member -> suggestion.roomMember.getBestName()
             is ResolvedSuggestion.Alias -> suggestion.roomName
             is ResolvedSuggestion.Command -> suggestion.command.command
+        }
+        val status = when (suggestion) {
+            is ResolvedSuggestion.Member -> suggestion.roomMember.displayedStatus
+            else -> null
         }
         val details = when (suggestion) {
             is ResolvedSuggestion.AtRoom,
@@ -153,11 +158,11 @@ private fun SuggestionItemView(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 title?.let {
-                    Text(
-                        text = it,
+                    DisplayNameWithStatus(
+                        name = title,
+                        status = status,
                         style = ElementTheme.typography.fontBodyLgRegular,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+                        nameColor = ElementTheme.colors.textPrimary,
                     )
                 }
                 details?.let {
@@ -198,6 +203,7 @@ internal fun SuggestionsPickerViewPreview() {
             role = RoomMember.Role.User,
             membershipChangeReason = null,
             isServiceMember = false,
+            displayedStatus = null,
         )
         val anAlias = remember { RoomAlias("#room:domain.org") }
         SuggestionsPickerView(

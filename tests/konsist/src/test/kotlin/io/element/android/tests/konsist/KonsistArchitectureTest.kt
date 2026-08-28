@@ -20,7 +20,6 @@ import com.lemonappdev.konsist.api.ext.list.withNameEndingWith
 import com.lemonappdev.konsist.api.ext.list.withoutAnnotationOf
 import com.lemonappdev.konsist.api.ext.list.withoutConstructors
 import com.lemonappdev.konsist.api.ext.list.withoutName
-import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.ext.list.withoutParents
 import com.lemonappdev.konsist.api.verify.assertEmpty
 import com.lemonappdev.konsist.api.verify.assertTrue
@@ -35,11 +34,9 @@ class KonsistArchitectureTest {
             .classes()
             .withNameEndingWith("State")
             .withoutName(
+                "NoopContentValidationState",
                 "CameraPositionState",
                 "CustomSheetState",
-            )
-            .withoutPackage(
-                "de.bwi.messenger.features.messages.impl.timeline.components.event"
             )
             .constructors
             .parameters

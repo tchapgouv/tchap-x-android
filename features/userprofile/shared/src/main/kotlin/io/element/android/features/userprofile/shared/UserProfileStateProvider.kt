@@ -18,6 +18,7 @@ import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.UserId
+import io.element.android.libraries.matrix.api.user.DisplayedStatus
 import io.element.android.libraries.matrix.ui.components.aMatrixUser
 
 open class UserProfileStateProvider : PreviewParameterProvider<UserProfileState> {
@@ -49,6 +50,7 @@ fun aUserProfileState(
     canCall: Boolean = false,
     canDm: Boolean = true,
     snackbarMessage: SnackbarMessage? = null,
+    displayedStatus: DisplayedStatus? = null,
     eventSink: (UserProfileEvents) -> Unit = {},
 ) = UserProfileState(
     showMatrixId = false,
@@ -64,5 +66,6 @@ fun aUserProfileState(
     canCall = canCall,
     canDm = canDm,
     snackbarMessage = snackbarMessage,
+    displayedStatus = displayedStatus,
     eventSink = eventSink,
 )

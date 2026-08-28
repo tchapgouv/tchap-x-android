@@ -9,6 +9,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.android.build.api.variant.FilterConfiguration.FilterType.ABI
+import com.android.build.api.variant.ResValue
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.android.build.gradle.tasks.GenerateBuildConfig
 import com.google.firebase.appdistribution.gradle.firebaseAppDistribution
@@ -24,11 +25,11 @@ import extension.buildConfigFieldStr
 import extension.locales
 import extension.setupDependencyInjection
 import extension.testCommonDependencies
+import org.sonarqube.gradle.SonarResolverTask
 import java.util.Locale
 
 plugins {
     id("io.element.android-compose-application")
-    alias(libs.plugins.kotlin.android)
     // When using precompiled plugins, we need to apply the firebase plugin like this
     id(libs.plugins.firebaseAppDistribution.get().pluginId)
     id("kotlin-parcelize")
@@ -195,6 +196,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        resValues = true
     }
     flavorDimensions += listOf("store", "target", "pinning")
     productFlavors {
@@ -235,28 +237,6 @@ android {
         }
     }
 
-    // :tchap: AppName based on "target" flavor & buildType
-    applicationVariants.configureEach {
-        val targetFlavor = productFlavors.find { it.dimension == "target" }?.name
-
-        // BaseName based on "target" flavor
-        val flavorBaseName = when (targetFlavor) {
-            "tchapDev" -> "$baseAppName dev"
-            "tchapPreprod" -> "$baseAppName preprod"
-            "tchap" -> baseAppName
-            else -> baseAppName
-        }
-
-        // Add a suffix based on buildType (use this.buildType to differentiate from buildType line#103)
-        val suffix = when (this.buildType.name) {
-            "debug" -> " dbg"
-            "nightly" -> " nightly"
-            else -> ""
-        }
-
-        // Final AppName
-        resValue("string", "app_name", flavorBaseName + suffix)
-    }
     // :tchap: end
 
     packaging {
@@ -282,6 +262,30 @@ androidComponents {
     )
 
     onVariants { variant ->
+        // :tchap: AppName based on "target" flavor & buildType
+        val targetFlavor = variant.productFlavors.find { it.first == "target" }?.second
+
+        // BaseName based on "target" flavor
+        val flavorBaseName = when (targetFlavor) {
+            "tchapDev" -> "${BuildTimeConfig.APPLICATION_NAME} dev"
+            "tchapPreprod" -> "${BuildTimeConfig.APPLICATION_NAME} preprod"
+            "tchap" -> BuildTimeConfig.APPLICATION_NAME
+            else -> BuildTimeConfig.APPLICATION_NAME
+        }
+
+        // Add a suffix based on buildType
+        val suffix = when (variant.buildType) {
+            "debug" -> " dbg"
+            "nightly" -> " nightly"
+            else -> ""
+        }
+
+        // Final AppName
+        variant.resValues.put(
+            variant.makeResValueKey("string", "app_name"),
+            ResValue(flavorBaseName + suffix, null)
+        )
+
         // Assigns a different version code for each output APK
         // other than the universal APK.
         variant.outputs.forEach { output ->
@@ -297,6 +301,11 @@ androidComponents {
 
     val reportingExtension: ReportingExtension = project.extensions.getByType(ReportingExtension::class.java)
     configureLicensesTasks(reportingExtension)
+}
+
+// Configure the SonarQube plugin to wait for the resource generation tasks to complete before running the analysis.
+tasks.withType<SonarResolverTask>().configureEach {
+    dependsOn("generateGplayDebugResValues", "generateGplayDebugAndroidTestResValues")
 }
 
 setupDependencyInjection()

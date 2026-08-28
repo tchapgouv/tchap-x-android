@@ -323,6 +323,11 @@ class DefaultElementClassicConnection(
             ElementClassicConnectionState.Error(error)
         } else {
             val userId = getString(KEY_USER_ID_STR)?.takeIf { it.isNotEmpty() }?.let(::UserId)
+
+            // :tchap: Retrieve email from Tchap Classique
+            val emailFromTchapClassique = getString(KEY_USER_EMAIL_STR)?.takeIf { it.isNotEmpty() && it != "undefined" }
+            // :tchap: end
+
             if (userId == null) {
                 ElementClassicConnectionState.ElementClassicReadyNoSession
             } else {
@@ -358,6 +363,9 @@ class DefaultElementClassicConnection(
                 ElementClassicConnectionState.ElementClassicReady(
                     elementClassicSession = ElementClassicSession(
                         userId = userId,
+                        // :tchap: Retrieve email from Tchap Classique
+                        email = emailFromTchapClassique,
+                        // :tchap: end
                         homeserverUrl = homeserverUrl,
                         secrets = secrets,
                         roomKeysVersion = roomKeysVersion,
@@ -385,6 +393,10 @@ class DefaultElementClassicConnection(
         const val KEY_USER_ID_STR = "userId"
         const val KEY_HOMESERVER_URL_STR = "homeserverUrl"
         const val KEY_USER_DISPLAY_NAME_STR = "displayName"
+
+        // :tchap: Retrieve email from Tchap Classique
+        const val KEY_USER_EMAIL_STR = "email"
+        // :tchap: end
 
         /**
          * Key to extract the secrets from the bundle, as a Json string.

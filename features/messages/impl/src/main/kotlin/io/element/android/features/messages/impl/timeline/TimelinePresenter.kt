@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import de.bwi.messenger.libraries.matrix.api.BwiContentScannerScanState
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
@@ -34,15 +33,10 @@ import io.element.android.features.messages.impl.timeline.factories.TimelineItem
 import io.element.android.features.messages.impl.timeline.factories.TimelineItemsFactoryConfig
 import io.element.android.features.messages.impl.timeline.model.NewEventState
 import io.element.android.features.messages.impl.timeline.model.TimelineItem
-import io.element.android.features.messages.impl.timeline.model.TimelineItem.Virtual
-import io.element.android.features.messages.impl.timeline.model.event.TimelineItemAudioContent
-import io.element.android.features.messages.impl.timeline.model.event.TimelineItemEventContentWithAttachment
-import io.element.android.features.messages.impl.timeline.model.event.TimelineItemFileContent
-import io.element.android.features.messages.impl.timeline.model.event.TimelineItemImageContent
-import io.element.android.features.messages.impl.timeline.model.event.TimelineItemVideoContent
-import io.element.android.features.messages.impl.timeline.model.event.TimelineItemVoiceContent
-import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemBwiScanStateChangedModel
+import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemReadMarkerModel
 import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemTypingNotificationModel
+import io.element.android.features.messages.impl.timeline.protection.TimelineProtectionEvent
+import io.element.android.features.messages.impl.timeline.protection.TimelineProtectionState
 import io.element.android.features.messages.impl.typing.TypingNotificationState
 import io.element.android.features.messages.impl.userEventPermissions
 import io.element.android.features.messages.impl.voicemessages.timeline.RedactedVoiceMessageManager
@@ -106,6 +100,8 @@ class TimelinePresenter(
     private val featureFlagService: FeatureFlagService,
     private val analyticsService: AnalyticsService,
     private val liveLocationShareManager: ActiveLiveLocationShareManager,
+    private val markAsFullyRead: MarkAsFullyRead,
+    private val timelineProtectionPresenter: Presenter<TimelineProtectionState>,
 ) : Presenter<TimelineState> {
     private val tag = "TimelinePresenter"
 
@@ -144,13 +140,16 @@ class TimelinePresenter(
 
         val prevMostRecentItemId = rememberSaveable { mutableStateOf<UniqueId?>(null) }
 
-        val newEventState = remember { mutableStateOf(NewEventState.None) }
+        val newEventState = remember { mutableStateOf<NewEventState>(NewEventState.None) }
         val messageShieldDialogData: MutableState<MessageShieldData?> = remember { mutableStateOf(null) }
 
+        // Forces [JumpToUnreadState.Hidden] until the next RoomInfo push. Set after a
+        // [TimelineEvent.MarkAllAsRead] await completes so the FAB hides without waiting for
+        // the SDK to push a refreshed fully-read marker; the after-await ordering means any
+        // RoomInfo update racing the mark-as-read call has already landed and can't undo this.
+        val suppressJumpToUnread = remember { mutableStateOf(false) }
+
         val resolveVerifiedUserSendFailureState = resolveVerifiedUserSendFailurePresenter.present()
-        val renderReadReceipts by remember {
-            sessionPreferencesStore.isRenderReadReceiptsEnabled()
-        }.collectAsState(initial = true)
         val isLive by remember {
             timelineController.isLive()
         }.collectAsState(initial = true)
@@ -158,6 +157,11 @@ class TimelinePresenter(
         val displayThreadSummaries by produceState(false) {
             value = featureFlagService.isFeatureEnabled(FeatureFlags.Threads)
         }
+        val displayJumpToUnread by produceState(false) {
+            value = featureFlagService.isFeatureEnabled(FeatureFlags.JumpToUnread)
+        }
+
+        val timelineProtectionState = timelineProtectionPresenter.present()
 
         fun handleEvent(event: TimelineEvent) {
             when (event) {
@@ -231,6 +235,14 @@ class TimelinePresenter(
                     timelineController.focusOnLive()
                 }
                 TimelineEvent.HideShieldDialog -> messageShieldDialogData.value = null
+                TimelineEvent.MarkAllAsRead -> sessionCoroutineScope.launch {
+                    val latestEventId = room.liveTimeline.getLatestEventId().getOrElse {
+                        Timber.tag(tag).w(it, "Failed to get latest event id to mark as fully read")
+                        null
+                    } ?: return@launch
+                    markAsFullyRead(room.roomId, latestEventId)
+                    suppressJumpToUnread.value = true
+                }
                 is TimelineEvent.ShowShieldDialog -> messageShieldDialogData.value = event.messageShieldData
                 is TimelineEvent.ComputeVerifiedUserSendFailure -> {
                     resolveVerifiedUserSendFailureState.eventSink(ResolveVerifiedUserSendFailureEvent.ComputeForMessage(event.event))
@@ -246,6 +258,9 @@ class TimelinePresenter(
                         focusedEventId = event.focusedEvent,
                     )
                 }
+                is TimelineEvent.ValidateMedia -> {
+                    timelineProtectionState.eventSink(TimelineProtectionEvent.ValidateContent(event.mediaSources, event.validationState))
+                }
             }
         }
 
@@ -253,7 +268,7 @@ class TimelinePresenter(
             timelineItemsFactory.timelineItems
                 .onEach { newTimelineItems ->
                     timelineItemIndexer.process(newTimelineItems)
-                    timelineItems = newTimelineItems
+                    timelineItems = newTimelineItems.toImmutableList()
 
                     analyticsService.run {
                         finishLongRunningTransaction(DisplayFirstTimelineItems)
@@ -262,13 +277,18 @@ class TimelinePresenter(
                 }
                 .launchIn(this)
 
-            combine(timelineController.timelineItems(), room.membersStateFlow) { items, membersState ->
+            combine(
+                timelineController.timelineItems(),
+                room.membersStateFlow,
+                sessionPreferencesStore.isRenderReadReceiptsEnabled(),
+            ) { items, membersState, renderReadReceipts ->
                 val parent = analyticsService.getLongRunningTransaction(DisplayFirstTimelineItems)
                 val transaction = parent?.startChild("timelineItemsFactory.replaceWith", "Processing timeline items")
                 transaction?.putExtraData(AnalyticsUserData.TIMELINE_ITEM_COUNT, items.count().toString())
                 timelineItemsFactory.replaceWith(
                     timelineItems = items,
-                    roomMembers = membersState.roomMembers().orEmpty()
+                    roomMembers = membersState.roomMembers().orEmpty(),
+                    renderReadReceipts = renderReadReceipts,
                 )
                 transaction?.finish()
                 items
@@ -282,7 +302,67 @@ class TimelinePresenter(
             computeNewItemState(timelineItems, prevMostRecentItemId, newEventState)
         }
 
-        LaunchedEffect(timelineItems.size, focusRequestState.value) {
+        // Keyed on the full [timelineItems] reference (not just .size) so we re-scan when the
+        // read marker advances in place — the SDK swaps the marker virtual item to a new position
+        // without changing the list length, e.g. when [markRoomAsFullyRead] is sent while at the
+        // bottom of the room.
+        //
+        // The state has three shapes:
+        //  - InWindow: the SDK has materialised a virtual ReadMarker item in the loaded window;
+        //    tapping the FAB smoothly scrolls to its index.
+        //  - OutOfWindow: the marker event is older than the loaded window, so the SDK gives us
+        //    only the event id via RoomInfo.fullyReadEventId; tapping triggers a focused-event
+        //    load via the existing TimelineEvent.FocusOnEvent path.
+        //  - Hidden: feature flag off, no marker, caught-up (marker loaded but no virtual item),
+        //    or initial load (no items yet).
+        val jumpToUnread = remember { mutableStateOf<JumpToUnreadState>(JumpToUnreadState.Hidden) }
+        // The SDK is authoritative again once it pushes a new fully-read marker, so drop the
+        // post-mark-as-read suppression and let the recompute below pick up the new value.
+        LaunchedEffect(roomInfo.fullyReadEventId) {
+            suppressJumpToUnread.value = false
+        }
+        LaunchedEffect(
+            timelineItems.map { it.identifier() },
+            displayJumpToUnread,
+            roomInfo.fullyReadEventId,
+            roomInfo.numUnreadMessages,
+            suppressJumpToUnread.value,
+        ) {
+            if (!displayJumpToUnread || suppressJumpToUnread.value) {
+                jumpToUnread.value = JumpToUnreadState.Hidden
+                return@LaunchedEffect
+            }
+            val items = timelineItems
+            val fullyReadEventId = roomInfo.fullyReadEventId
+            val hasUnreadMessages = roomInfo.numUnreadMessages > 0
+            val markerIndex = withContext(dispatchers.computation) {
+                items.indexOfFirst {
+                    (it as? TimelineItem.Virtual)?.model is TimelineItemReadMarkerModel
+                }
+            }
+            jumpToUnread.value = when {
+                markerIndex >= 0 -> JumpToUnreadState.InWindow(markerIndex)
+                // Out-of-window only when there is genuinely unread *displayable* content
+                // (numUnreadMessages counts "interesting" messages, never state/hidden events) AND
+                // the marker event isn't merely an in-window item we don't render. isKnown is the
+                // cheap display-index check; isEventLoaded falls back to the SDK to tell
+                // "in window but not displayed" apart from "genuinely out of window".
+                fullyReadEventId != null &&
+                    hasUnreadMessages &&
+                    items.isNotEmpty() &&
+                    !timelineItemIndexer.isKnown(fullyReadEventId) &&
+                    !timelineController.activeTimelineFlow().value.isEventLoaded(fullyReadEventId) ->
+                    JumpToUnreadState.OutOfWindow(fullyReadEventId)
+                else -> JumpToUnreadState.Hidden
+            }
+        }
+
+        // Keyed on the full [timelineItems] reference (not just .size) so we re-resolve the index
+        // when a focused timeline loads with the same item count as the window it replaced — e.g.
+        // jumping to an out-of-window read marker in a busy room, where both windows fill to the
+        // same page size. With .size as the key the effect wouldn't re-run, the focused event's
+        // index would stay unresolved, and the scroll would never fire until a second tap.
+        LaunchedEffect(timelineItems.map { it.identifier() }, focusRequestState.value) {
             val currentFocusRequestState = focusRequestState.value
             if (currentFocusRequestState is FocusRequestState.Success && !currentFocusRequestState.rendered) {
                 val eventId = currentFocusRequestState.eventId
@@ -320,118 +400,19 @@ class TimelinePresenter(
         }
 
         return TimelineState(
-            timelineItems = applyBwiScanStateChangedEvents(timelineItems),
+            timelineItems = timelineItems,
             timelineMode = timelineMode,
             timelineRoomInfo = timelineRoomInfo,
-            renderReadReceipts = renderReadReceipts,
             newEventState = newEventState.value,
             isLive = isLive,
             focusRequestState = focusRequestState.value,
             messageShieldDialogData = messageShieldDialogData.value,
             resolveVerifiedUserSendFailureState = resolveVerifiedUserSendFailureState,
             displayThreadSummaries = displayThreadSummaries,
+            displayJumpToUnread = displayJumpToUnread,
+            jumpToUnread = jumpToUnread.value,
             eventSink = ::handleEvent,
         )
-    }
-
-    private fun TimelineItem.getBwiScanStateModel(): TimelineItemBwiScanStateChangedModel? {
-        if (this !is Virtual || model !is TimelineItemBwiScanStateChangedModel) return null
-        return model
-    }
-
-    private fun applyBwiScanStateChangedEvents(items: ImmutableList<TimelineItem>): ImmutableList<TimelineItem> {
-        val list = items.filter { item -> item.getBwiScanStateModel() == null }.toTypedArray()
-
-        // merge scan state to items
-        for (item in items) {
-            val scanStateChangedModel = item.getBwiScanStateModel()
-            if (scanStateChangedModel != null && scanStateChangedModel.newScanState != BwiContentScannerScanState.IN_PROGRESS) {
-                val event = list.find { it.identifier().toString() == scanStateChangedModel.eventId }
-                if (event is TimelineItem.Event && event.content is TimelineItemEventContentWithAttachment) {
-                    val index = list.indexOf(event)
-                    val content = when (event.content) {
-                        is TimelineItemImageContent -> event.content.copy(scanState = scanStateChangedModel.newScanState)
-                        is TimelineItemVideoContent -> event.content.copy(scanState = scanStateChangedModel.newScanState)
-                        is TimelineItemFileContent -> event.content.copy(scanState = scanStateChangedModel.newScanState)
-                        is TimelineItemAudioContent -> event.content.copy(scanState = scanStateChangedModel.newScanState)
-                        is TimelineItemVoiceContent -> event.content.copy(scanState = scanStateChangedModel.newScanState)
-                        else -> null
-                    }
-                    if (content != null) {
-                        list[index] = event.copy(content = content)
-                    }
-                    Timber.i("###BWI### newScanState ${event.id} ${scanStateChangedModel.newScanState}")
-                } else {
-                    Timber.e("###BWI### newScanState could not be applied on event ${scanStateChangedModel.eventId}! ")
-                }
-            }
-        }
-        return list.toImmutableList()
-
-//        if (items.isEmpty()) return items
-//        val (scanStateItems, regularItems) = items.partition { item -> item.getBwiScanStateModel() == null }
-//
-//        return scanStateItems.map { scanStateItem ->
-//            regularItems.firstOrNull { it.getBwiScanStateModel()?.eventId == scanStateItem.identifier().toString() }.let { event ->
-//                event?.getBwiScanStateModel()?.newScanState?.let { scanState ->
-//                    if (event is TimelineItem.Event && event.content is TimelineItemEventContentWithAttachment) {
-//                        val updatedContent = when (val content = event.content) {
-//                            is TimelineItemImageContent -> content.copy(scanState = scanState)
-//                            is TimelineItemVideoContent -> content.copy(scanState = scanState)
-//                            is TimelineItemFileContent -> content.copy(scanState = scanState)
-//                            is TimelineItemAudioContent -> content.copy(scanState = scanState)
-//                            is TimelineItemVoiceContent -> content.copy(scanState = scanState)
-//                            else -> content
-//                        }
-//                        if (updatedContent === event.content) {
-//                            event
-//                        } else {
-//                            event.copy(content = updatedContent)
-//                        }
-//                    } else {
-//                        event
-//                    }
-//                }
-//            } ?: scanStateItem
-//        }.toImmutableList()
-
-//        if (items.isEmpty()) return items
-//        val (scanStateItems, regularItems) = items.partition { it.getBwiScanStateModel() != null }
-//        val scanStateChanges = scanStateItems
-//            .mapNotNull { it.getBwiScanStateModel() }
-//            .filter { it.newScanState != BwiContentScannerScanState.IN_PROGRESS }
-//            .associateBy { it.eventId }
-//
-//        if (scanStateChanges.isEmpty()) {
-//            return regularItems.toImmutableList()
-//        }
-//
-//        // Process items and apply scan states
-//        return regularItems.map { item ->
-//            if (item is TimelineItem.Event && item.content is TimelineItemEventContentWithAttachment) {
-//                val scanState = scanStateChanges[item.identifier().toString()]?.newScanState
-//                if (scanState == null) {
-//                    item
-//                } else {
-//                    val updatedContent = when (val content = item.content) {
-//                        is TimelineItemImageContent -> content.copy(scanState = scanState)
-//                        is TimelineItemVideoContent -> content.copy(scanState = scanState)
-//                        is TimelineItemFileContent -> content.copy(scanState = scanState)
-//                        is TimelineItemAudioContent -> content.copy(scanState = scanState)
-//                        is TimelineItemVoiceContent -> content.copy(scanState = scanState)
-//                        else -> content
-//                    }
-//                    if (updatedContent === item.content) {
-//                        item
-//                    } else {
-//                        Timber.i("###BWI### Applied scanState ${scanState} to event ${item.id}")
-//                        item.copy(content = updatedContent)
-//                    }
-//                }
-//            } else {
-//                item
-//            }
-//        }.toImmutableList()
     }
 
     private suspend fun focusOnEvent(
@@ -491,7 +472,7 @@ class TimelinePresenter(
     private suspend fun computeNewItemState(
         timelineItems: ImmutableList<TimelineItem>,
         prevMostRecentItemId: MutableState<UniqueId?>,
-        newEventState: MutableState<NewEventState>
+        newEventState: MutableState<NewEventState>,
     ) = withContext(dispatchers.computation) {
         // FromMe is prioritized over FromOther, so skip if we already have a FromMe
         if (newEventState.value == NewEventState.FromMe) {
@@ -510,12 +491,7 @@ class TimelinePresenter(
 
         if (hasNewEvent) {
             // Scroll to bottom if the new event is from me, even if sent from another device
-            val fromMe = newMostRecentItem.isMine
-            newEventState.value = if (fromMe) {
-                NewEventState.FromMe
-            } else {
-                NewEventState.FromOther
-            }
+            newEventState.value = if (newMostRecentItem.isMine) NewEventState.FromMe else NewEventState.FromOther
         }
         prevMostRecentItemId.value = newMostRecentItemId
     }

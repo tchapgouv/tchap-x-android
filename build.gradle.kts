@@ -52,7 +52,6 @@ allprojects {
 
     tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
         exclude("io/element/android/tests/konsist/failures/**")
-        exclude("**/de.bwi.messenger.features.messages.impl.timeline.components.event/**")
 
         // This file comes from another project and we want to keep it as close to the original as possible
         exclude("org/rustls/platformverifier/**")
@@ -107,8 +106,6 @@ allprojects {
             // Fix compilation warning for annotations
             // See https://youtrack.jetbrains.com/issue/KT-73255/Change-defaulting-rule-for-annotations for more details
             freeCompilerArgs.add("-Xannotation-default-target=first-only")
-            // Opt-in to context receivers
-            freeCompilerArgs.add("-Xcontext-parameters")
         }
     }
 }

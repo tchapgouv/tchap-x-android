@@ -19,7 +19,6 @@ import com.lemonappdev.konsist.api.ext.list.withNameEndingWith
 import com.lemonappdev.konsist.api.ext.list.withPackage
 import com.lemonappdev.konsist.api.ext.list.withoutName
 import com.lemonappdev.konsist.api.ext.list.withoutNameStartingWith
-import com.lemonappdev.konsist.api.ext.list.withoutPackage
 import com.lemonappdev.konsist.api.verify.assertEmpty
 import com.lemonappdev.konsist.api.verify.assertTrue
 import io.element.android.libraries.architecture.BaseFlowNode
@@ -32,9 +31,6 @@ class KonsistClassNameTest {
         Konsist.scopeFromProject()
             .classes()
             .withAllParentsOf(Presenter::class)
-            .withoutPackage(
-                "de.bwi.messenger.features.messages.impl.timeline.components.event"
-            )
             .assertTrue {
                 it.name.endsWith("Presenter")
             }
@@ -45,9 +41,6 @@ class KonsistClassNameTest {
         Konsist.scopeFromProject()
             .classes()
             .withAllParentsOf(Node::class)
-            .withoutPackage(
-                "de.bwi.messenger.features.messages.impl.timeline.components.event"
-            )
             .assertTrue {
                 it.name.endsWith("Node")
             }
@@ -74,9 +67,6 @@ class KonsistClassNameTest {
                 "LoginModeViewErrorProvider",
                 "OverlapRatioProvider",
                 "TextFileContentProvider",
-            )
-            .withoutPackage(
-                "de.bwi.messenger.features.messages.impl.timeline.components.event"
             )
             .also {
                 // Check that classes are actually found
@@ -115,9 +105,6 @@ class KonsistClassNameTest {
                 "FakeKeyStore",
                 "FakeListenableFuture",
             )
-            .withoutPackage(
-                "de.bwi.messenger.features.messages.impl.timeline.components.event"
-            )
             .assertTrue {
                 val interfaceName = it.name
                     .replace("FakeFfi", "")
@@ -153,9 +140,9 @@ class KonsistClassNameTest {
         Konsist.scopeFromProject()
             .classes()
             .withNameEndingWith("Impl")
-            .withoutName("MediaUploadHandlerImpl")
-            .withoutPackage(
-                "de.bwi.messenger.features.messages.impl.timeline.components.event"
+            .withoutName(
+                "MediaUploadHandlerImpl",
+                "GalleryMediaUploadHandlerImpl",
             )
             .assertEmpty(additionalMessage = "Class implementing interface should have name not end with 'Impl' but start with 'Default'")
     }
@@ -192,9 +179,6 @@ class KonsistClassNameTest {
                 "Preferences",
                 "Rust",
                 "SharedPreferences",
-            )
-            .withoutPackage(
-                "de.bwi.messenger.features.messages.impl.timeline.components.event"
             )
             .assertEmpty()
     }

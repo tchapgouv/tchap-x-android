@@ -43,7 +43,6 @@ class DefaultUserListPresenterTest {
                 FakeMatrixClient(),
             )
         presenter.test {
-            skipItems(1)
             val initialState = awaitItem()
             assertThat(initialState.searchQuery.text.toString()).isEmpty()
             assertThat(initialState.isMultiSelectionEnabled).isFalse()
@@ -64,7 +63,6 @@ class DefaultUserListPresenterTest {
                 FakeMatrixClient(),
             )
         presenter.test {
-            skipItems(1)
             val initialState = awaitItem()
             assertThat(initialState.searchQuery.text.toString()).isEmpty()
             assertThat(initialState.isMultiSelectionEnabled).isTrue()
@@ -85,7 +83,6 @@ class DefaultUserListPresenterTest {
                 FakeMatrixClient(),
             )
         presenter.test {
-            skipItems(1)
             val initialState = awaitItem()
 
             initialState.eventSink(UserListEvents.OnSearchActiveChanged(true))
@@ -95,13 +92,11 @@ class DefaultUserListPresenterTest {
             initialState.searchQuery.setTextAndPlaceCursorAtEnd(matrixIdQuery)
             assertThat(awaitItem().searchQuery.text.toString()).isEqualTo(matrixIdQuery)
             assertThat(userRepository.providedQuery).isEqualTo(matrixIdQuery)
-            skipItems(1)
 
             val notMatrixIdQuery = "name"
             initialState.searchQuery.setTextAndPlaceCursorAtEnd(notMatrixIdQuery)
             assertThat(awaitItem().searchQuery.text.toString()).isEqualTo(notMatrixIdQuery)
             assertThat(userRepository.providedQuery).isEqualTo(notMatrixIdQuery)
-            skipItems(1)
 
             initialState.eventSink(UserListEvents.OnSearchActiveChanged(false))
             assertThat(awaitItem().isSearchActive).isFalse()
@@ -121,13 +116,12 @@ class DefaultUserListPresenterTest {
                 FakeMatrixClient(),
             )
         presenter.test {
-            skipItems(1)
             val initialState = awaitItem()
 
             initialState.searchQuery.setTextAndPlaceCursorAtEnd("alice")
             assertThat(initialState.searchResults).isInstanceOf(SearchBarResultState.Initial::class.java)
             assertThat(userRepository.providedQuery).isEqualTo("alice")
-            skipItems(2)
+            skipItems(1)
 
             // When the user repository emits a result, it's copied to the state
             val result = UserSearchResultState(
@@ -173,13 +167,12 @@ class DefaultUserListPresenterTest {
                 FakeMatrixClient(),
             )
         presenter.test {
-            skipItems(1)
             val initialState = awaitItem()
 
             initialState.searchQuery.setTextAndPlaceCursorAtEnd("alice")
             assertThat(initialState.searchResults).isInstanceOf(SearchBarResultState.Initial::class.java)
             assertThat(userRepository.providedQuery).isEqualTo("alice")
-            skipItems(2)
+            skipItems(1)
 
             // When the results list is empty, the state is set to NoResults
             userRepository.emitState(UserSearchResultState(results = emptyList(), isSearching = false))
@@ -198,7 +191,6 @@ class DefaultUserListPresenterTest {
                 FakeMatrixClient(),
             )
         presenter.test {
-            skipItems(1)
             val initialState = awaitItem()
 
             val userA = aMatrixUser("@userA:domain", "A")
