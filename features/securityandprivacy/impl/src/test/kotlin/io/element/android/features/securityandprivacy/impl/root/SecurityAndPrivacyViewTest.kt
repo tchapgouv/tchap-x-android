@@ -20,7 +20,6 @@ import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.matrix.test.A_ROOM_ID
 import io.element.android.libraries.ui.strings.CommonStrings
-import io.element.android.tests.testutils.EnsureNeverCalledWithParam
 import io.element.android.tests.testutils.EventsRecorder
 import io.element.android.tests.testutils.clickOn
 import io.element.android.tests.testutils.pressBack
@@ -222,12 +221,16 @@ private fun AndroidComposeUiTest<ComponentActivity>.setSecurityAndPrivacyView(
     state: SecurityAndPrivacyState = aSecurityAndPrivacyState(
         eventSink = EventsRecorder(expectEvents = false),
     ),
-    onLinkClick: (String) -> Unit = EnsureNeverCalledWithParam(),
+    // :tchap: Hide unnecessary "Learn more" link
+//    onLinkClick: (String) -> Unit = EnsureNeverCalledWithParam(),
+    // :tchap: end
 ) {
     setContent {
         SecurityAndPrivacyView(
             state = state,
-            onLinkClick = onLinkClick,
+            // :tchap: Hide unnecessary "Learn more" link
+//            onLinkClick = onLinkClick,
+            // :tchap: end
         )
     }
 }

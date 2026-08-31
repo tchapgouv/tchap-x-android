@@ -28,7 +28,6 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.securityandprivacy.impl.R
 import io.element.android.libraries.architecture.AsyncAction
@@ -41,7 +40,6 @@ import io.element.android.libraries.designsystem.components.list.ListItemContent
 import io.element.android.libraries.designsystem.preview.ElementPreviewDark
 import io.element.android.libraries.designsystem.preview.ElementPreviewLight
 import io.element.android.libraries.designsystem.preview.PreviewWithLargeHeight
-import io.element.android.libraries.designsystem.text.stringWithLink
 import io.element.android.libraries.designsystem.theme.components.ListItem
 import io.element.android.libraries.designsystem.theme.components.Scaffold
 import io.element.android.libraries.designsystem.theme.components.Text
@@ -55,7 +53,9 @@ import kotlinx.collections.immutable.ImmutableList
 @Composable
 fun SecurityAndPrivacyView(
     state: SecurityAndPrivacyState,
-    onLinkClick: (String) -> Unit,
+    // :tchap: Hide unnecessary "Learn more" link
+//    onLinkClick: (String) -> Unit,
+    // :tchap: end
     modifier: Modifier = Modifier,
 ) {
     BackHandler {
@@ -122,7 +122,9 @@ fun SecurityAndPrivacyView(
                     savedOptions = state.savedSettings.historyVisibility,
                     availableOptions = state.availableHistoryVisibilities,
                     onSelectOption = { state.eventSink(SecurityAndPrivacyEvent.ChangeHistoryVisibility(it)) },
-                    onLinkClick = onLinkClick,
+                    // :tchap: Hide unnecessary "Learn more" link
+//                    onLinkClick = onLinkClick,
+                    // :tchap: end
                 )
             }
         }
@@ -412,7 +414,9 @@ private fun HistoryVisibilitySection(
     savedOptions: SecurityAndPrivacyHistoryVisibility?,
     availableOptions: ImmutableList<SecurityAndPrivacyHistoryVisibility>,
     onSelectOption: (SecurityAndPrivacyHistoryVisibility) -> Unit,
-    onLinkClick: (String) -> Unit,
+    // :tchap: Hide unnecessary "Learn more" link
+//    onLinkClick: (String) -> Unit,
+    // :tchap: end
     modifier: Modifier = Modifier,
 ) {
     SecurityAndPrivacySection(
@@ -483,7 +487,9 @@ internal fun SecurityAndPrivacyViewDarkPreview(@PreviewParameter(SecurityAndPriv
 @Composable
 private fun ContentToPreview(state: SecurityAndPrivacyState) {
     SecurityAndPrivacyView(
-        state = state,
-        onLinkClick = {},
+        state = state
+        // :tchap: Hide unnecessary "Learn more" link
+//        onLinkClick = {},
+        // :tchap: end
     )
 }
