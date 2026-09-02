@@ -8,8 +8,6 @@
 
 package io.element.android.libraries.push.impl.troubleshoot
 
-import dev.zacsweers.metro.ContributesIntoSet
-import io.element.android.libraries.di.SessionScope
 import io.element.android.libraries.matrix.api.core.SessionId
 import io.element.android.libraries.push.api.PushService
 import io.element.android.libraries.push.api.gateway.PushGatewayFailure
@@ -29,7 +27,9 @@ import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 import kotlin.time.Duration.Companion.seconds
 
-@ContributesIntoSet(SessionScope::class)
+// :tchap: Disable this test because the server is not configured to accept it (returns HTTP 503).
+// @ContributesIntoSet(SessionScope::class)
+// :tchap: end
 class PushLoopbackTest(
     private val sessionId: SessionId,
     private val pushService: PushService,
