@@ -25,4 +25,8 @@ object LearnMoreConfig {
     // :tchap: end
 
     const val HISTORY_VISIBLE_URL: String = "https://element.io/en/help#e2ee-history-sharing"
+
+    // :tchap: Add backup guide to connect from Tchap Classique
+    const val BACKUP_GUIDE_TCHAP_CLASSIQUE: String = "https://aide.tchap.numerique.gouv.fr/fr/article/verifier-la-sauvegarde-automatique-pour-la-connexion-depuis-tchap-classique-6zsiqk/"
+    // :tchap: end
 }

@@ -13,6 +13,8 @@ import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
 import com.bumble.appyx.core.plugin.Plugin
@@ -20,6 +22,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
+import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.features.login.impl.BuildConfig
 import io.element.android.libraries.architecture.callback
 import timber.log.Timber
@@ -54,16 +57,28 @@ class MissingKeyBackupNode(
         }
     }
 
+    // :tchap: Add backup guide to connect from Tchap Classique
+    private fun onLearnMoreClick(uriHandler: UriHandler) {
+        uriHandler.openUri(LearnMoreConfig.BACKUP_GUIDE_TCHAP_CLASSIQUE)
+    }
+    // :tchap: end
+
     @Composable
     override fun View(modifier: Modifier) {
         val state = presenter.present()
         val context = LocalContext.current
+        // :tchap: Add backup guide to connect from Tchap Classique
+        val uriHandler = LocalUriHandler.current
+        // :tchap: end
         MissingKeyBackupView(
             state = state,
             onBackClick = callback::navigateBack,
             onOpenClassicClick = {
                 openClassic(context)
             },
+            // :tchap: Add backup guide to connect from Tchap Classique
+            onReadBackupGuideClick = { onLearnMoreClick(uriHandler) },
+            // :tchap: end
             modifier = modifier,
         )
     }
