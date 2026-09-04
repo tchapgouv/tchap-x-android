@@ -14,6 +14,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import io.element.android.libraries.core.bool.orFalse
+import io.element.android.libraries.core.bool.orTrue
 import io.element.android.libraries.preferences.api.store.PreferenceDataStoreFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -46,7 +47,10 @@ class DefaultAnalyticsStore(
     private val dataStore = preferenceDataStoreFactory.create("vector_analytics")
 
     override val userConsentFlow: Flow<Boolean> = dataStore.data
-        .map { preferences -> preferences[userConsent].orFalse() }
+        // :tchap: Enable Posthog by default
+//        .map { preferences -> preferences[userConsent].orFalse() }
+        .map { preferences -> preferences[userConsent].orTrue() }
+        // :tchap: end
         .distinctUntilChanged()
 
     override val didAskUserConsentFlow: Flow<Boolean> = dataStore.data

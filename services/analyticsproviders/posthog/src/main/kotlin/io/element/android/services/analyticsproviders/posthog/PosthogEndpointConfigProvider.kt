@@ -42,7 +42,23 @@ class PosthogEndpointConfigProvider(
                 )
             }
         } else {
-            null
+            // :tchap: Config Posthog URL for Tchap
+//            null
+            when (BuildConfig.FLAVOR_target) {
+                "tchap" -> PosthogEndpointConfig(
+                    host = "https://posthog.tchap.numerique.gouv.fr",
+                    apiKey = "phc_gm2O25mu8NTQtKpozdoVwZCixWqdq7PUHLLjDNDzVIe",
+                )
+                "tchapPreprod" -> PosthogEndpointConfig(
+                    host = "https://posthog.preprod.tchap.numerique.gouv.fr",
+                    apiKey = "phc_yf5yr3PrgiUTZMZpSmUlR6hdtqAejwhcUMQGsK8Nx5w",
+                )
+                else -> PosthogEndpointConfig(
+                    host = "https://posthog.tchap.incubateur.net",
+                    apiKey = "phc_yf5yr3PrgiUTZMZpSmUlR6hdtqAejwhcUMQGsK8Nx5w",
+                )
+            }
+            // :tchap: end
         }
     }
 }
