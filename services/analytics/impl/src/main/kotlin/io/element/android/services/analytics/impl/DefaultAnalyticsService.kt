@@ -56,7 +56,11 @@ class DefaultAnalyticsService(
     private var pendingUserProperties: UserProperties? = null
 
     override val userConsentFlow: Flow<Boolean> = analyticsStore.userConsentFlow
-    override val didAskUserConsentFlow: Flow<Boolean> = flowOf(true) // TCHAP disabled the consent dialog
+
+    // :tchap: Enable Posthog without ask user consent
+    override val didAskUserConsentFlow: Flow<Boolean> = flowOf(true)
+    // :tchap: end
+
     override val analyticsIdFlow: Flow<String> = analyticsStore.analyticsIdFlow
 
     init {
