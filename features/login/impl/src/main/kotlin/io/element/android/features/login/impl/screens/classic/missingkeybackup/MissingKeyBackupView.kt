@@ -7,6 +7,7 @@
 
 package io.element.android.features.login.impl.screens.classic.missingkeybackup
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,13 +15,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.login.impl.R
 import io.element.android.libraries.designsystem.atomic.organisms.NumberedListOrganism
 import io.element.android.libraries.designsystem.atomic.pages.FlowStepPage
 import io.element.android.libraries.designsystem.components.BigIcon
+import io.element.android.libraries.designsystem.components.ClickableLinkText
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.components.Button
@@ -31,6 +35,9 @@ fun MissingKeyBackupView(
     state: MissingKeyBackupState,
     onBackClick: () -> Unit,
     onOpenClassicClick: () -> Unit,
+    // :tchap: Add backup guide to connect from Tchap Classique
+    onReadBackupGuideClick: () -> Unit,
+    // :tchap: end
     modifier: Modifier = Modifier,
 ) {
     FlowStepPage(
@@ -38,7 +45,10 @@ fun MissingKeyBackupView(
         onBackClick = onBackClick,
         iconStyle = BigIcon.Style.Default(CompoundIcons.KeySolid()),
         title = stringResource(id = R.string.screen_missing_key_backup_title, state.appName),
-        content = { Content(state) },
+        // :tchap: Add backup guide to connect from Tchap Classique
+//        content = { Content(state) },
+        content = { Content(onReadBackupGuideClick) },
+        // :tchap: end
         buttons = {
             Buttons(
                 onOpenClassicClick = onOpenClassicClick,
@@ -49,18 +59,41 @@ fun MissingKeyBackupView(
 
 @Composable
 private fun Content(
-    state: MissingKeyBackupState,
+    // :tchap: Add backup guide to connect from Tchap Classique
+//    state: MissingKeyBackupState,
+    onOpenClassicClick: () -> Unit,
+    // :tchap: end
 ) {
-    NumberedListOrganism(
-        modifier = Modifier.padding(top = 50.dp, start = 20.dp, end = 20.dp),
-        items = persistentListOf(
-            AnnotatedString(stringResource(R.string.screen_missing_key_backup_step_1)),
-            AnnotatedString(stringResource(R.string.screen_missing_key_backup_step_2_android)),
-            AnnotatedString(stringResource(R.string.screen_missing_key_backup_step_3_android)),
-            AnnotatedString(stringResource(R.string.screen_missing_key_backup_step_4)),
-            AnnotatedString(stringResource(R.string.screen_missing_key_backup_step_5, state.appName)),
-        ),
-    )
+    // :tchap: Add backup guide to connect from Tchap Classique
+//    NumberedListOrganism(
+//        modifier = Modifier.padding(top = 50.dp, start = 20.dp, end = 20.dp),
+//        items = persistentListOf(
+//            AnnotatedString(stringResource(R.string.screen_missing_key_backup_step_1)),
+//            AnnotatedString(stringResource(R.string.screen_missing_key_backup_step_2_android)),
+//            AnnotatedString(stringResource(R.string.screen_missing_key_backup_step_3_android)),
+//            AnnotatedString(stringResource(R.string.screen_missing_key_backup_step_4)),
+//            AnnotatedString(stringResource(R.string.screen_missing_key_backup_step_5, state.appName)),
+//        ),
+//    )
+    Column {
+        NumberedListOrganism(
+            modifier = Modifier.padding(top = 50.dp, start = 20.dp, end = 20.dp),
+            items = persistentListOf(
+                AnnotatedString(stringResource(R.string.screen_missing_key_backup_step_1)),
+                AnnotatedString(stringResource(R.string.screen_missing_key_backup_step_2_android)),
+                AnnotatedString(stringResource(R.string.screen_missing_key_backup_step_3_android)),
+            ),
+        )
+        ClickableLinkText(
+            modifier = Modifier.padding(vertical = 48.dp),
+            annotatedString = AnnotatedString(stringResource(R.string.tchap_screen_missing_key_backup_open_help_center)),
+            style = ElementTheme.typography.fontBodyMdRegular.copy(
+                textDecoration = TextDecoration.Underline,
+            ),
+            onClick = onOpenClassicClick
+        )
+    }
+    // :tchap: end
 }
 
 @Composable
@@ -81,5 +114,8 @@ internal fun MissingKeyBackupViewPreview(@PreviewParameter(MissingKeyBackupState
         state = state,
         onBackClick = {},
         onOpenClassicClick = {},
+        // :tchap: Add backup guide to connect from Tchap Classique
+        onReadBackupGuideClick = {},
+        // :tchap: end
     )
 }

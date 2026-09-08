@@ -38,12 +38,13 @@
   <string name="screen_login_title">"Content de vous revoir !"</string>
   <string name="screen_login_title_with_homeserver">"Connectez-vous à %1$s"</string>
   <string name="screen_missing_key_backup_open_element_classic">"Ouvrir Tchap Classique"</string><!-- Tchap: Custom string -->
-  <string name="screen_missing_key_backup_step_1">"Ouvrez Tchap Classique sur votre appareil"</string><!-- Tchap: Custom string -->
-  <string name="screen_missing_key_backup_step_2_android">"Aller à Paramètres &gt; Sécurité et vie privée"</string>
-  <string name="screen_missing_key_backup_step_3_android">"Dans Sauvegarde automatique des messages, sélectionnez Activer la sauvegarde automatique des messages (ou Récupérer mes messages)"</string><!-- Tchap: Custom string -->
+  <string name="screen_missing_key_backup_step_1">"Ouvrez Tchap Classique et allez dans
+Paramètres > Sécurité et vie privée"</string><!-- Tchap: Custom string -->
+  <string name="screen_missing_key_backup_step_2_android">"Dans Sauvegarde automatique des messages, sélectionnez Activer la sauvegarde automatique des messages (ou Récupérer mes messages)"</string>
+  <string name="screen_missing_key_backup_step_3_android">"Revenez ici pour continuer"</string><!-- Tchap: Custom string -->
   <string name="screen_missing_key_backup_step_4">"Suivez les instructions pour activer votre sauvegarde automatique (ou récupérer vos messages)"</string><!-- Tchap: Custom string -->
   <string name="screen_missing_key_backup_step_5">"Revenez à %1$s"</string>
-  <string name="screen_missing_key_backup_title">"Activez la sauvegarde automatique avant de continuer avec %1$s"</string><!-- Tchap: Custom string -->
+  <string name="screen_missing_key_backup_title">"Activez la sauvegarde automatique dans %1$s Classique"</string><!-- Tchap: Custom string -->
   <string name="screen_onboarding_app_version">"Version %1$s"</string>
   <string name="screen_onboarding_checking_account">"Vérification du compte"</string>
   <string name="screen_onboarding_sign_in_manually">"Se connecter manuellement"</string>
