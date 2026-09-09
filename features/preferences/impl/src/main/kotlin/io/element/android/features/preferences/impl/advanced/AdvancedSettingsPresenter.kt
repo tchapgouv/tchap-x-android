@@ -147,7 +147,7 @@ class AdvancedSettingsPresenter(
                     sessionPreferencesStore.setVideoCompressionPreset(event.videoPreset)
                 }
                 // :tchap: AdvancedSettings - Add ClearCache & Rageshake rows
-                is AdvancedSettingsEvents.ClearCache -> localCoroutineScope.launch {
+                is AdvancedSettingsEvent.ClearCache -> localCoroutineScope.launch {
                     suspend {
                         clearCacheUseCase()
                     }.runCatchingUpdatingState(clearCacheAction)

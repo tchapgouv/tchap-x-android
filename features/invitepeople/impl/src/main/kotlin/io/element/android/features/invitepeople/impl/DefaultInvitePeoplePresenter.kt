@@ -26,13 +26,9 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import dev.zacsweers.metro.ContributesBinding
-<<<<<<< HEAD
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
-import io.element.android.features.invitepeople.api.InvitePeopleEvents
-=======
 import io.element.android.features.invitepeople.api.InvitePeopleEvent
->>>>>>> main-element
 import io.element.android.features.invitepeople.api.InvitePeoplePresenter
 import io.element.android.features.invitepeople.api.InvitePeopleState
 import io.element.android.libraries.architecture.AsyncAction
@@ -265,20 +261,17 @@ class DefaultInvitePeoplePresenter(
                     searchActive = false
                     queryState.clearText()
                 }
-<<<<<<< HEAD
-                // TCHAP external user
-                is InvitePeopleEvents.CheckExternalsAndSendInvites -> {
+                // :tchap: external user
+                is InvitePeopleEvent.CheckExternalsAndSendInvites -> {
                     val hasSelectedExternalUsers = selectedUsers.value.any { it.userId.toString().isExternalTchapUser() }
                     if (hasSelectedExternalUsers && !room.dataOrNull()?.info()?.isOpenToExternalUsers!!) {
                         showOpenRoomToExternalsDialog = true
                     } else {
-                        handleEvent(InvitePeopleEvents.SendInvites)
+                        handleEvent(InvitePeopleEvent.SendInvites)
                     }
                 }
-                is InvitePeopleEvents.ClearError -> {
-=======
+                // :tchap: end
                 is InvitePeopleEvent.ClearError -> {
->>>>>>> main-element
                     sendInvitesAction.value = AsyncAction.Uninitialized
                     createRoomFromDmAction.value = AsyncAction.Uninitialized
                 }
@@ -295,7 +288,7 @@ class DefaultInvitePeoplePresenter(
                         sessionCoroutineScope.launch {
                             it.setAccessRule(RoomAccessRules.UNRESTRICTED)
                                 .onSuccess {
-                                    handleEvent(InvitePeopleEvents.SendInvites)
+                                    handleEvent(InvitePeopleEvent.SendInvites)
                                 }
                                 .onFailure {
                                     showOpenRoomToExternalsDialog = false

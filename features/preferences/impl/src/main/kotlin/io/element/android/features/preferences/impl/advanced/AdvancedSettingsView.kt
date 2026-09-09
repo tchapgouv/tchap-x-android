@@ -225,7 +225,7 @@ fun AdvancedSettingsView(
             ClearCacheSection(
                 state = state,
                 onClearCacheClick = {
-                    state.eventSink(AdvancedSettingsEvents.ClearCache)
+                    state.eventSink(AdvancedSettingsEvent.ClearCache)
                 }
             )
         }

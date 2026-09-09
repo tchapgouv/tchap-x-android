@@ -155,17 +155,11 @@ fun SpaceView(
                         onSettingsClick = onSettingsClick,
                         onShareSpace = onShareSpace,
                         onViewMembersClick = onViewMembersClick,
-<<<<<<< HEAD
                         // :tchap: space-admin-limitations
-//                        onManageRoomsClick = { state.eventSink(SpaceEvents.EnterManageMode) },
+//                        onManageRoomsClick = { state.eventSink(SpaceEvent.EnterManageMode) },
 //                        onAddRoomClick = onAddRoomClick,
 //                        onCreateRoomClick = onCreateRoomClick,
                         // :tchap: end
-=======
-                        onManageRoomsClick = { state.eventSink(SpaceEvent.EnterManageMode) },
-                        onAddRoomClick = onAddRoomClick,
-                        onCreateRoomClick = onCreateRoomClick,
->>>>>>> main-element
                     )
                 }
             }

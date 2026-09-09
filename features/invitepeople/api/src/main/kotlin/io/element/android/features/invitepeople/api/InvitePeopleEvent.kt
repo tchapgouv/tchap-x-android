@@ -8,19 +8,12 @@
 
 package io.element.android.features.invitepeople.api
 
-<<<<<<< HEAD:features/invitepeople/api/src/main/kotlin/io/element/android/features/invitepeople/api/InvitePeopleEvents.kt
-interface InvitePeopleEvents {
-    data object SendInvites : InvitePeopleEvents
-    data object CloseSearch : InvitePeopleEvents
-    data object CheckExternalsAndSendInvites : InvitePeopleEvents // TCHAP external user
-    data object ClearError : InvitePeopleEvents
-=======
 /**
  * Events the invite people UI sends to its presenter through [InvitePeopleState.eventSink].
  */
 interface InvitePeopleEvent {
     data object SendInvites : InvitePeopleEvent
     data object CloseSearch : InvitePeopleEvent
+    data object CheckExternalsAndSendInvites : InvitePeopleEvent // :tchap: external user
     data object ClearError : InvitePeopleEvent
->>>>>>> main-element:features/invitepeople/api/src/main/kotlin/io/element/android/features/invitepeople/api/InvitePeopleEvent.kt
 }

@@ -222,10 +222,10 @@ fi
 ## Build the SDK
 
 if [ -z "${target_arch}" ]; then
-    arch_args=""
+    arch_args=()
     target_info="all architectures"
 else
-    arch_args="-t ${target_arch}"
+    arch_args=("-t" "${target_arch}")
     target_info="${target_arch}"
 fi
 
@@ -234,14 +234,9 @@ printf "\n## Building the SDK for ${target_info}...\n\n"
 cmd=("${kotlinComponentsPath}/scripts/build.sh" \
     -p "${rustSdkPath}" \
     -m sdk \
-<<<<<<< HEAD
-    ${arch_args} \
+    "${arch_args[@]}" \
     -o "${elementPwd}/libraries/rustsdk" \
-    -r
-=======
-    -t "${target_arch}" \
-    -o "${elementPwd}/libraries/rustsdk")
->>>>>>> main-element
+    -r)
 
 echo "$" "${cmd[@]}"
 "${cmd[@]}"

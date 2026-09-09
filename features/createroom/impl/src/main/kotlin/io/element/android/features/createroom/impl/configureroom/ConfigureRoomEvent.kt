@@ -11,20 +11,6 @@ package io.element.android.features.createroom.impl.configureroom
 import io.element.android.libraries.matrix.api.spaces.SpaceRoom
 import io.element.android.libraries.matrix.ui.media.AvatarAction
 
-<<<<<<< HEAD:features/createroom/impl/src/main/kotlin/io/element/android/features/createroom/impl/configureroom/ConfigureRoomEvents.kt
-sealed interface ConfigureRoomEvents {
-    data class RoomNameChanged(val name: String) : ConfigureRoomEvents
-    data class TopicChanged(val topic: String) : ConfigureRoomEvents
-    data class JoinRuleChanged(val joinRuleItem: JoinRuleItem) : ConfigureRoomEvents
-    data class RoomAddressChanged(val roomAddress: String) : ConfigureRoomEvents
-    data object CreateRoom : ConfigureRoomEvents
-    data class HandleAvatarAction(val action: AvatarAction) : ConfigureRoomEvents
-    data class SetParentSpace(val space: SpaceRoom?) : ConfigureRoomEvents
-    data object CancelCreateRoom : ConfigureRoomEvents
-
-    // TCHAP : Add toggle to enable/disable public room federation
-    data class PublicRoomLimitedToFederation(val isPublicRoomLimited: Boolean) : ConfigureRoomEvents
-=======
 sealed interface ConfigureRoomEvent {
     data class RoomNameChanged(val name: String) : ConfigureRoomEvent
     data class TopicChanged(val topic: String) : ConfigureRoomEvent
@@ -34,5 +20,8 @@ sealed interface ConfigureRoomEvent {
     data class HandleAvatarAction(val action: AvatarAction) : ConfigureRoomEvent
     data class SetParentSpace(val space: SpaceRoom?) : ConfigureRoomEvent
     data object CancelCreateRoom : ConfigureRoomEvent
->>>>>>> main-element:features/createroom/impl/src/main/kotlin/io/element/android/features/createroom/impl/configureroom/ConfigureRoomEvent.kt
+
+    // :tchap: Add toggle to enable/disable public room federation
+    data class PublicRoomLimitedToFederation(val isPublicRoomLimited: Boolean) : ConfigureRoomEvent
+    // :tchap: end
 }

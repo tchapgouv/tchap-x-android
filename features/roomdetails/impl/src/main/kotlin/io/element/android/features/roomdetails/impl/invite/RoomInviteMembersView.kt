@@ -55,12 +55,10 @@ fun RoomInviteMembersView(
                     }
                 },
                 onSubmitClick = {
-<<<<<<< HEAD
-                    // TCHAP external user
-                    state.eventSink(InvitePeopleEvents.CheckExternalsAndSendInvites)
-=======
-                    state.eventSink(InvitePeopleEvent.SendInvites)
->>>>>>> main-element
+                    // :tchap: external user
+//                    state.eventSink(InvitePeopleEvent.SendInvites)
+                    state.eventSink(InvitePeopleEvent.CheckExternalsAndSendInvites)
+                    // :tchap: end
                 },
                 canSend = state.canInvite,
             )

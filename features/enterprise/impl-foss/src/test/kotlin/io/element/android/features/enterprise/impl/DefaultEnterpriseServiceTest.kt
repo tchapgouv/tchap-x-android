@@ -24,23 +24,9 @@ class DefaultEnterpriseServiceTest {
     )
 
     @Test
-<<<<<<< HEAD
-    fun `isEnterpriseBuild is false`() {
-        val defaultEnterpriseService = DefaultEnterpriseService(homeserverList)
-        assertThat(defaultEnterpriseService.isEnterpriseBuild).isFalse()
-    }
-
-    @Test
-    fun `defaultHomeserverList should return empty list`() {
-        val defaultEnterpriseService = DefaultEnterpriseService(HomeserverConfiguration(
-            defaultHomeserverList = listOf()
-        ))
-        assertThat(defaultEnterpriseService.defaultHomeserverList()).isEmpty()
-=======
     fun homeserverWhitelist() {
-        val defaultEnterpriseService = DefaultEnterpriseService()
+        val defaultEnterpriseService = DefaultEnterpriseService(homeserverList)
         assertThat(defaultEnterpriseService.homeserverAllowList()).isEmpty()
->>>>>>> main-element
     }
 
     @Test

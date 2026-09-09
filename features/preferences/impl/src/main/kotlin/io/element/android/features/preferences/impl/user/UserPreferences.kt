@@ -32,11 +32,6 @@ fun UserPreferences(
 
 @PreviewsDayNight
 @Composable
-<<<<<<< HEAD
-internal fun UserPreferencesPreview(@PreviewParameter(MatrixUserProvider::class) matrixUser: MatrixUser) = ElementPreview {
-    UserPreferences(showMatrixId = false, matrixUser)
-=======
 internal fun UserPreferencesPreview(@PreviewParameter(MatrixUserPreviewParam::class) matrixUser: MatrixUser) = ElementPreview {
-    UserPreferences(matrixUser)
->>>>>>> main-element
+    UserPreferences(showMatrixId = false, matrixUser)
 }

@@ -22,19 +22,12 @@ import kotlinx.coroutines.flow.flowOf
 import kotlin.random.Random
 
 @ContributesBinding(AppScope::class)
-<<<<<<< HEAD
+
 class DefaultEnterpriseService(
     private val homeserverConfiguration: HomeserverConfiguration
 ) : EnterpriseService {
-    override val isEnterpriseBuild = false
-
-    override suspend fun isEnterpriseUser(sessionId: SessionId) = false
-    override suspend fun tweakMasUrl(url: String, homeserver: String, urlContentFetcher: UrlContentFetcher) = url
 
     // :tchap: Get a random HomeServeur from a known list to determine account HomeServer
-//    override fun defaultHomeserverList(): List<String> = emptyList()
-    override fun defaultHomeserverList(): List<String> = homeserverConfiguration.defaultHomeserverList
-
     override var selectedHomeserver: Int = -1
     override fun getNextRandomHomeserver(): String {
         val homeservers = homeserverConfiguration.defaultHomeserverList
@@ -48,12 +41,9 @@ class DefaultEnterpriseService(
     }
     // :tchap: end
 
-=======
-class DefaultEnterpriseService : EnterpriseService {
     override suspend fun isEnterpriseUser(sessionId: SessionId) = false
     override suspend fun tweakMasUrl(url: String, urlContentFetcher: ClientUrlContentFetcher) = url
     override fun homeserverAllowList(): List<String> = emptyList()
->>>>>>> main-element
     override suspend fun isAllowedToConnectToHomeserver(homeserverUrl: String) = true
     override suspend fun isElementProEnforced(serverName: String): Boolean = false
 

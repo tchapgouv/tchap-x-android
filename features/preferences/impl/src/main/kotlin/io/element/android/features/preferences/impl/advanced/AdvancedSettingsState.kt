@@ -26,15 +26,13 @@ data class AdvancedSettingsState(
     val availableThemeOptions: ImmutableList<ThemeOption>,
     val mediaPreviewConfigState: MediaPreviewConfigState,
     val liveLocationMinimumDistanceUpdate: Int?,
-<<<<<<< HEAD
+
     // :tchap: AdvancedSettings - Add ClearCache & Rageshake rows
     val rageshakeConfigState: RageshakePreferencesState,
     val clearCacheAction: AsyncAction<Unit>,
     // :tchap: end
-    val eventSink: (AdvancedSettingsEvents) -> Unit
-=======
+
     val eventSink: (AdvancedSettingsEvent) -> Unit
->>>>>>> main-element
 )
 
 sealed interface MediaOptimizationState {

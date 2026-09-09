@@ -229,11 +229,7 @@ fun LoginWithClassicView(
         onLearnMoreClick = onLearnMoreClick,
         onOAuthDetails = onOAuthDetails,
         onNeedLoginPassword = onNeedLoginPassword,
-<<<<<<< HEAD
         onNeedLoginHint = onNeedLoginHint,
-        onCreateAccountContinue = onCreateAccountContinue,
-=======
->>>>>>> main-element
     )
     LocalNetworkPermissionDialogView(
         dialog = state.loginModeState.localNetworkPermissionDialog,

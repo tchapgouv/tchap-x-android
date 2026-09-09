@@ -54,15 +54,11 @@ class StartChatPresenter(
         val localCoroutineScope = rememberCoroutineScope()
         val startDmActionState: MutableState<AsyncAction<RoomId>> = remember { mutableStateOf(AsyncAction.Uninitialized) }
 
-<<<<<<< HEAD
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(initial = false)
 
-        fun handleEvent(event: StartChatEvents) {
-=======
         fun handleEvent(event: StartChatEvent) {
->>>>>>> main-element
             when (event) {
                 is StartChatEvent.StartDM -> localCoroutineScope.launch {
                     startDMAction.execute(

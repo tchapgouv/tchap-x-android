@@ -20,14 +20,16 @@ import kotlinx.coroutines.flow.Flow
  * On a standard build this reports permissive defaults, so callers do not need to branch on the build type themselves.
  */
 interface EnterpriseService {
-<<<<<<< HEAD
-    val isEnterpriseBuild: Boolean
+    /**
+     * :tchap: Int used to randomise homeserver for getHomeserverFromEmail
+     */
     var selectedHomeserver: Int
-    suspend fun isEnterpriseUser(sessionId: SessionId): Boolean
-    suspend fun tweakMasUrl(url: String, homeserver: String, urlContentFetcher: UrlContentFetcher): String
-    fun defaultHomeserverList(): List<String>
+
+    /**
+     * :tchap: Function to return a randomised homeserver for getHomeserverFromEmail
+     */
     fun getNextRandomHomeserver(): String
-=======
+
     /**
      * Whether the given session belongs to an enterprise deployment, which can be true even on a standard build.
      *
@@ -55,7 +57,7 @@ interface EnterpriseService {
      *
      * @param homeserverUrl the server the user is trying to use.
      */
->>>>>>> main-element
+
     suspend fun isAllowedToConnectToHomeserver(homeserverUrl: String): Boolean
 
     /**

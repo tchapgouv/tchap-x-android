@@ -76,12 +76,8 @@ object AppBindingContainer {
         buildType: BuildType,
         isEnterpriseBuild: IsEnterpriseBuild,
     ): BuildMeta {
-<<<<<<< HEAD:app/src/main/kotlin/io/element/android/x/di/AppModule.kt
-        val applicationName = context.getString(R.string.app_name)
-=======
         val applicationName = ApplicationConfig.APPLICATION_NAME.takeIf { it.isNotEmpty() } ?: context.getString(R.string.app_name)
         val isEnterprise = isEnterpriseBuild()
->>>>>>> main-element:app/src/main/kotlin/io/element/android/x/di/AppBindingContainer.kt
         return BuildMeta(
             isDebuggable = BuildConfig.DEBUG,
             buildType = buildType,

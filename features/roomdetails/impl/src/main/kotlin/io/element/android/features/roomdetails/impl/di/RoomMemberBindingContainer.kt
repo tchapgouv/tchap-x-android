@@ -24,12 +24,8 @@ import io.element.android.libraries.matrix.api.room.JoinedRoom
 @ContributesTo(RoomScope::class)
 object RoomMemberBindingContainer {
     @Provides
-<<<<<<< HEAD:features/roomdetails/impl/src/main/kotlin/io/element/android/features/roomdetails/impl/di/RoomMemberModule.kt
-    fun provideRoomMemberDetailsPresenterFactory(
-        featureFlagService: FeatureFlagService,
-=======
     fun providesRoomMemberDetailsPresenterFactory(
->>>>>>> main-element:features/roomdetails/impl/src/main/kotlin/io/element/android/features/roomdetails/impl/di/RoomMemberBindingContainer.kt
+        featureFlagService: FeatureFlagService,
         room: JoinedRoom,
         userProfilePresenterFactory: UserProfilePresenterFactory,
         encryptionService: EncryptionService,

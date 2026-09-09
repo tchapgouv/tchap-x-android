@@ -97,21 +97,18 @@ interface JoinedRoom : BaseRoom {
      */
     suspend fun inviteUserById(id: UserId): Result<Unit>
 
-<<<<<<< HEAD
     // TCHAP invite-by-email : send an invite by email to create a Tchap account for the given email
     suspend fun inviteUserByEmail(email: String): Result<Unit>
 
     // TCHAP invite-by-email : send an invite by email to create a Tchap account for all emails
     suspend fun inviteUsersByEmail(emails: List<String>): Result<Unit>
 
-=======
     /**
      * Uploads [data] as the new avatar of the room, not of the current user.
      *
      * @param mimeType the MIME type of the image, for instance `image/jpeg`.
      * @param data the raw bytes of the image.
      */
->>>>>>> main-element
     suspend fun updateAvatar(mimeType: String, data: ByteArray): Result<Unit>
 
     /** Removes the avatar of the room. */

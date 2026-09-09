@@ -131,13 +131,10 @@ fun HomeView(
             state = homeState,
             onSetUpRecoveryClick = onSetUpRecoveryClick,
             onConfirmRecoveryKeyClick = onConfirmRecoveryKeyClick,
-<<<<<<< HEAD
-            // TCHAP : Display banner when sync is offline
+            // :tchap: Display banner when sync is offline
             onViewServiceStatusClick = onViewServiceStatusClick,
-            onRoomClick = { if (firstThrottler.canHandle()) onRoomClick(it) },
-=======
+            // :tchap: end
             onRoomClick = { roomId -> if (firstThrottler.canHandle()) onRoomClick(roomId, null) },
->>>>>>> main-element
             onOpenSettings = { if (firstThrottler.canHandle()) onSettingsClick() },
             onStartChatClick = { if (firstThrottler.canHandle()) onStartChatClick() },
             // :tchap: space-admin-limitations

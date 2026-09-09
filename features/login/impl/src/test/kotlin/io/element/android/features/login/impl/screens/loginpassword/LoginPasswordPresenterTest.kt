@@ -22,12 +22,9 @@ import io.element.android.libraries.matrix.test.A_USER_NAME
 import io.element.android.libraries.matrix.test.A_USER_NAME_2
 import io.element.android.libraries.matrix.test.auth.FakeMatrixAuthenticationService
 import io.element.android.libraries.matrix.test.auth.aMatrixHomeServerDetails
-<<<<<<< HEAD
 import io.element.android.libraries.matrix.test.core.aBuildMeta
-=======
 import io.element.android.libraries.preferences.api.store.AppPreferencesStore
 import io.element.android.libraries.preferences.test.InMemoryAppPreferencesStore
->>>>>>> main-element
 import io.element.android.tests.testutils.WarmUpRule
 import io.element.android.tests.testutils.test
 import kotlinx.coroutines.flow.first
@@ -197,10 +194,7 @@ class LoginPasswordPresenterTest {
         initialLogin = initialLogin,
         authenticationService = authenticationService,
         accountProviderDataSource = accountProviderDataSource,
-<<<<<<< HEAD
         buildMeta = aBuildMeta(),
-=======
         saveAccountProviderToHistory = SaveAccountProviderToHistory(accountProviderDataSource, appPreferencesStore),
->>>>>>> main-element
     )
 }

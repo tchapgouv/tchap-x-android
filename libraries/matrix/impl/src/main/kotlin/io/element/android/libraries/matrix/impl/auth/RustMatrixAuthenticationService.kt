@@ -9,15 +9,13 @@
 package io.element.android.libraries.matrix.impl.auth
 
 import android.content.Context
+import android.text.method.TextKeyListener.clear
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
-<<<<<<< HEAD
 import fr.gouv.tchap.android.appcertificates.BuildConfig
 import fr.gouv.tchap.android.appcertificates.R
-=======
 import io.element.android.features.enterprise.api.ClientEnterpriseHook
->>>>>>> main-element
 import io.element.android.features.enterprise.api.EnterpriseService
 import io.element.android.libraries.androidutils.crypto.ClientSecret
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
@@ -51,12 +49,9 @@ import io.element.android.libraries.matrix.impl.exception.mapClientException
 import io.element.android.libraries.matrix.impl.keys.SecretGenerator
 import io.element.android.libraries.matrix.impl.mapper.toSessionData
 import io.element.android.libraries.matrix.impl.paths.SessionPathsFactory
-<<<<<<< HEAD
 import io.element.android.libraries.matrix.impl.proxy.ProxyProvider
 import io.element.android.libraries.matrix.impl.toSession
 import io.element.android.libraries.network.useragent.UserAgentProvider
-=======
->>>>>>> main-element
 import io.element.android.libraries.sessionstorage.api.LoginType
 import io.element.android.libraries.sessionstorage.api.SessionStore
 import kotlinx.coroutines.CancellationException
@@ -91,13 +86,10 @@ class RustMatrixAuthenticationService(
     private val oAuthConfigurationProvider: OAuthConfigurationProvider,
     private val enterpriseService: EnterpriseService,
     private val featureFlagService: FeatureFlagService,
-<<<<<<< HEAD
     // :tchap: Add proxy config in rust http client
     private val proxyProvider: ProxyProvider,
     // :tchap: end
-=======
     private val clientEnterpriseHook: ClientEnterpriseHook,
->>>>>>> main-element
 ) : MatrixAuthenticationService {
     // Any existing Element Classic session that we want to try to import secrets from during login.
     private var elementClassicSession: ElementClassicSession? = null

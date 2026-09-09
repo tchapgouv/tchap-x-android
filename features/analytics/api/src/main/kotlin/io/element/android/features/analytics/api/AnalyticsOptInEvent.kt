@@ -8,14 +8,6 @@
 
 package io.element.android.features.analytics.api
 
-<<<<<<< HEAD:appconfig/src/main/kotlin/io/element/android/appconfig/PushConfig.kt
-object PushConfig {
-    /**
-     * Note: pusher_app_id cannot exceed 64 chars.
-     */
-    const val PUSHER_APP_ID: String = BuildConfig.PUSHER_APP_ID
-=======
 sealed interface AnalyticsOptInEvent {
     data class EnableAnalytics(val isEnabled: Boolean) : AnalyticsOptInEvent
->>>>>>> main-element:features/analytics/api/src/main/kotlin/io/element/android/features/analytics/api/AnalyticsOptInEvent.kt
 }

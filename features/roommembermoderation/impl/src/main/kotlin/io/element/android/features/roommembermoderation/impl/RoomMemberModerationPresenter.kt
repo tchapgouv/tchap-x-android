@@ -80,15 +80,11 @@ class RoomMemberModerationPresenter(
         }
         val moderationActions = remember { mutableStateOf<ImmutableList<ModerationActionState>>(persistentListOf()) }
 
-<<<<<<< HEAD
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
-        fun handleEvent(event: RoomMemberModerationEvents) {
-=======
         fun handleEvent(event: RoomMemberModerationEvent) {
->>>>>>> main-element
             when (event) {
                 is RoomMemberModerationEvent.ShowActionsForUser -> {
                     selectedUser = event.user

@@ -74,7 +74,7 @@ fun SecureBackupEnterRecoveryKeyView(
                 actions = {
                     TextButton(
                         text = stringResource(CommonStrings.action_signout),
-                        onClick = { state.eventSink(SecureBackupEnterRecoveryKeyEvents.SignOut) }
+                        onClick = { state.eventSink(SecureBackupEnterRecoveryKeyEvent.SignOut) }
                     )
                 }
             )

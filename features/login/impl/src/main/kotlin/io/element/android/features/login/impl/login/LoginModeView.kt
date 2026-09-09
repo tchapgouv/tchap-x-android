@@ -145,11 +145,7 @@ internal fun LoginModeViewPreview(@PreviewParameter(LoginModeViewErrorPreviewPar
             onLearnMoreClick = {},
             onOAuthDetails = {},
             onNeedLoginPassword = {},
-<<<<<<< HEAD
             onNeedLoginHint = {},
-            onCreateAccountContinue = {}
-=======
->>>>>>> main-element
         )
     }
 }

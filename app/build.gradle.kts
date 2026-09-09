@@ -249,7 +249,6 @@ androidComponents {
     )
 
     onVariants { variant ->
-<<<<<<< HEAD
         // :tchap: AppName based on "target" flavor & buildType
         val targetFlavor = variant.productFlavors.find { it.first == "target" }?.second
 
@@ -273,8 +272,8 @@ androidComponents {
             variant.makeResValueKey("string", "app_name"),
             ResValue(flavorBaseName + suffix, null)
         )
+        // :tchap: end
 
-=======
         // Register the R8 keep rules source folders for optimized build types (release, nightly).
         // Replaces the deprecated `optimization.keepRules.files` DSL (AGP 9+).
         if (variant.buildType != "debug") {
@@ -299,7 +298,6 @@ androidComponents {
             }
         }
 
->>>>>>> main-element
         // Assigns a different version code for each output APK
         // other than the universal APK.
         variant.outputs.forEach { output ->

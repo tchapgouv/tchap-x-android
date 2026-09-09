@@ -145,7 +145,6 @@
                 <data android:host="room" />
             </intent-filter>
             <!--
-<<<<<<< HEAD
               tchap.gouv.fr links
             -->
             <intent-filter android:autoVerify="true">
@@ -168,13 +167,12 @@
                 <!-- Matching asset file: https://www.tchap.incubateur.net/.well-known/assetlinks.json -->
                 <data android:host="www.tchap.incubateur.net" />
             </intent-filter>
-=======
+            <!--
               Conversation shortcuts offered in the Direct Share row of the system share sheet.
             -->
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
->>>>>>> main-element
             <!-- Incoming share simple -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

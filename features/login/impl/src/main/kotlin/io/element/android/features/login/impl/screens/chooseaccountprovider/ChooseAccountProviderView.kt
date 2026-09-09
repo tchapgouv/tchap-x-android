@@ -57,11 +57,7 @@ fun ChooseAccountProviderView(
     onOAuthDetails: (OAuthDetails) -> Unit,
     onNeedLoginPassword: () -> Unit,
     onLearnMoreClick: () -> Unit,
-<<<<<<< HEAD
     onNeedLoginHint: () -> Unit,
-    onCreateAccountContinue: (url: String) -> Unit,
-=======
->>>>>>> main-element
     modifier: Modifier = Modifier,
 ) {
     val isLoading by remember(state.loginModeState.loginMode) {
@@ -141,11 +137,7 @@ fun ChooseAccountProviderView(
                 onLearnMoreClick = onLearnMoreClick,
                 onOAuthDetails = onOAuthDetails,
                 onNeedLoginPassword = onNeedLoginPassword,
-<<<<<<< HEAD
                 onNeedLoginHint = onNeedLoginHint,
-                onCreateAccountContinue = onCreateAccountContinue,
-=======
->>>>>>> main-element
             )
         }
     }
@@ -171,10 +163,6 @@ internal fun ChooseAccountProviderViewPreview(@PreviewParameter(
         onLearnMoreClick = { },
         onOAuthDetails = { },
         onNeedLoginPassword = { },
-<<<<<<< HEAD
         onNeedLoginHint = { },
-        onCreateAccountContinue = { },
-=======
->>>>>>> main-element
     )
 }

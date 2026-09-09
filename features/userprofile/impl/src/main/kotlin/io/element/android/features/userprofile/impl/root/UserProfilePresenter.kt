@@ -118,15 +118,11 @@ class UserProfilePresenter(
         }
         val userProfile by produceState<MatrixUser?>(null) { value = client.getProfile(userId).getOrNull() }
 
-<<<<<<< HEAD
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
-        fun handleEvent(event: UserProfileEvents) {
-=======
         fun handleEvent(event: UserProfileEvent) {
->>>>>>> main-element
             when (event) {
                 is UserProfileEvent.BlockUser -> {
                     if (event.needsConfirmation) {

@@ -56,14 +56,11 @@ fun AddPeopleView(
             Button(
                 text = stringResource(CommonStrings.action_finish),
                 onClick = {
-<<<<<<< HEAD
                     // :tchap: Open the room to external users if needed, before sending invites
-//                    state.eventSink(InvitePeopleEvents.SendInvites)
-                    state.eventSink(InvitePeopleEvents.CheckExternalsAndSendInvites)
+//                    state.eventSink(InvitePeopleEvent.SendInvites)
+                    state.eventSink(InvitePeopleEvent.CheckExternalsAndSendInvites)
                     // :tchap: end
-=======
-                    state.eventSink(InvitePeopleEvent.SendInvites)
->>>>>>> main-element
+
                 },
                 enabled = state.canInvite,
                 modifier = Modifier

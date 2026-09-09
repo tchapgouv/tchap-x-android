@@ -40,6 +40,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
+import kotlin.Boolean
 
 class GlobalSearchStatePreviewParam : PreviewParameterProvider<GlobalSearchState> {
     override val values: Sequence<GlobalSearchState>
@@ -157,6 +158,7 @@ fun aRoomInfo(
     activeCallIntentConsensus: CallIntentConsensus = CallIntentConsensus.None,
     isDm: Boolean = false,
     fullyReadEventId: EventId? = null,
+    isOpenToExternalUsers: Boolean = false,
 ) = RoomInfo(
     id = id,
     name = name,
@@ -197,6 +199,7 @@ fun aRoomInfo(
     activeCallIntentConsensus = activeCallIntentConsensus,
     isDm = isDm,
     fullyReadEventId = fullyReadEventId,
+    isOpenToExternalUsers = isOpenToExternalUsers,
 )
 
 fun aMessageContent(

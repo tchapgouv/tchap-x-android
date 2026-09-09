@@ -8,20 +8,13 @@
 
 package io.element.android.features.securebackup.impl.enter
 
-<<<<<<< HEAD:features/securebackup/impl/src/main/kotlin/io/element/android/features/securebackup/impl/enter/SecureBackupEnterRecoveryKeyEvents.kt
-sealed interface SecureBackupEnterRecoveryKeyEvents {
-    data class OnRecoveryKeyChange(val recoveryKey: String) : SecureBackupEnterRecoveryKeyEvents
-    data class ChangeRecoveryKeyFieldContentsVisibility(val visible: Boolean) : SecureBackupEnterRecoveryKeyEvents
-    data object Submit : SecureBackupEnterRecoveryKeyEvents
-    data object ClearDialog : SecureBackupEnterRecoveryKeyEvents
-
-    // TCHAP - Verify device with recovery key : add signout topbar button
-    data object SignOut : SecureBackupEnterRecoveryKeyEvents
-=======
 sealed interface SecureBackupEnterRecoveryKeyEvent {
     data class OnRecoveryKeyChange(val recoveryKey: String) : SecureBackupEnterRecoveryKeyEvent
     data class ChangeRecoveryKeyFieldContentsVisibility(val visible: Boolean) : SecureBackupEnterRecoveryKeyEvent
     data object Submit : SecureBackupEnterRecoveryKeyEvent
     data object ClearDialog : SecureBackupEnterRecoveryKeyEvent
->>>>>>> main-element:features/securebackup/impl/src/main/kotlin/io/element/android/features/securebackup/impl/enter/SecureBackupEnterRecoveryKeyEvent.kt
+
+    // :tchap: Verify device with recovery key : add signout topbar button
+    data object SignOut : SecureBackupEnterRecoveryKeyEvent
+    // :tchap: end
 }

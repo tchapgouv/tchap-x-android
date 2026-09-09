@@ -90,7 +90,6 @@ fun LoginHintView(
     onNeedLoginHint: () -> Unit,
     onNeedLoginPassword: () -> Unit,
     onLearnMoreClick: () -> Unit,
-    onCreateAccountContinue: (url: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val autofillManager = LocalAutofillManager.current
@@ -200,7 +199,6 @@ fun LoginHintView(
                 onOAuthDetails = onOAuthDetails,
                 onNeedLoginPassword = onNeedLoginPassword,
                 onNeedLoginHint = onNeedLoginHint,
-                onCreateAccountContinue = onCreateAccountContinue,
             )
         }
     }
@@ -289,6 +287,5 @@ internal fun LoginHintViewPreview(@PreviewParameter(LoginHintStateProvider::clas
         onNeedLoginHint = {},
         onNeedLoginPassword = {},
         onLearnMoreClick = {},
-        onCreateAccountContinue = {},
     )
 }

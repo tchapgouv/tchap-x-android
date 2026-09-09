@@ -213,14 +213,6 @@ fun ConfirmAccountProviderView(
             } else {
                 null
             },
-<<<<<<< HEAD
-            onLearnMoreClick = onLearnMoreClick,
-            onOAuthDetails = onOAuthDetails,
-            onNeedLoginHint = onNeedLoginHint,
-            onNeedLoginPassword = onNeedLoginPassword,
-            onCreateAccountContinue = onCreateAccountContinue,
-=======
->>>>>>> main-element
         )
     }
 
@@ -238,6 +230,7 @@ fun ConfirmAccountProviderView(
         onLearnMoreClick = onLearnMoreClick,
         onOAuthDetails = onOAuthDetails,
         onNeedLoginPassword = onNeedLoginPassword,
+        onNeedLoginHint = onNeedLoginHint,
     )
 
     LocalNetworkPermissionDialogView(

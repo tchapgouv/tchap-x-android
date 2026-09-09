@@ -134,13 +134,10 @@ class FakeMatrixClient(
     private val resetWellKnownConfigLambda: () -> Result<Unit> = { lambdaError() },
     private val enableAutomaticCallStatusLambda: (Boolean) -> Unit = { },
     override val contentScanner: ContentScanner? = null,
-<<<<<<< HEAD
     // :tchap: account-expiration
     private val accountExpiredSendEmailLambda: () -> Result<Unit> = { lambdaError() },
     // :tchap: end
-=======
     private val isShuttingDownResult: () -> Boolean = { false },
->>>>>>> main-element
 ) : MatrixClient {
     var setDisplayNameCalled: Boolean = false
         private set

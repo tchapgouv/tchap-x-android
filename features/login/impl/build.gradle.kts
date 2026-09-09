@@ -106,11 +106,8 @@ dependencies {
     testImplementation(projects.features.login.test)
     testImplementation(projects.features.enterprise.test)
     testImplementation(projects.features.preferences.test)
-<<<<<<< HEAD
     testImplementation(projects.libraries.featureflag.test)
-=======
     testImplementation(projects.libraries.preferences.test)
->>>>>>> main-element
     testImplementation(projects.libraries.matrix.test)
     testImplementation(projects.libraries.oauth.test)
     testImplementation(projects.libraries.permissions.test)

@@ -78,14 +78,9 @@
   <string name="a11y_thread_in_room">"Discussion dans %1$s"</string>
   <string name="a11y_threads_in_room">"Discussions dans %1$s"</string>
   <string name="a11y_tombstoned_room">"Salon clôturé"</string>
-<<<<<<< HEAD
   <string name="a11y_user_avatar">"Avatar du membre"</string><!-- Tchap: Custom string -->
   <string name="a11y_user_menu">"Menu membre"</string><!-- Tchap: Custom string -->
-=======
-  <string name="a11y_user_avatar">"Avatar de l’utilisateur"</string>
-  <string name="a11y_user_menu">"Menu utilisateur"</string>
   <string name="a11y_video_preview">"Aperçu vidéo"</string>
->>>>>>> main-element
   <string name="a11y_view_avatar">"Voir l’avatar"</string>
   <string name="a11y_view_details">"Afficher les détails"</string>
   <string name="a11y_voice_message">"Message vocal, durée: %1$s"</string>
@@ -438,12 +433,8 @@ Raison : %1$s."</string>
   <string name="common_unmute">"Réactiver"</string><!-- Tchap: Custom string -->
   <string name="common_unsupported_call">"Appel non pris en charge"</string>
   <string name="common_unsupported_event">"Événement non pris en charge"</string>
-<<<<<<< HEAD
-  <string name="common_username">"Nom de membre"</string><!-- Tchap: Custom string -->
-=======
   <string name="common_user_started_a_call">"%1$s a commencé un appel"</string>
-  <string name="common_username">"Nom d’utilisateur"</string>
->>>>>>> main-element
+  <string name="common_username">"Nom de membre"</string><!-- Tchap: Custom string -->
   <string name="common_verification_cancelled">"Vérification annulée"</string>
   <string name="common_verification_complete">"Vérification terminée"</string>
   <string name="common_verification_failed">"Échec de la vérification"</string>
