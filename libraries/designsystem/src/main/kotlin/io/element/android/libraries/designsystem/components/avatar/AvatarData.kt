@@ -8,10 +8,15 @@
 
 package io.element.android.libraries.designsystem.components.avatar
 
+<<<<<<< HEAD
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.toUserDisplayName
+=======
+import androidx.compose.runtime.Immutable
+>>>>>>> main-element
 import io.element.android.libraries.core.data.tryOrNull
 import java.text.BreakIterator
 
+@Immutable
 data class AvatarData(
     val id: String,
     val name: String?,

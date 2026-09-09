@@ -33,7 +33,6 @@ class ChooseAccountProviderNode(
         fun navigateToLoginHint()
         fun navigateToLoginPassword()
         fun navigateToOAuth(oAuthDetails: OAuthDetails)
-        fun navigateToCreateAccount(url: String)
     }
 
     private val callback: Callback = callback()
@@ -50,7 +49,6 @@ class ChooseAccountProviderNode(
             onNeedLoginHint = callback::navigateToLoginHint,
             onNeedLoginPassword = callback::navigateToLoginPassword,
             onLearnMoreClick = { openLearnMorePage(context) },
-            onCreateAccountContinue = callback::navigateToCreateAccount,
         )
     }
 }

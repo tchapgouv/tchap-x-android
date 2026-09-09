@@ -9,6 +9,7 @@
 package config
 
 object BuildTimeConfig {
+<<<<<<< HEAD
     const val APPLICATION_ID = "fr.gouv.tchap.android.x"
     const val APPLICATION_NAME = "Tchap"
 //    const val GOOGLE_APP_ID_RELEASE = "1:912726360885:android:d097de99a4c23d2700427c"
@@ -37,6 +38,19 @@ object BuildTimeConfig {
     // TCHAP : specific URL
     val SERVICES_MAPTILER_BASE_URL = "https://openmaptiles.geo.data.gouv.fr/styles"
 
+=======
+    const val APPLICATION_ID = "io.element.android.x"
+    const val APPLICATION_NAME = "Element X"
+    val METADATA_HOST_REVERSED: String? = null
+    val OAUTH_CLIENT_URL_PATH: String? = "apps/android"
+    val URL_WEBSITE: String? = null
+    val URL_LOGO: String? = null
+    val URL_COPYRIGHT: String? = null
+    val URL_ACCEPTABLE_USE: String? = null
+    val URL_PRIVACY: String? = null
+    val URL_POLICY: String? = null
+    val SERVICES_MAPTILER_BASE_URL: String? = null
+>>>>>>> main-element
     val SERVICES_MAPTILER_APIKEY: String? = null
 
     // TCHAP : specific MapID
@@ -47,6 +61,7 @@ object BuildTimeConfig {
     val SERVICES_SENTRY_DSN: String? = null
     val SERVICES_SENTRY_DSN_RUST: String? = null
     val BUG_REPORT_URL: String? = null
+<<<<<<< HEAD
 
     // TCHAP : specific Bug report App Name
     const val BUG_REPORT_APP_NAME = "tchap-x-android"
@@ -71,4 +86,12 @@ object BuildTimeConfig {
     const val GOOGLE_APP_ID_DEV_NIGHTLY = "1:1092909174787:android:190ed65bcb2965002a7e36"
     const val GOOGLE_APP_ID_DEV_DEBUG = "1:1092909174787:android:ab600c14603565a62a7e36"
     // :tchap: end
+=======
+    val BUG_REPORT_APP_NAME: String? = null
+    const val PUSH_CONFIG_INCLUDE_FIREBASE: Boolean = true
+    const val PUSH_CONFIG_INCLUDE_UNIFIED_PUSH: Boolean = true
+    val PUSHER_APP_ID_RELEASE: String? = null
+    val PUSHER_APP_ID_DEBUG: String? = null
+    val PUSHER_APP_ID_NIGHTLY: String? = null
+>>>>>>> main-element
 }

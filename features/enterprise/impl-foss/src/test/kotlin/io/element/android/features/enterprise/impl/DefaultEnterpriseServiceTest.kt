@@ -24,6 +24,7 @@ class DefaultEnterpriseServiceTest {
     )
 
     @Test
+<<<<<<< HEAD
     fun `isEnterpriseBuild is false`() {
         val defaultEnterpriseService = DefaultEnterpriseService(homeserverList)
         assertThat(defaultEnterpriseService.isEnterpriseBuild).isFalse()
@@ -35,6 +36,11 @@ class DefaultEnterpriseServiceTest {
             defaultHomeserverList = listOf()
         ))
         assertThat(defaultEnterpriseService.defaultHomeserverList()).isEmpty()
+=======
+    fun homeserverWhitelist() {
+        val defaultEnterpriseService = DefaultEnterpriseService()
+        assertThat(defaultEnterpriseService.homeserverAllowList()).isEmpty()
+>>>>>>> main-element
     }
 
     @Test

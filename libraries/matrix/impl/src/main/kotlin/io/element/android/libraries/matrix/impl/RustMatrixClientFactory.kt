@@ -10,8 +10,12 @@ package io.element.android.libraries.matrix.impl
 
 import android.content.Context
 import dev.zacsweers.metro.Inject
+<<<<<<< HEAD
 import fr.gouv.tchap.android.appcertificates.BuildConfig
 import fr.gouv.tchap.android.appcertificates.R
+=======
+import io.element.android.features.enterprise.api.ClientBuilderEnterpriseHook
+>>>>>>> main-element
 import io.element.android.libraries.androidutils.crypto.ClientSecret
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.data.ByteUnit
@@ -22,7 +26,6 @@ import io.element.android.libraries.di.annotations.ApplicationContext
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.paths.SessionPaths
-import io.element.android.libraries.matrix.api.scanner.ContentScannerUrlProvider
 import io.element.android.libraries.matrix.impl.analytics.UtdTracker
 import io.element.android.libraries.matrix.impl.paths.getSessionPaths
 import io.element.android.libraries.matrix.impl.proxy.ProxyProvider
@@ -40,7 +43,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
 import org.matrix.rustcomponents.sdk.Client
 import org.matrix.rustcomponents.sdk.ClientBuilder
-import org.matrix.rustcomponents.sdk.ContentScanner
 import org.matrix.rustcomponents.sdk.CrossProcessLockConfig
 import org.matrix.rustcomponents.sdk.RequestConfig
 import org.matrix.rustcomponents.sdk.Session
@@ -74,7 +76,7 @@ class RustMatrixClientFactory(
     private val clientBuilderProvider: ClientBuilderProvider,
     private val sqliteStoreBuilderProvider: SqliteStoreBuilderProvider,
     private val workManagerScheduler: WorkManagerScheduler,
-    private val contentScannerUrlProviderFactory: ContentScannerUrlProvider.Factory,
+    private val clientBuilderEnterpriseHook: ClientBuilderEnterpriseHook,
 ) {
     private val sessionDelegate = RustClientSessionDelegate(
         sessionStore = sessionStore,
@@ -104,7 +106,7 @@ class RustMatrixClientFactory(
             isMessageSearchAvailable = isMessageSearchAvailable,
         )
             .homeserverUrl(sessionData.homeserverUrl)
-            .username(sessionData.userId)
+            .let { (clientBuilderEnterpriseHook(RustMatrixClientBuilder(it), SessionId(sessionData.userId)) as RustMatrixClientBuilder).inner }
             .use { it.build() }
 
         client.setMediaRetentionPolicy(
@@ -139,6 +141,7 @@ class RustMatrixClientFactory(
 
         client.setUtdDelegate(UtdTracker(analyticsService))
 
+<<<<<<< HEAD
         // If a content scanner URL is available for the homeserver, create a RustContentScanner and set it on the client.
         // This allows the SDK to use the content scanner for automatic media scanning.
         // If no content scanner URL is available, the contentScanner will be null.
@@ -158,6 +161,8 @@ class RustMatrixClientFactory(
                 )
             }
 
+=======
+>>>>>>> main-element
         val syncService = client.syncService()
             .withSharePos(true)
             .withOfflineMode()
@@ -178,7 +183,7 @@ class RustMatrixClientFactory(
             featureFlagService = featureFlagService,
             analyticsService = analyticsService,
             workManagerScheduler = workManagerScheduler,
-            contentScanner = contentScanner,
+            contentScanner = client.contentScanner()?.let { RustContentScanner(client, it) },
             isMessageSearchAvailable = isMessageSearchAvailable,
         ).also {
             Timber.tag("RustMatrixClient").i("Creating Client with access token '$anonymizedAccessToken' and refresh token '$anonymizedRefreshToken'")

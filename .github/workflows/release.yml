@@ -64,6 +64,7 @@ jobs:
           path: |
             app/build/outputs/bundle/gplayTchapWithpinningRelease/app-gplay-tchap-withpinning-release.aab
 
+<<<<<<< HEAD
   enterprise:
     name: Create App Bundle Enterprise
     runs-on: ubuntu-latest
@@ -104,6 +105,8 @@ jobs:
           path: |
             app/build/outputs/bundle/gplayTchapWithpinningRelease/app-gplay-release.aab
 
+=======
+>>>>>>> main-element
   fdroid:
     name: Create APKs (FDroid)
     runs-on: ubuntu-latest

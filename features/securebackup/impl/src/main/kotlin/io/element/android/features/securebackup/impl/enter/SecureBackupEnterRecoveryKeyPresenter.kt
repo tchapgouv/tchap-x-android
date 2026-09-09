@@ -49,15 +49,19 @@ class SecureBackupEnterRecoveryKeyPresenter(
             mutableStateOf(AsyncAction.Uninitialized)
         }
 
+<<<<<<< HEAD
         // TCHAP - Verify device with recovery key : add signout topbar button
         val directLogoutState = directLogoutPresenter.present()
 
         fun handleEvent(event: SecureBackupEnterRecoveryKeyEvents) {
+=======
+        fun handleEvent(event: SecureBackupEnterRecoveryKeyEvent) {
+>>>>>>> main-element
             when (event) {
-                SecureBackupEnterRecoveryKeyEvents.ClearDialog -> {
+                SecureBackupEnterRecoveryKeyEvent.ClearDialog -> {
                     submitAction.value = AsyncAction.Uninitialized
                 }
-                is SecureBackupEnterRecoveryKeyEvents.OnRecoveryKeyChange -> {
+                is SecureBackupEnterRecoveryKeyEvent.OnRecoveryKeyChange -> {
                     val previousRecoveryKey = recoveryKey
                     recoveryKey = if (previousRecoveryKey.isEmpty() && recoveryKeyTools.isRecoveryKeyFormatValid(event.recoveryKey)) {
                         // A Recovery key has been entered, remove the spaces for a better rendering
@@ -67,11 +71,11 @@ class SecureBackupEnterRecoveryKeyPresenter(
                         event.recoveryKey
                     }
                 }
-                SecureBackupEnterRecoveryKeyEvents.Submit -> {
+                SecureBackupEnterRecoveryKeyEvent.Submit -> {
                     // No need to remove the spaces, the SDK will do it.
                     coroutineScope.submitRecoveryKey(recoveryKey, submitAction)
                 }
-                is SecureBackupEnterRecoveryKeyEvents.ChangeRecoveryKeyFieldContentsVisibility -> {
+                is SecureBackupEnterRecoveryKeyEvent.ChangeRecoveryKeyFieldContentsVisibility -> {
                     displayRecoveryKeyFieldContents = event.visible
                 }
                 // TCHAP - Verify device with recovery key : add signout topbar button

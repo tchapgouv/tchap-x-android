@@ -369,6 +369,7 @@ fdroidTargetPath="${targetPath}/fdroid"
 unzip "${targetPath}"/app-fdroid-tchap-withoutpinning-apks-unsigned.zip -d "${fdroidTargetPath}"
 
 printf "\n================================================================================\n"
+<<<<<<< HEAD
 printf "Patching the FDroid APKs using inplace-fix.py...\n"
 
 inplaceFixScript="./tools/release/inplace-fix.py"
@@ -378,6 +379,8 @@ python3 "${inplaceFixScript}" --page-size 16 fix-pg-map-id "${fdroidTargetPath}"
 python3 "${inplaceFixScript}" --page-size 16 fix-pg-map-id "${fdroidTargetPath}"/app-fdroid-tchap-withoutpinning-x86_64-release.apk      '0000000'
 
 printf "\n================================================================================\n"
+=======
+>>>>>>> main-element
 printf "Signing the FDroid APKs...\n"
 
 # TCHAP - Final check of YubiKey before starting the signature process
