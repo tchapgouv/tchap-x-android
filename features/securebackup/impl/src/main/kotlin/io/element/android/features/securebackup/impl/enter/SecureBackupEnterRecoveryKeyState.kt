@@ -16,10 +16,8 @@ data class SecureBackupEnterRecoveryKeyState(
     val recoveryKeyViewState: RecoveryKeyViewState,
     val isSubmitEnabled: Boolean,
     val submitAction: AsyncAction<Unit>,
-
     // :tchap: Verify device with recovery key : add signout topbar button
     val directLogoutState: DirectLogoutState,
     // :tchap: end
-
     val eventSink: (SecureBackupEnterRecoveryKeyEvent) -> Unit
 )

@@ -60,7 +60,6 @@ fun AddPeopleView(
 //                    state.eventSink(InvitePeopleEvent.SendInvites)
                     state.eventSink(InvitePeopleEvent.CheckExternalsAndSendInvites)
                     // :tchap: end
-
                 },
                 enabled = state.canInvite,
                 modifier = Modifier
