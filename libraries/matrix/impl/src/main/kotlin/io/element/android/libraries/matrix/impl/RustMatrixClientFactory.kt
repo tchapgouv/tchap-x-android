@@ -41,6 +41,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
 import org.matrix.rustcomponents.sdk.Client
 import org.matrix.rustcomponents.sdk.ClientBuilder
+import org.matrix.rustcomponents.sdk.ContentScanner
 import org.matrix.rustcomponents.sdk.CrossProcessLockConfig
 import org.matrix.rustcomponents.sdk.RequestConfig
 import org.matrix.rustcomponents.sdk.Session
@@ -144,6 +145,10 @@ class RustMatrixClientFactory(
             .withOfflineMode()
             .withProfilesExtension()
             .finish()
+
+        // :tchap: Activate content scanner
+        client.setContentScanner(ContentScanner(sessionData.homeserverUrl))
+        // :tchap: end
 
         return RustMatrixClient(
             sessionPaths = sessionData.getSessionPaths(),
