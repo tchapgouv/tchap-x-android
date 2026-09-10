@@ -48,8 +48,6 @@ import io.element.android.libraries.core.mimetype.MimeTypes
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.matrix.api.core.UserId
@@ -143,7 +141,9 @@ class MessageComposerPresenter(
     private val mediaOptimizationConfigProvider: MediaOptimizationConfigProvider,
     private val notificationConversationService: NotificationConversationService,
     private val slashCommandService: SlashCommandService,
-    private val featureFlagService: FeatureFlagService,
+    // :tchap: Enable multi medias selection by sending multiple messages
+//    private val featureFlagService: FeatureFlagService,
+    // :tchap: end
     private val contentScannerService: ContentScannerService,
     private val contentValidationCache: EventContentValidationCache,
 ) : Presenter<MessageComposerState> {
@@ -190,21 +190,26 @@ class MessageComposerPresenter(
             canShareLocation.value = locationService.isServiceAvailable()
         }
 
-        val isSendGalleryMessagesEnabled by featureFlagService.isFeatureEnabledFlow(FeatureFlags.SendGalleryMessages)
-            .collectAsState(initial = false)
+        // :tchap: Enable multi medias selection by sending multiple messages
+//        val isSendGalleryMessagesEnabled by featureFlagService.isFeatureEnabledFlow(FeatureFlags.SendGalleryMessages)
+//            .collectAsState(initial = false)
+//
+//        val galleryMediaPicker = mediaPickerProvider.registerGalleryPicker { uri, mimeType ->
+//            handlePickedMedia(uri, mimeType)
+//        }
+        // :tchap: end
 
-        val galleryMediaPicker = mediaPickerProvider.registerGalleryPicker { uri, mimeType ->
-            handlePickedMedia(uri, mimeType)
-        }
         val galleryMultiMediaPicker = mediaPickerProvider.registerGalleryMultiPicker { uris ->
             handlePickedMediaList(uris)
         }
         val filesPicker = mediaPickerProvider.registerFileMultiPicker(AnyMimeTypes) { uris ->
             handlePickedMediaList(uris, sendAsFile = true)
         }
-        val fileSinglePicker = mediaPickerProvider.registerFilePicker(AnyMimeTypes) { uri, mimeType ->
-            handlePickedMedia(uri, mimeType ?: MimeTypes.OctetStream, sendAsFile = true)
-        }
+        // :tchap: Enable multi medias selection by sending multiple messages
+//        val fileSinglePicker = mediaPickerProvider.registerFilePicker(AnyMimeTypes) { uri, mimeType ->
+//            handlePickedMedia(uri, mimeType ?: MimeTypes.OctetStream, sendAsFile = true)
+//        }
+        // :tchap: end
         val cameraPhotoPicker = mediaPickerProvider.registerCameraPhotoPicker { uri ->
             handlePickedMedia(uri, MimeTypes.Jpeg)
         }
@@ -316,19 +321,25 @@ class MessageComposerPresenter(
                 MessageComposerEvent.DismissAttachmentMenu -> showAttachmentSourcePicker = false
                 MessageComposerEvent.PickAttachmentSource.FromGallery -> localCoroutineScope.launch {
                     showAttachmentSourcePicker = false
-                    if (isSendGalleryMessagesEnabled) {
-                        galleryMultiMediaPicker.launch()
-                    } else {
-                        galleryMediaPicker.launch()
-                    }
+                    // :tchap: Enable multi medias selection by sending multiple messages
+//                    if (isSendGalleryMessagesEnabled) {
+//                        galleryMultiMediaPicker.launch()
+//                    } else {
+//                        galleryMediaPicker.launch()
+//                    }
+                    galleryMultiMediaPicker.launch()
+                    // :tchap: end
                 }
                 MessageComposerEvent.PickAttachmentSource.FromFiles -> localCoroutineScope.launch {
                     showAttachmentSourcePicker = false
-                    if (isSendGalleryMessagesEnabled) {
-                        filesPicker.launch()
-                    } else {
-                        fileSinglePicker.launch()
-                    }
+                    // :tchap: Enable multi medias selection by sending multiple messages
+//                    if (isSendGalleryMessagesEnabled) {
+//                        filesPicker.launch()
+//                    } else {
+//                        fileSinglePicker.launch()
+//                    }
+                    filesPicker.launch()
+                    // :tchap: end
                 }
                 MessageComposerEvent.PickAttachmentSource.PhotoFromCamera -> localCoroutineScope.launch {
                     showAttachmentSourcePicker = false
