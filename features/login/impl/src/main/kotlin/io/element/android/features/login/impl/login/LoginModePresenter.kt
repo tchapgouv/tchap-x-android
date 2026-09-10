@@ -61,6 +61,10 @@ class LoginModePresenter(
         fun handleEvent(event: LoginModeEvent) {
             when (event) {
                 LoginModeEvent.ClearError -> loginMode.value = AsyncData.Uninitialized
+                // :tchap: LoginHint events
+                LoginModeEvent.SetLoading -> loginMode.value = AsyncData.Loading()
+                is LoginModeEvent.SetError -> loginMode.value = AsyncData.Failure(event.error)
+                // :tchap: end
                 is LoginModeEvent.Submit -> gateState.submit(event)
                 LoginModeEvent.DismissLocalNetworkPermission -> gateState.abort()
                 LoginModeEvent.RequestLocalNetworkPermission -> gateState.requestPermission()

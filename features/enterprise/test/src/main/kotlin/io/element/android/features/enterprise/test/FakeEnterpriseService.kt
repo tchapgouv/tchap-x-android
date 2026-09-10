@@ -29,7 +29,9 @@ class FakeEnterpriseService(
     private val overrideBrandColorResult: (SessionId?, String?) -> Unit = { _, _ -> lambdaError() },
     private val firebasePushGatewayResult: () -> String? = { lambdaError() },
     private val unifiedPushDefaultPushGatewayResult: () -> String? = { lambdaError() },
+    // :tchap: Get randomised homeserver for getHomeserverFromEmail
     override var selectedHomeserver: Int,
+    // :tchap: end
     private val getNoisyNotificationChannelIdResult: (SessionId?) -> String? = { lambdaError() },
     private val tweakMasUrlResult: (String, ClientUrlContentFetcher) -> String = { _, _ -> lambdaError() },
     private val isElementProEnforcedResult: (String) -> Boolean = { lambdaError() },
@@ -49,9 +51,15 @@ class FakeEnterpriseService(
         return defaultHomeserverListResult()
     }
 
+    // :tchap: Get randomised homeserver for getHomeserverFromEmail
     override fun getNextRandomHomeserver(): String {
         return defaultHomeserverListResult()[selectedHomeserver]
     }
+
+    override fun defaultHomeserverList(): List<String> {
+        return defaultHomeserverListResult()
+    }
+    // :tchap: end
 
     override suspend fun isAllowedToConnectToHomeserver(homeserverUrl: String): Boolean = simulateLongTask {
         isAllowedToConnectToHomeserverResult(homeserverUrl)

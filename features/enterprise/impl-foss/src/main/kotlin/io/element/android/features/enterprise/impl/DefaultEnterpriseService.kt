@@ -22,11 +22,9 @@ import kotlinx.coroutines.flow.flowOf
 import kotlin.random.Random
 
 @ContributesBinding(AppScope::class)
-
 class DefaultEnterpriseService(
     private val homeserverConfiguration: HomeserverConfiguration
 ) : EnterpriseService {
-
     // :tchap: Get a random HomeServeur from a known list to determine account HomeServer
     override var selectedHomeserver: Int = -1
     override fun getNextRandomHomeserver(): String {
@@ -39,6 +37,8 @@ class DefaultEnterpriseService(
 
         return homeservers[selectedHomeserver]
     }
+
+    override fun defaultHomeserverList(): List<String> = homeserverConfiguration.defaultHomeserverList
     // :tchap: end
 
     override suspend fun isEnterpriseUser(sessionId: SessionId) = false

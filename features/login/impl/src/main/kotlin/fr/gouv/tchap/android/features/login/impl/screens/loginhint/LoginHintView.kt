@@ -99,9 +99,9 @@ fun LoginHintView(
         onBackClick()
     }
 
-    val isLoading by remember(state.loginMode) {
+    val isLoading by remember(state.loginModeState.loginMode) {
         derivedStateOf {
-            state.loginMode is AsyncData.Loading
+            state.loginModeState.loginMode is AsyncData.Loading
         }
     }
 
@@ -184,14 +184,14 @@ fun LoginHintView(
                 }
             }
 
-            if (state.loginMode is AsyncData.Failure) {
-                LoginErrorDialog(error = state.loginMode.error, onDismiss = {
+            if (state.loginModeState.loginMode is AsyncData.Failure) {
+                LoginErrorDialog(error = state.loginModeState.loginMode.error, onDismiss = {
                     state.eventSink(LoginHintEvents.ClearError)
                 })
             }
 
             LoginModeView(
-                loginMode = state.loginMode,
+                loginMode = state.loginModeState.loginMode,
                 onClearError = {
                     state.eventSink(LoginHintEvents.ClearError)
                 },
@@ -279,7 +279,7 @@ private fun LoginErrorDialog(error: Throwable, onDismiss: () -> Unit) {
 
 @PreviewsDayNight
 @Composable
-internal fun LoginHintViewPreview(@PreviewParameter(LoginHintStateProvider::class) state: LoginHintState) = ElementPreview {
+internal fun LoginHintViewPreview(@PreviewParameter(LoginHintStatePreviewParam::class) state: LoginHintState) = ElementPreview {
     LoginHintView(
         state = state,
         onBackClick = {},

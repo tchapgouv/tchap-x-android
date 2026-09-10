@@ -132,10 +132,12 @@ class LoginFlowNode(
             val initialLogin: String = "",
         ) : NavTarget
 
+        // :tchap: Add LoginHint flow
         @Parcelize
         data class LoginHint(
             val isAccountCreation: Boolean,
         ) : NavTarget
+        // :tchap: end
     }
 
     override fun resolve(navTarget: NavTarget, buildContext: BuildContext): Node {
@@ -154,9 +156,11 @@ class LoginFlowNode(
                         backstack.push(NavTarget.LoginPassword())
                     }
 
+                    // :tchap: Add LoginHint flow
                     override fun navigateToLoginHint() {
                         backstack.push(NavTarget.LoginHint(isAccountCreation = false))
                     }
+                    // :tchap: end
 
                     override fun navigateToOAuth(oAuthDetails: OAuthDetails) {
                         navigateToMas(oAuthDetails)
@@ -168,17 +172,23 @@ class LoginFlowNode(
                 val callback = object : OnBoardingNode.Callback {
                     override fun navigateToSignUpFlow() {
                         backstack.push(
+                            // :tchap: Add LoginHint flow
+//                            NavTarget.ConfirmAccountProvider(isAccountCreation = true)
                             NavTarget.LoginHint(isAccountCreation = true)
+                            // :tchap: end
                         )
                     }
 
                     override fun navigateToSignInFlow(mustChooseAccountProvider: Boolean) {
                         backstack.push(
-                            if (mustChooseAccountProvider) {
-                                NavTarget.LoginHint(isAccountCreation = false)
-                            } else {
-                                NavTarget.ConfirmAccountProvider(isAccountCreation = false)
-                            }
+                            // :tchap: Add LoginHint flow
+//                            if (mustChooseAccountProvider) {
+//                                NavTarget.ChooseAccountProvider
+//                            } else {
+//                                NavTarget.ConfirmAccountProvider(isAccountCreation = false)
+//                            }
+                            NavTarget.LoginHint(isAccountCreation = false)
+                            // :tchap: end
                         )
                     }
 
@@ -190,9 +200,11 @@ class LoginFlowNode(
                         callback.navigateToBugReport()
                     }
 
+                    // :tchap: Add LoginHint flow
                     override fun navigateToLoginHint() {
                         backstack.push(NavTarget.LoginHint(isAccountCreation = false))
                     }
+                    // :tchap: end
 
                     override fun navigateToOAuth(oAuthDetails: OAuthDetails) {
                         navigateToMas(oAuthDetails)
@@ -240,9 +252,11 @@ class LoginFlowNode(
                         navigateToMas(oAuthDetails)
                     }
 
+                    // :tchap: Add LoginHint flow
                     override fun navigateToLoginHint() {
                         backstack.push(NavTarget.LoginHint(isAccountCreation = false))
                     }
+                    // :tchap: end
 
                     override fun navigateToLoginPassword() {
                         backstack.push(NavTarget.LoginPassword())
@@ -266,9 +280,13 @@ class LoginFlowNode(
                     override fun navigateToOAuth(oAuthDetails: OAuthDetails) {
                         navigateToMas(oAuthDetails)
                     }
+
+                    // :tchap: Add LoginHint flow
                     override fun navigateToLoginHint() {
                         backstack.push(NavTarget.LoginHint(isAccountCreation = navTarget.isAccountCreation))
                     }
+                    // :tchap: end
+
                     override fun navigateToLoginPassword() {
                         backstack.push(NavTarget.LoginPassword())
                     }
@@ -281,6 +299,7 @@ class LoginFlowNode(
                 )
                 createNode<LoginPasswordNode>(buildContext, plugins = listOf(inputs))
             }
+            // :tchap: Add LoginHint flow
             is NavTarget.LoginHint -> {
                 val inputs = LoginHintNode.Inputs(
                     isAccountCreation = navTarget.isAccountCreation,
@@ -301,6 +320,7 @@ class LoginFlowNode(
                 }
                 createNode<LoginHintNode>(buildContext, listOf(inputs, callback))
             }
+            // :tchap: end
         }
     }
 

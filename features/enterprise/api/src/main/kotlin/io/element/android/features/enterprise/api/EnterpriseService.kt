@@ -21,14 +21,19 @@ import kotlinx.coroutines.flow.Flow
  */
 interface EnterpriseService {
     /**
-     * :tchap: Int used to randomise homeserver for getHomeserverFromEmail
+     * :tchap: Int used to randomise homeserver for getHomeserverFromEmail.
      */
     var selectedHomeserver: Int
 
     /**
-     * :tchap: Function to return a randomised homeserver for getHomeserverFromEmail
+     * :tchap: Function to return a randomised homeserver for getHomeserverFromEmail.
      */
     fun getNextRandomHomeserver(): String
+
+    /**
+     * :tchap: Function to return the list of default homeservers.
+     */
+    fun defaultHomeserverList(): List<String>
 
     /**
      * Whether the given session belongs to an enterprise deployment, which can be true even on a standard build.

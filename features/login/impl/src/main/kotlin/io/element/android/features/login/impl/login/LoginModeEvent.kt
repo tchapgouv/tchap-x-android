@@ -23,6 +23,12 @@ sealed interface LoginModeEvent {
 
     data object ClearError : LoginModeEvent
 
+    // :tchap: LoginHint events
+    data object SetLoading : LoginModeEvent
+
+    data class SetError(val error: Throwable) : LoginModeEvent
+    // :tchap: end
+
     data object RequestLocalNetworkPermission : LoginModeEvent
 
     data object DismissLocalNetworkPermission : LoginModeEvent

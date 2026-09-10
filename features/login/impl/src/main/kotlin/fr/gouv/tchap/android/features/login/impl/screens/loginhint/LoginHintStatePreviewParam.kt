@@ -27,17 +27,18 @@ package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.element.android.features.login.impl.accountprovider.AccountProvider
 import io.element.android.features.login.impl.accountprovider.anAccountProvider
-import io.element.android.features.login.impl.login.LoginMode
+import io.element.android.features.login.impl.login.LoginModeState
+import io.element.android.features.login.impl.login.aLoginModeState
 import io.element.android.libraries.architecture.AsyncData
 
-open class LoginHintStateProvider : PreviewParameterProvider<LoginHintState> {
+open class LoginHintStatePreviewParam : PreviewParameterProvider<LoginHintState> {
     override val values: Sequence<LoginHintState>
         get() = sequenceOf(
             aLoginHintState(),
             // Loading
-            aLoginHintState(loginMode = AsyncData.Loading()),
+            aLoginHintState(loginModeState = aLoginModeState(loginMode = AsyncData.Loading())),
             // Error
-            aLoginHintState(loginMode = AsyncData.Failure(Exception("An error occurred"))),
+            aLoginHintState(loginModeState = aLoginModeState(loginMode = AsyncData.Failure(Exception("An error occurred")))),
         )
 }
 
@@ -46,19 +47,13 @@ fun aLoginHintState(
     accountProvider: AccountProvider = anAccountProvider(),
     formState: LoginFormState = LoginFormState.Default,
     isAccountCreation: Boolean = false,
-    loginMode: AsyncData<LoginMode> = AsyncData.Uninitialized,
+    loginModeState: LoginModeState = aLoginModeState(),
     eventSink: (LoginHintEvents) -> Unit = {},
 ) = LoginHintState(
     applicationName = applicationName,
     accountProvider = accountProvider,
     isAccountCreation = isAccountCreation,
     formState = formState,
-    loginMode = loginMode,
+    loginModeState = loginModeState,
     eventSink = eventSink,
-)
-
-fun aLoginFormState(
-    login: String = "",
-) = LoginFormState(
-    login = login,
 )
