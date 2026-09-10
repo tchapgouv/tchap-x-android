@@ -52,10 +52,11 @@ object BuildTimeConfig {
     const val PUSH_CONFIG_INCLUDE_FIREBASE: Boolean = true
     const val PUSH_CONFIG_INCLUDE_UNIFIED_PUSH: Boolean = true
 
-    // TODO : remove this after check unused
-    val PUSHER_APP_ID_RELEASE: String? = null
-    val PUSHER_APP_ID_DEBUG: String? = null
-    val PUSHER_APP_ID_NIGHTLY: String? = null
+    // :tchap: Dynamic PUSHER_APP_ID depending on env in build.gradle.kts
+//    val PUSHER_APP_ID_RELEASE: String? = null
+//    val PUSHER_APP_ID_DEBUG: String? = null
+//    val PUSHER_APP_ID_NIGHTLY: String? = null
+    // :tchap: end
 
     // :tchap: Push config for Gateway URL
     const val PUSH_CONFIG_GATEWAY_URL_PROD = "https://sygnal.tchap.gouv.fr/_matrix/push/v1/notify"

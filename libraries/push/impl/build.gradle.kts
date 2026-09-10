@@ -1,3 +1,4 @@
+import com.android.build.api.variant.BuildConfigField
 import config.BuildTimeConfig
 import extension.buildConfigFieldStr
 import extension.setupDependencyInjection
@@ -23,28 +24,33 @@ android {
         buildConfig = true
     }
 
-    buildTypes {
-        val defaultPusherAppId = "im.vector.app.android"
-        getByName("release") {
-            buildConfigFieldStr(
-                name = "PUSHER_APP_ID",
-                value = BuildTimeConfig.PUSHER_APP_ID_RELEASE ?: defaultPusherAppId,
-            )
-        }
-        getByName("debug") {
-            buildConfigFieldStr(
-                name = "PUSHER_APP_ID",
-                value = BuildTimeConfig.PUSHER_APP_ID_DEBUG ?: defaultPusherAppId,
-            )
-        }
-        register("nightly") {
-            matchingFallbacks += listOf("release")
-            buildConfigFieldStr(
-                name = "PUSHER_APP_ID",
-                value = BuildTimeConfig.PUSHER_APP_ID_NIGHTLY ?: defaultPusherAppId,
-            )
-        }
+    // :tchap: Dynamic PUSHER_APP_ID depending on env
+//    buildTypes {
+//        val defaultPusherAppId = "im.vector.app.android"
+//        getByName("release") {
+//            buildConfigFieldStr(
+//                name = "PUSHER_APP_ID",
+//                value = BuildTimeConfig.PUSHER_APP_ID_RELEASE ?: defaultPusherAppId,
+//            )
+//        }
+//        getByName("debug") {
+//            buildConfigFieldStr(
+//                name = "PUSHER_APP_ID",
+//                value = BuildTimeConfig.PUSHER_APP_ID_DEBUG ?: defaultPusherAppId,
+//            )
+//        }
+//        register("nightly") {
+//            matchingFallbacks += listOf("release")
+//            buildConfigFieldStr(
+//                name = "PUSHER_APP_ID",
+//                value = BuildTimeConfig.PUSHER_APP_ID_NIGHTLY ?: defaultPusherAppId,
+//            )
+//        }
+//    }
+    defaultConfig {
+        buildConfigFieldStr("PUSHER_APP_ID", BuildTimeConfig.APPLICATION_ID)
     }
+    // :tchap: end
 
     testOptions {
         unitTests {
@@ -52,6 +58,25 @@ android {
         }
     }
 }
+
+// :tchap: Dynamic PUSHER_APP_ID depending on env
+androidComponents {
+    onVariants { variant ->
+        val targetFlavor = variant.productFlavors.find { it.first == "target" }?.second
+
+        val flavorSuffix = when (targetFlavor) {
+            "tchapDev" -> ".dev"
+            "tchapPreprod" -> ".staging"
+            else -> ""
+        }
+
+        variant.buildConfigFields?.put(
+            "PUSHER_APP_ID",
+            BuildConfigField("String", "\"${BuildTimeConfig.APPLICATION_ID}$flavorSuffix\"", null)
+        )
+    }
+}
+// :tchap: end
 
 setupDependencyInjection()
 
