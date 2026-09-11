@@ -34,17 +34,26 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns
+import io.element.android.features.enterprise.api.EnterpriseService
+import io.element.android.features.login.impl.accountprovider.AccountProvider
 import io.element.android.features.login.impl.accountprovider.AccountProviderDataSource
-import io.element.android.features.login.impl.login.LoginHelper
+import io.element.android.features.login.impl.login.LoginModeEvent
+import io.element.android.features.login.impl.login.LoginModeState
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.meta.BuildMeta
+import io.element.android.libraries.matrix.api.auth.AuthenticationException
+import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
+import kotlinx.coroutines.launch
 
 @AssistedInject
 class LoginHintPresenter(
     @Assisted private val params: Params,
     private val buildMeta: BuildMeta,
-    private val loginHelper: LoginHelper,
+    private val loginModePresenter: Presenter<LoginModeState>,
     private val accountProviderDataSource: AccountProviderDataSource,
+    private val enterpriseService: EnterpriseService,
+    private val authenticationService: MatrixAuthenticationService,
 ) : Presenter<LoginHintState> {
     data class Params(
         val isAccountCreation: Boolean,
@@ -64,20 +73,45 @@ class LoginHintPresenter(
         }
         val accountProvider by accountProviderDataSource.flow.collectAsState()
 
-        val loginMode by loginHelper.collectLoginMode()
+        val loginModeState = loginModePresenter.present()
 
         fun handleEvents(event: LoginHintEvents) {
             when (event) {
                 is LoginHintEvents.SetLogin -> updateFormState(formState) {
                     copy(login = event.login)
                 }
-                is LoginHintEvents.OnContinue -> loginHelper.getHomeserverFromLoginHint(
-                    coroutineScope = localCoroutineScope,
-                    isAccountCreation = params.isAccountCreation,
-                    accountProviderDataSource = accountProviderDataSource,
-                    loginHint = formState.value.login,
-                )
-                LoginHintEvents.ClearError -> loginHelper.clearError()
+                is LoginHintEvents.OnContinue -> localCoroutineScope.launch {
+                    loginModeState.eventSink(LoginModeEvent.SetLoading)
+
+                    val loginHint = formState.value.login
+                    val homeservers = enterpriseService.defaultHomeserverList()
+
+                    val homeServerFromLoginHint = if (TchapPatterns.isEmail(loginHint)) {
+                        homeservers.indices.firstNotNullOfOrNull {
+                            val defaultHomeserver = enterpriseService.getNextRandomHomeserver()
+                            authenticationService.getHomeserverFromLoginHint(defaultHomeserver, loginHint).getOrNull()
+                        }
+                    } else {
+                        null
+                    }
+
+                    if (homeServerFromLoginHint != null) {
+                        accountProviderDataSource.setAccountProvider(AccountProvider(url = homeServerFromLoginHint))
+                        loginModeState.eventSink(
+                            LoginModeEvent.Submit(
+                                isAccountCreation = params.isAccountCreation,
+                                homeserverUrl = homeServerFromLoginHint,
+                                loginHint = loginHint,
+                                resolvedHomeserverUrl = null,
+                            )
+                        )
+                    } else {
+                        loginModeState.eventSink(
+                            LoginModeEvent.SetError(AuthenticationException.NoHomeserverAvailable("Failed to resolve the account's homeserver"))
+                        )
+                    }
+                }
+                LoginHintEvents.ClearError -> loginModeState.eventSink(LoginModeEvent.ClearError)
             }
         }
 
@@ -86,8 +120,8 @@ class LoginHintPresenter(
             accountProvider = accountProvider,
             isAccountCreation = params.isAccountCreation,
             formState = formState.value,
+            loginModeState = loginModeState,
             eventSink = ::handleEvents,
-            loginMode = loginMode,
         )
     }
 

@@ -105,6 +105,7 @@ class RustMatrixAuthenticationServiceTest {
             enterpriseService = enterpriseService,
             featureFlagService = FakeFeatureFlagService(),
             proxyProvider = FakeProxyProvider(),
+            clientEnterpriseHook = {},
         )
     }
 }

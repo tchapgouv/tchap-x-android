@@ -26,7 +26,7 @@ package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 
 import android.os.Parcelable
 import io.element.android.features.login.impl.accountprovider.AccountProvider
-import io.element.android.features.login.impl.login.LoginMode
+import io.element.android.features.login.impl.login.LoginModeState
 import io.element.android.libraries.architecture.AsyncData
 import kotlinx.parcelize.Parcelize
 
@@ -35,12 +35,12 @@ data class LoginHintState(
     val accountProvider: AccountProvider,
     val isAccountCreation: Boolean,
     val formState: LoginFormState,
-    val loginMode: AsyncData<LoginMode>,
+    val loginModeState: LoginModeState,
     val eventSink: (LoginHintEvents) -> Unit
 ) {
     val submitEnabled: Boolean
         get() = accountProvider.url.isNotEmpty() && formState.login.isNotEmpty() &&
-            (loginMode is AsyncData.Uninitialized || loginMode is AsyncData.Loading)
+            (loginModeState.loginMode is AsyncData.Uninitialized || loginModeState.loginMode is AsyncData.Loading)
 }
 
 @Parcelize

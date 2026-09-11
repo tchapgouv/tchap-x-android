@@ -101,7 +101,7 @@ fun ConfigureRoomView(
                 onBackClick = onBackClick,
                 onNextClick = {
                     focusManager.clearFocus()
-                    state.eventSink(ConfigureRoomEvents.CreateRoom)
+                    state.eventSink(ConfigureRoomEvent.CreateRoom)
                 },
             )
         }
@@ -138,26 +138,29 @@ fun ConfigureRoomView(
                 avatarUri = state.config.avatarUri,
                 roomName = state.config.roomName.orEmpty(),
                 onAvatarClick = ::onAvatarClick,
-                onChangeRoomName = { state.eventSink(ConfigureRoomEvents.RoomNameChanged(it)) },
+                onChangeRoomName = { state.eventSink(ConfigureRoomEvent.RoomNameChanged(it)) },
             )
             Spacer(modifier = Modifier.height(16.dp))
             RoomTopic(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 topic = state.config.topic.orEmpty(),
-                onTopicChange = { state.eventSink(ConfigureRoomEvents.TopicChanged(it)) },
-                // TCHAP : specific values when isSpace
+                onTopicChange = { state.eventSink(ConfigureRoomEvent.TopicChanged(it)) },
+                // :tchap: specific values when isSpace
                 isSpace = isSpace,
+                // :tchap: end
             )
-            // TCHAP : Disable RoomJoinRuleOptions in space creation
+            // :tchap: Disable RoomJoinRuleOptions in space creation
             if (!isSpace) {
+                // :tchap: end
                 Spacer(modifier = Modifier.height(16.dp))
-                // TCHAP : Disable parent space selection when no parent space has been pre-selected
-//                if (!state.isSpace && state.spaces.isNotEmpty()) {
+                // :tchap: Disable parent space selection when no parent space has been pre-selected
+//              if (!state.isSpace && state.spaces.isNotEmpty()) {
                 if (state.spaces.isNotEmpty() && state.config.parentSpace != null) {
+                    // :tchap: end
                     SelectParentSpaceOptions(
                         spaces = state.spaces,
                         selectedSpace = state.config.parentSpace,
-                        onSelectSpace = { state.eventSink(ConfigureRoomEvents.SetParentSpace(it)) },
+                        onSelectSpace = { state.eventSink(ConfigureRoomEvent.SetParentSpace(it)) },
                     )
                 }
                 RoomJoinRuleOptions(
@@ -166,12 +169,12 @@ fun ConfigureRoomView(
                     parentSpace = state.config.parentSpace,
                     onOptionClick = {
                         focusManager.clearFocus()
-                        state.eventSink(ConfigureRoomEvents.JoinRuleChanged(it))
+                        state.eventSink(ConfigureRoomEvent.JoinRuleChanged(it))
                     },
                 )
             }
 
-            // TCHAP : Disable room address customization
+            // :tchap: Disable room address customization
 //            if (state.config.visibilityState !is RoomVisibilityState.Private) {
 //                ListSectionHeader(title = stringResource(R.string.screen_create_room_room_address_section_title))
 //                RoomAddressField(
@@ -179,13 +182,14 @@ fun ConfigureRoomView(
 //                    address = state.config.visibilityState.roomAddress().getOrNull().orEmpty(),
 //                    homeserverName = state.homeserverName,
 //                    addressValidity = state.roomAddressValidity,
-//                    onAddressChange = { state.eventSink(ConfigureRoomEvents.RoomAddressChanged(it)) },
+//                    onAddressChange = { state.eventSink(ConfigureRoomEvent.RoomAddressChanged(it)) },
 //                    label = null,
 //                    supportingText = stringResource(R.string.screen_create_room_room_address_section_footer),
 //                )
 //            }
+            // :tchap: end
 
-            // TCHAP : Add toggle to enable/disable public room federation
+            // :tchap: Add toggle to enable/disable public room federation
             if (!isSpace && state.config.visibilityState is RoomVisibilityState.Public) {
                 ListItem(
                     content = {
@@ -203,10 +207,11 @@ fun ConfigureRoomView(
                         checked = state.config.isPublicRoomLimited,
                     ),
                     onClick = {
-                        state.eventSink(ConfigureRoomEvents.PublicRoomLimitedToFederation(!state.config.isPublicRoomLimited))
+                        state.eventSink(ConfigureRoomEvent.PublicRoomLimitedToFederation(!state.config.isPublicRoomLimited))
                     },
                 )
             }
+            // :tchap: end
         }
     }
 
@@ -214,7 +219,7 @@ fun ConfigureRoomView(
         actions = state.avatarActions,
         isVisible = isAvatarActionsSheetVisible.value,
         onDismiss = { isAvatarActionsSheetVisible.value = false },
-        onSelectAction = { state.eventSink(ConfigureRoomEvents.HandleAvatarAction(it)) }
+        onSelectAction = { state.eventSink(ConfigureRoomEvent.HandleAvatarAction(it)) }
     )
 
     AsyncActionView(
@@ -226,8 +231,8 @@ fun ConfigureRoomView(
         },
         onSuccess = { onCreateRoomSuccess(it) },
         errorMessage = { stringResource(if (isSpace) R.string.screen_create_room_error_creating_space else R.string.screen_create_room_error_creating_room) },
-        onRetry = { state.eventSink(ConfigureRoomEvents.CreateRoom) },
-        onErrorDismiss = { state.eventSink(ConfigureRoomEvents.CancelCreateRoom) },
+        onRetry = { state.eventSink(ConfigureRoomEvent.CreateRoom) },
+        onErrorDismiss = { state.eventSink(ConfigureRoomEvent.CancelCreateRoom) },
     )
 
     PermissionsView(
@@ -453,12 +458,12 @@ private fun RoomJoinRuleOptions(
 
 @PreviewWithLargeHeight
 @Composable
-internal fun ConfigureRoomViewLightPreview(@PreviewParameter(ConfigureRoomStateProvider::class) state: ConfigureRoomState) =
+internal fun ConfigureRoomViewLightPreview(@PreviewParameter(ConfigureRoomStatePreviewParam::class) state: ConfigureRoomState) =
     ElementPreviewLight { ContentToPreview(state) }
 
 @PreviewWithLargeHeight
 @Composable
-internal fun ConfigureRoomViewDarkPreview(@PreviewParameter(ConfigureRoomStateProvider::class) state: ConfigureRoomState) =
+internal fun ConfigureRoomViewDarkPreview(@PreviewParameter(ConfigureRoomStatePreviewParam::class) state: ConfigureRoomState) =
     ElementPreviewDark { ContentToPreview(state) }
 
 @ExcludeFromCoverage

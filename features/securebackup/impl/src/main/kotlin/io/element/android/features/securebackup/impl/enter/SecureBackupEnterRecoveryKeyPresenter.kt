@@ -17,7 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import dev.zacsweers.metro.Inject
-import io.element.android.features.logout.api.direct.DirectLogoutEvents
+import io.element.android.features.logout.api.direct.DirectLogoutEvent
 import io.element.android.features.logout.api.direct.DirectLogoutState
 import io.element.android.features.securebackup.impl.setup.views.RecoveryKeyUserStory
 import io.element.android.features.securebackup.impl.setup.views.RecoveryKeyViewState
@@ -33,8 +33,9 @@ import kotlinx.coroutines.launch
 class SecureBackupEnterRecoveryKeyPresenter(
     private val encryptionService: EncryptionService,
     private val recoveryKeyTools: RecoveryKeyTools,
-    // TCHAP - Verify device with recovery key : add signout topbar button
+    // :tchap: Verify device with recovery key : add signout topbar button
     private val directLogoutPresenter: Presenter<DirectLogoutState>,
+    // :tchap: end
 ) : Presenter<SecureBackupEnterRecoveryKeyState> {
     @Composable
     override fun present(): SecureBackupEnterRecoveryKeyState {
@@ -49,15 +50,16 @@ class SecureBackupEnterRecoveryKeyPresenter(
             mutableStateOf(AsyncAction.Uninitialized)
         }
 
-        // TCHAP - Verify device with recovery key : add signout topbar button
+        // :tchap: Verify device with recovery key : add signout topbar button
         val directLogoutState = directLogoutPresenter.present()
+        // :tchap: end
 
-        fun handleEvent(event: SecureBackupEnterRecoveryKeyEvents) {
+        fun handleEvent(event: SecureBackupEnterRecoveryKeyEvent) {
             when (event) {
-                SecureBackupEnterRecoveryKeyEvents.ClearDialog -> {
+                SecureBackupEnterRecoveryKeyEvent.ClearDialog -> {
                     submitAction.value = AsyncAction.Uninitialized
                 }
-                is SecureBackupEnterRecoveryKeyEvents.OnRecoveryKeyChange -> {
+                is SecureBackupEnterRecoveryKeyEvent.OnRecoveryKeyChange -> {
                     val previousRecoveryKey = recoveryKey
                     recoveryKey = if (previousRecoveryKey.isEmpty() && recoveryKeyTools.isRecoveryKeyFormatValid(event.recoveryKey)) {
                         // A Recovery key has been entered, remove the spaces for a better rendering
@@ -67,15 +69,16 @@ class SecureBackupEnterRecoveryKeyPresenter(
                         event.recoveryKey
                     }
                 }
-                SecureBackupEnterRecoveryKeyEvents.Submit -> {
+                SecureBackupEnterRecoveryKeyEvent.Submit -> {
                     // No need to remove the spaces, the SDK will do it.
                     coroutineScope.submitRecoveryKey(recoveryKey, submitAction)
                 }
-                is SecureBackupEnterRecoveryKeyEvents.ChangeRecoveryKeyFieldContentsVisibility -> {
+                is SecureBackupEnterRecoveryKeyEvent.ChangeRecoveryKeyFieldContentsVisibility -> {
                     displayRecoveryKeyFieldContents = event.visible
                 }
-                // TCHAP - Verify device with recovery key : add signout topbar button
-                SecureBackupEnterRecoveryKeyEvents.SignOut -> directLogoutState.eventSink(DirectLogoutEvents.Logout(ignoreSdkError = false))
+                // :tchap: Verify device with recovery key : add signout topbar button
+                SecureBackupEnterRecoveryKeyEvent.SignOut -> directLogoutState.eventSink(DirectLogoutEvent.Logout(ignoreSdkError = false))
+                // :tchap: end
             }
         }
 
@@ -89,8 +92,9 @@ class SecureBackupEnterRecoveryKeyPresenter(
             isSubmitEnabled = recoveryKey.isNotEmpty() && submitAction.value.isUninitialized(),
             submitAction = submitAction.value,
             eventSink = ::handleEvent,
-            // TCHAP - Verify device with recovery key : add signout topbar button
+            // :tchap: Verify device with recovery key : add signout topbar button
             directLogoutState = directLogoutState,
+            // :tchap: end
         )
     }
 

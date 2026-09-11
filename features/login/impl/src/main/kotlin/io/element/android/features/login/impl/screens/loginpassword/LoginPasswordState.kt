@@ -19,7 +19,7 @@ data class LoginPasswordState(
     val accountProvider: AccountProvider,
     val formState: LoginFormState,
     val loginAction: AsyncData<SessionId>,
-    val eventSink: (LoginPasswordEvents) -> Unit
+    val eventSink: (LoginPasswordEvent) -> Unit
 ) {
     val submitEnabled: Boolean
         get() = loginAction !is AsyncData.Failure &&

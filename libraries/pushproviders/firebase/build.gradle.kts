@@ -30,34 +30,6 @@ android {
         // :tchap: end
     }
 
-    // :tchap: Push config for Gateway URL & Variants
-//    buildTypes {
-//        getByName("release") {
-//            consumerProguardFiles("consumer-proguard-rules.pro")
-//            resValue(
-//                type = "string",
-//                name = "google_app_id",
-//                value = BuildTimeConfig.GOOGLE_APP_ID_RELEASE,
-//            )
-//        }
-//        getByName("debug") {
-//            resValue(
-//                type = "string",
-//                name = "google_app_id",
-//                value = BuildTimeConfig.GOOGLE_APP_ID_DEBUG,
-//            )
-//        }
-//        register("nightly") {
-//            consumerProguardFiles("consumer-proguard-rules.pro")
-//            matchingFallbacks += listOf("release")
-//            resValue(
-//                type = "string",
-//                name = "google_app_id",
-//                value = BuildTimeConfig.GOOGLE_APP_ID_NIGHTLY,
-//            )
-//        }
-//    }
-
     buildTypes {
         getByName("release") {
             consumerProguardFiles("consumer-proguard-rules.pro")
@@ -68,6 +40,7 @@ android {
         }
     }
 
+    // :tchap: Push config for Gateway URL & Variants
     defaultConfig {
         buildConfigField("String", "pushConfigGatewayURL", "\"\"")
     }

@@ -49,7 +49,7 @@ fun SecureBackupEnterRecoveryKeyView(
         progressDialog = { },
         errorTitle = { stringResource(id = R.string.screen_recovery_key_confirm_error_title) },
         errorMessage = { stringResource(id = R.string.screen_recovery_key_confirm_error_content) },
-        onErrorDismiss = { state.eventSink(SecureBackupEnterRecoveryKeyEvents.ClearDialog) },
+        onErrorDismiss = { state.eventSink(SecureBackupEnterRecoveryKeyEvent.ClearDialog) },
     )
 
     // TCHAP - Verify device with recovery key : remove back button & add signout topbar button
@@ -74,7 +74,7 @@ fun SecureBackupEnterRecoveryKeyView(
                 actions = {
                     TextButton(
                         text = stringResource(CommonStrings.action_signout),
-                        onClick = { state.eventSink(SecureBackupEnterRecoveryKeyEvents.SignOut) }
+                        onClick = { state.eventSink(SecureBackupEnterRecoveryKeyEvent.SignOut) }
                     )
                 }
             )
@@ -116,13 +116,13 @@ private fun Content(
         state = state.recoveryKeyViewState,
         onClick = null,
         onChange = {
-            state.eventSink.invoke(SecureBackupEnterRecoveryKeyEvents.OnRecoveryKeyChange(it))
+            state.eventSink.invoke(SecureBackupEnterRecoveryKeyEvent.OnRecoveryKeyChange(it))
         },
         onSubmit = {
-            state.eventSink.invoke(SecureBackupEnterRecoveryKeyEvents.Submit)
+            state.eventSink.invoke(SecureBackupEnterRecoveryKeyEvent.Submit)
         },
         toggleRecoveryKeyVisibility = {
-            state.eventSink(SecureBackupEnterRecoveryKeyEvents.ChangeRecoveryKeyFieldContentsVisibility(it))
+            state.eventSink(SecureBackupEnterRecoveryKeyEvent.ChangeRecoveryKeyFieldContentsVisibility(it))
         }
     )
 }
@@ -137,7 +137,7 @@ private fun ColumnScope.Buttons(
         showProgress = state.submitAction.isLoading(),
         modifier = Modifier.fillMaxWidth(),
         onClick = {
-            state.eventSink.invoke(SecureBackupEnterRecoveryKeyEvents.Submit)
+            state.eventSink.invoke(SecureBackupEnterRecoveryKeyEvent.Submit)
         }
     )
 }
@@ -145,7 +145,7 @@ private fun ColumnScope.Buttons(
 @PreviewsDayNight
 @Composable
 internal fun SecureBackupEnterRecoveryKeyViewPreview(
-    @PreviewParameter(SecureBackupEnterRecoveryKeyStateProvider::class) state: SecureBackupEnterRecoveryKeyState
+    @PreviewParameter(SecureBackupEnterRecoveryKeyStatePreviewParam::class) state: SecureBackupEnterRecoveryKeyState
 ) = ElementPreview {
     SecureBackupEnterRecoveryKeyView(
         state = state,

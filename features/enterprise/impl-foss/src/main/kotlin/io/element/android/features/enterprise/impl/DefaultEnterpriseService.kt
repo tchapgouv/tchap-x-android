@@ -15,9 +15,8 @@ import fr.gouv.tchap.android.features.enterprise.api.HomeserverConfiguration
 import io.element.android.compound.colors.SemanticColorsLightDark
 import io.element.android.features.enterprise.api.BugReportUrl
 import io.element.android.features.enterprise.api.EnterpriseService
-import io.element.android.libraries.matrix.api.UrlContentFetcher
+import io.element.android.libraries.matrix.api.ClientUrlContentFetcher
 import io.element.android.libraries.matrix.api.core.SessionId
-import io.element.android.libraries.wellknown.api.ElementWellKnown
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlin.random.Random
@@ -26,15 +25,7 @@ import kotlin.random.Random
 class DefaultEnterpriseService(
     private val homeserverConfiguration: HomeserverConfiguration
 ) : EnterpriseService {
-    override val isEnterpriseBuild = false
-
-    override suspend fun isEnterpriseUser(sessionId: SessionId) = false
-    override suspend fun tweakMasUrl(url: String, homeserver: String, urlContentFetcher: UrlContentFetcher) = url
-
     // :tchap: Get a random HomeServeur from a known list to determine account HomeServer
-//    override fun defaultHomeserverList(): List<String> = emptyList()
-    override fun defaultHomeserverList(): List<String> = homeserverConfiguration.defaultHomeserverList
-
     override var selectedHomeserver: Int = -1
     override fun getNextRandomHomeserver(): String {
         val homeservers = homeserverConfiguration.defaultHomeserverList
@@ -46,9 +37,15 @@ class DefaultEnterpriseService(
 
         return homeservers[selectedHomeserver]
     }
+
+    override fun defaultHomeserverList(): List<String> = homeserverConfiguration.defaultHomeserverList
     // :tchap: end
 
+    override suspend fun isEnterpriseUser(sessionId: SessionId) = false
+    override suspend fun tweakMasUrl(url: String, urlContentFetcher: ClientUrlContentFetcher) = url
+    override fun homeserverAllowList(): List<String> = emptyList()
     override suspend fun isAllowedToConnectToHomeserver(homeserverUrl: String) = true
+    override suspend fun isElementProEnforced(serverName: String): Boolean = false
 
     override suspend fun overrideBrandColor(sessionId: SessionId?, brandColor: String?) = Unit
 
@@ -68,8 +65,4 @@ class DefaultEnterpriseService(
     }
 
     override fun getNoisyNotificationChannelId(sessionId: SessionId): String? = null
-
-    override fun overriddenElementWellKnown(): ElementWellKnown? = null
-
-    override fun essConfigEndpointUrl(domain: String): String? = null
 }

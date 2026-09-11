@@ -11,11 +11,11 @@ package config
 object BuildTimeConfig {
     const val APPLICATION_ID = "fr.gouv.tchap.android.x"
     const val APPLICATION_NAME = "Tchap"
-//    const val GOOGLE_APP_ID_RELEASE = "1:912726360885:android:d097de99a4c23d2700427c"
-//    const val GOOGLE_APP_ID_DEBUG = "1:912726360885:android:def0a4e454042e9b00427c"
-//    const val GOOGLE_APP_ID_NIGHTLY = "1:912726360885:android:e17435e0beb0303000427c"
 
     val METADATA_HOST_REVERSED: String? = null
+    val OAUTH_CLIENT_URL_PATH: String? = "apps/android"
+
+    // TCHAP : specific URL
     val URL_WEBSITE: String = "https://tchap.gouv.fr"
 
     // TCHAP : specific URL
@@ -31,8 +31,6 @@ object BuildTimeConfig {
 
     // TCHAP : specific URL
     val URL_POLICY = "https://tchap.numerique.gouv.fr/politique-de-confidentialite"
-
-    val OAUTH_CLIENT_URL_PATH: String? = "apps/android"
 
     // TCHAP : specific URL
     val SERVICES_MAPTILER_BASE_URL = "https://openmaptiles.geo.data.gouv.fr/styles"
@@ -51,8 +49,14 @@ object BuildTimeConfig {
     // TCHAP : specific Bug report App Name
     const val BUG_REPORT_APP_NAME = "tchap-x-android"
 
-    const val PUSH_CONFIG_INCLUDE_FIREBASE = true
-    const val PUSH_CONFIG_INCLUDE_UNIFIED_PUSH = true
+    const val PUSH_CONFIG_INCLUDE_FIREBASE: Boolean = true
+    const val PUSH_CONFIG_INCLUDE_UNIFIED_PUSH: Boolean = true
+
+    // :tchap: Dynamic PUSHER_APP_ID depending on env in build.gradle.kts
+//    val PUSHER_APP_ID_RELEASE: String? = null
+//    val PUSHER_APP_ID_DEBUG: String? = null
+//    val PUSHER_APP_ID_NIGHTLY: String? = null
+    // :tchap: end
 
     // :tchap: Push config for Gateway URL
     const val PUSH_CONFIG_GATEWAY_URL_PROD = "https://sygnal.tchap.gouv.fr/_matrix/push/v1/notify"

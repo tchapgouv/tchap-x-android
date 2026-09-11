@@ -51,7 +51,6 @@ class LoginHintNode(
         fun navigateToLoginHint()
         fun navigateToLoginPassword()
         fun navigateToOAuth(oauthDetails: OAuthDetails)
-        fun navigateToCreateAccount(url: String)
     }
 
     private val callback: Callback = callback()
@@ -79,7 +78,6 @@ class LoginHintNode(
             onNeedLoginHint = callback::navigateToLoginHint,
             onNeedLoginPassword = callback::navigateToLoginPassword,
             onLearnMoreClick = { openLearnMorePage(context) },
-            onCreateAccountContinue = callback::navigateToCreateAccount,
         )
     }
 }

@@ -120,10 +120,10 @@ class BlockedUsersPresenterTest {
             presenter.present()
         }.test {
             val initialState = awaitItem()
-            initialState.eventSink(BlockedUsersEvents.Unblock(A_USER_ID))
+            initialState.eventSink(BlockedUsersEvent.Unblock(A_USER_ID))
 
             assertThat(awaitItem().unblockUserAction).isInstanceOf(AsyncAction.Confirming::class.java)
-            initialState.eventSink(BlockedUsersEvents.ConfirmUnblock)
+            initialState.eventSink(BlockedUsersEvent.ConfirmUnblock)
 
             assertThat(awaitItem().unblockUserAction).isInstanceOf(AsyncAction.Loading::class.java)
             assertThat(awaitItem().unblockUserAction).isInstanceOf(AsyncAction.Success::class.java)
@@ -143,10 +143,10 @@ class BlockedUsersPresenterTest {
             presenter.present()
         }.test {
             val initialState = awaitItem()
-            initialState.eventSink(BlockedUsersEvents.Unblock(A_USER_ID))
+            initialState.eventSink(BlockedUsersEvent.Unblock(A_USER_ID))
 
             assertThat(awaitItem().unblockUserAction).isInstanceOf(AsyncAction.Confirming::class.java)
-            initialState.eventSink(BlockedUsersEvents.ConfirmUnblock)
+            initialState.eventSink(BlockedUsersEvent.ConfirmUnblock)
 
             assertThat(awaitItem().unblockUserAction).isInstanceOf(AsyncAction.Loading::class.java)
             assertThat(awaitItem().unblockUserAction).isInstanceOf(AsyncAction.Failure::class.java)
@@ -165,10 +165,10 @@ class BlockedUsersPresenterTest {
             presenter.present()
         }.test {
             val initialState = awaitItem()
-            initialState.eventSink(BlockedUsersEvents.Unblock(A_USER_ID))
+            initialState.eventSink(BlockedUsersEvent.Unblock(A_USER_ID))
 
             assertThat(awaitItem().unblockUserAction).isInstanceOf(AsyncAction.Confirming::class.java)
-            initialState.eventSink(BlockedUsersEvents.Cancel)
+            initialState.eventSink(BlockedUsersEvent.Cancel)
 
             assertThat(awaitItem().unblockUserAction).isEqualTo(AsyncAction.Uninitialized)
         }
@@ -189,7 +189,7 @@ class BlockedUsersPresenterTest {
         }.test {
             val initialState = awaitItem()
             assertThat(initialState.snackbarMessage).isNull()
-            initialState.eventSink(BlockedUsersEvents.CopyToClipboard(A_USER_ID))
+            initialState.eventSink(BlockedUsersEvent.CopyToClipboard(A_USER_ID))
 
             assertThat(clipboardHelper.clipboardContents).isEqualTo(A_USER_ID.value)
             assertThat(awaitItem().snackbarMessage?.messageResId).isEqualTo(CommonStrings.common_copied_to_clipboard)
@@ -203,7 +203,7 @@ class BlockedUsersPresenterTest {
         moleculeFlow(RecompositionMode.Immediate) {
             presenter.present()
         }.test {
-            awaitItem().eventSink(BlockedUsersEvents.ConfirmUnblock)
+            awaitItem().eventSink(BlockedUsersEvent.ConfirmUnblock)
             ensureAllEventsConsumed()
         }
     }

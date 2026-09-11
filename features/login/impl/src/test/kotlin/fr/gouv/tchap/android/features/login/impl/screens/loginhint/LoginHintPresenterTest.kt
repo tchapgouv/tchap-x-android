@@ -26,17 +26,18 @@ package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 
 import com.google.common.truth.Truth.assertThat
 import io.element.android.appconfig.AuthenticationConfig
+import io.element.android.features.enterprise.api.EnterpriseService
 import io.element.android.features.enterprise.test.FakeEnterpriseService
 import io.element.android.features.login.impl.accountprovider.AccountProviderDataSource
-import io.element.android.features.login.impl.login.LoginHelper
-import io.element.android.features.login.impl.screens.onboarding.createLoginHelper
+import io.element.android.features.login.impl.accountprovider.anAccountProviderDataSource
+import io.element.android.features.login.impl.login.LoginMode
+import io.element.android.features.login.impl.screens.onboarding.createLoginModePresenter
 import io.element.android.libraries.architecture.AsyncData
-import io.element.android.libraries.matrix.api.core.SessionId
+import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
 import io.element.android.libraries.matrix.test.AN_EXCEPTION
-import io.element.android.libraries.matrix.test.A_HOMESERVER
-import io.element.android.libraries.matrix.test.A_SESSION_ID
 import io.element.android.libraries.matrix.test.A_USER_NAME
 import io.element.android.libraries.matrix.test.auth.FakeMatrixAuthenticationService
+import io.element.android.libraries.matrix.test.auth.aMatrixHomeServerDetails
 import io.element.android.libraries.matrix.test.core.aBuildMeta
 import io.element.android.tests.testutils.WarmUpRule
 import io.element.android.tests.testutils.test
@@ -54,7 +55,7 @@ class LoginHintPresenterTest {
             val initialState = awaitItem()
             assertThat(initialState.accountProvider.url).isEqualTo(AuthenticationConfig.MATRIX_ORG_URL)
             assertThat(initialState.formState).isEqualTo(LoginFormState.Default)
-            assertThat(initialState.loginMode).isEqualTo(AsyncData.Uninitialized)
+            assertThat(initialState.loginModeState.loginMode).isEqualTo(AsyncData.Uninitialized)
             assertThat(initialState.submitEnabled).isFalse()
         }
     }
@@ -62,11 +63,8 @@ class LoginHintPresenterTest {
     @Test
     fun `present - enter login`() = runTest {
         val authenticationService = FakeMatrixAuthenticationService()
-        authenticationService.givenHomeserver(A_HOMESERVER)
         createLoginHintPresenter(
-            loginHelper = createLoginHelper(
-                authenticationService = authenticationService,
-            ),
+            authenticationService = authenticationService,
         ).test {
             val initialState = awaitItem()
             initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_NAME))
@@ -78,81 +76,121 @@ class LoginHintPresenterTest {
 
     @Test
     fun `present - submit`() = runTest {
-        val authenticationService = FakeMatrixAuthenticationService()
-        authenticationService.givenHomeserver(A_HOMESERVER)
+        val authenticationService = FakeMatrixAuthenticationService(
+            setHomeserverResult = {
+                Result.success(aMatrixHomeServerDetails(supportsPasswordLogin = true))
+            }
+        )
+        val enterpriseService = FakeEnterpriseService(
+            defaultHomeserverListResult = { listOf("matrix.org") },
+            selectedHomeserver = 0
+        )
         createLoginHintPresenter(
-            loginHelper = createLoginHelper(
-                authenticationService = authenticationService,
-            ),
+            enterpriseService = enterpriseService,
+            authenticationService = authenticationService,
         ).test {
             val initialState = awaitItem()
             initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_NAME))
-            skipItems(1)
             val loginState = awaitItem()
             loginState.eventSink.invoke(LoginHintEvents.OnContinue)
             val submitState = awaitItem()
-            assertThat(submitState.loginMode).isInstanceOf(AsyncData.Loading::class.java)
-            val loggedInState = awaitItem()
-            assertThat(loggedInState.loginMode).isEqualTo(AsyncData.Success(A_SESSION_ID))
+            assertThat(submitState.loginModeState.loginMode).isInstanceOf(AsyncData.Loading::class.java)
+            val successState = awaitItem()
+            assertThat(successState.loginModeState.loginMode).isEqualTo(AsyncData.Success(LoginMode.PasswordLogin))
+            assertThat(successState.accountProvider.url).isEqualTo("https://matrix.org")
+        }
+    }
+
+    @Test
+    fun `present - submit with email discovery`() = runTest {
+        val authenticationService = FakeMatrixAuthenticationService(
+            setHomeserverResult = {
+                Result.success(aMatrixHomeServerDetails(supportsPasswordLogin = true))
+            }
+        )
+        val enterpriseService = FakeEnterpriseService(
+            defaultHomeserverListResult = { listOf("agent.dinum.tchap.gouv.fr") },
+            selectedHomeserver = 0
+        )
+        createLoginHintPresenter(
+            enterpriseService = enterpriseService,
+            authenticationService = authenticationService,
+        ).test {
+            val initialState = awaitItem()
+            initialState.eventSink.invoke(LoginHintEvents.SetLogin("user@dinum.tchap.gouv.fr"))
+            val loginState = awaitItem()
+            loginState.eventSink.invoke(LoginHintEvents.OnContinue)
+            val submitState = awaitItem()
+            assertThat(submitState.loginModeState.loginMode).isInstanceOf(AsyncData.Loading::class.java)
+            val successState = awaitItem()
+            assertThat(successState.accountProvider.url).isEqualTo("https://agent.dinum.tchap.gouv.fr")
         }
     }
 
     @Test
     fun `present - submit with error`() = runTest {
-        val authenticationService = FakeMatrixAuthenticationService()
-        authenticationService.givenHomeserver(A_HOMESERVER)
+        val authenticationService = FakeMatrixAuthenticationService(
+            setHomeserverResult = {
+                Result.failure(AN_EXCEPTION)
+            }
+        )
+        val enterpriseService = FakeEnterpriseService(
+            defaultHomeserverListResult = { listOf("matrix.org") },
+            selectedHomeserver = 0
+        )
         createLoginHintPresenter(
-            loginHelper = createLoginHelper(
-                authenticationService = authenticationService,
-            ),
+            enterpriseService = enterpriseService,
+            authenticationService = authenticationService,
         ).test {
             val initialState = awaitItem()
             initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_NAME))
-            skipItems(1)
             val loginState = awaitItem()
-            authenticationService.givenLoginError(AN_EXCEPTION)
             loginState.eventSink.invoke(LoginHintEvents.OnContinue)
             val submitState = awaitItem()
-            assertThat(submitState.loginMode).isInstanceOf(AsyncData.Loading::class.java)
-            val loggedInState = awaitItem()
-            assertThat(loggedInState.loginMode).isEqualTo(AsyncData.Failure<SessionId>(AN_EXCEPTION))
+            assertThat(submitState.loginModeState.loginMode).isInstanceOf(AsyncData.Loading::class.java)
+            val errorState = awaitItem()
+            assertThat(errorState.loginModeState.loginMode).isInstanceOf(AsyncData.Failure::class.java)
         }
     }
 
     @Test
     fun `present - clear error`() = runTest {
         val authenticationService = FakeMatrixAuthenticationService()
-        authenticationService.givenHomeserver(A_HOMESERVER)
+        val enterpriseService = FakeEnterpriseService(
+            defaultHomeserverListResult = { emptyList() },
+            selectedHomeserver = 0
+        )
         createLoginHintPresenter(
-            loginHelper = createLoginHelper(
-                authenticationService = authenticationService,
-            ),
+            enterpriseService = enterpriseService,
+            authenticationService = authenticationService,
         ).test {
             val initialState = awaitItem()
             initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_NAME))
-            skipItems(1)
             val loginState = awaitItem()
-            authenticationService.givenLoginError(AN_EXCEPTION)
             loginState.eventSink.invoke(LoginHintEvents.OnContinue)
             val submitState = awaitItem()
-            assertThat(submitState.loginMode).isInstanceOf(AsyncData.Loading::class.java)
-            val loggedInState = awaitItem()
-            // Check an error was returned
-            assertThat(loggedInState.loginMode).isEqualTo(AsyncData.Failure<SessionId>(AN_EXCEPTION))
-            // Assert the error is then cleared
-            loggedInState.eventSink(LoginHintEvents.ClearError)
+            assertThat(submitState.loginModeState.loginMode).isInstanceOf(AsyncData.Loading::class.java)
+            val errorState = awaitItem()
+            assertThat(errorState.loginModeState.loginMode).isInstanceOf(AsyncData.Failure::class.java)
+            errorState.eventSink(LoginHintEvents.ClearError)
             val clearedState = awaitItem()
-            assertThat(clearedState.loginMode).isEqualTo(AsyncData.Uninitialized)
+            assertThat(clearedState.loginModeState.loginMode).isEqualTo(AsyncData.Uninitialized)
         }
     }
 
     private fun createLoginHintPresenter(
-        loginHelper: LoginHelper = createLoginHelper(),
-        accountProviderDataSource: AccountProviderDataSource = AccountProviderDataSource(FakeEnterpriseService()),
+        enterpriseService: EnterpriseService = FakeEnterpriseService(
+            defaultHomeserverListResult = { listOf("matrix.org") },
+            selectedHomeserver = 0
+        ),
+        authenticationService: MatrixAuthenticationService = FakeMatrixAuthenticationService(),
+        accountProviderDataSource: AccountProviderDataSource = anAccountProviderDataSource(enterpriseService = enterpriseService),
     ): LoginHintPresenter = LoginHintPresenter(
-        loginHelper = loginHelper,
         params = LoginHintPresenter.Params(isAccountCreation = true),
         accountProviderDataSource = accountProviderDataSource,
         buildMeta = aBuildMeta(),
+        enterpriseService = enterpriseService,
+        authenticationService = authenticationService,
+        loginModePresenter = createLoginModePresenter(authenticationService = authenticationService),
     )
 }
