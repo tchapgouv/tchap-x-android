@@ -58,9 +58,9 @@ class StartChatPresenter(
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(initial = false)
 
-        fun handleEvent(event: StartChatEvents) {
+        fun handleEvent(event: StartChatEvent) {
             when (event) {
-                is StartChatEvents.StartDM -> localCoroutineScope.launch {
+                is StartChatEvent.StartDM -> localCoroutineScope.launch {
                     startDMAction.execute(
                         showMatrixId = showMatrixId,
                         matrixUser = event.matrixUser,
@@ -68,7 +68,7 @@ class StartChatPresenter(
                         actionState = startDmActionState,
                     )
                 }
-                StartChatEvents.CancelStartDM -> startDmActionState.value = AsyncAction.Uninitialized
+                StartChatEvent.CancelStartDM -> startDmActionState.value = AsyncAction.Uninitialized
             }
         }
 

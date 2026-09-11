@@ -57,7 +57,7 @@ internal fun SelectedUserExternalPreview() = ElementPreview {
 
 @PreviewsDayNight
 @Composable
-internal fun SelectedUserPreview(@PreviewParameter(MatrixUserWithAvatarProvider::class) user: MatrixUser) = ElementPreview {
+internal fun SelectedUserPreview(@PreviewParameter(MatrixUserWithAvatarPreviewParam::class) user: MatrixUser) = ElementPreview {
     SelectedUser(
         matrixUser = user,
         canRemove = true,

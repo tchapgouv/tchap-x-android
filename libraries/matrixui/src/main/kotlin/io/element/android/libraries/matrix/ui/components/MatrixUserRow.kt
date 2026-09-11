@@ -52,6 +52,6 @@ fun MatrixUserRow(
 
 @PreviewsDayNight
 @Composable
-internal fun MatrixUserRowPreview(@PreviewParameter(MatrixUserProvider::class) matrixUser: MatrixUser) = ElementPreview {
+internal fun MatrixUserRowPreview(@PreviewParameter(MatrixUserPreviewParam::class) matrixUser: MatrixUser) = ElementPreview {
     MatrixUserRow(showMatrixId = false, matrixUser)
 }

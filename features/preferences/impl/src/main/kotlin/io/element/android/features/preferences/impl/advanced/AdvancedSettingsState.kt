@@ -30,7 +30,7 @@ data class AdvancedSettingsState(
     val rageshakeConfigState: RageshakePreferencesState,
     val clearCacheAction: AsyncAction<Unit>,
     // :tchap: end
-    val eventSink: (AdvancedSettingsEvents) -> Unit
+    val eventSink: (AdvancedSettingsEvent) -> Unit
 )
 
 sealed interface MediaOptimizationState {

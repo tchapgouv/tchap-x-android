@@ -70,7 +70,6 @@ fun OnBoardingView(
     onNeedLoginHint: () -> Unit,
     onNeedLoginPassword: () -> Unit,
     onLearnMoreClick: () -> Unit,
-    onCreateAccountContinue: (url: String) -> Unit,
     onReportProblem: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -78,13 +77,12 @@ fun OnBoardingView(
         LoginModeView(
             loginMode = state.loginModeState.loginMode,
             onClearError = {
-                state.eventSink(OnBoardingEvents.ClearError)
+                state.eventSink(OnBoardingEvent.ClearError)
             },
             onLearnMoreClick = onLearnMoreClick,
             onOAuthDetails = onOAuthDetails,
             onNeedLoginHint = onNeedLoginHint,
             onNeedLoginPassword = onNeedLoginPassword,
-            onCreateAccountContinue = onCreateAccountContinue,
         )
         LocalNetworkPermissionDialogView(
             dialog = state.loginModeState.localNetworkPermissionDialog,
@@ -311,7 +309,7 @@ private fun OnBoardingButtons(
                 text = stringResource(id = R.string.tchap_screen_onboarding_sign_in_to, defaultAccountProvider),
                 showProgress = isLoading,
                 onClick = {
-                    state.eventSink(OnBoardingEvents.OnSignIn(defaultAccountProvider))
+                    state.eventSink(OnBoardingEvent.OnSignIn(defaultAccountProvider))
                 },
                 enabled = state.submitEnabled || isLoading,
                 modifier = Modifier
@@ -341,7 +339,7 @@ private fun OnBoardingButtons(
                 Text(
                     modifier = Modifier
                         .clickable(role = Role.Button) {
-                            state.eventSink(OnBoardingEvents.OnVersionClick)
+                            state.eventSink(OnBoardingEvent.OnVersionClick)
                         }
                         .padding(16.dp),
                     text = stringResource(id = R.string.screen_onboarding_app_version, state.version),
@@ -356,7 +354,7 @@ private fun OnBoardingButtons(
 @PreviewsDayNight
 @Composable
 internal fun OnBoardingViewPreview(
-    @PreviewParameter(OnBoardingStateProvider::class) state: OnBoardingState
+    @PreviewParameter(OnBoardingStatePreviewParam::class) state: OnBoardingState
 ) = ElementPreview {
     OnBoardingView(
         state = state,
@@ -370,6 +368,5 @@ internal fun OnBoardingViewPreview(
         onNeedLoginHint = {},
         onNeedLoginPassword = {},
         onLearnMoreClick = {},
-        onCreateAccountContinue = {},
     )
 }

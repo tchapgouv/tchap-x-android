@@ -195,16 +195,17 @@ class ConfigureRoomPresenter(
             localCoroutineScope.createRoom(config, createRoomAction)
         }
 
-        fun handleEvent(event: ConfigureRoomEvents) {
+        fun handleEvent(event: ConfigureRoomEvent) {
             when (event) {
-                is ConfigureRoomEvents.RoomNameChanged -> dataStore.setRoomName(event.name)
-                is ConfigureRoomEvents.TopicChanged -> dataStore.setTopic(event.topic)
-                is ConfigureRoomEvents.JoinRuleChanged -> dataStore.setJoinRule(event.joinRuleItem)
-                is ConfigureRoomEvents.RoomAddressChanged -> dataStore.setRoomAddress(event.roomAddress)
-                // TCHAP : Add toggle to enable/disable public room federation
-                is ConfigureRoomEvents.PublicRoomLimitedToFederation -> dataStore.setIsPublicRoomLimited(event.isPublicRoomLimited)
-                is ConfigureRoomEvents.CreateRoom -> createRoom(createRoomConfig)
-                is ConfigureRoomEvents.HandleAvatarAction -> {
+                is ConfigureRoomEvent.RoomNameChanged -> dataStore.setRoomName(event.name)
+                is ConfigureRoomEvent.TopicChanged -> dataStore.setTopic(event.topic)
+                is ConfigureRoomEvent.JoinRuleChanged -> dataStore.setJoinRule(event.joinRuleItem)
+                is ConfigureRoomEvent.RoomAddressChanged -> dataStore.setRoomAddress(event.roomAddress)
+                // :tchap: Add toggle to enable/disable public room federation
+                is ConfigureRoomEvent.PublicRoomLimitedToFederation -> dataStore.setIsPublicRoomLimited(event.isPublicRoomLimited)
+                // :tchap: end
+                is ConfigureRoomEvent.CreateRoom -> createRoom(createRoomConfig)
+                is ConfigureRoomEvent.HandleAvatarAction -> {
                     when (event.action) {
                         AvatarAction.ChoosePhoto -> galleryImagePicker.launch()
                         AvatarAction.TakePhoto -> if (cameraPermissionState.permissionGranted) {
@@ -216,10 +217,10 @@ class ConfigureRoomPresenter(
                         AvatarAction.Remove -> dataStore.setAvatarUri(uri = null)
                     }
                 }
-                is ConfigureRoomEvents.SetParentSpace -> {
+                is ConfigureRoomEvent.SetParentSpace -> {
                     dataStore.setParentSpace(event.space, false)
                 }
-                ConfigureRoomEvents.CancelCreateRoom -> {
+                ConfigureRoomEvent.CancelCreateRoom -> {
                     createRoomAction.value = AsyncAction.Uninitialized
                 }
             }

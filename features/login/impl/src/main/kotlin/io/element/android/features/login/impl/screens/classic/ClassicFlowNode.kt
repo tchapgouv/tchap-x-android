@@ -56,7 +56,6 @@ class ClassicFlowNode(
         fun navigateToLoginPassword()
         fun navigateToLoginHint()
         fun navigateToOAuth(oAuthDetails: OAuthDetails)
-        fun navigateToCreateAccount(url: String)
     }
 
     sealed interface NavTarget : Parcelable {
@@ -118,10 +117,6 @@ class ClassicFlowNode(
 
                     override fun navigateToOAuth(oAuthDetails: OAuthDetails) {
                         callback.navigateToOAuth(oAuthDetails)
-                    }
-
-                    override fun navigateToCreateAccount(url: String) {
-                        callback.navigateToCreateAccount(url)
                     }
 
                     override fun navigateToMissingKeyBackup() {

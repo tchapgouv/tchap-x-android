@@ -1002,12 +1002,12 @@ private fun AccessByLinkItem(
 
 @PreviewWithExtraLargeHeight
 @Composable
-internal fun RoomDetailsPreview(@PreviewParameter(RoomDetailsStateProvider::class) state: RoomDetailsState) =
+internal fun RoomDetailsPreview(@PreviewParameter(RoomDetailsStatePreviewParam::class) state: RoomDetailsState) =
     ElementPreviewLight { ContentToPreview(state) }
 
 @PreviewWithExtraLargeHeight
 @Composable
-internal fun RoomDetailsDarkPreview(@PreviewParameter(RoomDetailsStateProvider::class) state: RoomDetailsState) =
+internal fun RoomDetailsDarkPreview(@PreviewParameter(RoomDetailsStatePreviewParam::class) state: RoomDetailsState) =
     ElementPreviewDark { ContentToPreview(state) }
 
 @PreviewWithExtraLargeHeight

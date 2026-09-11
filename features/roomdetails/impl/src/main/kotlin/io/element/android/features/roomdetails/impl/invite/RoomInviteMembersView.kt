@@ -22,9 +22,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import io.element.android.compound.theme.ElementTheme
-import io.element.android.features.invitepeople.api.InvitePeopleEvents
+import io.element.android.features.invitepeople.api.InvitePeopleEvent
 import io.element.android.features.invitepeople.api.InvitePeopleState
-import io.element.android.features.invitepeople.api.InvitePeopleStateProvider
+import io.element.android.features.invitepeople.api.InvitePeopleStatePreviewParam
 import io.element.android.features.roomdetails.impl.R
 import io.element.android.libraries.designsystem.components.ProgressDialog
 import io.element.android.libraries.designsystem.components.button.BackButton
@@ -49,14 +49,16 @@ fun RoomInviteMembersView(
             RoomInviteMembersTopBar(
                 onBackClick = {
                     if (state.isSearchActive) {
-                        state.eventSink(InvitePeopleEvents.CloseSearch)
+                        state.eventSink(InvitePeopleEvent.CloseSearch)
                     } else {
                         onBackClick()
                     }
                 },
                 onSubmitClick = {
-                    // TCHAP external user
-                    state.eventSink(InvitePeopleEvents.CheckExternalsAndSendInvites)
+                    // :tchap: external user
+//                    state.eventSink(InvitePeopleEvent.SendInvites)
+                    state.eventSink(InvitePeopleEvent.CheckExternalsAndSendInvites)
+                    // :tchap: end
                 },
                 canSend = state.canInvite,
             )
@@ -117,7 +119,7 @@ private fun InviteProgressDialog() {
 
 @PreviewsDayNight
 @Composable
-internal fun RoomInviteMembersViewPreview(@PreviewParameter(InvitePeopleStateProvider::class) state: InvitePeopleState) = ElementPreview {
+internal fun RoomInviteMembersViewPreview(@PreviewParameter(InvitePeopleStatePreviewParam::class) state: InvitePeopleState) = ElementPreview {
     RoomInviteMembersView(
         state = state,
         invitePeopleView = {},

@@ -9,7 +9,6 @@
 package io.element.android.services.analyticsproviders.posthog
 
 import dev.zacsweers.metro.Inject
-import io.element.android.features.enterprise.api.EnterpriseService
 import io.element.android.libraries.core.extensions.isElement
 import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.core.meta.BuildType
@@ -17,10 +16,9 @@ import io.element.android.libraries.core.meta.BuildType
 @Inject
 class PosthogEndpointConfigProvider(
     private val buildMeta: BuildMeta,
-    private val enterpriseService: EnterpriseService,
 ) {
     fun provide(): PosthogEndpointConfig? {
-        return if (enterpriseService.isEnterpriseBuild) {
+        return if (buildMeta.isEnterpriseBuild) {
             PosthogEndpointConfig(
                 host = BuildConfig.POSTHOG_HOST,
                 apiKey = BuildConfig.POSTHOG_APIKEY,
@@ -42,7 +40,23 @@ class PosthogEndpointConfigProvider(
                 )
             }
         } else {
-            null
+            // :tchap: Config Posthog URL for Tchap
+//            null
+            when (BuildConfig.FLAVOR_target) {
+                "tchap" -> PosthogEndpointConfig(
+                    host = "https://posthog.tchap.numerique.gouv.fr",
+                    apiKey = "phc_gm2O25mu8NTQtKpozdoVwZCixWqdq7PUHLLjDNDzVIe",
+                )
+                "tchapPreprod" -> PosthogEndpointConfig(
+                    host = "https://posthog.preprod.tchap.numerique.gouv.fr",
+                    apiKey = "phc_yf5yr3PrgiUTZMZpSmUlR6hdtqAejwhcUMQGsK8Nx5w",
+                )
+                else -> PosthogEndpointConfig(
+                    host = "https://posthog.tchap.incubateur.net",
+                    apiKey = "phc_yf5yr3PrgiUTZMZpSmUlR6hdtqAejwhcUMQGsK8Nx5w",
+                )
+            }
+            // :tchap: end
         }
     }
 }

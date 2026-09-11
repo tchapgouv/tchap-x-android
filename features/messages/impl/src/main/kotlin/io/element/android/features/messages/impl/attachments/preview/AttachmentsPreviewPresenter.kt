@@ -40,6 +40,8 @@ import io.element.android.libraries.core.coroutine.firstInstanceOf
 import io.element.android.libraries.core.extensions.runCatchingExceptions
 import io.element.android.libraries.core.mimetype.MimeTypes.isMimeTypeVideo
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.permalink.PermalinkBuilder
 import io.element.android.libraries.matrix.api.room.JoinedRoom
@@ -81,6 +83,9 @@ class AttachmentsPreviewPresenter(
     @SessionCoroutineScope private val sessionCoroutineScope: CoroutineScope,
     private val dispatchers: CoroutineDispatchers,
     private val mediaOptimizationConfigProvider: MediaOptimizationConfigProvider,
+    // :tchap: Enable multi medias selection by sending multiple messages
+    private val featureFlagService: FeatureFlagService,
+    // :tchap: end
 ) : Presenter<AttachmentsPreviewState> {
     @AssistedFactory
     interface Factory {
@@ -553,12 +558,33 @@ class AttachmentsPreviewPresenter(
                 inReplyToEventId = inReplyToEventId,
             ).getOrThrow()
         } else {
-            mediaSender.sendGallery(
-                mediaUploadInfos = mediaUploadInfos,
-                caption = caption,
-                formattedCaption = null,
-                inReplyToEventId = inReplyToEventId,
-            ).getOrThrow()
+            // :tchap: Enable multi medias selection by sending multiple messages
+//            mediaSender.sendGallery(
+//                mediaUploadInfos = mediaUploadInfos,
+//                caption = caption,
+//                formattedCaption = null,
+//                inReplyToEventId = inReplyToEventId,
+//            ).getOrThrow()
+            if (featureFlagService.isFeatureEnabled(FeatureFlags.SendGalleryMessages)) {
+                mediaSender.sendGallery(
+                    mediaUploadInfos = mediaUploadInfos,
+                    caption = caption,
+                    formattedCaption = null,
+                    inReplyToEventId = inReplyToEventId,
+                ).getOrThrow()
+            } else {
+                sendActionState.value = SendActionState.Sending.Uploading(mediaUploadInfos)
+                mediaUploadInfos.forEachIndexed { index, mediaUploadInfo ->
+                    val itemCaption = if (index == 0) caption else null
+                    mediaSender.sendPreProcessedMedia(
+                        mediaUploadInfo = mediaUploadInfo,
+                        caption = itemCaption,
+                        formattedCaption = null,
+                        inReplyToEventId = inReplyToEventId,
+                    ).getOrThrow()
+                }
+            }
+            // :tchap: end
         }
     }.fold(
         onSuccess = {

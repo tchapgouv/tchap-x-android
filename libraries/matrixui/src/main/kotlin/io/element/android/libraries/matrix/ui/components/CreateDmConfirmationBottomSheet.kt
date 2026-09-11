@@ -159,7 +159,7 @@ fun CreateDmConfirmationBottomSheet(
 @Composable
 internal fun CreateDmConfirmationBottomSheetPreview(
     @PreviewParameter(
-        CreateDmConfirmationBottomSheetStateProvider::class
+        CreateDmConfirmationBottomSheetStatePreviewParam::class
     ) state: CreateDmConfirmationBottomSheetState
 ) = ElementPreview(fillMaxSize = true) {
     CreateDmConfirmationBottomSheet(
@@ -177,7 +177,7 @@ data class CreateDmConfirmationBottomSheetState(
     val isUserIdentityUnknown: Boolean,
 )
 
-class CreateDmConfirmationBottomSheetStateProvider : PreviewParameterProvider<CreateDmConfirmationBottomSheetState> {
+class CreateDmConfirmationBottomSheetStatePreviewParam : PreviewParameterProvider<CreateDmConfirmationBottomSheetState> {
     override val values = sequenceOf(
         CreateDmConfirmationBottomSheetState(showMatrixId = false, matrixUser = aMatrixUser(), isUserIdentityUnknown = false),
         CreateDmConfirmationBottomSheetState(showMatrixId = false, matrixUser = aMatrixUser(), isUserIdentityUnknown = true),

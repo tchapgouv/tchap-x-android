@@ -21,5 +21,4 @@ sealed interface LoginMode {
     data object LoginHint : LoginMode
     data object PasswordLogin : LoginMode
     data class OAuth(val oAuthDetails: OAuthDetails) : LoginMode
-    data class AccountCreation(val url: String) : LoginMode
 }

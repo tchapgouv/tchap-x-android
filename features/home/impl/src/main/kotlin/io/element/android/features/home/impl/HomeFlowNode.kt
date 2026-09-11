@@ -59,6 +59,7 @@ import io.element.android.libraries.designsystem.utils.DelayedVisibility
 import io.element.android.libraries.di.SessionScope
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
 import io.element.android.libraries.matrix.api.MatrixClient
+import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.services.analytics.api.AnalyticsService
 import kotlinx.coroutines.CoroutineScope
@@ -192,6 +193,7 @@ class HomeFlowNode(
 
             fun navigateToRoom(
                 roomId: RoomId,
+                eventId: EventId?,
             ) {
                 if (!loadingJoinedRoomJob.value.isUninitialized()) {
                     Timber.w("Already loading a room, ignoring navigateToRoom for $roomId")
@@ -204,7 +206,7 @@ class HomeFlowNode(
                     }.fold(
                         onSuccess = { joinedRoom ->
                             if (isActive) {
-                                callback.navigateToRoom(roomId, joinedRoom)
+                                callback.navigateToRoom(roomId = roomId, eventId = eventId, joinedRoom = joinedRoom)
                                 loadingJoinedRoomJob.value = AsyncData.Success(coroutineContext.job)
                                 // Wait a bit before resetting the state to avoid allowing to open several rooms
                                 delay(200.milliseconds)
@@ -214,7 +216,7 @@ class HomeFlowNode(
                         onFailure = {
                             // If the operation wasn't cancelled, navigate without the room, using the room id
                             if (it !is CancellationException) {
-                                callback.navigateToRoom(roomId, null)
+                                callback.navigateToRoom(roomId = roomId, eventId = null, joinedRoom = null)
                             }
                             loadingJoinedRoomJob.value = AsyncData.Failure(error = it, prevData = coroutineContext.job)
                             // Wait a bit before resetting the state to avoid allowing to open several rooms
@@ -246,7 +248,7 @@ class HomeFlowNode(
                 acceptDeclineInviteView = {
                     acceptDeclineInviteView.Render(
                         state = state.roomListState.acceptDeclineInviteState,
-                        onAcceptInviteSuccess = ::navigateToRoom,
+                        onAcceptInviteSuccess = { navigateToRoom(roomId = it, eventId = null) },
                         onDeclineInviteSuccess = { },
                         modifier = Modifier
                     )
@@ -282,6 +284,11 @@ class HomeFlowNode(
                     parentNode = this,
                     buildContext = buildContext,
                     inviteData = navTarget.inviteData,
+                    callback = object : DeclineInviteAndBlockEntryPoint.Callback {
+                        override fun onDeclineSuccess() {
+                            backstack.pop()
+                        }
+                    },
                 )
             }
             is NavTarget.SelectNewOwnersWhenLeavingRoom -> {

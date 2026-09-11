@@ -19,6 +19,7 @@ import io.element.android.features.messages.impl.timeline.model.event.TimelineIt
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemVideoContent
 import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemDaySeparatorModel
 import io.element.android.features.messages.impl.timeline.model.virtual.TimelineItemVirtualModel
+import io.element.android.libraries.androidutils.metadata.isInDebug
 import io.element.android.libraries.designsystem.components.avatar.AvatarData
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.SendHandle
@@ -136,7 +137,14 @@ sealed interface TimelineItem {
 
         // No need to be lazy here?
         val messageShield: MessageShieldData? = messageShieldProvider(strict = false)?.let {
-            MessageShieldData(it, forwarder, forwarderProfile)
+            // :tchap: Show MessageShield.AuthenticityNotGuaranteed only in debug
+//            MessageShieldData(it, forwarder, forwarderProfile)
+            if (it is MessageShield.AuthenticityNotGuaranteed && forwarder == null && !isInDebug) {
+                null
+            } else {
+                MessageShieldData(it, forwarder, forwarderProfile)
+            }
+            // :tchap: end
         }
 
         val debugInfo: TimelineItemDebugInfo

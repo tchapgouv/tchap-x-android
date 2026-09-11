@@ -46,8 +46,6 @@ class ConfirmAccountProviderNode(
         fun navigateToLoginHint()
         fun navigateToLoginPassword()
         fun navigateToOAuth(oAuthDetails: OAuthDetails)
-        fun navigateToCreateAccount(url: String)
-        fun navigateToChangeAccountProvider()
     }
 
     private val callback: Callback = callback()
@@ -62,8 +60,6 @@ class ConfirmAccountProviderNode(
             onOAuthDetails = callback::navigateToOAuth,
             onNeedLoginHint = callback::navigateToLoginHint,
             onNeedLoginPassword = callback::navigateToLoginPassword,
-            onCreateAccountContinue = callback::navigateToCreateAccount,
-            onChange = callback::navigateToChangeAccountProvider,
             onLearnMoreClick = { openLearnMorePage(context) },
         )
     }

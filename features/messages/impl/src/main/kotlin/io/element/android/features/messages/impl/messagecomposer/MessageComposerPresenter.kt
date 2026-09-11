@@ -48,8 +48,6 @@ import io.element.android.libraries.core.mimetype.MimeTypes
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.matrix.api.core.UserId
@@ -87,6 +85,7 @@ import io.element.android.libraries.textcomposer.model.MarkdownTextEditorState
 import io.element.android.libraries.textcomposer.model.Message
 import io.element.android.libraries.textcomposer.model.MessageComposerMode
 import io.element.android.libraries.textcomposer.model.Suggestion
+import io.element.android.libraries.textcomposer.model.SuggestionType
 import io.element.android.libraries.textcomposer.model.TextEditorState
 import io.element.android.libraries.textcomposer.model.rememberMarkdownTextEditorState
 import io.element.android.services.analytics.api.AnalyticsService
@@ -104,7 +103,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -140,7 +141,9 @@ class MessageComposerPresenter(
     private val mediaOptimizationConfigProvider: MediaOptimizationConfigProvider,
     private val notificationConversationService: NotificationConversationService,
     private val slashCommandService: SlashCommandService,
-    private val featureFlagService: FeatureFlagService,
+    // :tchap: Enable multi medias selection by sending multiple messages
+//    private val featureFlagService: FeatureFlagService,
+    // :tchap: end
     private val contentScannerService: ContentScannerService,
     private val contentValidationCache: EventContentValidationCache,
 ) : Presenter<MessageComposerState> {
@@ -187,21 +190,26 @@ class MessageComposerPresenter(
             canShareLocation.value = locationService.isServiceAvailable()
         }
 
-        val isSendGalleryMessagesEnabled by featureFlagService.isFeatureEnabledFlow(FeatureFlags.SendGalleryMessages)
-            .collectAsState(initial = false)
+        // :tchap: Enable multi medias selection by sending multiple messages
+//        val isSendGalleryMessagesEnabled by featureFlagService.isFeatureEnabledFlow(FeatureFlags.SendGalleryMessages)
+//            .collectAsState(initial = false)
+//
+//        val galleryMediaPicker = mediaPickerProvider.registerGalleryPicker { uri, mimeType ->
+//            handlePickedMedia(uri, mimeType)
+//        }
+        // :tchap: end
 
-        val galleryMediaPicker = mediaPickerProvider.registerGalleryPicker { uri, mimeType ->
-            handlePickedMedia(uri, mimeType)
-        }
         val galleryMultiMediaPicker = mediaPickerProvider.registerGalleryMultiPicker { uris ->
             handlePickedMediaList(uris)
         }
         val filesPicker = mediaPickerProvider.registerFileMultiPicker(AnyMimeTypes) { uris ->
             handlePickedMediaList(uris, sendAsFile = true)
         }
-        val fileSinglePicker = mediaPickerProvider.registerFilePicker(AnyMimeTypes) { uri, mimeType ->
-            handlePickedMedia(uri, mimeType ?: MimeTypes.OctetStream, sendAsFile = true)
-        }
+        // :tchap: Enable multi medias selection by sending multiple messages
+//        val fileSinglePicker = mediaPickerProvider.registerFilePicker(AnyMimeTypes) { uri, mimeType ->
+//            handlePickedMedia(uri, mimeType ?: MimeTypes.OctetStream, sendAsFile = true)
+//        }
+        // :tchap: end
         val cameraPhotoPicker = mediaPickerProvider.registerCameraPhotoPicker { uri ->
             handlePickedMedia(uri, MimeTypes.Jpeg)
         }
@@ -313,19 +321,25 @@ class MessageComposerPresenter(
                 MessageComposerEvent.DismissAttachmentMenu -> showAttachmentSourcePicker = false
                 MessageComposerEvent.PickAttachmentSource.FromGallery -> localCoroutineScope.launch {
                     showAttachmentSourcePicker = false
-                    if (isSendGalleryMessagesEnabled) {
-                        galleryMultiMediaPicker.launch()
-                    } else {
-                        galleryMediaPicker.launch()
-                    }
+                    // :tchap: Enable multi medias selection by sending multiple messages
+//                    if (isSendGalleryMessagesEnabled) {
+//                        galleryMultiMediaPicker.launch()
+//                    } else {
+//                        galleryMediaPicker.launch()
+//                    }
+                    galleryMultiMediaPicker.launch()
+                    // :tchap: end
                 }
                 MessageComposerEvent.PickAttachmentSource.FromFiles -> localCoroutineScope.launch {
                     showAttachmentSourcePicker = false
-                    if (isSendGalleryMessagesEnabled) {
-                        filesPicker.launch()
-                    } else {
-                        fileSinglePicker.launch()
-                    }
+                    // :tchap: Enable multi medias selection by sending multiple messages
+//                    if (isSendGalleryMessagesEnabled) {
+//                        filesPicker.launch()
+//                    } else {
+//                        fileSinglePicker.launch()
+//                    }
+                    filesPicker.launch()
+                    // :tchap: end
                 }
                 MessageComposerEvent.PickAttachmentSource.PhotoFromCamera -> localCoroutineScope.launch {
                     showAttachmentSourcePicker = false
@@ -432,6 +446,7 @@ class MessageComposerPresenter(
             textEditorState = textEditorState,
             isFullScreen = isFullScreen.value,
             mode = messageComposerContext.composerMode,
+            isInThreadTimeline = isInThread,
             showAttachmentSourcePicker = showAttachmentSourcePicker,
             showTextFormatting = showTextFormatting,
             canShareLocation = canShareLocation.value,
@@ -464,6 +479,14 @@ class MessageComposerPresenter(
             val mentionCompletionTrigger = suggestionSearchTrigger.debounce(0.3.seconds).filter { !it?.text.isNullOrEmpty() }
 
             val mentionTriggerFlow = merge(mentionStartTrigger, mentionCompletionTrigger)
+
+            // Refresh the room members, which are only loaded on demand, when a mention starts
+            launch {
+                suggestionSearchTrigger
+                    .distinctUntilChangedBy { it?.type }
+                    .filter { it?.type == SuggestionType.Mention }
+                    .collect { room.updateMembers() }
+            }
 
             val roomAliasSuggestionsFlow = roomAliasSuggestionsDataSource
                 .getAllRoomAliasSuggestions()

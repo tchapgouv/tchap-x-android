@@ -1,3 +1,23 @@
+Changements dans Tchap Android v26.09.0
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v26.09.0 -->
+
+## Qu'est-ce qui a changé ?
+### ✨ Nouveautés
+* Activation des statistiques analytiques anonymes PostHog by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/279
+* Envoi de fichiers et d'images multiples by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/283
+### 🙌 Améliorations
+* Désactivation du test de PUSH car indisponible côté serveur by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/277
+* Guide pour la sauvegarde auto de Tchap Classique by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/278
+* Afficher l'icône « authenticité non garantie » uniquement en mode debug by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/282
+* Correction de la couleur du texte de la snackbar en DarkMode by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/280
+### Autres
+* Merge Element X v26.09.1 by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/281
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v26.08.1...v26.09.0
+
 Changements dans Tchap Android v26.08.1
 =============================
 

@@ -23,7 +23,6 @@ import com.bumble.appyx.navmodel.backstack.BackStack
 import com.bumble.appyx.navmodel.backstack.operation.pop
 import com.bumble.appyx.navmodel.backstack.operation.push
 import com.bumble.appyx.navmodel.backstack.operation.replace
-import com.bumble.appyx.navmodel.backstack.operation.singleTop
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
@@ -34,14 +33,11 @@ import io.element.android.features.login.api.LoginEntryPoint
 import io.element.android.features.login.impl.accountprovider.AccountProviderDataSource
 import io.element.android.features.login.impl.classic.ElementClassicConnection
 import io.element.android.features.login.impl.qrcode.QrCodeLoginFlowNode
-import io.element.android.features.login.impl.screens.changeaccountprovider.ChangeAccountProviderNode
 import io.element.android.features.login.impl.screens.chooseaccountprovider.ChooseAccountProviderNode
 import io.element.android.features.login.impl.screens.classic.ClassicFlowNode
 import io.element.android.features.login.impl.screens.confirmaccountprovider.ConfirmAccountProviderNode
-import io.element.android.features.login.impl.screens.createaccount.CreateAccountNode
 import io.element.android.features.login.impl.screens.loginpassword.LoginPasswordNode
 import io.element.android.features.login.impl.screens.onboarding.OnBoardingNode
-import io.element.android.features.login.impl.screens.searchaccountprovider.SearchAccountProviderNode
 import io.element.android.features.preferences.api.PreferencesEntryPoint
 import io.element.android.libraries.androidutils.browser.openUrlInChromeCustomTab
 import io.element.android.libraries.architecture.BackstackView
@@ -132,23 +128,16 @@ class LoginFlowNode(
         data object ChooseAccountProvider : NavTarget
 
         @Parcelize
-        data object ChangeAccountProvider : NavTarget
-
-        @Parcelize
-        data object SearchAccountProvider : NavTarget
-
-        @Parcelize
         data class LoginPassword(
             val initialLogin: String = "",
         ) : NavTarget
 
+        // :tchap: Add LoginHint flow
         @Parcelize
         data class LoginHint(
             val isAccountCreation: Boolean,
         ) : NavTarget
-
-        @Parcelize
-        data class CreateAccount(val url: String) : NavTarget
+        // :tchap: end
     }
 
     override fun resolve(navTarget: NavTarget, buildContext: BuildContext): Node {
@@ -167,16 +156,14 @@ class LoginFlowNode(
                         backstack.push(NavTarget.LoginPassword())
                     }
 
+                    // :tchap: Add LoginHint flow
                     override fun navigateToLoginHint() {
                         backstack.push(NavTarget.LoginHint(isAccountCreation = false))
                     }
+                    // :tchap: end
 
                     override fun navigateToOAuth(oAuthDetails: OAuthDetails) {
                         navigateToMas(oAuthDetails)
-                    }
-
-                    override fun navigateToCreateAccount(url: String) {
-                        backstack.push(NavTarget.CreateAccount(url))
                     }
                 }
                 createNode<ClassicFlowNode>(buildContext, listOf(callback))
@@ -185,17 +172,23 @@ class LoginFlowNode(
                 val callback = object : OnBoardingNode.Callback {
                     override fun navigateToSignUpFlow() {
                         backstack.push(
+                            // :tchap: Add LoginHint flow
+//                            NavTarget.ConfirmAccountProvider(isAccountCreation = true)
                             NavTarget.LoginHint(isAccountCreation = true)
+                            // :tchap: end
                         )
                     }
 
                     override fun navigateToSignInFlow(mustChooseAccountProvider: Boolean) {
                         backstack.push(
-                            if (mustChooseAccountProvider) {
-                                NavTarget.LoginHint(isAccountCreation = false)
-                            } else {
-                                NavTarget.ConfirmAccountProvider(isAccountCreation = false)
-                            }
+                            // :tchap: Add LoginHint flow
+//                            if (mustChooseAccountProvider) {
+//                                NavTarget.ChooseAccountProvider
+//                            } else {
+//                                NavTarget.ConfirmAccountProvider(isAccountCreation = false)
+//                            }
+                            NavTarget.LoginHint(isAccountCreation = false)
+                            // :tchap: end
                         )
                     }
 
@@ -207,16 +200,14 @@ class LoginFlowNode(
                         callback.navigateToBugReport()
                     }
 
+                    // :tchap: Add LoginHint flow
                     override fun navigateToLoginHint() {
                         backstack.push(NavTarget.LoginHint(isAccountCreation = false))
                     }
+                    // :tchap: end
 
                     override fun navigateToOAuth(oAuthDetails: OAuthDetails) {
                         navigateToMas(oAuthDetails)
-                    }
-
-                    override fun navigateToCreateAccount(url: String) {
-                        backstack.push(NavTarget.CreateAccount(url))
                     }
 
                     override fun navigateToDeveloperSettings() {
@@ -261,13 +252,11 @@ class LoginFlowNode(
                         navigateToMas(oAuthDetails)
                     }
 
-                    override fun navigateToCreateAccount(url: String) {
-                        backstack.push(NavTarget.CreateAccount(url))
-                    }
-
+                    // :tchap: Add LoginHint flow
                     override fun navigateToLoginHint() {
                         backstack.push(NavTarget.LoginHint(isAccountCreation = false))
                     }
+                    // :tchap: end
 
                     override fun navigateToLoginPassword() {
                         backstack.push(NavTarget.LoginPassword())
@@ -292,53 +281,17 @@ class LoginFlowNode(
                         navigateToMas(oAuthDetails)
                     }
 
-                    override fun navigateToCreateAccount(url: String) {
-                        backstack.push(NavTarget.CreateAccount(url))
-                    }
-
+                    // :tchap: Add LoginHint flow
                     override fun navigateToLoginHint() {
                         backstack.push(NavTarget.LoginHint(isAccountCreation = navTarget.isAccountCreation))
                     }
+                    // :tchap: end
 
                     override fun navigateToLoginPassword() {
                         backstack.push(NavTarget.LoginPassword())
                     }
-
-                    override fun navigateToChangeAccountProvider() {
-                        backstack.push(NavTarget.ChangeAccountProvider)
-                    }
                 }
                 createNode<ConfirmAccountProviderNode>(buildContext, plugins = listOf(inputs, callback))
-            }
-            NavTarget.ChangeAccountProvider -> {
-                val callback = object : ChangeAccountProviderNode.Callback {
-                    override fun onDone() {
-                        // Go back to the Account Provider screen
-                        val confirmAccountProvider = backstack.elements.value.firstOrNull {
-                            it.key.navTarget is NavTarget.ConfirmAccountProvider
-                        }?.key?.navTarget ?: NavTarget.ConfirmAccountProvider(isAccountCreation = false)
-                        backstack.singleTop(confirmAccountProvider)
-                    }
-
-                    override fun navigateToSearchAccountProvider() {
-                        backstack.push(NavTarget.SearchAccountProvider)
-                    }
-                }
-
-                createNode<ChangeAccountProviderNode>(buildContext, plugins = listOf(callback))
-            }
-            NavTarget.SearchAccountProvider -> {
-                val callback = object : SearchAccountProviderNode.Callback {
-                    override fun onDone() {
-                        // Go back to the Account Provider screen
-                        val confirmAccountProvider = backstack.elements.value.firstOrNull {
-                            it.key.navTarget is NavTarget.ConfirmAccountProvider
-                        }?.key?.navTarget ?: NavTarget.ConfirmAccountProvider(isAccountCreation = false)
-                        backstack.singleTop(confirmAccountProvider)
-                    }
-                }
-
-                createNode<SearchAccountProviderNode>(buildContext, plugins = listOf(callback))
             }
             is NavTarget.LoginPassword -> {
                 val inputs = LoginPasswordNode.Inputs(
@@ -346,6 +299,7 @@ class LoginFlowNode(
                 )
                 createNode<LoginPasswordNode>(buildContext, plugins = listOf(inputs))
             }
+            // :tchap: Add LoginHint flow
             is NavTarget.LoginHint -> {
                 val inputs = LoginHintNode.Inputs(
                     isAccountCreation = navTarget.isAccountCreation,
@@ -354,10 +308,6 @@ class LoginFlowNode(
                 val callback = object : LoginHintNode.Callback {
                     override fun navigateToOAuth(oauthDetails: OAuthDetails) {
                         navigateToMas(oauthDetails)
-                    }
-
-                    override fun navigateToCreateAccount(url: String) {
-                        backstack.push(NavTarget.CreateAccount(url))
                     }
 
                     override fun navigateToLoginHint() {
@@ -370,12 +320,7 @@ class LoginFlowNode(
                 }
                 createNode<LoginHintNode>(buildContext, listOf(inputs, callback))
             }
-            is NavTarget.CreateAccount -> {
-                val inputs = CreateAccountNode.Inputs(
-                    url = navTarget.url,
-                )
-                createNode<CreateAccountNode>(buildContext, listOf(inputs))
-            }
+            // :tchap: end
         }
     }
 

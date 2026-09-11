@@ -214,7 +214,7 @@ private fun RoomListFilterView(
 
 @PreviewsDayNight
 @Composable
-internal fun RoomListFiltersViewPreview(@PreviewParameter(RoomListFiltersStateProvider::class) state: RoomListFiltersState) = ElementPreview {
+internal fun RoomListFiltersViewPreview(@PreviewParameter(RoomListFiltersStatePreviewParam::class) state: RoomListFiltersState) = ElementPreview {
     RoomListFiltersView(
         modifier = Modifier.padding(vertical = 4.dp),
         state = state,

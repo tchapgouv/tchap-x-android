@@ -37,7 +37,6 @@ class LoginWithClassicNode(
         fun navigateToLoginPassword()
         fun navigateToLoginHint()
         fun navigateToOAuth(oAuthDetails: OAuthDetails)
-        fun navigateToCreateAccount(url: String)
         fun navigateToMissingKeyBackup()
     }
 
@@ -65,7 +64,6 @@ class LoginWithClassicNode(
             onNeedLoginPassword = callback::navigateToLoginPassword,
             onNeedLoginHint = callback::navigateToLoginHint,
             onLearnMoreClick = { openLearnMorePage(context) },
-            onCreateAccountContinue = callback::navigateToCreateAccount,
         )
     }
 }
