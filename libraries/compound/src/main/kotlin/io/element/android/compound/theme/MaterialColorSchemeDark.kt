@@ -41,7 +41,10 @@ fun SemanticColors.toMaterialColorSchemeDark(): ColorScheme = darkColorScheme(
     onSurfaceVariant = textSecondary,
     surfaceTint = DarkColorTokens.colorGray1000,
     inverseSurface = DarkColorTokens.colorGray1300,
-    inverseOnSurface = textOnSolidPrimary,
+    // :tchap: Fix inverseOnSurface for DarkMode
+//    inverseOnSurface = textOnSolidPrimary,
+    inverseOnSurface = DarkColorTokens.colorThemeBg,
+    // :tchap: end
     error = textCriticalPrimary,
     onError = textOnSolidPrimary,
     errorContainer = DarkColorTokens.colorRed400,
