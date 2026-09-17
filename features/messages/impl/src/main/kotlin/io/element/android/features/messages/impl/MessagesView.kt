@@ -91,6 +91,7 @@ import io.element.android.features.messages.impl.timeline.components.receipt.bot
 import io.element.android.features.messages.impl.timeline.components.receipt.bottomsheet.ReadReceiptBottomSheetEvent
 import io.element.android.features.messages.impl.timeline.model.TimelineItem
 import io.element.android.features.messages.impl.timeline.model.TimelineItemGroupPosition
+import io.element.android.features.messages.impl.timeline.model.event.TimelineItemLocationContent
 import io.element.android.features.messages.impl.timeline.model.event.aTimelineItemStateEventContent
 import io.element.android.features.messages.impl.timeline.model.event.aTimelineItemTextContent
 import io.element.android.features.messages.impl.timeline.sendfailure.SendFailureDialogView
@@ -180,7 +181,11 @@ fun MessagesView(
     fun onContentClick(event: TimelineItem.Event) {
         Timber.v("onMessageClick= ${event.id}")
         val eventId = event.eventId
-        if (eventId != null && eventContentValidationState[eventId].getCurrentOverallState() != ContentValidationValue.Valid) return
+        // :tchap: Ignore eventContentValidationState for Location event content
+//        if (eventId != null && eventContentValidationState[eventId].getCurrentOverallState() != ContentValidationValue.Valid) return
+        val isLocationEventContent = event.content is TimelineItemLocationContent
+        if (!isLocationEventContent && eventId != null && eventContentValidationState[eventId].getCurrentOverallState() != ContentValidationValue.Valid) return
+        // :tchap: end
 
         val hideKeyboard = onEventContentClick(state.timelineState.isLive, event)
         if (hideKeyboard) {
