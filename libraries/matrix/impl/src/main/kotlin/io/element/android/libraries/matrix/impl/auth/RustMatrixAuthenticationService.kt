@@ -156,6 +156,8 @@ class RustMatrixAuthenticationService(
                         }
                         certificatesList.add(bytes)
                     }
+                } else {
+                    certificatesList.addAll(getUserTrustedCertificates())
                 }
 
                 tchapGetInstance(
@@ -520,5 +522,26 @@ class RustMatrixAuthenticationService(
             val status = sessionVerificationService.sessionVerifiedStatus.first { it != SessionVerifiedStatus.Unknown }
             Timber.d("Finished waiting for a known verification status: $status")
         } ?: Timber.w("Timed out waiting for a known verification status")
+    }
+
+    private fun getUserTrustedCertificates(): List<ByteArray> {
+        val userCertificates = mutableListOf<ByteArray>()
+        try {
+            val keyStore = java.security.KeyStore.getInstance("AndroidCAStore")
+            keyStore.load(null, null)
+            val aliases = keyStore.aliases()
+            while (aliases.hasMoreElements()) {
+                val alias = aliases.nextElement()
+                if (alias.startsWith("user:")) {
+                    val cert = keyStore.getCertificate(alias) as? java.security.cert.X509Certificate
+                    cert?.encoded?.let { bytes ->
+                        userCertificates.add(bytes)
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Error reading user certificates from AndroidCAStore")
+        }
+        return userCertificates
     }
 }
