@@ -8,10 +8,7 @@
 
 package io.element.android.libraries.matrix.impl
 
-import android.content.Context
 import dev.zacsweers.metro.Inject
-import fr.gouv.tchap.android.appcertificates.BuildConfig
-import fr.gouv.tchap.android.appcertificates.R
 import io.element.android.features.enterprise.api.ClientBuilderEnterpriseHook
 import io.element.android.libraries.androidutils.crypto.ClientSecret
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
@@ -19,7 +16,6 @@ import io.element.android.libraries.core.data.ByteUnit
 import io.element.android.libraries.core.data.megaBytes
 import io.element.android.libraries.di.CacheDirectory
 import io.element.android.libraries.di.annotations.AppCoroutineScope
-import io.element.android.libraries.di.annotations.ApplicationContext
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.SessionId
@@ -60,7 +56,6 @@ import kotlin.time.toJavaDuration
 
 @Inject
 class RustMatrixClientFactory(
-    @ApplicationContext private val context: Context,
     @CacheDirectory private val cacheDirectory: File,
     @AppCoroutineScope
     private val appCoroutineScope: CoroutineScope,
@@ -177,7 +172,7 @@ class RustMatrixClientFactory(
         slidingSyncType: ClientBuilderSlidingSync,
         isMessageSearchAvailable: Boolean,
     ): ClientBuilder {
-        var builder = clientBuilderProvider.provide()
+        return clientBuilderProvider.provide()
             .run {
                 sqliteStoreBuilderProvider.provide(sessionPaths)
                     .secret(clientSecret)
@@ -185,36 +180,7 @@ class RustMatrixClientFactory(
             }
             .setSessionDelegate(sessionDelegate)
             .userAgent(userAgentProvider.provide())
-
-        // :tchap: Disable Root Certificates & add in-app Certificates when ENABLE_CERTIFICATE_PINNING (withpinning) is enabled
-        if (BuildConfig.ENABLE_CERTIFICATE_PINNING) {
-            try {
-                val certificatesRessources = listOf(
-                    R.raw.harica_qwac_sub_r1_cross,
-                    R.raw.servicesca_rootca,
-                )
-                val certificatesList = mutableListOf<ByteArray>()
-
-                certificatesRessources.listIterator().forEach {
-                    certificatesList.add(context.resources.openRawResource(it).use { inputStream ->
-                        inputStream.readBytes()
-                    })
-                }
-
-                if (certificatesList.isNotEmpty()) {
-                    builder = builder.disableBuiltInRootCertificates()
-                        .addRootCertificates(certificatesList)
-                }
-            } catch (e: Exception) {
-                Timber.e(
-                    e,
-                    "An unexpected error occurred while processing certificate from R.raw.harica_qwac_sub_r1_cross or R.raw.servicesca_rootca.",
-                )
-            }
-        }
-        // :tchap: end
-
-        return builder.autoEnableBackups(true)
+            .autoEnableBackups(true)
             .autoEnableCrossSigning(true)
             .roomKeyRecipientStrategy(
                 strategy = if (featureFlagService.isFeatureEnabled(FeatureFlags.OnlySignedDeviceIsolationMode)) {

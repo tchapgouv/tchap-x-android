@@ -124,7 +124,10 @@ enum class FeatureFlags(
         key = "feature.allow_black_theme",
         title = "Black theme",
         description = "Allow selecting the black appearance theme for battery saving on OLED.",
-        defaultValue = { false },
+        // :tchap: Enable AllowBlackTheme by default
+//        defaultValue = { false },
+        defaultValue = { true },
+        // :tchap: end
         isFinished = false,
     ),
     ValidateNetworkWhenSchedulingNotificationFetching(
@@ -140,7 +143,10 @@ enum class FeatureFlags(
         title = "Jump to unread messages",
         description = "Show a button to jump to the read marker, plus a count badge on the scroll-to-bottom button " +
             "when new messages arrive while scrolled away.",
-        defaultValue = { false },
+        // :tchap: Enable JumpToUnread by default
+//        defaultValue = { false },
+        defaultValue = { true },
+        // :tchap: end
         isFinished = false,
     ),
     SlashCommand(
@@ -172,7 +178,10 @@ enum class FeatureFlags(
         key = "feature.unread_indicator_count",
         title = "Unread indicator count",
         description = "Show the number of unread messages on the unread indicator in the room list.",
-        defaultValue = { false },
+        // :tchap: Enable UnreadIndicatorCount by default
+//        defaultValue = { false },
+        defaultValue = { true },
+        // :tchap: end
         isFinished = false,
     ),
     SendGalleryMessages(

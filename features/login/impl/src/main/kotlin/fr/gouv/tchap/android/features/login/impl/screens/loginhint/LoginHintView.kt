@@ -24,7 +24,6 @@
 
 package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,6 +40,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -94,9 +94,10 @@ fun LoginHintView(
 ) {
     val autofillManager = LocalAutofillManager.current
 
-    BackHandler {
-        autofillManager?.cancel()
-        onBackClick()
+    DisposableEffect(Unit) {
+        onDispose {
+            autofillManager?.cancel()
+        }
     }
 
     val isLoading by remember(state.loginModeState.loginMode) {

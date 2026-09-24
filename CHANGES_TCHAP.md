@@ -1,3 +1,23 @@
+Changements dans Tchap Android v26.09.1
+=============================
+
+<!-- Release notes generated using configuration in .github/release.yml at v26.09.1 -->
+
+## Qu'est-ce qui a changé ?
+### ✨ Nouveautés
+* Activation des options : Thème noir, Aller au dernier message non lu, Compteur de messages non lus by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/289
+### 🐛 Corrections de bugs
+* Correction du BackHandler dans la vue LoginHint by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/284
+* Correction de l'ouverture de la carte lors du partage de position by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/285
+### 🗣 Textes & Traductions
+* Traduction temporaire pour les sondages multivotes by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/287
+* Traductions pour les badges d'infos de l'Historique des salons by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/288
+### Autres
+* Gestion des certificats par le système Android & Ajout du build F-droid by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/291
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v26.09.0...v26.09.1
+
 Changements dans Tchap Android v26.09.0
 =============================
 

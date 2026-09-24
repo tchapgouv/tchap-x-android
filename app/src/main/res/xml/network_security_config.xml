@@ -8,6 +8,9 @@
             <!-- Certificate Pinning disabled by default -->
             <!-- Give access to the user certificate, as per default behaviour when targeting API 23 or lower -->
             <certificates src="user" />
+            <!-- Add local app certificates authority to ensure all Android versions access to certificates -->
+            <certificates src="@raw/harica_qwac_sub_r1_cross" />
+            <certificates src="@raw/servicesca_rootca" />
         </trust-anchors>
     </base-config>
 

@@ -234,7 +234,7 @@ printf "\n## Building the SDK for ${target_info}...\n\n"
 cmd=("${kotlinComponentsPath}/scripts/build.sh" \
     -p "${rustSdkPath}" \
     -m sdk \
-    "${arch_args[@]}" \
+    ${arch_args[@]+"${arch_args[@]}"} \
     -o "${elementPwd}/libraries/rustsdk" \
     -r)
 
