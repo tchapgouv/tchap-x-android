@@ -8,7 +8,6 @@
 
 package io.element.android.libraries.matrix.impl.auth
 
-import android.content.Context
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
@@ -19,7 +18,6 @@ import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.extensions.mapFailure
 import io.element.android.libraries.core.extensions.runCatchingExceptions
 import io.element.android.libraries.core.meta.BuildMeta
-import io.element.android.libraries.di.annotations.ApplicationContext
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
@@ -71,7 +69,6 @@ import kotlin.time.Duration.Companion.seconds
 @ContributesBinding(AppScope::class)
 @SingleIn(AppScope::class)
 class RustMatrixAuthenticationService(
-    @ApplicationContext private val context: Context,
     private val sessionPathsFactory: SessionPathsFactory,
     private val coroutineDispatchers: CoroutineDispatchers,
     private val sessionStore: SessionStore,
