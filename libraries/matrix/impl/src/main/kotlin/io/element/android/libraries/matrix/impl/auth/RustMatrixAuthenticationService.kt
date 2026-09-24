@@ -12,8 +12,6 @@ import android.content.Context
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
-import fr.gouv.tchap.android.appcertificates.BuildConfig
-import fr.gouv.tchap.android.appcertificates.R
 import io.element.android.features.enterprise.api.ClientEnterpriseHook
 import io.element.android.features.enterprise.api.EnterpriseService
 import io.element.android.libraries.androidutils.crypto.ClientSecret
@@ -143,29 +141,10 @@ class RustMatrixAuthenticationService(
     override suspend fun getHomeserverFromLoginHint(defaultHomeserver: String, loginHint: String): Result<String> =
         withContext(coroutineDispatchers.io) {
             runCatchingExceptions {
-                val certificatesList = mutableListOf<ByteArray>()
-                if (BuildConfig.ENABLE_CERTIFICATE_PINNING) {
-                    val certificatesResources = listOf(
-                        R.raw.harica_qwac_sub_r1_cross,
-                        R.raw.servicesca_rootca,
-                    )
-
-                    certificatesResources.forEach { resId ->
-                        val bytes = context.resources.openRawResource(resId).use { inputStream ->
-                            inputStream.readBytes()
-                        }
-                        certificatesList.add(bytes)
-                    }
-                } else {
-                    certificatesList.addAll(getUserTrustedCertificates())
-                }
-
                 tchapGetInstance(
                     TchapGetInstanceConfig(
                         homeServer = defaultHomeserver,
                         userAgent = userAgentProvider.provide(),
-                        disableBuiltInRootCertificates = BuildConfig.ENABLE_CERTIFICATE_PINNING,
-                        additionalRawRootCertificates = certificatesList,
                         // :tchap: Add proxy config in rust http client
                         proxy = proxyProvider.provides(),
                         // :tchap: end
@@ -522,26 +501,5 @@ class RustMatrixAuthenticationService(
             val status = sessionVerificationService.sessionVerifiedStatus.first { it != SessionVerifiedStatus.Unknown }
             Timber.d("Finished waiting for a known verification status: $status")
         } ?: Timber.w("Timed out waiting for a known verification status")
-    }
-
-    private fun getUserTrustedCertificates(): List<ByteArray> {
-        val userCertificates = mutableListOf<ByteArray>()
-        try {
-            val keyStore = java.security.KeyStore.getInstance("AndroidCAStore")
-            keyStore.load(null, null)
-            val aliases = keyStore.aliases()
-            while (aliases.hasMoreElements()) {
-                val alias = aliases.nextElement()
-                if (alias.startsWith("user:")) {
-                    val cert = keyStore.getCertificate(alias) as? java.security.cert.X509Certificate
-                    cert?.encoded?.let { bytes ->
-                        userCertificates.add(bytes)
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            Timber.e(e, "Error reading user certificates from AndroidCAStore")
-        }
-        return userCertificates
     }
 }
