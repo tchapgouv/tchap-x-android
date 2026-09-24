@@ -29,7 +29,6 @@ dependencies {
         debugImplementation(libs.matrix.sdk)
         releaseImplementation(libs.matrix.sdk)
     }
-    implementation(projects.appcertificates)
     implementation(projects.libraries.rustlsTls)
 
     implementation(projects.appconfig)

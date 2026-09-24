@@ -24,7 +24,7 @@ jobs:
       pull-requests: write
     strategy:
       matrix:
-        variant: [debug, release, tchap-nightly, tchap-preprod-nightly, tchap-dev-nightly]
+        variant: [debug, release, tchap-nightly, tchap-preprod-nightly, tchap-dev-nightly, tchap-fdroid-debug-withoutpinning]
       fail-fast: false
     # Allow all jobs on develop. Just one per PR.
     concurrency:
@@ -179,4 +179,23 @@ jobs:
           name: Tchap.dev-nightly
           path: |
             app/build/outputs/apk/gplayTchapDevWithpinning/nightly/app-gplay-tchapDev-withpinning-arm64-v8a-nightly.apk
+      - name: Assemble Tchap F-droid debug WithoutPinning APKs
+        if: ${{ matrix.variant == 'tchap-fdroid-debug-withoutpinning' }}
+        env:
+          ELEMENT_ANDROID_MAPTILER_API_KEY: ${{ secrets.MAPTILER_KEY }}
+          ELEMENT_ANDROID_MAPTILER_LIGHT_MAP_ID: ${{ secrets.MAPTILER_LIGHT_MAP_ID }}
+          ELEMENT_ANDROID_MAPTILER_DARK_MAP_ID: ${{ secrets.MAPTILER_DARK_MAP_ID }}
+          ELEMENT_SDK_SENTRY_DSN: ${{ secrets.ELEMENT_SDK_SENTRY_DSN }}
+          ELEMENT_CALL_SENTRY_DSN: ${{ secrets.ELEMENT_CALL_SENTRY_DSN }}
+          ELEMENT_CALL_POSTHOG_API_HOST: ${{ secrets.ELEMENT_CALL_POSTHOG_API_HOST }}
+          ELEMENT_CALL_POSTHOG_API_KEY: ${{ secrets.ELEMENT_CALL_POSTHOG_API_KEY }}
+          ELEMENT_CALL_RAGESHAKE_URL: ${{ secrets.ELEMENT_CALL_RAGESHAKE_URL }}
+        run: ./gradlew :app:assembleFdroidTchapWithoutpinningDebug -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
+      - name: Upload Tchap F-droid debug WithoutPinning APKs
+        if: ${{ matrix.variant == 'tchap-fdroid-debug-withoutpinning' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: Tchap.f-droid.withoutpinning-debug
+          path: |
+            app/build/outputs/apk/fdroidTchapWithoutpinning/debug/app-fdroid-tchap-withoutpinning-arm64-v8a-debug.apk
       # end Tchap Specific

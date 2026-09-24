@@ -90,7 +90,6 @@ class RustMatrixAuthenticationServiceTest {
             clientBuilderProvider = clientBuilderProvider,
         )
         return RustMatrixAuthenticationService(
-            context = mockk(),
             sessionPathsFactory = SessionPathsFactory(baseDirectory, cacheDirectory),
             coroutineDispatchers = testCoroutineDispatchers(),
             sessionStore = sessionStore,
