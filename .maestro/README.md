@@ -23,6 +23,7 @@ From root dir of the project
 ```shell
 maestro test \
     -e MAESTRO_APP_ID=io.element.android.x.debug \
+    -e MAESTRO_APP_NAME="Tchap dbg" \
     -e MAESTRO_USERNAME=user1 \
     -e MAESTRO_PASSWORD=123 \
     -e MAESTRO_RECOVERY_KEY=ABC \
