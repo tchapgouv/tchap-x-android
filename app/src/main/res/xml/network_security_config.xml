@@ -13,10 +13,4 @@
             <certificates src="@raw/servicesca_rootca" />
         </trust-anchors>
     </base-config>
-
-    <!-- Tchap : Allow clearText traffic for Harica & Let's Encrypt (CRL-only : Check Certificate Revocation List) -->
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">lencr.org</domain>
-        <domain includeSubdomains="true">crl.harica.gr</domain>
-    </domain-config>
 </network-security-config>
