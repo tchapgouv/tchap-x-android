@@ -32,11 +32,26 @@ then
 else
     # Check if gh is authenticated
     if ! gh auth status &> /dev/null; then
-        printf "GitHub CLI is not authenticated. Launching authentication...\n"
-        gh auth login
-        if [ $? -ne 0 ]; then
-            printf "Fatal: GitHub CLI authentication failed.\n"
-            envError=1
+        printf "GitHub CLI is not authenticated. Checking for token in environment...\n"
+        if [[ -z "${TCHAP_GITHUB_TOKEN}" ]]; then
+            printf "TCHAP_GITHUB_TOKEN is not defined in the environment.\n"
+            read -r -s -p "Please paste your GitHub personal access token : " githubTokenInput
+            printf "\n"
+            if [[ -z "${githubTokenInput}" ]]; then
+                printf "Fatal: No token provided. Cannot authenticate automatically.\n"
+                envError=1
+            else
+                TCHAP_GITHUB_TOKEN="${githubTokenInput}"
+            fi
+        fi
+
+        if [[ -n "${TCHAP_GITHUB_TOKEN}" ]]; then
+            printf "Authenticating GitHub CLI with provided token...\n"
+            echo "${TCHAP_GITHUB_TOKEN}" | gh auth login --with-token
+            if [ $? -ne 0 ]; then
+                printf "Fatal: GitHub CLI authentication failed.\n"
+                envError=1
+            fi
         fi
     fi
 fi
