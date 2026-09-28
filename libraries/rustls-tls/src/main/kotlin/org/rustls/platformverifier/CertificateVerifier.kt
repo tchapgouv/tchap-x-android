@@ -181,7 +181,10 @@ internal object CertificateVerifier {
 
     @get:Synchronized
     private val systemTrustManager: Lazy<X509TrustManagerExtensions?> =
-        makeLazyTrustManager(systemKeystore)
+        // :tchap: Replace systemKeystore by null to allow to read custom config from network_security_config.xml file
+//        makeLazyTrustManager(systemKeystore)
+        makeLazyTrustManager(null)
+        // :tchap: end
 
     @JvmStatic
     private fun verifyCertificateChain(
