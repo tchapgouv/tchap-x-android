@@ -647,10 +647,13 @@ while [[ ${missingAsset} -ne 0 ]]; do
 done
 
 printf "Creating the pre-release v%s and uploading the %d files, this can take a while...\n" "${version}" "${#releaseAssets[@]}"
+
+releaseNotesContentWithHeader="<!-- Release notes generated using configuration in .github/release.yml at v${version} -->\n\n## Qu'est-ce qui a changé ?\n${releaseNotesContent}"
+
 gh release create "v${version}" \
    --repo tchapgouv/tchap-x-android \
    --title "${appName} v${version}" \
-   --notes "${releaseNotesContent}" \
+   --notes "$(printf "%b" "${releaseNotesContentWithHeader}")" \
    --prerelease \
    --verify-tag \
    "${releaseAssets[@]}"
@@ -674,7 +677,7 @@ changesUnderline="${changesTitle//?/=}"
 
 printf "Updating %s...\n" "${tchapChangesFile}"
 
-printf "%s\n%s\n\n<!-- Release notes generated using configuration in .github/release.yml at v${version} -->\n\n## Qu'est-ce qui a changé ?\n%s\n\n" "${changesTitle}" "${changesUnderline}" "${releaseNotesContent}" > "${tchapChangesFileBak}"
+printf "%s\n%s\n\n%b\n\n" "${changesTitle}" "${changesUnderline}" "${releaseNotesContentWithHeader}" > "${tchapChangesFileBak}"
 cat "${tchapChangesFile}" >> "${tchapChangesFileBak}"
 mv "${tchapChangesFileBak}" "${tchapChangesFile}"
 
