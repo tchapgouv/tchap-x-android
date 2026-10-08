@@ -43,10 +43,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -56,6 +58,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.login.impl.R
@@ -75,6 +78,7 @@ import io.element.android.libraries.designsystem.theme.components.Button
 import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.Scaffold
 import io.element.android.libraries.designsystem.theme.components.TextField
+import io.element.android.libraries.designsystem.theme.components.TextFieldValidity
 import io.element.android.libraries.designsystem.theme.components.TopAppBar
 import io.element.android.libraries.matrix.api.auth.OAuthDetails
 import io.element.android.libraries.testtags.TestTags
@@ -216,6 +220,12 @@ private fun LoginForm(
     val focusManager = LocalFocusManager.current
     val eventSink = state.eventSink
 
+    var hasFocusBeenLost by remember { mutableStateOf(false) }
+    var wasFocused by remember { mutableStateOf(false) }
+
+    val isInvalid = loginFieldState.isNotEmpty() && !TchapPatterns.isEmail(loginFieldState)
+    val showError = isInvalid && hasFocusBeenLost
+
     Column {
         TextField(
             label = stringResource(R.string.tchap_screen_login_hint_label),
@@ -225,6 +235,13 @@ private fun LoginForm(
                 .fillMaxWidth()
                 .onTabOrEnterKeyFocusNext(focusManager)
                 .testTag(TestTags.loginEmailUsername)
+                .onFocusChanged { focusState ->
+                    if (focusState.isFocused) {
+                        wasFocused = true
+                    } else if (wasFocused) {
+                        hasFocusBeenLost = true
+                    }
+                }
                 .semantics {
                     contentType = ContentType.Username
                 },
@@ -242,6 +259,8 @@ private fun LoginForm(
                 onDone = { onSubmit() }
             ),
             singleLine = true,
+            validity = if (showError) TextFieldValidity.Invalid else TextFieldValidity.None,
+            supportingText = if (showError) stringResource(R.string.tchap_screen_login_invalid_email_error) else null,
             trailingIcon = if (loginFieldState.isNotEmpty()) {
                 {
                     Box(Modifier.clickable {
@@ -263,10 +282,10 @@ private fun LoginForm(
 }
 
 /**
- * Ensure that the string does not contain any new line characters, which can happen when pasting values.
+ * Ensure that the string does not contain any new line characters, which can happen when pasting values, and automatically trim the value.
  */
 private fun String.sanitize(): String {
-    return replace("\n", "")
+    return replace("\n", "").trim()
 }
 
 @Composable

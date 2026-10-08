@@ -35,4 +35,5 @@
     <string name="tchap_screen_onboarding_legacy_continue">"Continuer avec ce compte"</string>
     <string name="tchap_screen_onboarding_legacy_other_account">"Utiliser un autre compte"</string>
     <string name="tchap_screen_missing_key_backup_open_help_center">"Pour en savoir plus lire le guide sur \"Comment vérifier ma sauvegarde\""</string>
+    <string name="tchap_screen_login_invalid_email_error">"Format d\'email invalide"</string>
 </resources>
