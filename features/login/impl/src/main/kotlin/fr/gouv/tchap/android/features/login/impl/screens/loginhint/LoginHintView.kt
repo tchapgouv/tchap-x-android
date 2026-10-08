@@ -69,6 +69,7 @@ import io.element.android.libraries.designsystem.atomic.molecules.ButtonColumnMo
 import io.element.android.libraries.designsystem.atomic.molecules.IconTitleSubtitleMolecule
 import io.element.android.libraries.designsystem.components.BigIcon
 import io.element.android.libraries.designsystem.components.button.BackButton
+import io.element.android.libraries.designsystem.components.dialogs.ConfirmationDialog
 import io.element.android.libraries.designsystem.components.dialogs.ErrorDialog
 import io.element.android.libraries.designsystem.components.form.textFieldState
 import io.element.android.libraries.designsystem.modifiers.onTabOrEnterKeyFocusNext
@@ -193,6 +194,17 @@ fun LoginHintView(
                 LoginErrorDialog(error = state.loginModeState.loginMode.error, onDismiss = {
                     state.eventSink(LoginHintEvents.ClearError)
                 })
+            }
+
+            if (state.showExternalConfirmationDialog) {
+                ConfirmationDialog(
+                    title = stringResource(R.string.tchap_screen_login_external_email_title),
+                    content = stringResource(R.string.tchap_screen_login_external_email_message, state.formState.login),
+                    submitText = stringResource(CommonStrings.action_continue),
+                    cancelText = stringResource(CommonStrings.action_cancel),
+                    onSubmitClick = { state.eventSink(LoginHintEvents.OnExternalConfirmationResult(true)) },
+                    onDismiss = { state.eventSink(LoginHintEvents.OnExternalConfirmationResult(false)) },
+                )
             }
 
             LoginModeView(

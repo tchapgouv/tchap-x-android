@@ -27,5 +27,6 @@ package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 sealed interface LoginHintEvents {
     data class SetLogin(val login: String) : LoginHintEvents
     data object OnContinue : LoginHintEvents
+    data class OnExternalConfirmationResult(val confirmed: Boolean) : LoginHintEvents
     data object ClearError : LoginHintEvents
 }

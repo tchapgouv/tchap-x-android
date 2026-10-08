@@ -29,8 +29,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
@@ -74,6 +76,19 @@ class LoginHintPresenter(
         val accountProvider by accountProviderDataSource.flow.collectAsState()
 
         val loginModeState = loginModePresenter.present()
+        var externalHomeserverUrlToConfirm by remember { mutableStateOf<String?>(null) }
+
+        suspend fun submitToLoginMode(homeServerUrl: String, loginHint: String) {
+            accountProviderDataSource.setAccountProvider(AccountProvider(url = homeServerUrl))
+            loginModeState.eventSink(
+                LoginModeEvent.Submit(
+                    isAccountCreation = params.isAccountCreation,
+                    homeserverUrl = homeServerUrl,
+                    loginHint = loginHint,
+                    resolvedHomeserverUrl = null,
+                )
+            )
+        }
 
         fun handleEvents(event: LoginHintEvents) {
             when (event) {
@@ -96,19 +111,27 @@ class LoginHintPresenter(
                     }
 
                     if (homeServerFromLoginHint != null) {
-                        accountProviderDataSource.setAccountProvider(AccountProvider(url = homeServerFromLoginHint))
-                        loginModeState.eventSink(
-                            LoginModeEvent.Submit(
-                                isAccountCreation = params.isAccountCreation,
-                                homeserverUrl = homeServerFromLoginHint,
-                                loginHint = loginHint,
-                                resolvedHomeserverUrl = null,
-                            )
-                        )
+                        val host = homeServerFromLoginHint.removePrefix("https://").removePrefix("matrix.")
+                        if (with(TchapPatterns) { host.isExternalTchapServer() }) {
+                            loginModeState.eventSink(LoginModeEvent.ClearError)
+                            externalHomeserverUrlToConfirm = homeServerFromLoginHint
+                        } else {
+                            submitToLoginMode(homeServerFromLoginHint, loginHint)
+                        }
                     } else {
                         loginModeState.eventSink(
                             LoginModeEvent.SetError(AuthenticationException.NoHomeserverAvailable("Failed to resolve the account's homeserver"))
                         )
+                    }
+                }
+                is LoginHintEvents.OnExternalConfirmationResult -> {
+                    val url = externalHomeserverUrlToConfirm
+                    externalHomeserverUrlToConfirm = null
+                    if (event.confirmed && url != null) {
+                        localCoroutineScope.launch {
+                            loginModeState.eventSink(LoginModeEvent.SetLoading)
+                            submitToLoginMode(url, formState.value.login)
+                        }
                     }
                 }
                 LoginHintEvents.ClearError -> loginModeState.eventSink(LoginModeEvent.ClearError)
@@ -121,6 +144,7 @@ class LoginHintPresenter(
             isAccountCreation = params.isAccountCreation,
             formState = formState.value,
             loginModeState = loginModeState,
+            showExternalConfirmationDialog = externalHomeserverUrlToConfirm != null,
             eventSink = ::handleEvents,
         )
     }
