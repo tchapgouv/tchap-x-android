@@ -23,6 +23,12 @@ import io.element.android.libraries.matrix.api.room.RoomNotificationMode
 
 const val A_USER_NAME = "alice"
 const val A_USER_NAME_2 = "Bob"
+
+// :tchap: Add Email tests
+const val A_USER_EMAIL = "alice@internal.gouv.fr"
+const val A_USER_EMAIL_2 = "bob@external.com"
+// :tchap: end
+
 const val A_PASSWORD = "password"
 const val A_PASSPHRASE = "passphrase"
 const val A_SECRET = "secret"

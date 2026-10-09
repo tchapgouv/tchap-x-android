@@ -37,6 +37,7 @@ data class LoginHintState(
     val isAccountCreation: Boolean,
     val formState: LoginFormState,
     val loginModeState: LoginModeState,
+    val showExternalConfirmationDialog: Boolean,
     val eventSink: (LoginHintEvents) -> Unit
 ) {
     val submitEnabled: Boolean
