@@ -31,6 +31,8 @@ import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import fr.gouv.tchap.android.features.enterprise.api.HomeserverConfiguration
 import io.element.android.libraries.di.annotations.ApplicationContext
+import io.element.android.libraries.di.identifiers.SentryDsn
+import io.element.android.libraries.di.identifiers.SentrySdkDsn
 import io.element.android.x.R
 
 @BindingContainer
@@ -45,4 +47,36 @@ object HomeserverModule {
             defaultHomeserverList = homeserverList
         )
     }
+
+    // :tchap: Tchap custom Sentry DSN
+    fun getCustomTchapSentryURL(
+        context: Context,
+        homeserverConfiguration: HomeserverConfiguration
+    ): String? {
+        val homeserver = homeserverConfiguration.defaultHomeserverList.firstOrNull()
+        val sentryKey = context.getString(R.string.sentry_key)
+        return if (homeserver != null && sentryKey.isNotBlank()) {
+            "https://$sentryKey@matrix.$homeserver/sentry/1"
+        } else {
+            null
+        }
+    }
+
+    @Provides
+    fun provideSentryDsn(
+        @ApplicationContext context: Context,
+        homeserverConfiguration: HomeserverConfiguration
+    ): SentryDsn? {
+        return getCustomTchapSentryURL(context, homeserverConfiguration)?.let { SentryDsn(it) }
+    }
+
+    // :tchap: Tchap custom Sentry DSN for the Matrix Rust SDK
+    @Provides
+    fun provideSentrySdkDsn(
+        @ApplicationContext context: Context,
+        homeserverConfiguration: HomeserverConfiguration
+    ): SentrySdkDsn? {
+        return getCustomTchapSentryURL(context, homeserverConfiguration)?.let { SentrySdkDsn(it) }
+    }
+    // :tchap: end
 }
