@@ -1,7 +1,7 @@
 appId: ${MAESTRO_APP_ID}
 ---
 - runFlow: ../assertions/assertRoomListSynced.yaml
-- tapOn: "search"
+- tapOn: "Rechercher"
 - inputText: ${MAESTRO_ROOM_NAME.substring(0, 3)}
 - takeScreenshot: build/maestro/400-SearchRoom
 - tapOn: ${MAESTRO_ROOM_NAME}
@@ -14,5 +14,9 @@ appId: ${MAESTRO_APP_ID}
 - back
 - waitForAnimationToEnd
 # Back to close the home screen
-- back
+- runFlow:
+    when:
+      visible: ${MAESTRO_ROOM_NAME.substring(0, 3)}
+    commands:
+      - back
 - runFlow: ../assertions/assertHomeDisplayed.yaml
