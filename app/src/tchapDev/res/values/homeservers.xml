@@ -23,8 +23,10 @@
   -->
 <resources>
     <string-array name="default_homeservers">
-        <item>"dev01.tchap.incubateur.net"</item>
-        <item>"dev02.tchap.incubateur.net"</item>
-        <item>"ext01.tchap.incubateur.net"</item>
+        <!-- :tchap: Tchap PRA -->
+        <item>"internal01.dev.tchap.incubateur.net"</item><!-- Agents 1 -->
+        <item>"internal02.dev.tchap.incubateur.net"</item><!-- Agents 2 -->
+        <item>"external01.dev.tchap.incubateur.net"</item><!-- Externes -->
+        <!-- :tchap: end -->
     </string-array>
 </resources>
