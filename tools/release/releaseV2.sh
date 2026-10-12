@@ -689,6 +689,62 @@ else
 fi
 
 printf "\n================================================================================\n"
+read -r -p "Do you want to create and push a tag for matrix-rust-sdk? (yes/no) default to yes: " doTagRustSdk
+doTagRustSdk=${doTagRustSdk:-yes}
+
+if [ "${doTagRustSdk}" == "yes" ]; then
+  rustSdkDir="../matrix-rust-sdk"
+  if [ ! -d "${rustSdkDir}" ]; then
+    printf "Error: Directory %s not found. Skipping matrix-rust-sdk tagging.\n" "${rustSdkDir}"
+  else
+    (
+      cd "${rustSdkDir}" || exit
+      currentBranch=$(git branch --show-current)
+      proceedToTag=1
+
+      if [ "${currentBranch}" != "tchap-main-android" ]; then
+        printf "Warning: Current branch in matrix-rust-sdk is '%s', not 'tchap-main-android'.\n" "${currentBranch}"
+        if git rev-parse --verify tchap-main-android >/dev/null 2>&1; then
+          read -r -p "Do you want to switch to 'tchap-main-android' automatically? (yes/no) default to yes: " doSwitchBranch
+          doSwitchBranch=${doSwitchBranch:-yes}
+          if [ "${doSwitchBranch}" == "yes" ]; then
+            git checkout tchap-main-android
+            if [ $? -ne 0 ]; then
+               printf "Error: Failed to checkout 'tchap-main-android'. Skipping tagging.\n"
+               proceedToTag=0
+            fi
+          else
+            printf "Skipping matrix-rust-sdk tagging.\n"
+            proceedToTag=0
+          fi
+        else
+          printf "Error: Branch 'tchap-main-android' does not exist locally in matrix-rust-sdk. Skipping tagging.\n"
+          proceedToTag=0
+        fi
+      fi
+
+      if [ ${proceedToTag} -eq 1 ]; then
+        rustTag="android-tchap-v${version}"
+        printf "Creating tag %s in matrix-rust-sdk...\n" "${rustTag}"
+        git tag "${rustTag}"
+        if [ $? -ne 0 ]; then
+            printf "Error: Failed to create tag %s. It may already exist.\n" "${rustTag}"
+        else
+            read -r -p "Tag created. Do you want to push this tag to 'origin'? (yes/no) default to yes: " doPushRustTag
+            doPushRustTag=${doPushRustTag:-yes}
+            if [ "${doPushRustTag}" == "yes" ]; then
+                printf "Pushing tag %s to origin...\n" "${rustTag}"
+                git push origin "${rustTag}"
+            else
+                printf "Not pushing the tag to origin. You may need to do it manually.\n"
+            fi
+        fi
+      fi
+    )
+  fi
+fi
+
+printf "\n================================================================================\n"
 printf "Message for the Android internal room:\n\n"
 printf "# ${appName} v${version}\n\n## Qu'est-ce qui a changé ?\n${releaseNotesContent}\n\n[🧑‍💻 Voir la version sur GitHub](https://github.com/tchapgouv/tchap-x-android/releases/tag/v${version})\n[🚀 Forcer la mise à jour manuelle via le Play Store](https://play.google.com/store/apps/details?id=fr.gouv.tchap.android.x)\n\n"
 read -r -p "Send the message manually, and press enter to continue. "
