@@ -65,4 +65,11 @@ interface NotificationCleaner {
      * @param roomId the room whose notifications are dismissed.
      */
     fun clearMembershipNotificationForRoom(sessionId: SessionId, roomId: RoomId)
+
+    /**
+     * :tchap: Clears obsolete notifications (e.g. notifications for rooms that have been read on another device).
+     *
+     * @param sessionId the session to check.
+     */
+    suspend fun cleanObsoleteNotifications(sessionId: SessionId)
 }
