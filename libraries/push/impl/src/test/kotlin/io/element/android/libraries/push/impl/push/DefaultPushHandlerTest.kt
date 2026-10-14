@@ -109,6 +109,61 @@ class DefaultPushHandlerTest {
             .isCalledOnce()
     }
 
+    // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
+    @Test
+    fun `when PushData without eventId and roomId is received, sync work is scheduled and success is logged`() = runTest {
+        val incrementPushCounterResult = lambdaRecorder<Unit> {}
+        val aPushData = PushData(
+            eventId = null,
+            roomId = null,
+            unread = 6,
+            clientSecret = A_SECRET,
+        )
+
+        val onPushReceivedResult = lambdaRecorder<String, EventId?, RoomId?, SessionId?, Boolean, Boolean, String?, Unit> { _, _, _, _, _, _, _ -> }
+        val enqueuePushRequestResult = lambdaRecorder<PushRequest, Result<Unit>> { Result.success(Unit) }
+        val pushHistoryService = FakePushHistoryService(
+            onPushReceivedResult = onPushReceivedResult,
+            enqueuePushRequest = enqueuePushRequestResult,
+        )
+        val submitWorkLambda = lambdaRecorder<WorkManagerRequestBuilder, Unit> {}
+        val workManagerScheduler = FakeWorkManagerScheduler(submitLambda = submitWorkLambda)
+
+        val defaultPushHandler = createDefaultPushHandler(
+            pushClientSecret = FakePushClientSecret(
+                getUserIdFromSecretResult = { A_USER_ID }
+            ),
+            incrementPushCounterResult = incrementPushCounterResult,
+            workManagerScheduler = workManagerScheduler,
+            pushHistoryService = pushHistoryService,
+        )
+        defaultPushHandler.handle(aPushData, A_PUSHER_INFO)
+
+        advanceTimeBy(300.milliseconds)
+
+        submitWorkLambda.assertions()
+            .isCalledOnce()
+
+        enqueuePushRequestResult.assertions()
+            .isNeverCalled()
+
+        incrementPushCounterResult.assertions()
+            .isCalledOnce()
+
+        onPushReceivedResult.assertions()
+            .isCalledOnce()
+            .with(
+                value(A_PUSHER_INFO),
+                value(null),
+                value(null),
+                value(A_USER_ID),
+                value(true),
+                value(false),
+                value("Success - Push handled successfully")
+            )
+    }
+    // :tchap: end
+
     @Test
     fun `when classical PushData is received, but notifications are disabled, nothing happen`() =
         runTest {

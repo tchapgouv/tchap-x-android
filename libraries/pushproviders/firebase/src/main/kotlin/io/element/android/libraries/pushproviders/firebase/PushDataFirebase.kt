@@ -33,9 +33,13 @@ data class PushDataFirebase(
 )
 
 fun PushDataFirebase.toPushData(): PushData? {
-    val safeEventId = eventId?.let(::EventId) ?: return null
-    val safeRoomId = roomId?.let(::RoomId) ?: return null
+    // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
+//    val safeEventId = eventId?.let(::EventId) ?: return null
+//    val safeRoomId = roomId?.let(::RoomId) ?: return null
     val safeClientSecret = clientSecret ?: return null
+    val safeEventId = eventId?.takeIf { it.isNotBlank() }?.let(::EventId)
+    val safeRoomId = roomId?.takeIf { it.isNotBlank() }?.let(::RoomId)
+    // :tchap: end
     return PushData(
         eventId = safeEventId,
         roomId = safeRoomId,

@@ -83,7 +83,15 @@ class FetchPendingNotificationsWorker(
         }
 
         if (requests.isEmpty()) {
-            Timber.d("No pending notifications to fetch, returning early")
+            // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
+//            Timber.d("No pending notifications to fetch, returning early")
+            Timber.d("No pending notifications to fetch, performing checkNetwork, sync and cleaning, and after returning early")
+            checkNetworkConnection(requests)?.let { failure -> return failure }
+            analyticsService.recordTransaction("Opportunistic sync", "opportunistic_sync") {
+                performOpportunisticSyncIfNeeded(mapOf(sessionId to requests))
+            }
+            notificationCleaner.cleanObsoleteNotifications(sessionId)
+            // :tchap: end
             return Result.success()
         }
 

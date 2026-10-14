@@ -42,6 +42,27 @@ class UnifiedPushParserTest {
         assertThat(pushParser.parse(UNIFIED_PUSH_DATA.toByteArray(), aClientSecret)).isEqualTo(validData)
     }
 
+    // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
+    @Test
+    fun `test UnifiedPush format without event_id and room_id`() {
+        val pushParser = createUnifiedPushParser()
+        val jsonWithoutEventAndRoom = """
+            {
+              "notification": {
+                "counts": { "unread": 6 }
+              }
+            }
+        """.trimIndent()
+        val expected = PushData(
+            eventId = null,
+            roomId = null,
+            unread = 6,
+            clientSecret = aClientSecret,
+        )
+        assertThat(pushParser.parse(jsonWithoutEventAndRoom.toByteArray(), aClientSecret)).isEqualTo(expected)
+    }
+    // :tchap: end
+
     @Test
     fun `test empty roomId`() {
         val pushParser = createUnifiedPushParser()
