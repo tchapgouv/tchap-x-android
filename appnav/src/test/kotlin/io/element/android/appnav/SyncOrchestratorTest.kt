@@ -14,6 +14,7 @@ import io.element.android.features.networkmonitor.test.FakeNetworkMonitor
 import io.element.android.libraries.matrix.api.sync.SyncState
 import io.element.android.libraries.matrix.test.FakeMatrixClient
 import io.element.android.libraries.matrix.test.sync.FakeSyncService
+import io.element.android.libraries.push.test.notifications.FakeNotificationCleaner
 import io.element.android.services.analytics.test.FakeAnalyticsService
 import io.element.android.services.appnavstate.test.FakeAppForegroundStateService
 import io.element.android.tests.testutils.WarmUpRule
@@ -425,5 +426,8 @@ class SyncOrchestratorTest {
         appForegroundStateService = appForegroundStateService,
         dispatchers = testCoroutineDispatchers(),
         analyticsService = FakeAnalyticsService(),
+        // :tchap: AutoClean System Notifications on sync
+        notificationCleaner = FakeNotificationCleaner(),
+        // :tchap: end
     )
 }

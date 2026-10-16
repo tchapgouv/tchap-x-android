@@ -18,6 +18,7 @@ import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.coroutine.childScope
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.sync.SyncState
+import io.element.android.libraries.push.api.notifications.NotificationCleaner
 import io.element.android.services.analytics.api.AnalyticsService
 import io.element.android.services.analytics.api.recordTransaction
 import io.element.android.services.analyticsproviders.api.AnalyticsUserData
@@ -43,6 +44,9 @@ class SyncOrchestrator(
     private val networkMonitor: NetworkMonitor,
     dispatchers: CoroutineDispatchers,
     private val analyticsService: AnalyticsService,
+    // :tchap: AutoClean System Notifications on sync
+    private val notificationCleaner: NotificationCleaner,
+    // :tchap: end
 ) {
     @AssistedFactory
     interface Factory {
@@ -85,7 +89,20 @@ class SyncOrchestrator(
 
             observeStates()
         }
+
+        // :tchap: AutoClean System Notifications on sync
+        observeRoomListAndClearNotifications()
+        // :tchap: end
     }
+
+    // :tchap: AutoClean System Notifications on sync
+    private fun observeRoomListAndClearNotifications() = coroutineScope.launch {
+        matrixClient.roomListService.allRooms.summaries.collect {
+            // Check if there are any notifications to clear (when rooms have been read on another device)
+            notificationCleaner.cleanObsoleteNotifications(matrixClient.sessionId)
+        }
+    }
+    // :tchap: end
 
     @OptIn(FlowPreview::class)
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
