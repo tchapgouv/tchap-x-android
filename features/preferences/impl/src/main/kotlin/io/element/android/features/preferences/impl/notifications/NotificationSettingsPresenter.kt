@@ -198,6 +198,11 @@ class NotificationSettingsPresenter(
 
         fun handleEvent(event: NotificationSettingsEvent) {
             when (event) {
+                // :tchap: Allow to enable/disable account notifications
+                is NotificationSettingsEvent.SetAccountNotificationsEnabled -> {
+                    localCoroutineScope.setAccountNotificationsEnabled(event.enabled, changeNotificationSettingAction)
+                }
+                // :tchap: end
                 is NotificationSettingsEvent.SetAtRoomNotificationsEnabled -> {
                     localCoroutineScope.setAtRoomNotificationsEnabled(event.enabled, changeNotificationSettingAction)
                 }
@@ -453,8 +458,14 @@ class NotificationSettingsPresenter(
         val callNotificationsEnabled = notificationSettingsService.isCallEnabled().getOrThrow()
         val atRoomNotificationsEnabled = notificationSettingsService.isRoomMentionEnabled().getOrThrow()
         val inviteForMeNotificationsEnabled = notificationSettingsService.isInviteForMeEnabled().getOrThrow()
+        // :tchap: Allow to enable/disable account notifications
+        val accountNotificationsEnabled = notificationSettingsService.isAccountNotificationsEnabled().getOrDefault(true)
+        // :tchap: end
 
         target.value = NotificationSettingsState.MatrixSettings.Valid(
+            // :tchap: Allow to enable/disable account notifications
+            accountNotificationsEnabled = accountNotificationsEnabled,
+            // :tchap: end
             atRoomNotificationsEnabled = atRoomNotificationsEnabled,
             callNotificationsEnabled = callNotificationsEnabled,
             inviteForMeNotificationsEnabled = inviteForMeNotificationsEnabled,
@@ -493,6 +504,14 @@ class NotificationSettingsPresenter(
             }
         )
     }
+
+    // :tchap: Allow to enable/disable account notifications
+    private fun CoroutineScope.setAccountNotificationsEnabled(enabled: Boolean, action: MutableState<AsyncAction<Unit>>) = launch {
+        action.runUpdatingStateNoSuccess {
+            notificationSettingsService.setAccountNotificationsEnabled(enabled)
+        }
+    }
+    // :tchap: end
 
     private fun CoroutineScope.setAtRoomNotificationsEnabled(enabled: Boolean, action: MutableState<AsyncAction<Unit>>) = launch {
         action.runUpdatingStateNoSuccess {

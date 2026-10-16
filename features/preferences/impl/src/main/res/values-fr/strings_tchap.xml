@@ -24,4 +24,6 @@
 
 <resources>
     <string name="tchap_screen_advanced_settings_clear_cache">"Vider le cache"</string>
+    <string name="tchap_screen_notification_settings_account_notifications_title">"Activer les notifications du compte (tous les appareils)"</string>
+    <string name="tchap_screen_notification_settings_account_notifications_disabled_banner">"Les notifications sont désactivées pour l\'ensemble de votre compte Tchap. Vous ne recevrez aucune notification sur aucun appareil."</string>
 </resources>
