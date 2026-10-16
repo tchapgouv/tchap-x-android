@@ -93,6 +93,9 @@ fun NotificationSettingsView(
             is NotificationSettingsState.MatrixSettings.Valid -> NotificationSettingsContentView(
                 matrixSettings = state.matrixSettings,
                 state = state,
+                // :tchap: Allow to enable/disable account notifications
+                onAccountNotificationsEnabledChange = { state.eventSink(NotificationSettingsEvent.SetAccountNotificationsEnabled(it)) },
+                // :tchap: end
                 onNotificationsEnabledChange = { state.eventSink(NotificationSettingsEvent.SetNotificationsEnabled(it)) },
                 onGroupChatsClick = { onOpenEditDefault(false) },
                 onDirectChatsClick = { onOpenEditDefault(true) },
@@ -116,6 +119,9 @@ fun NotificationSettingsView(
 private fun NotificationSettingsContentView(
     matrixSettings: NotificationSettingsState.MatrixSettings.Valid,
     state: NotificationSettingsState,
+    // :tchap: Allow to enable/disable account notifications
+    onAccountNotificationsEnabledChange: (Boolean) -> Unit,
+    // :tchap: end
     onNotificationsEnabledChange: (Boolean) -> Unit,
     onGroupChatsClick: () -> Unit,
     onDirectChatsClick: () -> Unit,
@@ -147,13 +153,39 @@ private fun NotificationSettingsContentView(
         )
     }
 
+    // :tchap: Allow to enable/disable account notifications
+//    PreferenceSwitch(
+//        title = stringResource(id = R.string.screen_notification_settings_enable_notifications),
+//        isChecked = systemSettings.appNotificationsEnabled,
+//        onCheckedChange = onNotificationsEnabledChange
+//    )
+    if (!matrixSettings.accountNotificationsEnabled) {
+        PreferenceCategory(showTopDivider = false) {
+            ListItem(
+                leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.NotificationsOffSolid())),
+                content = {
+                    Text(stringResource(id = R.string.tchap_screen_notification_settings_account_notifications_disabled_banner))
+                },
+            )
+        }
+    }
+
     PreferenceSwitch(
-        title = stringResource(id = R.string.screen_notification_settings_enable_notifications),
-        isChecked = systemSettings.appNotificationsEnabled,
-        onCheckedChange = onNotificationsEnabledChange
+        title = stringResource(id = R.string.tchap_screen_notification_settings_account_notifications_title),
+        isChecked = matrixSettings.accountNotificationsEnabled,
+        onCheckedChange = onAccountNotificationsEnabledChange
     )
 
-    if (systemSettings.appNotificationsEnabled) {
+    if (matrixSettings.accountNotificationsEnabled) {
+        PreferenceSwitch(
+            title = stringResource(id = R.string.screen_notification_settings_enable_notifications),
+            isChecked = systemSettings.appNotificationsEnabled,
+            onCheckedChange = onNotificationsEnabledChange
+        )
+    }
+
+    if (systemSettings.appNotificationsEnabled && matrixSettings.accountNotificationsEnabled) {
+        // :tchap: end
         if (!state.fullScreenIntentPermissionsState.permissionGranted) {
             PreferenceCategory {
                 ListItem(
