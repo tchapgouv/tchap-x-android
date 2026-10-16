@@ -49,8 +49,13 @@ data class PushDataUnifiedPushCounts(
 )
 
 fun PushDataUnifiedPush.toPushData(clientSecret: String): PushData? {
-    val safeEventId = notification?.eventId?.let(::EventId) ?: return null
-    val safeRoomId = notification.roomId?.let(::RoomId) ?: return null
+    // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
+//    val safeEventId = notification?.eventId?.let(::EventId) ?: return null
+//    val safeRoomId = notification.roomId?.let(::RoomId) ?: return null
+    if (notification == null) return null
+    val safeEventId = notification.eventId?.takeIf { it.isNotBlank() }?.let(::EventId)
+    val safeRoomId = notification.roomId?.takeIf { it.isNotBlank() }?.let(::RoomId)
+    // :tchap: end
     return PushData(
         eventId = safeEventId,
         roomId = safeRoomId,

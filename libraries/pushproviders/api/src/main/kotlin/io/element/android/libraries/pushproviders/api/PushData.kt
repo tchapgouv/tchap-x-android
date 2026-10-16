@@ -20,8 +20,12 @@ import io.element.android.libraries.matrix.api.core.RoomId
  * @property clientSecret data used when the pusher was configured, to be able to determine the session.
  */
 data class PushData(
-    val eventId: EventId,
-    val roomId: RoomId,
+    // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
+//    val eventId: EventId,
+//    val roomId: RoomId,
+    val eventId: EventId?,
+    val roomId: RoomId?,
+    // :tchap: end
     val unread: Int?,
     val clientSecret: String,
 )
