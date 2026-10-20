@@ -4,11 +4,11 @@ appId: ${MAESTRO_APP_ID}
 - longPressOn: ${MAESTRO_ROOM_NAME}
 - takeScreenshot: build/maestro/310-RoomList-ContextMenu
 - tapOn:
-    text: "Settings"
+    text: "Paramètres"
     index: 0
-- tapOn: "Back"
+- tapOn: "Retour"
 - longPressOn: ${MAESTRO_ROOM_NAME}
 - tapOn:
-    text: "Leave room"
+    text: "Quitter le salon"
     index: 0
-- tapOn: "Cancel"
+- tapOn: "Annuler"
