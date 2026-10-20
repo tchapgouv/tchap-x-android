@@ -24,6 +24,9 @@ class FakeNotificationSettingsService(
     initialEncryptedGroupDefaultMode: RoomNotificationMode = RoomNotificationMode.MENTIONS_AND_KEYWORDS_ONLY,
     initialOneToOneDefaultMode: RoomNotificationMode = RoomNotificationMode.ALL_MESSAGES,
     initialEncryptedOneToOneDefaultMode: RoomNotificationMode = RoomNotificationMode.ALL_MESSAGES,
+    // :tchap: Allow to enable/disable account notifications
+    initialAccountNotificationsEnabled: Boolean = true,
+    // :tchap: end
     private val getRawPushRulesResult: () -> Result<String> = { lambdaError() },
     private val getRoomsWithUserDefinedRulesResult: () -> Result<List<RoomId>> = { lambdaError() },
 ) : NotificationSettingsService {
@@ -34,6 +37,10 @@ class FakeNotificationSettingsService(
     private var defaultEncryptedOneToOneRoomNotificationMode: RoomNotificationMode = initialEncryptedOneToOneDefaultMode
     private var roomNotificationMode: RoomNotificationMode = initialRoomMode
     private var roomNotificationModeIsDefault: Boolean = initialRoomModeIsDefault
+    // :tchap: Allow to enable/disable account notifications
+    private var accountNotificationsEnabled = initialAccountNotificationsEnabled
+    private var setAccountNotificationsError: Throwable? = null
+    // :tchap: end
     private var callNotificationsEnabled = false
     private var inviteNotificationsEnabled = false
     private var atRoomNotificationsEnabled = false
@@ -154,6 +161,22 @@ class FakeNotificationSettingsService(
         return Result.success(Unit)
     }
 
+    // :tchap: Allow to enable/disable account notifications
+    override suspend fun isAccountNotificationsEnabled(): Result<Boolean> {
+        return Result.success(accountNotificationsEnabled)
+    }
+
+    override suspend fun setAccountNotificationsEnabled(enabled: Boolean): Result<Unit> {
+        val error = setAccountNotificationsError
+        if (error != null) {
+            return Result.failure(error)
+        }
+        accountNotificationsEnabled = enabled
+        notificationSettingsStateFlow.emit(Unit)
+        return Result.success(Unit)
+    }
+    // :tchap: end
+
     override suspend fun getRoomsWithUserDefinedRules(): Result<List<RoomId>> {
         return getRoomsWithUserDefinedRulesResult()
     }
@@ -173,6 +196,12 @@ class FakeNotificationSettingsService(
     fun givenSetAtRoomError(throwable: Throwable?) {
         setAtRoomError = throwable
     }
+
+    // :tchap: Allow to enable/disable account notifications
+    fun givenSetAccountNotificationsError(throwable: Throwable?) {
+        setAccountNotificationsError = throwable
+    }
+    // :tchap: end
 
     fun givenSetDefaultNotificationModeError(throwable: Throwable?) {
         setDefaultNotificationModeError = throwable

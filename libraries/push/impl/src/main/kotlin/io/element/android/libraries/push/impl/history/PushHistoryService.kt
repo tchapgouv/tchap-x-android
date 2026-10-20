@@ -67,8 +67,12 @@ fun PushHistoryService.onInvalidPushReceived(
 
 fun PushHistoryService.onUnableToRetrieveSession(
     providerInfo: String,
-    eventId: EventId,
-    roomId: RoomId,
+    // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
+//    eventId: EventId,
+//    roomId: RoomId,
+    eventId: EventId?,
+    roomId: RoomId?,
+    // :tchap: end
     reason: String,
 ) = onPushResult(
     providerInfo = providerInfo,
@@ -82,8 +86,12 @@ fun PushHistoryService.onUnableToRetrieveSession(
 
 fun PushHistoryService.onUnableToResolveEvent(
     providerInfo: String,
-    eventId: EventId,
-    roomId: RoomId,
+    // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
+//    eventId: EventId,
+//    roomId: RoomId,
+    eventId: EventId?,
+    roomId: RoomId?,
+    // :tchap: end
     sessionId: SessionId,
     reason: String,
 ) = onPushResult(
@@ -98,8 +106,12 @@ fun PushHistoryService.onUnableToResolveEvent(
 
 fun PushHistoryService.onSuccess(
     providerInfo: String,
-    eventId: EventId,
-    roomId: RoomId,
+    // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
+//    eventId: EventId,
+//    roomId: RoomId,
+    eventId: EventId?,
+    roomId: RoomId?,
+    // :tchap: end
     sessionId: SessionId,
     comment: String?,
 ) = onPushResult(

@@ -10,17 +10,15 @@ package io.element.android.services.analyticsproviders.sentry.di
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.Provides
-import io.element.android.libraries.di.identifiers.SentryDsn
-import io.element.android.libraries.di.identifiers.SentrySdkDsn
-import io.element.android.services.analyticsproviders.sentry.SentryConfig
 
 @BindingContainer
 @ContributesTo(AppScope::class)
 object SentryBindingContainer {
-    @Provides
-    fun providesSentryDsn(): SentryDsn? = SentryConfig.DSN.takeIf { it.isNotBlank() }?.let(::SentryDsn)
+    // :tchap: Tchap custom Sentry DSN
+//    @Provides
+//    fun providesSentryDsn(): SentryDsn? = SentryConfig.DSN.takeIf { it.isNotBlank() }?.let(::SentryDsn)
 
-    @Provides
-    fun providesSentrySdkDsn(): SentrySdkDsn? = SentryConfig.SDK_DSN.takeIf { it.isNotBlank() }?.let(::SentrySdkDsn)
+//    @Provides
+//    fun providesSentrySdkDsn(): SentrySdkDsn? = SentryConfig.SDK_DSN.takeIf { it.isNotBlank() }?.let(::SentrySdkDsn)
+    // :tchap: end
 }

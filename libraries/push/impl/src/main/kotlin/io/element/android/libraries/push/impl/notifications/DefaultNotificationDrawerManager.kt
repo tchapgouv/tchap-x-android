@@ -178,6 +178,36 @@ class DefaultNotificationDrawerManager(
         clearSummaryNotificationIfNeeded(sessionId)
     }
 
+    // :tchap: AutoClean System Notifications on sync
+    override suspend fun cleanObsoleteNotifications(sessionId: SessionId) {
+        val client = matrixClientProvider.getOrNull(sessionId) ?: return
+        val activeNotifications = activeNotificationsProvider.getNotificationsForSession(sessionId)
+        if (activeNotifications.isEmpty()) return
+
+        val messageNotificationId = NotificationIdProvider.getRoomMessagesNotificationId(sessionId)
+        val messageNotifications = activeNotifications.filter { it.id == messageNotificationId }
+
+        if (messageNotifications.isEmpty()) return
+
+        val summariesList = client.roomListService.allRooms.summaries.replayCache.lastOrNull() ?: return
+        val readRoomIds = summariesList.filter { it.info.numUnreadMessages == 0L && !it.info.isMarkedUnread }.map { it.info.id.value }
+
+        var clearedAny = false
+        messageNotifications.forEach { notification ->
+            val tag = notification.tag ?: return@forEach
+            val roomId = tag.substringBefore("|")
+            if (roomId in readRoomIds) {
+                notificationDisplayer.cancelNotification(tag, messageNotificationId)
+                clearedAny = true
+            }
+        }
+
+        if (clearedAny) {
+            clearSummaryNotificationIfNeeded(sessionId)
+        }
+    }
+    // :tchap: end
+
     /**
      * Clear the notifications for a single event.
      */

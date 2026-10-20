@@ -35,7 +35,8 @@ import io.element.android.features.login.impl.screens.onboarding.createLoginMode
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.matrix.api.auth.MatrixAuthenticationService
 import io.element.android.libraries.matrix.test.AN_EXCEPTION
-import io.element.android.libraries.matrix.test.A_USER_NAME
+import io.element.android.libraries.matrix.test.A_USER_EMAIL
+import io.element.android.libraries.matrix.test.A_USER_EMAIL_2
 import io.element.android.libraries.matrix.test.auth.FakeMatrixAuthenticationService
 import io.element.android.libraries.matrix.test.auth.aMatrixHomeServerDetails
 import io.element.android.libraries.matrix.test.core.aBuildMeta
@@ -67,9 +68,9 @@ class LoginHintPresenterTest {
             authenticationService = authenticationService,
         ).test {
             val initialState = awaitItem()
-            initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_NAME))
+            initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_EMAIL))
             val loginState = awaitItem()
-            assertThat(loginState.formState).isEqualTo(LoginFormState(login = A_USER_NAME))
+            assertThat(loginState.formState).isEqualTo(LoginFormState(login = A_USER_EMAIL))
             assertThat(loginState.submitEnabled).isTrue()
         }
     }
@@ -90,7 +91,7 @@ class LoginHintPresenterTest {
             authenticationService = authenticationService,
         ).test {
             val initialState = awaitItem()
-            initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_NAME))
+            initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_EMAIL))
             val loginState = awaitItem()
             loginState.eventSink.invoke(LoginHintEvents.OnContinue)
             val submitState = awaitItem()
@@ -143,7 +144,7 @@ class LoginHintPresenterTest {
             authenticationService = authenticationService,
         ).test {
             val initialState = awaitItem()
-            initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_NAME))
+            initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_EMAIL))
             val loginState = awaitItem()
             loginState.eventSink.invoke(LoginHintEvents.OnContinue)
             val submitState = awaitItem()
@@ -165,7 +166,7 @@ class LoginHintPresenterTest {
             authenticationService = authenticationService,
         ).test {
             val initialState = awaitItem()
-            initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_NAME))
+            initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_EMAIL))
             val loginState = awaitItem()
             loginState.eventSink.invoke(LoginHintEvents.OnContinue)
             val submitState = awaitItem()
@@ -175,6 +176,44 @@ class LoginHintPresenterTest {
             errorState.eventSink(LoginHintEvents.ClearError)
             val clearedState = awaitItem()
             assertThat(clearedState.loginModeState.loginMode).isEqualTo(AsyncData.Uninitialized)
+        }
+    }
+
+    @Test
+    fun `present - submit with external email`() = runTest {
+        val authenticationService = FakeMatrixAuthenticationService(
+            setHomeserverResult = {
+                Result.success(aMatrixHomeServerDetails(supportsPasswordLogin = true))
+            }
+        )
+        val enterpriseService = FakeEnterpriseService(
+            defaultHomeserverListResult = { listOf("agent.externe.tchap.gouv.fr") },
+            selectedHomeserver = 0
+        )
+        createLoginHintPresenter(
+            enterpriseService = enterpriseService,
+            authenticationService = authenticationService,
+        ).test {
+            val initialState = awaitItem()
+            initialState.eventSink.invoke(LoginHintEvents.SetLogin(A_USER_EMAIL_2))
+            val loginState = awaitItem()
+            loginState.eventSink.invoke(LoginHintEvents.OnContinue)
+            val submitState = awaitItem()
+            assertThat(submitState.loginModeState.loginMode).isInstanceOf(AsyncData.Loading::class.java)
+
+            // Should show the confirmation dialog
+            val dialogState = awaitItem()
+            assertThat(dialogState.showExternalConfirmationDialog).isTrue()
+
+            // Confirm
+            dialogState.eventSink(LoginHintEvents.OnExternalConfirmationResult(true))
+            val submitConfirmState = awaitItem()
+            assertThat(submitConfirmState.loginModeState.loginMode).isInstanceOf(AsyncData.Loading::class.java)
+            assertThat(submitConfirmState.showExternalConfirmationDialog).isFalse()
+
+            val successState = awaitItem()
+            assertThat(successState.loginModeState.loginMode).isEqualTo(AsyncData.Success(LoginMode.PasswordLogin))
+            assertThat(successState.accountProvider.url).isEqualTo("https://agent.externe.tchap.gouv.fr")
         }
     }
 

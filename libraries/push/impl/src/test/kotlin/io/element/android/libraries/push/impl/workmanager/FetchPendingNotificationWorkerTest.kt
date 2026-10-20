@@ -27,6 +27,7 @@ import io.element.android.libraries.push.impl.notifications.FakeNotificationResu
 import io.element.android.libraries.push.impl.notifications.fixtures.aPushRequest
 import io.element.android.libraries.push.impl.notifications.model.ResolvedPushEvent
 import io.element.android.libraries.push.impl.push.SyncOnNotifiableEvent
+import io.element.android.libraries.push.test.notifications.FakeNotificationCleaner
 import io.element.android.libraries.push.test.push.FakeFetchPushForegroundServiceManager
 import io.element.android.libraries.workmanager.api.WorkManagerRequestBuilder
 import io.element.android.libraries.workmanager.api.di.MetroWorkerFactory
@@ -238,6 +239,9 @@ class FetchPendingNotificationWorkerTest : RobolectricTest() {
         resultProcessor: FakeNotificationResultProcessor = FakeNotificationResultProcessor(),
         systemClock: FakeSystemClock = FakeSystemClock(),
         pushHandlingWakeLock: FakeFetchPushForegroundServiceManager = FakeFetchPushForegroundServiceManager(),
+        // :tchap: AutoClean System Notifications on sync
+        notificationCleaner: FakeNotificationCleaner = FakeNotificationCleaner(),
+        // :tchap: end
     ) = FetchPendingNotificationsWorker(
         params = createWorkerParams(workDataOf("session_id" to input)),
         context = InstrumentationRegistry.getInstrumentation().context,
@@ -249,6 +253,9 @@ class FetchPendingNotificationWorkerTest : RobolectricTest() {
         resultProcessor = resultProcessor,
         systemClock = systemClock,
         fetchPushForegroundServiceManager = pushHandlingWakeLock,
+        // :tchap: AutoClean System Notifications on sync
+        notificationCleaner = notificationCleaner,
+        // :tchap: end
     )
 
     private fun TestScope.createWorkerParams(

@@ -18,6 +18,7 @@ import io.element.android.libraries.push.impl.db.PushRequest
 import io.element.android.libraries.push.impl.history.PushHistoryService
 import io.element.android.libraries.push.impl.history.onDiagnosticPush
 import io.element.android.libraries.push.impl.history.onInvalidPushReceived
+import io.element.android.libraries.push.impl.history.onSuccess
 import io.element.android.libraries.push.impl.history.onUnableToRetrieveSession
 import io.element.android.libraries.push.impl.notifications.NotificationResultProcessor
 import io.element.android.libraries.push.impl.test.DefaultTestPush
@@ -69,9 +70,17 @@ class DefaultPushHandler(
      */
     override suspend fun handle(pushData: PushData, providerInfo: String): Boolean = withContext(dispatchers.computation) {
         // Start measuring how long it takes to display a notification from when the push is received
-        Timber.d("Calculating push-to-notification for event ${pushData.eventId}")
-        val parent = analyticsService.startLongRunningTransaction(AnalyticsLongRunningTransaction.PushToNotification(pushData.eventId.value))
-        analyticsService.startLongRunningTransaction(AnalyticsLongRunningTransaction.PushToWorkManager(pushData.eventId.value), parent)
+        // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
+//        Timber.d("Calculating push-to-notification for event ${pushData.eventId}")
+//        val parent = analyticsService.startLongRunningTransaction(AnalyticsLongRunningTransaction.PushToNotification(pushData.eventId.value))
+//        analyticsService.startLongRunningTransaction(AnalyticsLongRunningTransaction.PushToWorkManager(pushData.eventId.value), parent)
+        val eventId = pushData.eventId
+        if (eventId != null) {
+            Timber.d("Calculating push-to-notification for event $eventId")
+            val parent = analyticsService.startLongRunningTransaction(AnalyticsLongRunningTransaction.PushToNotification(eventId.value))
+            analyticsService.startLongRunningTransaction(AnalyticsLongRunningTransaction.PushToWorkManager(eventId.value), parent)
+        }
+        // :tchap: end
 
         Timber.tag(loggerTag.value).d("## handling pushData: ${pushData.roomId}/${pushData.eventId}")
         if (buildMeta.lowPrivacyLoggingEnabled) {
@@ -84,7 +93,7 @@ class DefaultPushHandler(
         }
 
         // Diagnostic Push
-        if (pushData.eventId == DefaultTestPush.TEST_EVENT_ID) {
+        if (eventId == DefaultTestPush.TEST_EVENT_ID) {
             pushHistoryService.onDiagnosticPush(providerInfo)
             diagnosticPushHandler.handlePush()
             false
@@ -130,19 +139,48 @@ class DefaultPushHandler(
                 return false
             }
 
-            val pushRequest = PushRequest(
-                pushDate = systemClock.epochMillis(),
-                providerInfo = providerInfo,
-                eventId = pushData.eventId.value,
-                roomId = pushData.roomId.value,
-                sessionId = userId.value,
-                status = PushRequestStatus.PENDING.value,
-                retries = 0L,
-            )
+            // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
+//            val pushRequest = PushRequest(
+//                pushDate = systemClock.epochMillis(),
+//                providerInfo = providerInfo,
+//                eventId = pushData.eventId.value,
+//                roomId = pushData.roomId.value,
+//                sessionId = userId.value,
+//                status = PushRequestStatus.PENDING.value,
+//                retries = 0L,
+//            )
+//
+//            Timber.d("Queueing notification: $pushRequest")
+//            pushHistoryService.insertOrUpdatePushRequest(pushRequest)
+//            Timber.d("Queueing notification finished")
 
-            Timber.d("Queueing notification: $pushRequest")
-            pushHistoryService.insertOrUpdatePushRequest(pushRequest)
-            Timber.d("Queueing notification finished")
+            val eventId = pushData.eventId
+            val roomId = pushData.roomId
+            if (eventId != null && roomId != null) {
+                val pushRequest = PushRequest(
+                    pushDate = systemClock.epochMillis(),
+                    providerInfo = providerInfo,
+                    eventId = eventId.value,
+                    roomId = roomId.value,
+                    sessionId = userId.value,
+                    status = PushRequestStatus.PENDING.value,
+                    retries = 0L,
+                )
+
+                Timber.d("Queueing notification: $pushRequest")
+                pushHistoryService.insertOrUpdatePushRequest(pushRequest)
+                Timber.d("Queueing notification finished")
+            } else {
+                // Useless to queue a notification without eventId or roomId, directly mark it as success
+                pushHistoryService.onSuccess(
+                    providerInfo = providerInfo,
+                    eventId = null,
+                    roomId = null,
+                    sessionId = userId,
+                    comment = "Push without eventId or roomId handled successfully",
+                )
+            }
+            // :tchap: end
 
             if (!workManagerScheduler.hasPendingWork(userId, WorkManagerRequestType.NOTIFICATION_SYNC)) {
                 Timber.d("No pending worker for push notifications found")

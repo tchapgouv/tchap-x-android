@@ -113,6 +113,18 @@ interface NotificationSettingsService {
      */
     suspend fun setInviteForMeEnabled(enabled: Boolean): Result<Unit>
 
+    // :tchap: Allow to enable/disable account notifications
+    /** Whether global account notifications are enabled (.m.rule.master is disabled). */
+    suspend fun isAccountNotificationsEnabled(): Result<Boolean>
+
+    /**
+     * Sets whether global account notifications are enabled.
+     *
+     * @param enabled true to enable notifications for the entire account (.m.rule.master disabled), false to disable (.m.rule.master enabled).
+     */
+    suspend fun setAccountNotificationsEnabled(enabled: Boolean): Result<Unit>
+    // :tchap: end
+
     /** The rooms that have an enabled rule of their own rather than following the defaults. */
     suspend fun getRoomsWithUserDefinedRules(): Result<List<RoomId>>
 

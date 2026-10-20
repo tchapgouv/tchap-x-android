@@ -39,6 +39,8 @@ open class LoginHintStatePreviewParam : PreviewParameterProvider<LoginHintState>
             aLoginHintState(loginModeState = aLoginModeState(loginMode = AsyncData.Loading())),
             // Error
             aLoginHintState(loginModeState = aLoginModeState(loginMode = AsyncData.Failure(Exception("An error occurred")))),
+            // External Confirmation
+            aLoginHintState(showExternalConfirmationDialog = true),
         )
 }
 
@@ -48,6 +50,7 @@ fun aLoginHintState(
     formState: LoginFormState = LoginFormState.Default,
     isAccountCreation: Boolean = false,
     loginModeState: LoginModeState = aLoginModeState(),
+    showExternalConfirmationDialog: Boolean = false,
     eventSink: (LoginHintEvents) -> Unit = {},
 ) = LoginHintState(
     applicationName = applicationName,
@@ -55,5 +58,6 @@ fun aLoginHintState(
     isAccountCreation = isAccountCreation,
     formState = formState,
     loginModeState = loginModeState,
+    showExternalConfirmationDialog = showExternalConfirmationDialog,
     eventSink = eventSink,
 )

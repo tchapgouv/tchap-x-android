@@ -28,7 +28,7 @@ import org.matrix.rustcomponents.sdk.TchapConstants
 import java.util.Locale
 
 object TchapPatterns {
-    private val EMAIL_REGEX = "^[a-zA-Z0-9_!#\$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#\$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*\$".toRegex()
+    private val EMAIL_REGEX = "^[a-zA-Z0-9_!#\$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#\$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)+\$".toRegex()
 
     /**
      * Check if the provided string is an email.

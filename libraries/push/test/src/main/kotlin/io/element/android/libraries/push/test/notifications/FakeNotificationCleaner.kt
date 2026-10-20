@@ -21,7 +21,10 @@ class FakeNotificationCleaner(
     private val clearMessagesForThreadLambda: (SessionId, RoomId, ThreadId) -> Unit = { _, _, _ -> lambdaError() },
     private val clearEventLambda: (SessionId, EventId) -> Unit = { _, _ -> lambdaError() },
     private val clearMembershipNotificationForSessionLambda: (SessionId) -> Unit = { lambdaError() },
-    private val clearMembershipNotificationForRoomLambda: (SessionId, RoomId) -> Unit = { _, _ -> lambdaError() }
+    private val clearMembershipNotificationForRoomLambda: (SessionId, RoomId) -> Unit = { _, _ -> lambdaError() },
+    // :tchap: AutoClean System Notifications on sync
+    private val cleanObsoleteNotificationsLambda: (SessionId) -> Unit = { lambdaError() }
+    // :tchap: end
 ) : NotificationCleaner {
     override fun clearAllMessagesEvents(sessionId: SessionId) {
         clearAllMessagesEventsLambda(sessionId)
@@ -46,4 +49,10 @@ class FakeNotificationCleaner(
     override fun clearMembershipNotificationForRoom(sessionId: SessionId, roomId: RoomId) {
         clearMembershipNotificationForRoomLambda(sessionId, roomId)
     }
+
+    // :tchap: AutoClean System Notifications on sync
+    override suspend fun cleanObsoleteNotifications(sessionId: SessionId) {
+        cleanObsoleteNotificationsLambda(sessionId)
+    }
+    // :tchap: end
 }

@@ -25,6 +25,7 @@ import io.element.android.libraries.matrix.api.auth.SessionRestorationException
 import io.element.android.libraries.matrix.api.core.SessionId
 import io.element.android.libraries.matrix.api.exception.ClientException
 import io.element.android.libraries.matrix.api.exception.isNetworkError
+import io.element.android.libraries.push.api.notifications.NotificationCleaner
 import io.element.android.libraries.push.api.push.FetchPushForegroundServiceManager
 import io.element.android.libraries.push.impl.db.PushRequest
 import io.element.android.libraries.push.impl.history.PushHistoryService
@@ -59,6 +60,9 @@ class FetchPendingNotificationsWorker(
     private val analyticsService: AnalyticsService,
     private val systemClock: SystemClock,
     private val fetchPushForegroundServiceManager: FetchPushForegroundServiceManager,
+    // :tchap: AutoClean System Notifications on sync
+    private val notificationCleaner: NotificationCleaner,
+    // :tchap: end
 ) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
         Timber.d("FetchNotificationsWorker started")
@@ -79,7 +83,15 @@ class FetchPendingNotificationsWorker(
         }
 
         if (requests.isEmpty()) {
-            Timber.d("No pending notifications to fetch, returning early")
+            // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
+//            Timber.d("No pending notifications to fetch, returning early")
+            Timber.d("No pending notifications to fetch, performing checkNetwork, sync and cleaning, and after returning early")
+            checkNetworkConnection(requests)?.let { failure -> return failure }
+            analyticsService.recordTransaction("Opportunistic sync", "opportunistic_sync") {
+                performOpportunisticSyncIfNeeded(mapOf(sessionId to requests))
+            }
+            notificationCleaner.cleanObsoleteNotifications(sessionId)
+            // :tchap: end
             return Result.success()
         }
 
@@ -135,6 +147,10 @@ class FetchPendingNotificationsWorker(
         analyticsService.recordTransaction("Opportunistic sync", "opportunistic_sync") {
             performOpportunisticSyncIfNeeded(mapOf(sessionId to requests))
         }
+
+        // :tchap: AutoClean System Notifications on sync
+        notificationCleaner.cleanObsoleteNotifications(sessionId)
+        // :tchap: end
 
         return if (updatedRequests.any { it.status == PushRequestStatus.PENDING.value }) Result.retry() else Result.success()
     }
