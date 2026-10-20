@@ -221,6 +221,30 @@ class NotificationSettingsPresenterTest {
         }
     }
 
+    // :tchap: Allow to enable/disable account notifications
+    @Test
+    fun `present - toggle account notifications`() = runTest {
+        val notificationSettingsService = FakeNotificationSettingsService(initialAccountNotificationsEnabled = true)
+        val presenter = createNotificationSettingsPresenter(notificationSettingsService)
+        presenter.test {
+            val loadedState = consumeItemsUntilPredicate {
+                it.matrixSettings is NotificationSettingsState.MatrixSettings.Valid
+            }.last()
+            val valid = loadedState.matrixSettings as? NotificationSettingsState.MatrixSettings.Valid
+            assertThat(valid?.accountNotificationsEnabled).isTrue()
+
+            loadedState.eventSink(NotificationSettingsEvent.SetAccountNotificationsEnabled(false))
+
+            val updatedState = consumeItemsUntilPredicate {
+                (it.matrixSettings as? NotificationSettingsState.MatrixSettings.Valid)?.accountNotificationsEnabled == false
+            }.last()
+            val updatedValid = updatedState.matrixSettings as? NotificationSettingsState.MatrixSettings.Valid
+            assertThat(updatedValid?.accountNotificationsEnabled).isFalse()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+    // :tchap: end
+
     @Test
     fun `present - clear notification settings change error`() = runTest {
         val notificationSettingsService = FakeNotificationSettingsService()
