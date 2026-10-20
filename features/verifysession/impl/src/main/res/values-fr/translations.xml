@@ -38,11 +38,20 @@
   <string name="screen_session_verification_request_title">"Vérification demandée"</string>
   <string name="screen_session_verification_they_dont_match">"Ils ne correspondent pas"</string>
   <string name="screen_session_verification_they_match">"Ils correspondent"</string>
+  <string name="screen_session_verification_unavailable_subtitle">"Veuillez utiliser un autre appareil ou la clé de récupération."</string>
+  <string name="screen_session_verification_unavailable_title">"La vérification avec cet appareil est actuellement indisponible."</string>
   <string name="screen_session_verification_use_another_device_subtitle">"Assurez-vous que l’application est ouverte sur un autre appareil avant de commencer la vérification."</string>
   <string name="screen_session_verification_use_another_device_title">"Ouvrez l’application sur un autre appareil vérifié"</string>
+<<<<<<< HEAD
   <string name="screen_session_verification_user_initiator_subtitle">"Pour plus de sécurité, vérifiez ce membre en comparant des émojis sur vos appareils. Pour ce faire, utilisez un moyen de communication fiable."</string><!-- Tchap: Custom string -->
   <string name="screen_session_verification_user_initiator_title">"Vérifier ce membre ?"</string><!-- Tchap: Custom string -->
   <string name="screen_session_verification_user_responder_subtitle">"Pour plus de sécurité, cet autre membre souhaite vérifier votre identité. Des émojis à comparer vous seront présentés."</string><!-- Tchap: Custom string -->
+=======
+  <string name="screen_session_verification_user_initiator_subtitle">"Pour plus de sécurité, vérifiez cet utilisateur en comparant des émojis sur vos appareils. Pour ce faire, utilisez un moyen de communication fiable."</string>
+  <string name="screen_session_verification_user_initiator_title">"Vérifier cet utilisateur ?"</string>
+  <string name="screen_session_verification_user_requesting_verification">"Utilisateur demandant une vérification:"</string>
+  <string name="screen_session_verification_user_responder_subtitle">"Pour plus de sécurité, cet autre utilisateur souhaite vérifier votre identité numérique. Des émojis à comparer vous seront présentés."</string>
+>>>>>>> main-element
   <string name="screen_session_verification_waiting_another_device_subtitle">"Vous devriez voir une alerte sur l’autre appareil. Démarrez la vérification à partir de là dès maintenant."</string>
   <string name="screen_session_verification_waiting_another_device_title">"Démarrer la vérification sur l’autre appareil"</string>
   <string name="screen_session_verification_waiting_other_device_title">"Démarrer la vérification sur l’autre appareil"</string>

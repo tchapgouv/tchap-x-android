@@ -24,6 +24,9 @@
   <string name="screen_invites_invited_you">"%1$s (%2$s) запрошує вас"</string>
   <string name="screen_migration_message">"Це одноразовий процес, дякую за очікування."</string>
   <string name="screen_migration_title">"Налаштування облікового запису."</string>
+  <string name="screen_multi_account_announcement_action">"Додати обліковий запис"</string>
+  <string name="screen_multi_account_announcement_description">"Перейдіть до %1$s, щоб увійти в інший обліковий запис. Після цього ви зможете легко перемикатися між ними."</string>
+  <string name="screen_multi_account_announcement_title">"Відтепер ви можете додавати кілька облікових записів"</string>
   <string name="screen_roomlist_a11y_create_message">"Створити нову розмову або кімнату"</string>
   <string name="screen_roomlist_clear_filters">"Очистити фільтри"</string>
   <string name="screen_roomlist_empty_message">"Почніть з обміну повідомленнями з кимось."</string>
@@ -36,6 +39,8 @@
   <string name="screen_roomlist_filter_invites_empty_state_title">"У вас немає запрошень, що очікують на розгляд."</string>
   <string name="screen_roomlist_filter_low_priority">"Низький пріоритет"</string>
   <string name="screen_roomlist_filter_low_priority_empty_state_title">"У вас ще немає неважливих бесід"</string>
+  <string name="screen_roomlist_filter_mention">"Згадка"</string>
+  <string name="screen_roomlist_filter_mention_empty_state_title">"У вас немає непрочитаних згадок"</string>
   <string name="screen_roomlist_filter_mixed_empty_state_subtitle">"Ви можете зняти фільтри, щоб побачити інші ваші бесіди"</string>
   <string name="screen_roomlist_filter_mixed_empty_state_title">"Ви не маєте бесід для цієї категорії"</string>
   <string name="screen_roomlist_filter_people">"Люди"</string>

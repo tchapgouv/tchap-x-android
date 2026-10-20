@@ -180,6 +180,9 @@ private fun AddFirstAccountScaffold(
     )
 }
 
+/**
+ * Ref: https://www.figma.com/design/kEAcfun9iSpszeUDvdKZ6b/ER-351--Multi-account-in-EX?node-id=147-34607
+ */
 @Composable
 private fun AddOtherAccountScaffold(
     loginView: @Composable () -> Unit,
@@ -189,8 +192,9 @@ private fun AddOtherAccountScaffold(
 ) {
     FlowStepPage(
         modifier = modifier,
-        title = stringResource(CommonStrings.common_add_account),
-        iconStyle = BigIcon.Style.Default(CompoundIcons.HomeSolid()),
+        title = stringResource(R.string.screen_onboarding_add_account_title),
+        subTitle = stringResource(R.string.screen_onboarding_add_account_subtitle),
+        iconStyle = BigIcon.Style.Default(CompoundIcons.Plus()),
         buttons = { buttons() },
         content = loginView,
         onBackClick = onBackClick,
@@ -306,7 +310,11 @@ private fun OnBoardingButtons(
             )
         } else {
             Button(
+<<<<<<< HEAD
                 text = stringResource(id = R.string.tchap_screen_onboarding_sign_in_to, defaultAccountProvider),
+=======
+                text = stringResource(id = R.string.screen_onboarding_sign_in_to, defaultAccountProvider.friendlyServerName()),
+>>>>>>> main-element
                 showProgress = isLoading,
                 onClick = {
                     state.eventSink(OnBoardingEvent.OnSignIn(defaultAccountProvider))

@@ -8,7 +8,6 @@
 
 package io.element.android.features.messages.impl
 
-import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -39,6 +38,8 @@ import io.element.android.features.messages.impl.messagecomposer.MessageComposer
 import io.element.android.features.messages.impl.messagecomposer.MessageComposerState
 import io.element.android.features.messages.impl.pinned.banner.PinnedMessagesBannerState
 import io.element.android.features.messages.impl.timeline.MarkAsFullyRead
+import io.element.android.features.messages.impl.timeline.SelectionAction
+import io.element.android.features.messages.impl.timeline.SelectionState
 import io.element.android.features.messages.impl.timeline.TimelineController
 import io.element.android.features.messages.impl.timeline.TimelineEvent
 import io.element.android.features.messages.impl.timeline.TimelineState
@@ -53,11 +54,13 @@ import io.element.android.features.messages.impl.timeline.model.event.TimelineIt
 import io.element.android.features.messages.impl.timeline.model.event.captionOrNull
 import io.element.android.features.messages.impl.timeline.model.event.htmlCaptionOrNull
 import io.element.android.features.messages.impl.timeline.protection.TimelineProtectionState
+import io.element.android.features.messages.impl.timeline.selectedEventIdsInTimelineOrder
 import io.element.android.features.messages.impl.voicemessages.composer.DefaultVoiceMessageComposerPresenter
 import io.element.android.features.roomcall.api.RoomCallState
 import io.element.android.features.roommembermoderation.api.RoomMemberModerationEvent
 import io.element.android.features.roommembermoderation.api.RoomMemberModerationState
 import io.element.android.libraries.androidutils.clipboard.ClipboardHelper
+import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runUpdatingState
@@ -85,7 +88,9 @@ import io.element.android.libraries.matrix.api.room.history.RoomHistoryVisibilit
 import io.element.android.libraries.matrix.api.room.powerlevels.permissionsAsState
 import io.element.android.libraries.matrix.api.roomdirectory.RoomVisibility
 import io.element.android.libraries.matrix.api.timeline.Timeline
+import io.element.android.libraries.matrix.api.timeline.item.SendTarget
 import io.element.android.libraries.matrix.api.timeline.item.event.EventOrTransactionId
+import io.element.android.libraries.matrix.api.timeline.item.event.toEventOrTransactionId
 import io.element.android.libraries.matrix.ui.messages.reply.map
 import io.element.android.libraries.matrix.ui.model.dmUserStatus
 import io.element.android.libraries.matrix.ui.model.getAvatarData
@@ -178,7 +183,7 @@ class MessagesPresenter(
                 .collectLatest { value = it.toImmutableList() }
         }
 
-        val canOpenThreadList by featureFlagService.isFeatureEnabledFlow(FeatureFlags.RoomThreadList).collectAsState(initial = false)
+        val canOpenThreadList by featureFlagService.isFeatureEnabledFlow(FeatureFlags.Threads).collectAsState(initial = false)
         val isCurrentlySharingLiveLocationInRoom by remember { liveLocationShareManager.isCurrentlySharing(room.roomId) }.collectAsState()
 
         // :tchap: Hide Identity Change State
@@ -257,6 +262,8 @@ class MessagesPresenter(
             onPauseOrDispose {}
         }
 
+        val redactEventAction = remember { mutableStateOf<AsyncAction<Unit>>(AsyncAction.Uninitialized) }
+
         fun handleEvent(event: MessagesEvent) {
             when (event) {
                 is MessagesEvent.HandleAction -> {
@@ -267,7 +274,31 @@ class MessagesPresenter(
                         enableTextFormatting = composerState.showTextFormatting,
                         timelineState = timelineState,
                         timelineProtectionState = timelineProtectionState,
+                        redactEventAction = redactEventAction,
                     )
+                }
+                is MessagesEvent.ConfirmSelectionAction -> {
+                    val selection = timelineState.selectionState as? SelectionState.Active
+                    if (selection != null) {
+                        when (selection.action) {
+                            SelectionAction.Forward -> {
+                                navigator.forwardEvents(timelineState.selectedEventIdsInTimelineOrder(), timelineController)
+                            }
+                        }
+                        timelineState.eventSink(TimelineEvent.ExitSelectionMode)
+                    }
+                }
+                is MessagesEvent.ConfirmRedact -> {
+                    val confirming = redactEventAction.value as? MessagesState.ConfirmingRedaction
+                    redactEventAction.value = AsyncAction.Uninitialized
+                    if (confirming != null) {
+                        localCoroutineScope.launch {
+                            redact(confirming.eventId.toEventOrTransactionId(), event.reason?.takeIf { it.isNotBlank() })
+                        }
+                    }
+                }
+                MessagesEvent.CancelRedact -> {
+                    redactEventAction.value = AsyncAction.Uninitialized
                 }
                 is MessagesEvent.ToggleReaction -> {
                     localCoroutineScope.toggleReaction(event.emoji, event.eventOrTransactionId)
@@ -357,6 +388,7 @@ class MessagesPresenter(
                 hasUnreadThreads = false,
             ),
             showLiveLocationShareBanner = isCurrentlySharingLiveLocationInRoom && timelineState.timelineMode !is Timeline.Mode.Thread,
+            redactEventAction = redactEventAction.value,
             eventSink = ::handleEvent,
         )
     }
@@ -395,12 +427,13 @@ class MessagesPresenter(
         timelineProtectionState: TimelineProtectionState,
         enableTextFormatting: Boolean,
         timelineState: TimelineState,
+        redactEventAction: MutableState<AsyncAction<Unit>>,
     ) = launch {
         when (action) {
             TimelineItemAction.CopyText -> handleCopyContents(targetEvent)
             TimelineItemAction.CopyCaption -> handleCopyCaption(targetEvent)
             TimelineItemAction.CopyLink -> handleCopyLink(targetEvent)
-            TimelineItemAction.Redact -> handleActionRedact(targetEvent)
+            TimelineItemAction.Redact -> handleActionRedact(targetEvent, redactEventAction)
             TimelineItemAction.Edit,
             TimelineItemAction.EditPoll -> handleActionEdit(targetEvent, composerState, enableTextFormatting)
             TimelineItemAction.AddCaption -> handleActionAddCaption(targetEvent, composerState)
@@ -421,21 +454,27 @@ class MessagesPresenter(
                 }
             }
             TimelineItemAction.ViewSource -> handleShowDebugInfoAction(targetEvent)
-            TimelineItemAction.Forward -> handleForwardAction(targetEvent)
+            TimelineItemAction.Forward -> {
+                val eventId = targetEvent.eventId ?: return@launch
+                if (featureFlagService.isFeatureEnabled(FeatureFlags.MessageMultiSelect)) {
+                    timelineState.eventSink(TimelineEvent.EnterSelectionMode(SelectionAction.Forward, eventId))
+                } else {
+                    navigator.forwardEvents(listOf(eventId), timelineController)
+                }
+            }
             TimelineItemAction.ReportContent -> handleReportAction(targetEvent)
             TimelineItemAction.EndPoll -> handleEndPollAction(targetEvent, timelineState)
             TimelineItemAction.Pin -> handlePinAction(targetEvent)
             TimelineItemAction.Unpin -> handleUnpinAction(targetEvent)
             TimelineItemAction.ViewInTimeline -> Unit
             TimelineItemAction.RetrySending -> handleRetrySending(targetEvent)
+            TimelineItemAction.AbortSending -> handleActionAbortSend(targetEvent)
         }
     }
 
     private suspend fun handleRetrySending(targetEvent: TimelineItem.Event) {
-        val sendHandle = targetEvent.sendhandle ?: return Unit.also {
-            Timber.w("No send handle for event ${targetEvent.eventOrTransactionId}")
-        }
-        sendHandle.retry()
+        val (sendTarget, _) = targetEvent.pendingSend() ?: return
+        timelineController.retrySend(targetEvent.eventOrTransactionId, sendTarget)
             .onSuccess {
                 Timber.d("Succeed to add the message back to the send queue")
             }
@@ -522,9 +561,24 @@ class MessagesPresenter(
         )
     }
 
-    private suspend fun handleActionRedact(event: TimelineItem.Event) {
+    private suspend fun handleActionRedact(event: TimelineItem.Event, redactEventAction: MutableState<AsyncAction<Unit>>) {
+        val eventId = event.eventId
+        if (eventId == null) {
+            // The message (or its edit/redaction) was never sent, just remove it from the send queue.
+            handleActionAbortSend(event)
+        } else {
+            redactEventAction.value = MessagesState.ConfirmingRedaction(eventId)
+        }
+    }
+
+    private suspend fun handleActionAbortSend(event: TimelineItem.Event) {
+        val sendTarget = event.pendingSend()?.first ?: SendTarget.Event
+        timelineController.abortSend(event.eventOrTransactionId, sendTarget).onFailure { Timber.e(it) }
+    }
+
+    private suspend fun redact(eventOrTransactionId: EventOrTransactionId, reason: String?) {
         timelineController.invokeOnCurrentTimeline {
-            redactEvent(eventOrTransactionId = event.eventOrTransactionId, reason = null)
+            redactEvent(eventOrTransactionId = eventOrTransactionId, reason = reason)
                 .onFailure { Timber.e(it) }
         }
     }
@@ -610,11 +664,6 @@ class MessagesPresenter(
         navigator.navigateToEventDebugInfo(event.eventId, event.debugInfo)
     }
 
-    private fun handleForwardAction(event: TimelineItem.Event) {
-        if (event.eventId == null) return
-        navigator.forwardEvent(event.eventId)
-    }
-
     private fun handleReportAction(event: TimelineItem.Event) {
         if (event.eventId == null) return
         navigator.navigateToReportMessage(event.eventId, event.senderId)
@@ -631,8 +680,9 @@ class MessagesPresenter(
         event.eventId ?: return
         room.getPermalinkFor(event.eventId).fold(
             onSuccess = { permalink ->
-                clipboardHelper.copyPlainText(permalink)
-                snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_link_copied_to_clipboard))
+                clipboardHelper.copyPlainText(permalink) {
+                    snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_link_copied_to_clipboard))
+                }
             },
             onFailure = {
                 Timber.e(it, "Failed to get permalink for event ${event.eventId}")
@@ -647,16 +697,14 @@ class MessagesPresenter(
             is TimelineItemStateContent -> event.content.body
             else -> return
         }
-        clipboardHelper.copyPlainText(content)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        clipboardHelper.copyPlainText(content) {
             snackbarDispatcher.post(SnackbarMessage(R.string.screen_room_timeline_message_copied))
         }
     }
 
     private fun handleCopyCaption(event: TimelineItem.Event) {
         val content = event.content.captionOrNull() ?: return
-        clipboardHelper.copyPlainText(content)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        clipboardHelper.copyPlainText(content) {
             snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
         }
     }

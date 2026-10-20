@@ -16,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -90,6 +91,9 @@ class ConfigureRoomPresenter(
         val isKnockFeatureEnabled by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.Knock)
         }.collectAsState(initial = false)
+        val arePublicRoomsDisabled by produceState(false) {
+            value = sessionEnterpriseService.arePublicRoomsDisabledByHomeserver()
+        }
         val roomAddressValidity = remember {
             mutableStateOf<RoomAddressValidity>(RoomAddressValidity.Unknown)
         }
@@ -148,7 +152,9 @@ class ConfigureRoomPresenter(
         // 1. If we are creating a space.
         // 2. If it has a parent space.
         // 3. If knocking is enabled.
+        // 4. If the homeserver forbids public rooms.
         val parentSpace = createRoomConfig.parentSpace
+<<<<<<< HEAD
         val availableJoinRules = remember(parentSpace, isSpace, isKnockFeatureEnabled, isPrivateNotEncryptedRoomsActive) {
             when {
                 isSpace && parentSpace != null -> TODO("Adding a space to a parent space is not supported yet! How did you get here?")
@@ -157,6 +163,13 @@ class ConfigureRoomPresenter(
                     // TCHAP - Enable PrivateNotEncrypted room
                     JoinRuleItem.PrivateVisibility.PrivateNotEncrypted.takeIf { isPrivateNotEncryptedRoomsActive },
                     JoinRuleItem.PublicVisibility.Public,
+=======
+        val availableJoinRules = remember(parentSpace, isSpace, isKnockFeatureEnabled, arePublicRoomsDisabled) {
+            when {
+                isSpace && parentSpace != null -> TODO("Adding a space to a parent space is not supported yet! How did you get here?")
+                parentSpace == null || parentSpace.joinRule == JoinRule.Public -> listOfNotNull(
+                    JoinRuleItem.PublicVisibility.Public.takeIf { !arePublicRoomsDisabled },
+>>>>>>> main-element
                     JoinRuleItem.PublicVisibility.AskToJoin.takeIf { !isSpace && isKnockFeatureEnabled },
                 ).toImmutableList()
                 else -> listOfNotNull(

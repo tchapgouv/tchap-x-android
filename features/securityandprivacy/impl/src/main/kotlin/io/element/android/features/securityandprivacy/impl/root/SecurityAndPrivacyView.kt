@@ -20,7 +20,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
+<<<<<<< HEAD
 import androidx.compose.material3.ExperimentalMaterial3Api
+=======
+import androidx.compose.material3.ListItemDefaults
+>>>>>>> main-element
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -153,7 +157,6 @@ fun SecurityAndPrivacyView(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SecurityAndPrivacyToolbar(
     isSaveActionEnabled: Boolean,
@@ -234,13 +237,15 @@ private fun RoomAccessSection(
         title = stringResource(R.string.screen_security_and_privacy_room_access_section_header),
         modifier = modifier,
     ) {
-        ListItem(
-            content = { Text(text = stringResource(R.string.screen_security_and_privacy_room_access_anyone_option_title)) },
-            supportingContent = { Text(text = stringResource(R.string.screen_security_and_privacy_room_access_anyone_option_description)) },
-            trailingContent = ListItemContent.RadioButton(selected = edited == SecurityAndPrivacyRoomAccess.Anyone),
-            leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Public())),
-            onClick = { onSelectOption(SecurityAndPrivacyRoomAccess.Anyone) },
-        )
+        if (state.showAnyoneOption) {
+            ListItem(
+                content = { Text(text = stringResource(R.string.screen_security_and_privacy_room_access_anyone_option_title)) },
+                supportingContent = { Text(text = stringResource(R.string.screen_security_and_privacy_room_access_anyone_option_description)) },
+                trailingContent = ListItemContent.RadioButton(selected = edited == SecurityAndPrivacyRoomAccess.Anyone),
+                leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Public())),
+                onClick = { onSelectOption(SecurityAndPrivacyRoomAccess.Anyone) },
+            )
+        }
         if (state.showSpaceMemberOption) {
             ListItem(
                 content = { Text(text = stringResource(R.string.screen_security_and_privacy_room_access_space_members_option_title)) },

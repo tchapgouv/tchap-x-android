@@ -26,7 +26,7 @@ android {
     defaultConfig {
         buildConfigFieldStr(
             name = "MAPTILER_BASE_URL",
-            value = BuildTimeConfig.SERVICES_MAPTILER_BASE_URL ?: "https://api.maptiler.com/maps"
+            value = BuildTimeConfig.SERVICES_MAPTILER_BASE_URL,
         )
         buildConfigFieldStr(
             name = "MAPTILER_API_KEY",
@@ -37,8 +37,7 @@ android {
                 BuildTimeConfig.SERVICES_MAPTILER_APIKEY
                     ?: System.getenv("ELEMENT_ANDROID_MAPTILER_API_KEY")
                     ?: readLocalProperty("services.maptiler.apikey")
-            }
-                ?: ""
+            },
         )
         buildConfigFieldStr(
             name = "MAPTILER_LIGHT_MAP_ID",
@@ -49,9 +48,7 @@ android {
                 BuildTimeConfig.SERVICES_MAPTILER_LIGHT_MAPID
                     ?: System.getenv("ELEMENT_ANDROID_MAPTILER_LIGHT_MAP_ID")
                     ?: readLocalProperty("services.maptiler.lightMapId")
-            }
-            // fall back to maptiler's default light map.
-                ?: "basic-v2"
+            },
         )
         buildConfigFieldStr(
             name = "MAPTILER_DARK_MAP_ID",
@@ -62,9 +59,7 @@ android {
                 BuildTimeConfig.SERVICES_MAPTILER_DARK_MAPID
                     ?: System.getenv("ELEMENT_ANDROID_MAPTILER_DARK_MAP_ID")
                     ?: readLocalProperty("services.maptiler.darkMapId")
-            }
-            // fall back to maptiler's default dark map.
-                ?: "basic-v2-dark"
+            },
         )
     }
 }
@@ -74,13 +69,14 @@ dependencies {
     implementation(projects.libraries.designsystem)
     implementation(projects.libraries.core)
     implementation(projects.libraries.matrix.api)
-    implementation(projects.libraries.matrixui)
     implementation(projects.libraries.uiStrings)
-    implementation(projects.libraries.wellknown.api)
     implementation(projects.features.enterprise.api)
     implementation(libs.coil.compose)
+<<<<<<< HEAD
     implementation(libs.maplibre)
     implementation(libs.datetime)
+=======
+>>>>>>> main-element
 
     testCommonDependencies(libs)
 }

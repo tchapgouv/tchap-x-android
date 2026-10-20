@@ -122,8 +122,9 @@ class RoomMemberDetailsPresenter(
                     encryptionService.withdrawVerification(roomMemberId)
                 }
                 is UserProfileEvent.CopyToClipboard -> {
-                    clipboardHelper.copyPlainText(event.text)
-                    snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
+                    clipboardHelper.copyPlainText(event.text) {
+                        snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
+                    }
                 }
                 else -> userProfileState.eventSink(event)
             }

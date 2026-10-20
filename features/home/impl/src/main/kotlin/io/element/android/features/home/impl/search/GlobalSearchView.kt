@@ -12,24 +12,32 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -44,6 +52,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -62,13 +71,17 @@ import io.element.android.libraries.designsystem.modifiers.niceClickable
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.text.roundToPx
+import io.element.android.libraries.designsystem.text.toDp
+import io.element.android.libraries.designsystem.theme.components.ButtonSize
 import io.element.android.libraries.designsystem.theme.components.FilledTextField
+import io.element.android.libraries.designsystem.theme.components.HorizontalDivider
 import io.element.android.libraries.designsystem.theme.components.Icon
 import io.element.android.libraries.designsystem.theme.components.IconButton
 import io.element.android.libraries.designsystem.theme.components.LinearProgressIndicator
 import io.element.android.libraries.designsystem.theme.components.Scaffold
 import io.element.android.libraries.designsystem.theme.components.SegmentedButton
 import io.element.android.libraries.designsystem.theme.components.Text
+import io.element.android.libraries.designsystem.theme.components.TextButton
 import io.element.android.libraries.designsystem.theme.components.TopAppBar
 import io.element.android.libraries.designsystem.utils.OnVisibleRangeChangeEffect
 import io.element.android.libraries.designsystem.utils.lazyColumnContentPadding
@@ -80,6 +93,7 @@ import io.element.android.libraries.matrix.ui.components.AttachmentThumbnailInfo
 import io.element.android.libraries.matrix.ui.model.getAvatarData
 import io.element.android.libraries.ui.strings.CommonStrings
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
@@ -103,7 +117,10 @@ fun GlobalSearchView(
                 onBackButtonClick = {
                     state.eventSink(GlobalSearchEvent.ToggleSearchVisibility)
                 },
-                onSelectSearchResult = onSelectSearchResult,
+                onSelectSearchResult = { roomId, eventId ->
+                    onSelectSearchResult(roomId, eventId)
+                    state.eventSink(GlobalSearchEvent.SaveRoomToHistory(roomId))
+                },
             )
         }
     }
@@ -115,63 +132,11 @@ private fun GlobalSearchContent(
     onBackButtonClick: () -> Unit,
     onSelectSearchResult: (RoomId, EventId?) -> Unit,
 ) {
-    val borderColor = MaterialTheme.colorScheme.tertiary
-    val strokeWidth = 1.dp
-
-    val drawBottomLineModifier = Modifier.drawBehind {
-        drawLine(
-            color = borderColor,
-            start = Offset(0f, size.height),
-            end = Offset(size.width, size.height),
-            strokeWidth = strokeWidth.value
-        )
-    }
-
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = { BackButton(onClick = onBackButtonClick) },
-                title = {
-                    // The stateSaver will keep the selection state when returning to this UI
-                    val focusRequester = remember { FocusRequester() }
-                    val searchLabel = stringResource(CommonStrings.action_search)
-                    FilledTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .focusRequester(focusRequester)
-                            .semantics { contentDescription = searchLabel },
-                        state = state.queryState,
-                        lineLimits = TextFieldLineLimits.SingleLine,
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent,
-                            disabledContainerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                            disabledIndicatorColor = Color.Transparent,
-                            errorIndicatorColor = Color.Transparent,
-                        ),
-                        trailingIcon = if (state.queryState.text.isNotEmpty()) {
-                            @Composable {
-                                IconButton(onClick = { state.eventSink(GlobalSearchEvent.ClearQuery) }) {
-                                    Icon(
-                                        imageVector = CompoundIcons.Close(),
-                                        contentDescription = stringResource(CommonStrings.a11y_clear_search_field)
-                                    )
-                                }
-                            }
-                        } else {
-                            null
-                        },
-                    )
-
-                    LaunchedEffect(Unit) {
-                        if (!focusRequester.restoreFocusedChild()) {
-                            focusRequester.requestFocus()
-                        }
-                        focusRequester.saveFocusedChild()
-                    }
-                }
+                title = { SearchTopAppBarContent(state = state) }
             )
         },
         contentWindowInsets = scaffoldScrollableContentInsets,
@@ -179,27 +144,9 @@ private fun GlobalSearchContent(
         Column(
             modifier = Modifier.padding(padding),
         ) {
-            SingleChoiceSegmentedButtonRow(
-                modifier = drawBottomLineModifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
-            ) {
-                SegmentedButton(
-                    index = 0,
-                    count = 2,
-                    selected = state.currentTarget == GlobalSearchTarget.ROOMS,
-                    onClick = { state.eventSink(GlobalSearchEvent.UpdateTarget(GlobalSearchTarget.ROOMS)) },
-                    text = stringResource(R.string.search_section_chats),
-                )
+            HorizontalDivider(color = ElementTheme.colors.borderInteractivePrimary)
 
-                SegmentedButton(
-                    index = 1,
-                    count = 2,
-                    selected = state.currentTarget == GlobalSearchTarget.MESSAGES,
-                    onClick = { state.eventSink(GlobalSearchEvent.UpdateTarget(GlobalSearchTarget.MESSAGES)) },
-                    text = stringResource(R.string.search_section_messages),
-                )
-            }
+            SearchTargetSelector(state = state)
 
             val lazyListState = rememberLazyListState()
             OnVisibleRangeChangeEffect(lazyListState) { visibleRange ->
@@ -212,9 +159,25 @@ private fun GlobalSearchContent(
                 state = lazyListState,
             ) {
                 val results = state.results.dataOrNull()
+                val historyResults = state.history.dataOrNull()?.toImmutableList() ?: persistentListOf()
                 when {
-                    state.results.isUninitialized() -> startSearching()
-                    state.results.isLoading() -> loading()
+                    state.results.isUninitialized() -> if (state.queryState.text.isBlank() && historyResults.isNotEmpty()) {
+                        searchHistory(
+                            historyResults = historyResults,
+                            onRemoveResult = { item -> state.eventSink(GlobalSearchEvent.RemoveSearchHistoryResult(item)) },
+                            onClearAllResults = { state.eventSink(GlobalSearchEvent.ClearSearchHistory) },
+                        ) { result ->
+                            when (result) {
+                                is SearchHistoryListItem.Query -> Unit
+                                is SearchHistoryListItem.Room -> onSelectSearchResult(result.roomInfo.id, null)
+                            }
+
+                            state.eventSink(GlobalSearchEvent.SearchHistoryResultSelected(result))
+                        }
+                    } else {
+                        startSearching()
+                    }
+                    state.results.isLoading() -> loadingResults()
                     results?.isEmpty() == true -> emptySearchResults(query = state.queryState.text.toString())
                     results is GlobalSearchResults.RoomListResults -> roomListResults(
                         results = results.results,
@@ -227,6 +190,89 @@ private fun GlobalSearchContent(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun SearchTopAppBarContent(state: GlobalSearchState) {
+    // The stateSaver will keep the selection state when returning to this UI
+    val focusRequester = remember { FocusRequester() }
+    val searchLabel = stringResource(CommonStrings.action_search)
+    FilledTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester)
+            .semantics { contentDescription = searchLabel },
+        state = state.queryState,
+        lineLimits = TextFieldLineLimits.SingleLine,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActionHandler { performDefault ->
+            state.eventSink(GlobalSearchEvent.SaveQueryToHistory)
+            performDefault()
+        },
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+        ),
+        trailingIcon = if (state.queryState.text.isNotEmpty()) {
+            @Composable {
+                IconButton(
+                    modifier = Modifier.clip(CircleShape).size(20.dp),
+                    onClick = { state.eventSink(GlobalSearchEvent.ClearQuery) },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = ElementTheme.colors.iconSecondary,
+                        contentColor = ElementTheme.colors.iconOnSolidPrimary
+                    )
+                ) {
+                    Icon(
+                        modifier = Modifier.size(16.dp),
+                        imageVector = CompoundIcons.Close(),
+                        contentDescription = stringResource(CommonStrings.a11y_clear_search_field),
+                    )
+                }
+            }
+        } else {
+            null
+        },
+    )
+
+    LaunchedEffect(Unit) {
+        if (!focusRequester.restoreFocusedChild()) {
+            focusRequester.requestFocus()
+        }
+        focusRequester.saveFocusedChild()
+    }
+}
+
+@Composable
+private fun SearchTargetSelector(state: GlobalSearchState) {
+    if (state.queryState.text.isEmpty()) return
+
+    SingleChoiceSegmentedButtonRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
+    ) {
+        SegmentedButton(
+            index = 0,
+            count = 2,
+            selected = state.currentTarget == GlobalSearchTarget.ROOMS,
+            onClick = { state.eventSink(GlobalSearchEvent.UpdateTarget(GlobalSearchTarget.ROOMS)) },
+            text = stringResource(R.string.search_section_chats),
+        )
+
+        SegmentedButton(
+            index = 1,
+            count = 2,
+            selected = state.currentTarget == GlobalSearchTarget.MESSAGES,
+            onClick = { state.eventSink(GlobalSearchEvent.UpdateTarget(GlobalSearchTarget.MESSAGES)) },
+            text = stringResource(R.string.search_section_messages),
+        )
     }
 }
 
@@ -243,7 +289,130 @@ private fun LazyListScope.startSearching() {
     }
 }
 
-private fun LazyListScope.loading() {
+private fun LazyListScope.searchHistory(
+    historyResults: ImmutableList<SearchHistoryListItem>,
+    onRemoveResult: (SearchHistoryListItem) -> Unit,
+    onClearAllResults: () -> Unit,
+    onSelectSearchHistoryResult: (SearchHistoryListItem) -> Unit,
+) {
+    item {
+        Row(
+            modifier = Modifier.padding(top = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                modifier = Modifier.padding(start = 16.dp).weight(1f),
+                text = stringResource(R.string.screen_search_recent_searches_section_title),
+                style = ElementTheme.typography.fontBodyLgMedium,
+                color = ElementTheme.colors.textPrimary,
+            )
+
+            TextButton(
+                text = stringResource(CommonStrings.action_clear_all),
+                size = ButtonSize.Small,
+                colors = ButtonDefaults.textButtonColors(contentColor = ElementTheme.colors.textActionAccent),
+                onClick = onClearAllResults,
+            )
+        }
+    }
+    items(
+        items = historyResults,
+        key = { it.id },
+    ) { result ->
+        val twoLineHeight =
+            // Vertical padding
+            12.dp * 2 +
+            // Text line heights
+                ElementTheme.typography.fontBodyMdRegular.lineHeight.toDp() +
+                ElementTheme.typography.fontBodyLgRegular.lineHeight.toDp()
+        Row(
+            modifier = Modifier
+                .clickable(onClick = { onSelectSearchHistoryResult(result) })
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 2.dp)
+                .height(twoLineHeight),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            when (result) {
+                is SearchHistoryListItem.Query -> {
+                    Icon(
+                        modifier = Modifier.size(32.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(ElementTheme.colors.bgSubtleSecondary)
+                            .padding(6.dp),
+                        imageVector = CompoundIcons.History(),
+                        contentDescription = null,
+                        tint = ElementTheme.colors.iconPrimary,
+                    )
+
+                    Text(
+                        modifier = Modifier.weight(1f, fill = true),
+                        text = result.term,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = ElementTheme.typography.fontBodyLgRegular,
+                    )
+                }
+                is SearchHistoryListItem.Room -> {
+                    val heroAvatars = remember(result.roomInfo.heroes) {
+                        result.roomInfo.heroes.map { it.getAvatarData(AvatarSize.SearchRoomListItem) }.toImmutableList()
+                    }
+                    Avatar(
+                        avatarData = result.roomInfo.getAvatarData(AvatarSize.SearchRoomListItem),
+                        avatarType = AvatarType.Room(
+                            heroes = heroAvatars,
+                            isTombstoned = result.roomInfo.successorRoom != null,
+                        ),
+                    )
+
+                    Column(modifier = Modifier.weight(1f, fill = true)) {
+                        Text(
+                            text = result.roomInfo.name.orEmpty(),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = ElementTheme.typography.fontBodyLgRegular,
+                            color = ElementTheme.colors.textPrimary,
+                        )
+
+                        if (result.roomInfo.isDm) {
+                            val dmUserId = result.roomInfo.heroes.firstOrNull()?.userId
+                            dmUserId?.let { userId ->
+                                Text(
+                                    text = userId.value,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = ElementTheme.typography.fontBodyMdRegular,
+                                    color = ElementTheme.colors.textSecondary,
+                                )
+                            }
+                        } else if (result.roomInfo.canonicalAlias != null) {
+                            Text(
+                                text = result.roomInfo.canonicalAlias?.value!!,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                style = ElementTheme.typography.fontBodyMdRegular,
+                                color = ElementTheme.colors.textSecondary,
+                            )
+                        }
+                    }
+                }
+            }
+
+            Icon(
+                modifier = Modifier.minimumInteractiveComponentSize()
+                    .niceClickable {
+                        onRemoveResult(result)
+                    },
+                imageVector = CompoundIcons.Close(),
+                contentDescription = stringResource(CommonStrings.action_remove),
+                tint = ElementTheme.colors.iconSecondary,
+            )
+        }
+    }
+}
+
+private fun LazyListScope.loadingResults() {
     item {
         LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
     }
@@ -325,7 +494,7 @@ private fun LazyListScope.roomListResults(
 }
 
 private fun LazyListScope.messageSearchResults(
-    results: ImmutableList<MessageSearchResultItem>,
+    results: ImmutableList<MessageSearchListItem>,
     onSearchResultSelected: (RoomId, EventId?) -> Unit,
 ) {
     if (results.isNotEmpty()) {
@@ -345,7 +514,7 @@ private fun LazyListScope.messageSearchResults(
     ) { index, result ->
         val clickableModifier = Modifier.niceClickable(onClick = { onSearchResultSelected(result.roomId, result.eventId) })
         when (result) {
-            is MessageSearchResultItem.Message -> TextMessageSearchResultItemView(
+            is MessageSearchListItem.Message -> TextMessageSearchResultItemView(
                 modifier = clickableModifier.addSeparatorLine(color = ElementTheme.colors.separatorSecondary, isLastItem = index == results.lastIndex),
                 avatarData = result.roomInfo.getAvatarData(AvatarSize.RoomListItem),
                 avatarType = AvatarType.Room(
@@ -356,7 +525,7 @@ private fun LazyListScope.messageSearchResults(
                 body = result.body,
                 formattedTimestamp = result.formattedTimestamp,
             )
-            is MessageSearchResultItem.Media -> {
+            is MessageSearchListItem.Media -> {
                 MediaMessageSearchResultItemView(
                     modifier = clickableModifier.addSeparatorLine(color = ElementTheme.colors.separatorSecondary, isLastItem = index == results.lastIndex),
                     avatarData = result.roomInfo.getAvatarData(AvatarSize.RoomListItem),

@@ -182,6 +182,9 @@ if [[ ! -d ${buildToolsPath} ]]; then
     exit 1
 fi
 
+# Check that the Matrix Rust SDK is not a nightly version
+./tools/release/check_no_nightly_sdk.sh || exit 1
+
 # Check if git flow is enabled
 gitFlowDevelop=$(git config gitflow.branch.develop)
 if [[ ${gitFlowDevelop} != "" ]]

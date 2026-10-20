@@ -51,18 +51,22 @@ if [[ -z ${REPO} ]]; then
   exit 1
 fi
 
-echo "Deleting previous screenshots"
-./gradlew removeOldSnapshots --stacktrace --warn $GRADLE_ARGS
-
+# Note: the previous screenshots are deliberately kept, so that Paparazzi can leave the ones that only
+# differ by less than `maxPercentDifference` untouched instead of rewriting their Git LFS blob. The
+# screenshots of previews that no longer exist are pruned afterwards by `pruneObsoleteSnapshots`, which
+# `recordPaparazziDebug` is finalized by.
 echo "Record screenshots"
 ./gradlew recordPaparazziTchapWithpinningDebug --stacktrace $GRADLE_ARGS
 
+<<<<<<< HEAD
 echo "Deleting previous screenshots"
 ./gradlew removeOldScreenshots --stacktrace --warn $GRADLE_ARGS
 
 echo "Record screenshots (Compound)"
 ./gradlew :libraries:compound:recordRoborazziTchapWithpinningDebug --stacktrace -PpreDexEnable=false --max-workers 4 --warn $GRADLE_ARGS
 
+=======
+>>>>>>> main-element
 echo "Committing changes"
 git config http.sslVerify false
 

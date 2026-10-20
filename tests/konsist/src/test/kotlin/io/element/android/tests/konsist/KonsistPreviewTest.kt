@@ -111,6 +111,7 @@ class KonsistPreviewTest {
         "MessageComposerViewVoicePreview",
         "MessagesReactionButtonAddPreview",
         "MessagesReactionButtonExtraPreview",
+        "MessagesViewSelectionModePreview",
         "MessagesViewWithIdentityChangePreview",
         "PendingMemberRowWithLongNamePreview",
         "PinUnlockViewInAppPreview",
@@ -134,7 +135,11 @@ class KonsistPreviewTest {
         "SasEmojisPreview",
         "SecureBackupSetupViewChangePreview",
         "SelectedUserCannotRemovePreview",
+<<<<<<< HEAD
         "SelectedUserExternalPreview",
+=======
+        "SelectionIndicatorSelectedPreview",
+>>>>>>> main-element
         "SpaceMembersViewNoHeroesPreview",
         "SyncStateViewServerUnreachablePreview",
         "TextComposerAddCaptionPreview",
@@ -181,6 +186,7 @@ class KonsistPreviewTest {
         "TimelineItemVoiceViewScanningContentPreview",
         "TimelineItemVoiceViewUnifiedPreview",
         "TimelineViewMessageShieldPreview",
+        "TimelineViewSelectionModePreview",
         "TimelineViewWithReadMarkerBothIndicatorsPreview",
         "TimelineViewWithReadMarkerJumpToUnreadIndicatorOnlyPreview",
         "UserAvatarColorsPreview",

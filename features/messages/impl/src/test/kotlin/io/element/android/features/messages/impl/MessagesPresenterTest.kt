@@ -28,8 +28,12 @@ import io.element.android.features.messages.impl.pinned.banner.aLoadedPinnedMess
 import io.element.android.features.messages.impl.threads.list.aThreadListItem
 import io.element.android.features.messages.impl.timeline.FakeMarkAsFullyRead
 import io.element.android.features.messages.impl.timeline.MarkAsFullyRead
+import io.element.android.features.messages.impl.timeline.SelectionAction
+import io.element.android.features.messages.impl.timeline.SelectionState
 import io.element.android.features.messages.impl.timeline.TimelineController
 import io.element.android.features.messages.impl.timeline.TimelineEvent
+import io.element.android.features.messages.impl.timeline.TimelineState
+import io.element.android.features.messages.impl.timeline.aTimelineItemEvent
 import io.element.android.features.messages.impl.timeline.aTimelineState
 import io.element.android.features.messages.impl.timeline.model.TimelineItemThreadInfo
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemFileContent
@@ -45,6 +49,7 @@ import io.element.android.features.messages.test.timeline.voicemessages.composer
 import io.element.android.features.roomcall.api.aStandByCallState
 import io.element.android.features.roommembermoderation.api.RoomMemberModerationState
 import io.element.android.libraries.androidutils.clipboard.FakeClipboardHelper
+import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
@@ -70,21 +75,24 @@ import io.element.android.libraries.matrix.api.room.StateEventType
 import io.element.android.libraries.matrix.api.room.history.RoomHistoryVisibility
 import io.element.android.libraries.matrix.api.room.tombstone.SuccessorRoom
 import io.element.android.libraries.matrix.api.timeline.Timeline
+import io.element.android.libraries.matrix.api.timeline.TimelineProvider
 import io.element.android.libraries.matrix.api.timeline.item.TimelineItemDebugInfo
 import io.element.android.libraries.matrix.api.timeline.item.event.EventOrTransactionId
 import io.element.android.libraries.matrix.api.timeline.item.event.LocalEventSendState
 import io.element.android.libraries.matrix.api.timeline.item.event.toEventOrTransactionId
 import io.element.android.libraries.matrix.test.AN_AVATAR_URL
 import io.element.android.libraries.matrix.test.AN_EVENT_ID
+import io.element.android.libraries.matrix.test.AN_EVENT_ID_2
 import io.element.android.libraries.matrix.test.AN_EXCEPTION
 import io.element.android.libraries.matrix.test.A_CAPTION
+import io.element.android.libraries.matrix.test.A_REASON
 import io.element.android.libraries.matrix.test.A_ROOM_ID
 import io.element.android.libraries.matrix.test.A_SESSION_ID
 import io.element.android.libraries.matrix.test.A_SESSION_ID_2
 import io.element.android.libraries.matrix.test.A_THREAD_ID
+import io.element.android.libraries.matrix.test.A_TRANSACTION_ID
 import io.element.android.libraries.matrix.test.A_USER_ID
 import io.element.android.libraries.matrix.test.A_USER_ID_2
-import io.element.android.libraries.matrix.test.core.FakeSendHandle
 import io.element.android.libraries.matrix.test.core.aBuildMeta
 import io.element.android.libraries.matrix.test.encryption.FakeEncryptionService
 import io.element.android.libraries.matrix.test.permalink.FakePermalinkParser
@@ -106,6 +114,7 @@ import io.element.android.tests.testutils.FakeLifecycleOwner
 import io.element.android.tests.testutils.WarmUpRule
 import io.element.android.tests.testutils.consumeItemsUntilPredicate
 import io.element.android.tests.testutils.consumeItemsUntilTimeout
+import io.element.android.tests.testutils.lambda.any
 import io.element.android.tests.testutils.lambda.assert
 import io.element.android.tests.testutils.lambda.lambdaError
 import io.element.android.tests.testutils.lambda.lambdaRecorder
@@ -113,6 +122,7 @@ import io.element.android.tests.testutils.lambda.value
 import io.element.android.tests.testutils.testCoroutineDispatchers
 import io.element.android.tests.testutils.testWithLifecycleOwner
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -125,7 +135,6 @@ import org.junit.Test
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
-@Suppress("LargeClass")
 class MessagesPresenterTest {
     @get:Rule
     val warmUpRule = WarmUpRule()
@@ -285,17 +294,37 @@ class MessagesPresenterTest {
     }
 
     @Test
-    fun `present - handle action forward`() = runTest {
-        val onForwardEventClickLambda = lambdaRecorder<EventId, Unit> { }
-        val navigator = FakeMessagesNavigator(
-            onForwardEventClickLambda = onForwardEventClickLambda,
+    fun `present - handle action forward enters selection mode when multi select is enabled`() = runTest {
+        val timelineEventSink = lambdaRecorder<TimelineEvent, Unit> { }
+        val presenter = createMessagesPresenter(
+            timelineEventSink = timelineEventSink,
+            featureFlagService = FakeFeatureFlagService(initialState = mapOf(FeatureFlags.MessageMultiSelect.key to true)),
         )
-        val presenter = createMessagesPresenter(navigator = navigator)
         presenter.testWithLifecycleOwner {
             val initialState = awaitItem()
             initialState.eventSink(MessagesEvent.HandleAction(TimelineItemAction.Forward, aMessageEvent()))
             assertThat(awaitItem().actionListState.target).isEqualTo(ActionListState.Target.None)
-            onForwardEventClickLambda.assertions().isCalledOnce().with(value(AN_EVENT_ID))
+            timelineEventSink.assertions().isCalledOnce()
+                .with(value(TimelineEvent.EnterSelectionMode(SelectionAction.Forward, AN_EVENT_ID)))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `present - handle action forward navigates directly when multi select is disabled`() = runTest {
+        val onForwardEventClickLambda = lambdaRecorder<List<EventId>, TimelineProvider, Unit> { _, _ -> }
+        val navigator = FakeMessagesNavigator(
+            onForwardEventClickLambda = onForwardEventClickLambda,
+        )
+        val presenter = createMessagesPresenter(
+            navigator = navigator,
+            featureFlagService = FakeFeatureFlagService(initialState = mapOf(FeatureFlags.MessageMultiSelect.key to false)),
+        )
+        presenter.testWithLifecycleOwner {
+            val initialState = awaitItem()
+            initialState.eventSink(MessagesEvent.HandleAction(TimelineItemAction.Forward, aMessageEvent()))
+            assertThat(awaitItem().actionListState.target).isEqualTo(ActionListState.Target.None)
+            onForwardEventClickLambda.assertions().isCalledOnce().with(value(listOf(AN_EVENT_ID)), any())
         }
     }
 
@@ -557,10 +586,83 @@ class MessagesPresenterTest {
             val initialState = awaitItem()
             val messageEvent = aMessageEvent()
             initialState.eventSink(MessagesEvent.HandleAction(TimelineItemAction.Redact, messageEvent))
-            awaitItem()
+            advanceUntilIdle()
+            val confirmingState = expectMostRecentItem()
+            assertThat(confirmingState.redactEventAction).isEqualTo(MessagesState.ConfirmingRedaction(messageEvent.eventId!!))
+            assert(redactEventLambda).isNeverCalled()
+            confirmingState.eventSink(MessagesEvent.ConfirmRedact(A_REASON))
+            advanceUntilIdle()
+            assertThat(expectMostRecentItem().redactEventAction).isEqualTo(AsyncAction.Uninitialized)
+            assert(redactEventLambda)
+                .isCalledOnce()
+                .with(value(messageEvent.eventOrTransactionId), value(A_REASON))
+        }
+    }
+
+    @Test
+    fun `present - handle action redact - a blank reason is not sent`() = runTest {
+        val coroutineDispatchers = testCoroutineDispatchers(useUnconfinedTestDispatcher = true)
+        val liveTimeline = FakeTimeline()
+        val redactEventLambda = lambdaRecorder { _: EventOrTransactionId, _: String? -> Result.success(Unit) }
+        liveTimeline.redactEventLambda = redactEventLambda
+        val presenter = createMessagesPresenter(
+            timeline = liveTimeline,
+            coroutineDispatchers = coroutineDispatchers,
+        )
+        presenter.testWithLifecycleOwner {
+            val initialState = awaitItem()
+            val messageEvent = aMessageEvent()
+            initialState.eventSink(MessagesEvent.HandleAction(TimelineItemAction.Redact, messageEvent))
+            advanceUntilIdle()
+            expectMostRecentItem().eventSink(MessagesEvent.ConfirmRedact("  "))
+            advanceUntilIdle()
+            assertThat(expectMostRecentItem().redactEventAction).isEqualTo(AsyncAction.Uninitialized)
             assert(redactEventLambda)
                 .isCalledOnce()
                 .with(value(messageEvent.eventOrTransactionId), value(null))
+        }
+    }
+
+    @Test
+    fun `present - handle action redact - cancelling does not redact`() = runTest {
+        val coroutineDispatchers = testCoroutineDispatchers(useUnconfinedTestDispatcher = true)
+        val liveTimeline = FakeTimeline()
+        val redactEventLambda = lambdaRecorder { _: EventOrTransactionId, _: String? -> Result.success(Unit) }
+        liveTimeline.redactEventLambda = redactEventLambda
+        val presenter = createMessagesPresenter(
+            timeline = liveTimeline,
+            coroutineDispatchers = coroutineDispatchers,
+        )
+        presenter.testWithLifecycleOwner {
+            val initialState = awaitItem()
+            initialState.eventSink(MessagesEvent.HandleAction(TimelineItemAction.Redact, aMessageEvent()))
+            advanceUntilIdle()
+            expectMostRecentItem().eventSink(MessagesEvent.CancelRedact)
+            advanceUntilIdle()
+            assertThat(expectMostRecentItem().redactEventAction).isEqualTo(AsyncAction.Uninitialized)
+            assert(redactEventLambda).isNeverCalled()
+        }
+    }
+
+    @Test
+    fun `present - handle action redact - a message which was never sent is removed from the send queue without asking`() = runTest {
+        val coroutineDispatchers = testCoroutineDispatchers(useUnconfinedTestDispatcher = true)
+        val abortSendLambda = lambdaRecorder { _: EventOrTransactionId -> Result.success(true) }
+        val presenter = createMessagesPresenter(
+            timeline = FakeTimeline(abortSendResult = abortSendLambda),
+            coroutineDispatchers = coroutineDispatchers,
+        )
+        presenter.testWithLifecycleOwner {
+            val initialState = awaitItem()
+            val localEcho = aMessageEvent(
+                eventId = null,
+                transactionId = A_TRANSACTION_ID,
+                sendState = LocalEventSendState.Failed.Unknown("Error"),
+            )
+            initialState.eventSink(MessagesEvent.HandleAction(TimelineItemAction.Redact, localEcho))
+            advanceUntilIdle()
+            assertThat(expectMostRecentItem().redactEventAction).isEqualTo(AsyncAction.Uninitialized)
+            abortSendLambda.assertions().isCalledOnce().with(value(localEcho.eventOrTransactionId))
         }
     }
 
@@ -1074,29 +1176,27 @@ class MessagesPresenterTest {
 
     @Test
     fun `present - handle action retry sending`() = runTest {
-        val retryLambda = lambdaRecorder<Result<Unit>> { Result.success(Unit) }
+        val retryLambda = lambdaRecorder { _: EventOrTransactionId -> Result.success(true) }
         val messageEvent = aMessageEvent(
             sendState = LocalEventSendState.Failed.Unknown("Error"),
-            sendHandleProvider = { FakeSendHandle(retryLambda = retryLambda) },
         )
-        val presenter = createMessagesPresenter()
+        val presenter = createMessagesPresenter(timeline = FakeTimeline(retrySendResult = retryLambda))
         presenter.testWithLifecycleOwner {
             skipItems(1)
             val initialState = awaitItem()
             initialState.eventSink(MessagesEvent.HandleAction(TimelineItemAction.RetrySending, messageEvent))
             advanceUntilIdle()
-            retryLambda.assertions().isCalledOnce()
+            retryLambda.assertions().isCalledOnce().with(value(messageEvent.eventOrTransactionId))
         }
     }
 
     @Test
     fun `present - handle action retry sending - failure is ignored`() = runTest {
-        val retryLambda = lambdaRecorder<Result<Unit>> { Result.failure(AN_EXCEPTION) }
+        val retryLambda = lambdaRecorder { _: EventOrTransactionId -> Result.failure<Boolean>(AN_EXCEPTION) }
         val messageEvent = aMessageEvent(
             sendState = LocalEventSendState.Failed.Unknown("Error"),
-            sendHandleProvider = { FakeSendHandle(retryLambda = retryLambda) },
         )
-        val presenter = createMessagesPresenter()
+        val presenter = createMessagesPresenter(timeline = FakeTimeline(retrySendResult = retryLambda))
         presenter.testWithLifecycleOwner {
             skipItems(1)
             val initialState = awaitItem()
@@ -1107,18 +1207,16 @@ class MessagesPresenterTest {
     }
 
     @Test
-    fun `present - handle action retry sending - no send handle, it should have no effect`() = runTest {
-        val messageEvent = aMessageEvent(
-            sendState = LocalEventSendState.Failed.Unknown("Error"),
-            sendHandleProvider = { null },
-        )
-        val presenter = createMessagesPresenter()
+    fun `present - handle action retry sending - no pending send state, it should have no effect`() = runTest {
+        val retryLambda = lambdaRecorder { _: EventOrTransactionId -> Result.success(true) }
+        val messageEvent = aMessageEvent(sendState = null)
+        val presenter = createMessagesPresenter(timeline = FakeTimeline(retrySendResult = retryLambda))
         presenter.testWithLifecycleOwner {
             skipItems(1)
             val initialState = awaitItem()
             initialState.eventSink(MessagesEvent.HandleAction(TimelineItemAction.RetrySending, messageEvent))
             advanceUntilIdle()
-            // No op!
+            retryLambda.assertions().isNeverCalled()
         }
     }
 
@@ -1388,7 +1486,7 @@ class MessagesPresenterTest {
             assertThat(initialState.threads.hasThreads).isFalse()
 
             // Enable the feature flag, now it should reflect the thread list state
-            featureFlagService.setFeatureEnabled(FeatureFlags.RoomThreadList, true)
+            featureFlagService.setFeatureEnabled(FeatureFlags.Threads, true)
             skipItems(1)
             assertThat(awaitItem().threads.hasThreads).isTrue()
 
@@ -1424,6 +1522,49 @@ class MessagesPresenterTest {
         canPinUnpin = canPinUnpin,
     )
 
+    @Test
+    fun `present - confirm selection action forwards the selection in timeline order`() = runTest {
+        val onForwardEventClickLambda = lambdaRecorder<List<EventId>, TimelineProvider, Unit> { _, _ -> }
+        val navigator = FakeMessagesNavigator(onForwardEventClickLambda = onForwardEventClickLambda)
+        val timelineEventSink = lambdaRecorder<TimelineEvent, Unit> { }
+        val presenter = createMessagesPresenter(
+            navigator = navigator,
+            timelineEventSink = timelineEventSink,
+            timelineState = aTimelineState(
+                // The timeline is rendered from the most recent event to the oldest one.
+                timelineItems = persistentListOf(
+                    aTimelineItemEvent(eventId = AN_EVENT_ID_2),
+                    aTimelineItemEvent(eventId = AN_EVENT_ID),
+                ),
+                selectionState = SelectionState.Active(
+                    SelectionAction.Forward,
+                    persistentSetOf(AN_EVENT_ID_2, AN_EVENT_ID),
+                ),
+                eventSink = timelineEventSink,
+            ),
+        )
+        presenter.testWithLifecycleOwner {
+            val initialState = awaitItem()
+            initialState.eventSink(MessagesEvent.ConfirmSelectionAction)
+            onForwardEventClickLambda.assertions().isCalledOnce().with(value(listOf(AN_EVENT_ID, AN_EVENT_ID_2)), any())
+            timelineEventSink.assertions().isCalledOnce().with(value(TimelineEvent.ExitSelectionMode))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `present - confirm selection action does nothing when no selection is active`() = runTest {
+        val onForwardEventClickLambda = lambdaRecorder<List<EventId>, TimelineProvider, Unit> { _, _ -> }
+        val navigator = FakeMessagesNavigator(onForwardEventClickLambda = onForwardEventClickLambda)
+        val presenter = createMessagesPresenter(navigator = navigator)
+        presenter.testWithLifecycleOwner {
+            val initialState = awaitItem()
+            initialState.eventSink(MessagesEvent.ConfirmSelectionAction)
+            onForwardEventClickLambda.assertions().isNeverCalled()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
     private fun TestScope.createMessagesPresenter(
         coroutineDispatchers: CoroutineDispatchers = testCoroutineDispatchers(),
         timeline: Timeline = FakeTimeline(),
@@ -1446,6 +1587,7 @@ class MessagesPresenterTest {
         clipboardHelper: FakeClipboardHelper = FakeClipboardHelper(),
         analyticsService: FakeAnalyticsService = FakeAnalyticsService(),
         timelineEventSink: (TimelineEvent) -> Unit = {},
+        timelineState: TimelineState = aTimelineState(eventSink = timelineEventSink),
         permalinkParser: PermalinkParser = FakePermalinkParser(),
         messageComposerPresenter: Presenter<MessageComposerState> = Presenter {
             aMessageComposerState(
@@ -1468,7 +1610,7 @@ class MessagesPresenterTest {
             room = joinedRoom,
             composerPresenter = messageComposerPresenter,
             voiceMessageComposerPresenterFactory = FakeDefaultVoiceMessageComposerPresenterFactory(backgroundScope),
-            timelinePresenter = { aTimelineState(eventSink = timelineEventSink) },
+            timelinePresenter = { timelineState },
             timelineProtectionPresenter = { aTimelineProtectionState() },
             identityChangeStatePresenter = { anIdentityChangeState() },
             linkPresenter = { aLinkState() },
@@ -1484,7 +1626,12 @@ class MessagesPresenterTest {
             clipboardHelper = clipboardHelper,
             htmlConverterProvider = FakeHtmlConverterProvider(),
             buildMeta = aBuildMeta(),
-            timelineController = TimelineController(joinedRoom, timeline),
+            timelineController = TimelineController(
+                room = joinedRoom,
+                liveTimeline = timeline,
+                roomCoroutineScope = backgroundScope,
+                dispatchers = coroutineDispatchers,
+            ),
             permalinkParser = permalinkParser,
             analyticsService = analyticsService,
             encryptionService = encryptionService,

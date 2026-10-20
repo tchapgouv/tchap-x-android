@@ -98,6 +98,7 @@
   <string name="action_choose_file">"Choose file"</string>
   <string name="action_choose_photo">"Choose photo"</string>
   <string name="action_clear">"Clear"</string>
+  <string name="action_clear_all">"Clear all"</string>
   <string name="action_close">"Close"</string>
   <string name="action_complete_verification">"Complete verification"</string>
   <string name="action_confirm">"Confirm"</string>
@@ -108,6 +109,7 @@
   <string name="action_copy_link">"Copy link"</string>
   <string name="action_copy_link_to_message">"Copy link to message"</string>
   <string name="action_copy_text">"Copy text"</string>
+  <string name="action_copy_to_clipboard">"Copy to clipboard"</string>
   <string name="action_create">"Create"</string>
   <string name="action_create_room">"Create room"</string>
   <string name="action_create_space">"Create space"</string>
@@ -135,6 +137,10 @@
   <string name="action_finish">"Finish"</string>
   <string name="action_forgot_password">"Forgot password?"</string>
   <string name="action_forward">"Forward"</string>
+  <plurals name="action_forward_messages">
+    <item quantity="one">"Forward %1$d message"</item>
+    <item quantity="other">"Forward %1$d messages"</item>
+  </plurals>
   <string name="action_go_back">"Go back"</string>
   <string name="action_go_to_roles_and_permissions">"Go to roles &amp; permissions"</string>
   <string name="action_go_to_settings">"Go to settings"</string>
@@ -221,6 +227,7 @@
   <string name="banner_migrate_to_native_sliding_sync_title">"Upgrade available"</string>
   <string name="common_about">"About"</string>
   <string name="common_acceptable_use_policy">"Acceptable use policy"</string>
+  <string name="common_account_settings">"Account settings"</string>
   <string name="common_add_account">"Add an account"</string>
   <string name="common_add_another_account">"Add account"</string>
   <string name="common_adding_caption">"Adding caption"</string>
@@ -229,6 +236,7 @@
   <string name="common_analytics">"Analytics"</string>
   <string name="common_android_shortcuts_remove_reason_left_room">"You left the room"</string>
   <string name="common_android_shortcuts_remove_reason_session_logged_out">"You were logged out of the session"</string>
+  <string name="common_app_settings">"App settings"</string>
   <string name="common_appearance">"Appearance"</string>
   <string name="common_audio">"Audio"</string>
   <string name="common_beta">"Beta"</string>
@@ -239,6 +247,8 @@
   <string name="common_call_started">"Call started"</string>
   <string name="common_call_you_declined">"You declined a call"</string>
   <string name="common_chat_backup">"Chat backup"</string>
+  <string name="common_chats">"Chats"</string>
+  <string name="common_code_block">"Code block"</string>
   <string name="common_copied_to_clipboard">"Copied to clipboard"</string>
   <string name="common_copyright">"Copyright"</string>
   <string name="common_creating_room">"Creating room…"</string>
@@ -278,6 +288,7 @@ Reason: %1$s."</string>
   <string name="common_file_saved">"File saved"</string>
   <string name="common_file_saved_on_disk_android">"File saved to Downloads"</string>
   <string name="common_forward_message">"Forward message"</string>
+  <string name="common_forward_to">"Forward to"</string>
   <string name="common_frequently_used">"Frequently used"</string>
   <string name="common_gallery">"Gallery"</string>
   <plurals name="common_gallery_reply_attachments">
@@ -290,6 +301,7 @@ Reason: %1$s."</string>
   </plurals>
   <string name="common_gif">"GIF"</string>
   <string name="common_group_call_in_progress">"Group call in progress"</string>
+  <string name="common_header_rooms">"Rooms"</string>
   <string name="common_image">"Image"</string>
   <string name="common_in_reply_to">"In reply to %1$s"</string>
   <string name="common_install_apk_android">"Install APK"</string>
@@ -303,10 +315,12 @@ Reason: %1$s."</string>
   <string name="common_live_location_ended">"Live location ended"</string>
   <string name="common_loading">"Loading…"</string>
   <string name="common_loading_more">"Loading more…"</string>
+  <string name="common_location_sharing">"Location sharing"</string>
   <plurals name="common_many_members">
     <item quantity="one">"%d other"</item>
     <item quantity="other">"%d others"</item>
   </plurals>
+  <string name="common_media_upload_quality">"Media upload quality"</string>
   <plurals name="common_member_count">
     <item quantity="one">"%1$d Member"</item>
     <item quantity="other">"%1$d Members"</item>
@@ -316,11 +330,13 @@ Reason: %1$s."</string>
   <string name="common_message_failed_to_send">"Message failed to send"</string>
   <string name="common_message_layout">"Message layout"</string>
   <string name="common_message_removed">"Message removed"</string>
+  <string name="common_moderation_and_safety">"Moderation &amp; safety"</string>
   <string name="common_modern">"Modern"</string>
   <string name="common_mute">"Mute"</string>
   <string name="common_name">"Name"</string>
   <string name="common_name_and_id">"%1$s (%2$s)"</string>
   <string name="common_no_results">"No results"</string>
+  <string name="common_no_results_for">"There are no results for “%1$s”. Try a new search term."</string>
   <string name="common_no_room_name">"No room name"</string>
   <string name="common_no_space_name">"No space name"</string>
   <string name="common_not_encrypted">"Not encrypted"</string>
@@ -366,6 +382,7 @@ Reason: %1$s."</string>
   <string name="common_replying_to">"Replying to %1$s"</string>
   <string name="common_report_a_problem">"Report a problem"</string>
   <string name="common_report_submitted">"Report submitted"</string>
+  <string name="common_results_for">"Results for “%1$s”"</string>
   <string name="common_rich_text_editor">"Rich text editor"</string>
   <string name="common_role">"Role"</string>
   <string name="common_room">"Room"</string>
@@ -401,6 +418,7 @@ Reason: %1$s."</string>
   <string name="common_shared_live_location">"Shared live location"</string>
   <string name="common_shared_location">"Shared location"</string>
   <string name="common_shared_space">"Shared space"</string>
+  <string name="common_signed_in">"Signed in"</string>
   <string name="common_signing_out">"Removing device"</string>
   <string name="common_something_went_wrong">"Something went wrong"</string>
   <string name="common_something_went_wrong_message">"We encountered an issue. Please try again."</string>
@@ -416,6 +434,7 @@ Reason: %1$s."</string>
   <string name="common_success">"Success"</string>
   <string name="common_suggested">"Suggested"</string>
   <string name="common_suggestions">"Suggestions"</string>
+  <string name="common_switch_accounts">"Switch accounts"</string>
   <string name="common_syncing">"Syncing"</string>
   <string name="common_text">"Text"</string>
   <string name="common_third_party_notices">"Third-party notices"</string>
@@ -455,6 +474,7 @@ Reason: %1$s."</string>
   <string name="common_waiting_live_location">"Waiting for live location…"</string>
   <string name="common_world_readable_history">"Anyone can see history"</string>
   <string name="common_you">"You"</string>
+  <string name="common_your_account">"Your account"</string>
   <string name="content_scanner_not_found">"Download not available."</string>
   <string name="content_scanner_not_found_title">"Something went wrong"</string>
   <string name="content_scanner_scanning">"Scanning…"</string>
@@ -491,7 +511,7 @@ Are you sure you want to continue?"</string>
   <string name="dialog_video_quality_selector_subtitle_no_file_size">"Select the quality of the video you want to upload."</string>
   <string name="dialog_video_quality_selector_title">"Select video upload quality"</string>
   <string name="error_account_already_logged_in">"You\'re already logged in on this device as %1$s."</string>
-  <string name="error_account_creation_not_possible">"Your homeserver needs to be upgraded to support Matrix Authentication Service and account creation."</string>
+  <string name="error_account_creation_not_possible">"Your account provider needs to be upgraded to support Matrix Authentication Service and account creation."</string>
   <string name="error_failed_creating_the_permalink">"Failed creating the permalink"</string>
   <string name="error_failed_loading_map">"%1$s could not load the map. Please try again later."</string>
   <string name="error_failed_loading_messages">"Failed loading messages"</string>
@@ -538,6 +558,14 @@ Are you sure you want to continue?"</string>
     <item quantity="other">"%1$d Pinned messages"</item>
   </plurals>
   <string name="screen_pinned_timeline_screen_title_empty">"Pinned messages"</string>
+  <string name="screen_ptt_settings_battery_optimization">"Ignore battery optimisation"</string>
+  <string name="screen_ptt_settings_battery_optimization_description">"Stay active in background"</string>
+  <string name="screen_ptt_settings_covert_mode">"Covert mode"</string>
+  <string name="screen_ptt_settings_covert_mode_description">"Mute all channels"</string>
+  <string name="screen_ptt_settings_lock_screen">"Show on lock screen"</string>
+  <string name="screen_ptt_settings_lock_screen_description">"Access from the lock screen"</string>
+  <string name="screen_ptt_settings_system_overlay">"Enable system overlay"</string>
+  <string name="screen_ptt_settings_system_overlay_description">"Access a floating action button"</string>
   <string name="screen_reset_identity_confirmation_subtitle">"You\'re about to go to your %1$s account to reset your digital identity. Afterwards you\'ll be taken back to the app."</string>
   <string name="screen_reset_identity_confirmation_title">"Can\'t confirm? Go to your account to reset your digital identity."</string>
   <string name="screen_resolve_send_failure_changed_identity_primary_button_title">"Withdraw verification and send"</string>
@@ -555,11 +583,20 @@ Are you sure you want to continue?"</string>
   <string name="screen_room_grouped_state_events_expand">"Expand"</string>
   <string name="screen_room_grouped_state_events_reduce">"Reduce"</string>
   <string name="screen_room_live_location_banner">"Sharing live location"</string>
+  <string name="screen_room_maximum_messages_selected">"Maximum messages selected"</string>
+  <plurals name="screen_room_messages_forwarded">
+    <item quantity="one">"%1$d message forwarded"</item>
+    <item quantity="other">"%1$d messages forwarded"</item>
+  </plurals>
   <string name="screen_room_permalink_same_room_android">"Already viewing this room!"</string>
   <string name="screen_room_pinned_banner_indicator">"%1$s of %2$s"</string>
   <string name="screen_room_pinned_banner_indicator_description">"%1$s Pinned messages"</string>
   <string name="screen_room_pinned_banner_loading_description">"Loading message…"</string>
   <string name="screen_room_pinned_banner_view_all_button_title">"View All"</string>
+  <plurals name="screen_room_selection_count">
+    <item quantity="one">"%1$d message selected"</item>
+    <item quantity="other">"%1$d messages selected"</item>
+  </plurals>
   <string name="screen_room_title">"Chat"</string>
   <string name="screen_share_location_title">"Share location"</string>
   <string name="screen_share_my_location_action">"Share my location"</string>

@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import io.element.android.features.login.impl.login.LoginModeState
 import io.element.android.features.login.impl.login.aLoginModeState
 import io.element.android.libraries.designsystem.R
+import io.element.android.libraries.matrix.api.accountprovider.AccountProvider
 
 open class OnBoardingStatePreviewParam : PreviewParameterProvider<OnBoardingState> {
     override val values: Sequence<OnBoardingState>
@@ -22,7 +23,11 @@ open class OnBoardingStatePreviewParam : PreviewParameterProvider<OnBoardingStat
             anOnBoardingState(canCreateAccount = true),
             anOnBoardingState(canLoginWithQrCode = true, canCreateAccount = true),
             anOnBoardingState(canLoginWithQrCode = true, canCreateAccount = true, canReportBug = true),
-            anOnBoardingState(defaultAccountProvider = "element.io", canCreateAccount = false, canReportBug = true),
+            anOnBoardingState(
+                defaultAccountProvider = AccountProvider.Generic("element.io"),
+                canCreateAccount = false,
+                canReportBug = true
+            ),
             anOnBoardingState(customLogoResId = R.drawable.sample_background),
             anOnBoardingState(
                 isAddingAccount = true,
@@ -40,8 +45,13 @@ fun anOnBoardingState(
     isAddingAccount: Boolean = false,
     showBackButton: Boolean = false,
     showDeveloperSettings: Boolean = false,
+<<<<<<< HEAD
     productionApplicationName: String = "Tchap",
     defaultAccountProvider: String? = null,
+=======
+    productionApplicationName: String = "Element",
+    defaultAccountProvider: AccountProvider? = null,
+>>>>>>> main-element
     mustChooseAccountProvider: Boolean = false,
     canLoginWithQrCode: Boolean = false,
     canCreateAccount: Boolean = false,

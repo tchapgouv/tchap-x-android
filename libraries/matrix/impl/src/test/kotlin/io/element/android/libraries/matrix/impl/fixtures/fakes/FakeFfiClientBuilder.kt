@@ -27,6 +27,7 @@ class FakeFfiClientBuilder(
     override fun addRootCertificates(certificates: List<ByteArray>) = this
     override fun autoEnableBackups(autoEnableBackups: Boolean) = this
     override fun autoEnableCrossSigning(autoEnableCrossSigning: Boolean) = this
+    override fun enableAutomaticBackPagination(enableAutomaticBackPagination: Boolean): ClientBuilder = this
     override fun backupDownloadStrategy(backupDownloadStrategy: BackupDownloadStrategy) = this
     override fun disableAutomaticTokenRefresh() = this
     override fun disableBuiltInRootCertificates() = this
@@ -49,5 +50,6 @@ class FakeFfiClientBuilder(
     override fun inMemoryStore(): ClientBuilder = this
     override fun crossProcessLockConfig(crossProcessLockConfig: CrossProcessLockConfig): ClientBuilder = this
     override fun dmRoomDefinition(dmRoomDefinition: DmRoomDefinition): ClientBuilder = this
+    override fun withSearchIndexStore(path: String, password: String?): ClientBuilder = this
     override suspend fun build() = buildResult()
 }

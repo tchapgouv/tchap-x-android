@@ -35,7 +35,11 @@ import io.element.android.features.roomdetailsedit.api.roomDetailsEditPermission
 import io.element.android.features.securityandprivacy.api.SecurityAndPrivacyPermissions
 import io.element.android.features.securityandprivacy.api.securityAndPrivacyPermissions
 import io.element.android.libraries.androidutils.clipboard.ClipboardHelper
+<<<<<<< HEAD
 import io.element.android.libraries.architecture.AsyncData
+=======
+import io.element.android.libraries.androidutils.toast.ToastHelper
+>>>>>>> main-element
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runUpdatingState
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
@@ -83,6 +87,7 @@ class RoomDetailsPresenter(
     private val dispatchers: CoroutineDispatchers,
     private val analyticsService: AnalyticsService,
     private val clipboardHelper: ClipboardHelper,
+    private val toastHelper: ToastHelper,
     private val appPreferencesStore: AppPreferencesStore,
     private val featureFlagService: FeatureFlagService,
     private val sessionPreferencesStore: SessionPreferencesStore,
@@ -232,8 +237,14 @@ class RoomDetailsPresenter(
                     }
                 }
                 is RoomDetailsEvent.CopyToClipboard -> {
-                    clipboardHelper.copyPlainText(event.text)
-                    snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
+                    clipboardHelper.copyPlainText(event.text) {
+                        snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
+                    }
+                }
+                is RoomDetailsEvent.CopyRoomId -> {
+                    clipboardHelper.copyPlainText(room.roomId.value) {
+                        toastHelper.show(CommonStrings.common_copied_to_clipboard)
+                    }
                 }
                 is RoomDetailsEvent.MarkAsRead -> scope.markAsRead()
                 is RoomDetailsEvent.MarkAsUnread -> scope.markAsUnread()

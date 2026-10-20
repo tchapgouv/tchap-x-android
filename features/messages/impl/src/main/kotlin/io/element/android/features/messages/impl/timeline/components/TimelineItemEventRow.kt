@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -49,7 +50,9 @@ import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.platform.ViewConfiguration
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
@@ -57,6 +60,7 @@ import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
@@ -70,8 +74,6 @@ import io.element.android.features.messages.impl.timeline.TimelineEvent
 import io.element.android.features.messages.impl.timeline.TimelineRoomInfo
 import io.element.android.features.messages.impl.timeline.aTimelineItemEvent
 import io.element.android.features.messages.impl.timeline.components.event.TimelineItemEventContentView
-import io.element.android.features.messages.impl.timeline.components.layout.ContentAvoidingLayout
-import io.element.android.features.messages.impl.timeline.components.layout.ContentAvoidingLayoutData
 import io.element.android.features.messages.impl.timeline.components.receipt.ReadReceiptViewState
 import io.element.android.features.messages.impl.timeline.components.receipt.TimelineItemReadReceiptView
 import io.element.android.features.messages.impl.timeline.model.TimelineItem
@@ -137,6 +139,8 @@ import io.element.android.libraries.matrix.ui.messages.sender.SenderName
 import io.element.android.libraries.matrix.ui.messages.sender.SenderNameMode
 import io.element.android.libraries.testtags.TestTags
 import io.element.android.libraries.testtags.testTag
+import io.element.android.libraries.ui.common.layout.ContentAvoidingLayout
+import io.element.android.libraries.ui.common.layout.ContentAvoidingLayoutData
 import io.element.android.libraries.ui.strings.CommonPlurals
 import io.element.android.libraries.ui.strings.CommonStrings
 import io.element.android.libraries.ui.utils.a11y.isTalkbackActive
@@ -178,6 +182,11 @@ fun TimelineItemEventRow(
     onSwipeToReply: () -> Unit,
     eventSink: (TimelineEvent.TimelineItemEvent) -> Unit,
     modifier: Modifier = Modifier,
+    // Horizontal offset by which selection mode slides this row's content aside, to make room for the tick. It is applied here, to the message and the
+    // thread summary, rather than to the row as a whole: that keeps the row's accessibility node spanning the whole row, tick included, so that a
+    // screen reader can focus it from anywhere on the row. The read receipts are anchored to the end edge and stay pinned, so they are not slid.
+    selectionContentOffset: Dp = 0.dp,
+    isSelectionToggle: Boolean = false,
     eventContentView: @Composable (Modifier, (ContentAvoidingLayoutData) -> Unit) -> Unit = { contentModifier, onContentLayoutChange ->
         // Only pass down a custom clickable lambda if the content can be clicked separately
         val onContentClick = onEventClick.takeUnless { event.isWholeContentClickable }
@@ -217,20 +226,35 @@ fun TimelineItemEventRow(
         inReplyToClick(inReplyToEventId)
     }
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    val canReply = timelineRoomInfo.userHasPermissionToSendMessage && event.canBeRepliedTo
+    val accessibilityActions = rememberTimelineItemAccessibilityActions(
+        isEnabled = !isSelectionToggle,
+        canReply = canReply,
+        onLongClick = onLongClick,
+        onSwipeToReply = onSwipeToReply,
+    )
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .semantics { customActions = accessibilityActions }
+    ) {
         if (event.groupPosition.isNew()) {
             Spacer(modifier = Modifier.height(16.dp))
         } else {
             Spacer(modifier = Modifier.height(2.dp))
         }
-        val canReply = timelineRoomInfo.userHasPermissionToSendMessage && event.canBeRepliedTo
         if (canReply) {
             val state: SwipeableActionsState = rememberSwipeableActionsState()
             val offset = state.offset.floatValue
             val swipeThresholdPx = 40.dp.toPx()
             val thresholdCrossed = abs(offset) > swipeThresholdPx
             SwipeSensitivity(3f) {
-                Box(Modifier.fillMaxWidth()) {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .offset(x = selectionContentOffset)
+                ) {
                     Row(modifier = Modifier.matchParentSize()) {
                         ReplySwipeIndicator({ offset / 120 })
                     }
@@ -251,7 +275,7 @@ fun TimelineItemEventRow(
                             .absoluteOffset { IntOffset(x = offset.roundToInt(), y = 0) }
                             .draggable(
                                 orientation = Orientation.Horizontal,
-                                enabled = !state.isResettingOnRelease,
+                                enabled = !state.isResettingOnRelease && !isSelectionToggle,
                                 onDragStopped = {
                                     coroutineScope.launch {
                                         if (thresholdCrossed) {
@@ -269,6 +293,7 @@ fun TimelineItemEventRow(
             }
         } else {
             TimelineItemEventRowContent(
+                modifier = Modifier.offset(x = selectionContentOffset),
                 event = event,
                 timelineMode = timelineMode,
                 timelineProtectionState = timelineProtectionState,
@@ -294,7 +319,10 @@ fun TimelineItemEventRow(
                         .padding(end = 16.dp)
                 } else {
                     if (timelineRoomInfo.isDm) Modifier else Modifier.padding(start = 16.dp)
-                }.padding(top = 2.dp),
+                }
+                    .padding(top = 2.dp)
+                    .offset(x = selectionContentOffset)
+                    .hiddenFromAccessibilityWhile(isSelectionToggle),
                 threadSummary = event.threadInfo.summary,
                 latestEventText = event.threadInfo.latestEventText,
                 isOutgoing = event.isMine,
@@ -307,15 +335,67 @@ fun TimelineItemEventRow(
         }
 
         // Read receipts / Send state
+        val sendState = event.pendingSend()?.second
         TimelineItemReadReceiptView(
             state = ReadReceiptViewState(
-                sendState = event.localSendState,
+                sendState = sendState,
                 isLastOutgoingMessage = isLastOutgoingMessage,
                 receipts = event.readReceiptState.receipts,
             ),
             onReadReceiptsClick = { onReadReceiptClick(event) },
-            modifier = Modifier.padding(top = 4.dp)
+            // Counter the selection-mode content slide so the end-anchored read receipts stay pinned.
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .hiddenFromAccessibilityWhile(isSelectionToggle)
         )
+    }
+}
+
+/**
+ * Hides this element and its descendants from screen readers while [hidden] is true.
+ *
+ * A clickable descendant stays an accessibility node of its own even though the row merges its descendants, so while the row acts as a selection toggle
+ * it would otherwise still be reachable and activatable by a screen reader. Reactions already hide themselves this way at all times.
+ */
+private fun Modifier.hiddenFromAccessibilityWhile(hidden: Boolean): Modifier = if (hidden) {
+    semantics { hideFromAccessibility() }
+} else {
+    this
+}
+
+/**
+ * Exposes the gestures of a timeline item — long press for the action list, swipe for a reply — as TalkBack actions, since neither gesture is reachable
+ * with a screen reader enabled.
+ */
+@Composable
+private fun rememberTimelineItemAccessibilityActions(
+    isEnabled: Boolean,
+    canReply: Boolean,
+    onLongClick: () -> Unit,
+    onSwipeToReply: () -> Unit,
+): List<CustomAccessibilityAction> {
+    val messageActionsLabel = stringResource(CommonStrings.common_message_actions)
+    val replyLabel = stringResource(CommonStrings.action_reply)
+    val latestOnLongClick by rememberUpdatedState(onLongClick)
+    val latestOnSwipeToReply by rememberUpdatedState(onSwipeToReply)
+    return remember(isEnabled, canReply, messageActionsLabel, replyLabel) {
+        buildList {
+            if (!isEnabled) return@buildList
+            add(
+                CustomAccessibilityAction(messageActionsLabel) {
+                    latestOnLongClick()
+                    true
+                }
+            )
+            if (canReply) {
+                add(
+                    CustomAccessibilityAction(replyLabel) {
+                        latestOnSwipeToReply()
+                        true
+                    }
+                )
+            }
+        }
     }
 }
 

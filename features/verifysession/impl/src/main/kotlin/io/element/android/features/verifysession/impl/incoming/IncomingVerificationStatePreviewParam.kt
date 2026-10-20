@@ -13,6 +13,7 @@ import io.element.android.features.verifysession.impl.incoming.IncomingVerificat
 import io.element.android.features.verifysession.impl.ui.aDecimalsSessionVerificationData
 import io.element.android.features.verifysession.impl.ui.aEmojisSessionVerificationData
 import io.element.android.libraries.designsystem.preview.USER_NAME_ALICE
+import io.element.android.libraries.designsystem.preview.USER_NAME_BOB
 import io.element.android.libraries.matrix.api.core.DeviceId
 import io.element.android.libraries.matrix.api.core.FlowId
 import io.element.android.libraries.matrix.api.core.UserId
@@ -50,7 +51,16 @@ open class IncomingVerificationStatePreviewParam : PreviewParameterProvider<Inco
 internal fun aStepInitial(
     isWaiting: Boolean = false,
 ) = Step.Initial(
+<<<<<<< HEAD
     deviceDisplayName = "Tchap Android",
+=======
+    currentUser = MatrixUser(
+        userId = UserId("@bob:example.com"),
+        displayName = USER_NAME_BOB,
+        avatarUrl = null,
+    ),
+    deviceDisplayName = "Element X Android",
+>>>>>>> main-element
     deviceId = DeviceId("ILAKNDNASDLK"),
     formattedSignInTime = "12:34",
     isWaiting = isWaiting,
