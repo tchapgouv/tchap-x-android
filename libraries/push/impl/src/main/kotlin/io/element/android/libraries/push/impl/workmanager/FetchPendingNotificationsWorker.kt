@@ -64,13 +64,10 @@ class FetchPendingNotificationsWorker(
     private val analyticsService: AnalyticsService,
     private val systemClock: SystemClock,
     private val fetchPushForegroundServiceManager: FetchPushForegroundServiceManager,
-<<<<<<< HEAD
     // :tchap: AutoClean System Notifications on sync
     private val notificationCleaner: NotificationCleaner,
     // :tchap: end
-=======
     private val buildVersionSdkIntProvider: BuildVersionSdkIntProvider,
->>>>>>> main-element
 ) : CoroutineWorker(context, params) {
     private var foregroundServiceReleased = false
 

@@ -25,8 +25,8 @@
 package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import io.element.android.features.login.impl.accountprovider.AccountProvider
-import io.element.android.features.login.impl.accountprovider.anAccountProvider
+import io.element.android.libraries.matrix.api.accountprovider.AccountProvider
+import io.element.android.features.login.impl.accountprovider.anAccountProviderGeneric
 import io.element.android.features.login.impl.login.LoginModeState
 import io.element.android.features.login.impl.login.aLoginModeState
 import io.element.android.libraries.architecture.AsyncData
@@ -46,7 +46,7 @@ open class LoginHintStatePreviewParam : PreviewParameterProvider<LoginHintState>
 
 fun aLoginHintState(
     applicationName: String = "Tchap",
-    accountProvider: AccountProvider = anAccountProvider(),
+    accountProvider: AccountProvider = anAccountProviderGeneric(),
     formState: LoginFormState = LoginFormState.Default,
     isAccountCreation: Boolean = false,
     loginModeState: LoginModeState = aLoginModeState(),

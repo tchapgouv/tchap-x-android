@@ -59,10 +59,6 @@ interface EnterpriseService {
     /**
      * Whether the user is allowed to sign in to any account provider.
      */
-<<<<<<< HEAD
-
-    suspend fun isAllowedToConnectToHomeserver(homeserverUrl: String): Boolean
-=======
     fun canConnectToAnyAccountProvider(): Boolean
 
     /**
@@ -71,7 +67,6 @@ interface EnterpriseService {
      * @param accountProvider the account provider the user is trying to use.
      */
     suspend fun isAllowedToConnectToAccountProvider(accountProvider: AccountProvider): Boolean
->>>>>>> main-element
 
     /**
      * Whether the given homeserver enforces the use of Element Pro or a derived app.

@@ -235,12 +235,8 @@
   <string name="common_an_image">"une image"</string>
   <string name="common_analytics">"Statistiques d’utilisation"</string>
   <string name="common_android_shortcuts_remove_reason_left_room">"Vous avez quitté le salon"</string>
-<<<<<<< HEAD
   <string name="common_android_shortcuts_remove_reason_session_logged_out">"Vous avez été déconnecté de l'appareil"</string><!-- Tchap: Custom string -->
-=======
-  <string name="common_android_shortcuts_remove_reason_session_logged_out">"Vous avez été déconnecté de la session"</string>
   <string name="common_app_settings">"Paramètres de l’application"</string>
->>>>>>> main-element
   <string name="common_appearance">"Apparence"</string>
   <string name="common_audio">"Audio"</string>
   <string name="common_beta">"Bêta"</string>

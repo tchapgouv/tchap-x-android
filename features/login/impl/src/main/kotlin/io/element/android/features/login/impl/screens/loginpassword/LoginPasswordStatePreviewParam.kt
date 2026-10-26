@@ -26,15 +26,13 @@ open class LoginPasswordStatePreviewParam : PreviewParameterProvider<LoginPasswo
 }
 
 fun aLoginPasswordState(
-<<<<<<< HEAD
-    applicationName: String = "Tchap",
-    accountProvider: AccountProvider = anAccountProvider(),
-=======
     accountProvider: AccountProvider = anAccountProviderManaged(),
->>>>>>> main-element
     formState: LoginFormState = LoginFormState.Default,
     loginAction: AsyncData<SessionId> = AsyncData.Uninitialized,
     eventSink: (LoginPasswordEvent) -> Unit = {},
+    // :tchap: App Name
+    applicationName: String = "Tchap",
+    // :tchap: end
 ) = LoginPasswordState(
     applicationName = applicationName,
     accountProvider = accountProvider,

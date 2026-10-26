@@ -36,15 +36,15 @@ appId: ${MAESTRO_APP_ID}
 - assertVisible: "Appearance"
 
 - tapOn:
-<<<<<<< HEAD
     text: "Legals"
 - assertVisible: "Copyright"
 - assertVisible: "Terms of use"
 - assertVisible: "Privacy policy"
-=======
+- back
+
+- tapOn:
     text: "Media upload quality"
 - assertVisible: "Media upload quality"
->>>>>>> main-element
 - back
 
 - tapOn:

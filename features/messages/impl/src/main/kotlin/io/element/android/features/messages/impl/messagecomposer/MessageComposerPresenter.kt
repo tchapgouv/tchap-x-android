@@ -106,7 +106,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -195,33 +194,21 @@ class MessageComposerPresenter(
 //            .collectAsState(initial = false)
 //
 //        val galleryMediaPicker = mediaPickerProvider.registerGalleryPicker { uri, mimeType ->
-//            handlePickedMedia(uri, mimeType)
+//            localCoroutineScope.handlePickedMedia(uri, mimeType)
 //        }
         // :tchap: end
 
-<<<<<<< HEAD
-=======
-        val galleryMediaPicker = mediaPickerProvider.registerGalleryPicker { uri, mimeType ->
-            localCoroutineScope.handlePickedMedia(uri, mimeType)
-        }
->>>>>>> main-element
         val galleryMultiMediaPicker = mediaPickerProvider.registerGalleryMultiPicker { uris ->
             localCoroutineScope.handlePickedMediaList(uris)
         }
         val filesPicker = mediaPickerProvider.registerFileMultiPicker(AnyMimeTypes) { uris ->
             localCoroutineScope.handlePickedMediaList(uris, sendAsFile = true)
         }
-<<<<<<< HEAD
         // :tchap: Enable multi medias selection by sending multiple messages
 //        val fileSinglePicker = mediaPickerProvider.registerFilePicker(AnyMimeTypes) { uri, mimeType ->
-//            handlePickedMedia(uri, mimeType ?: MimeTypes.OctetStream, sendAsFile = true)
+//            localCoroutineScope.handlePickedMedia(uri, mimeType ?: MimeTypes.OctetStream, sendAsFile = true)
 //        }
         // :tchap: end
-=======
-        val fileSinglePicker = mediaPickerProvider.registerFilePicker(AnyMimeTypes) { uri, mimeType ->
-            localCoroutineScope.handlePickedMedia(uri, mimeType ?: MimeTypes.OctetStream, sendAsFile = true)
-        }
->>>>>>> main-element
         val cameraPhotoPicker = mediaPickerProvider.registerCameraPhotoPicker { uri ->
             localCoroutineScope.handlePickedMedia(uri, MimeTypes.Jpeg)
         }

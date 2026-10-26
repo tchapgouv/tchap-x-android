@@ -154,7 +154,7 @@ class RustMatrixAuthenticationService(
                     loginHint
                 )
             }.onFailure {
-                clear(destroyClient = true)
+                clear()
             }.mapFailure { failure ->
                 Timber.e(failure, "Failed to get homeserver from $defaultHomeserver for login hint $loginHint")
                 failure.mapAuthenticationException()

@@ -53,7 +53,6 @@ class FakeEnterpriseService(
         return accountProviderAllowListResult()
     }
 
-<<<<<<< HEAD
     // :tchap: Get randomised homeserver for getHomeserverFromEmail
     override fun getNextRandomHomeserver(): String {
         return defaultHomeserverListResult()[selectedHomeserver]
@@ -64,16 +63,12 @@ class FakeEnterpriseService(
     }
     // :tchap: end
 
-    override suspend fun isAllowedToConnectToHomeserver(homeserverUrl: String): Boolean = simulateLongTask {
-        isAllowedToConnectToHomeserverResult(homeserverUrl)
-=======
     override fun canConnectToAnyAccountProvider(): Boolean {
         return canConnectToAnyAccountProviderResult()
     }
 
     override suspend fun isAllowedToConnectToAccountProvider(accountProvider: AccountProvider): Boolean = simulateLongTask {
         isAllowedToConnectToAccountProviderResult(accountProvider)
->>>>>>> main-element
     }
 
     override suspend fun isElementProEnforced(serverName: String): Boolean = simulateLongTask {

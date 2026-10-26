@@ -33,11 +33,8 @@ import io.element.android.services.analytics.api.AnalyticsService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
 import org.matrix.rustcomponents.sdk.ClientBuilder
-<<<<<<< HEAD
 import org.matrix.rustcomponents.sdk.ContentScanner
-=======
 import org.matrix.rustcomponents.sdk.ClientSessionDelegate
->>>>>>> main-element
 import org.matrix.rustcomponents.sdk.CrossProcessLockConfig
 import org.matrix.rustcomponents.sdk.RequestConfig
 import org.matrix.rustcomponents.sdk.Session
@@ -138,15 +135,11 @@ class RustMatrixClientFactory(
             .withOfflineMode()
             .finish()
 
-<<<<<<< HEAD
         // :tchap: Activate content scanner
         client.setContentScanner(ContentScanner(sessionData.homeserverUrl))
         // :tchap: end
 
-        return RustMatrixClient(
-=======
         innerMatrixClientFactory.create(
->>>>>>> main-element
             sessionPaths = sessionData.getSessionPaths(),
             innerClient = client,
             innerSyncService = syncService,

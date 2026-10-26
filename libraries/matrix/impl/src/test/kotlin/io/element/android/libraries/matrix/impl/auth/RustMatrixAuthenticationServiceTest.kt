@@ -39,13 +39,10 @@ import io.element.android.libraries.sessionstorage.test.InMemorySessionStore
 import io.element.android.libraries.workmanager.test.FakeWorkManagerScheduler
 import io.element.android.tests.testutils.lambda.lambdaRecorder
 import io.element.android.tests.testutils.testCoroutineDispatchers
-<<<<<<< HEAD
 import io.mockk.mockk
-=======
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.launch
->>>>>>> main-element
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -301,21 +298,14 @@ class RustMatrixAuthenticationServiceTest {
     private fun TestScope.createRustMatrixAuthenticationService(
         sessionStore: SessionStore = InMemorySessionStore(updateUserProfileResult = { _, _, _, _ -> }),
         clientBuilderProvider: ClientBuilderProvider = FakeClientBuilderProvider(),
-<<<<<<< HEAD
+        // :tchap: Tchap Defined HomeServer List
+//        enterpriseService: EnterpriseService = FakeEnterpriseService(),
         enterpriseService: EnterpriseService = FakeEnterpriseService(selectedHomeserver = 0),
-=======
-        enterpriseService: EnterpriseService = FakeEnterpriseService(),
+        // :tchap: end
         sessionPathsFactory: SessionPathsFactory = SessionPathsFactory(File("/base"), File("/cache")),
         sqliteStoreBuilderProvider: SqliteStoreBuilderProvider = FakeSqliteStoreBuilderProvider(),
->>>>>>> main-element
     ): RustMatrixAuthenticationService {
         val rustMatrixClientFactory = createRustMatrixClientFactory(
-<<<<<<< HEAD
-            context = mockk(),
-            cacheDirectory = cacheDirectory,
-=======
-            cacheDirectory = File("/cache"),
->>>>>>> main-element
             sessionStore = sessionStore,
             clientBuilderProvider = clientBuilderProvider,
             workManagerScheduler = FakeWorkManagerScheduler(submitLambda = {}, cancelLambda = { _, _ -> }),

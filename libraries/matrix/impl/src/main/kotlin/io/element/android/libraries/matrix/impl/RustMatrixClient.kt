@@ -8,14 +8,11 @@
 
 package io.element.android.libraries.matrix.impl
 
-<<<<<<< HEAD
-import fr.gouv.tchap.libraries.tchaputils.TchapPatterns
-import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
-=======
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
->>>>>>> main-element
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns
+import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.libraries.androidutils.file.getSizeOfFiles
 import io.element.android.libraries.core.bool.orFalse
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers

@@ -18,11 +18,8 @@ import io.element.android.features.location.test.FakeLocationService
 import io.element.android.features.preferences.impl.account.aPreferencesAccountState
 import io.element.android.features.preferences.impl.userstatus.aUserStatusState
 import io.element.android.features.preferences.impl.utils.ShowDeveloperSettingsProvider
-<<<<<<< HEAD
 import io.element.android.features.rageshake.api.RageshakeFeatureAvailability
 import io.element.android.libraries.core.meta.BuildMeta
-=======
->>>>>>> main-element
 import io.element.android.libraries.core.meta.BuildType
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarDispatcher
 import io.element.android.libraries.featureflag.api.FeatureFlagService
@@ -334,12 +331,7 @@ class PreferencesRootPresenterTest {
         return awaitItem()
     }
 
-<<<<<<< HEAD
-    private fun createPresenter(
-        buildMeta: BuildMeta = aBuildMeta(),
-=======
     private fun CoroutineScope.createPreferencesRootPresenter(
->>>>>>> main-element
         matrixClient: FakeMatrixClient = FakeMatrixClient(),
         showDeveloperSettingsProvider: ShowDeveloperSettingsProvider = ShowDeveloperSettingsProvider(aBuildMeta(BuildType.DEBUG)),
         featureFlagService: FeatureFlagService = FakeFeatureFlagService(),

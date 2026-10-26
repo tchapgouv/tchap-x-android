@@ -164,14 +164,7 @@ enum class FeatureFlags(
         key = "feature.unread_indicator_count",
         title = "Unread indicator count",
         description = "Show the number of unread messages on the unread indicator in the room list.",
-<<<<<<< HEAD
-        // :tchap: Enable UnreadIndicatorCount by default
-//        defaultValue = { false },
         defaultValue = { true },
-        // :tchap: end
-=======
-        defaultValue = { true },
->>>>>>> main-element
         isFinished = false,
     ),
     SendGalleryMessages(
@@ -180,7 +173,9 @@ enum class FeatureFlags(
         description = "Allow sending multiple media items in a single message.",
         defaultValue = { false },
         isFinished = false,
-        isInLabs = true,
+        // :tchap: Remove from experimental menu
+//        isInLabs = true,
+        // :tchap: end
     ),
     Knock(
         key = "feature.knock",
@@ -188,7 +183,9 @@ enum class FeatureFlags(
         description = "Allow creating rooms which users can request access to.",
         defaultValue = { false },
         isFinished = false,
-        isInLabs = true,
+        // :tchap: Remove from experimental menu
+//        isInLabs = true,
+        // :tchap: end
     ),
     MessageSearch(
         key = "feature.message_search",

@@ -125,9 +125,7 @@ jobs:
           disable-animations: true
           disk-size: 3G
           script: |
-<<<<<<< HEAD
             .github/workflows/scripts/maestro/maestro-local-with-screen-recording.sh app-gplay-tchap-withpinning-x86_64-debug.apk
-=======
             .github/workflows/scripts/maestro/maestro-local-with-screen-recording.sh app-gplay-x86_64-debug.apk
       - name: Set up Python
         if: always()
@@ -142,7 +140,6 @@ jobs:
         run: |
           pip install requests
           python3 ./tools/mas/delete_all_sessions.py --homeserver matrix.org --username maestroelement
->>>>>>> main-element
       - name: Upload test results
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

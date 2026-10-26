@@ -128,13 +128,12 @@ fun LoginPasswordView(
                 modifier = Modifier.padding(top = 20.dp, start = 16.dp, end = 16.dp),
                 iconStyle = BigIcon.Style.Default(CompoundIcons.UserProfileSolid()),
                 title = stringResource(
-<<<<<<< HEAD
+                    // :tchap: Tchap App Name
+//                    id = R.string.screen_account_provider_signin_title,
+//                    state.accountProvider.friendlyServerName()
                     id = R.string.tchap_screen_account_provider_signin_title,
                     state.applicationName
-=======
-                    id = R.string.screen_account_provider_signin_title,
-                    state.accountProvider.friendlyServerName()
->>>>>>> main-element
+                    // :tchap: end
                 ),
                 subTitle = stringResource(id = R.string.tchap_screen_login_subtitle)
             )

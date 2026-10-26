@@ -22,18 +22,16 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
 import io.element.android.compound.theme.ElementTheme
+import io.element.android.features.logout.api.direct.DirectLogoutEvent
 import io.element.android.features.preferences.impl.account.PreferencesAccountCallback
 import io.element.android.libraries.androidutils.browser.openUrlInChromeCustomTab
 import io.element.android.libraries.architecture.callback
 import io.element.android.libraries.di.SessionScope
 import io.element.android.libraries.emoji.api.picker.EmojiPickerRenderer
-<<<<<<< HEAD
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.user.MatrixUser
-=======
 import io.element.android.libraries.matrix.api.core.SessionId
->>>>>>> main-element
 
 @ContributesNode(SessionScope::class)
 @AssistedInject
@@ -79,13 +77,10 @@ class PreferencesRootNode(
         val activity = requireNotNull(LocalActivity.current)
         val isDark = ElementTheme.isLightTheme.not()
 
-<<<<<<< HEAD
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
-=======
->>>>>>> main-element
         PreferencesRootView(
             state = state,
             emojiPickerRenderer = emojiPickerRenderer,
@@ -95,40 +90,22 @@ class PreferencesRootNode(
             onSwitchToSession = callback::navigateToSession,
             onOpenAnalytics = callback::navigateToAnalyticsSettings,
             onOpenAbout = callback::navigateToAbout,
-<<<<<<< HEAD
             onOpenFAQ = { callback.onOpenFAQ(activity, isDark) },
             onSecureBackupClick = callback::navigateToSecureBackup,
-=======
->>>>>>> main-element
             onOpenDeveloperSettings = callback::navigateToDeveloperSettings,
             onOpenMediaSettings = callback::navigateToMediaSettings,
             onOpenLocationSettings = callback::navigateToLocationSettings,
             onOpenLabs = callback::navigateToLabs,
             onOpenLockScreenSettings = callback::navigateToLockScreenSettings,
             onOpenRageShake = callback::navigateToBugReport,
-            onSecureBackupClick = callback::navigateToSecureBackup,
             onModerationAndSafetyClick = callback::navigateToModerationAndSafety,
             onLinkNewDeviceClick = callback::navigateToLinkNewDevice,
             onManageAccountClick = { onManageAccountClick(activity, it, isDark) },
             onOpenNotificationSettings = callback::navigateToNotificationSettings,
-<<<<<<< HEAD
-            onOpenLockScreenSettings = callback::navigateToLockScreenSettings,
-            onOpenUserProfile = callback::navigateToUserProfile,
-            onOpenBlockedUsers = callback::navigateToBlockedUsers,
-            onSignOutClick = {
-                if (state.directLogoutState.canDoDirectSignOut) {
-                    state.directLogoutState.eventSink(DirectLogoutEvent.Logout(ignoreSdkError = false))
-                } else {
-                    callback.startSignOutFlow()
-                }
-            },
-            onDeactivateClick = callback::startAccountDeactivationFlow,
-            showMatrixId = showMatrixId,
-=======
             onEditProfileClick = callback::navigateToUserProfile,
             onSignOutClick = callback::startSignOutFlow,
-            onDeactivateClick = callback::startAccountDeactivationFlow
->>>>>>> main-element
+            onDeactivateClick = callback::startAccountDeactivationFlow,
+            showMatrixId = showMatrixId,
         )
     }
 }

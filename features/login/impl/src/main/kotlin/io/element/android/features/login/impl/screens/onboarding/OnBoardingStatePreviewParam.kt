@@ -45,13 +45,11 @@ fun anOnBoardingState(
     isAddingAccount: Boolean = false,
     showBackButton: Boolean = false,
     showDeveloperSettings: Boolean = false,
-<<<<<<< HEAD
+    // :tchap: Tchap App Name
+//    productionApplicationName: String = "Element",
     productionApplicationName: String = "Tchap",
-    defaultAccountProvider: String? = null,
-=======
-    productionApplicationName: String = "Element",
+    // :tchap: end
     defaultAccountProvider: AccountProvider? = null,
->>>>>>> main-element
     mustChooseAccountProvider: Boolean = false,
     canLoginWithQrCode: Boolean = false,
     canCreateAccount: Boolean = false,

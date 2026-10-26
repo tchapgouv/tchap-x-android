@@ -49,11 +49,10 @@ import io.element.android.features.home.impl.filters.aRoomListFiltersState
 import io.element.android.features.home.impl.filters.selection.FilterSelectionState
 import io.element.android.features.home.impl.model.RoomListRoomSummary
 import io.element.android.features.home.impl.model.RoomSummaryDisplayType
-<<<<<<< HEAD
+import io.element.android.features.home.impl.roomlist.SecurityBannerState
+
 import io.element.android.features.home.impl.roomlist.OfflineBannerState
-=======
 import io.element.android.features.home.impl.roomlist.RoomListBanner
->>>>>>> main-element
 import io.element.android.features.home.impl.roomlist.RoomListContentState
 import io.element.android.features.home.impl.roomlist.RoomListContentStatePreviewParam
 import io.element.android.features.home.impl.roomlist.RoomListEvent
@@ -183,32 +182,6 @@ private fun EmptyView(
             },
             modifier = Modifier.align(Alignment.Center),
         )
-<<<<<<< HEAD
-        Box {
-            when (state.securityBannerState) {
-                SecurityBannerState.SetUpRecovery -> {
-                    SetUpRecoveryKeyBanner(
-                        onContinueClick = onSetUpRecoveryClick,
-                        onDismissClick = { eventSink(RoomListEvent.DismissBanner) },
-                    )
-                }
-                SecurityBannerState.RecoveryKeyConfirmation -> {
-                    ConfirmRecoveryKeyBanner(
-                        onContinueClick = onConfirmRecoveryKeyClick,
-                        onDismissClick = { eventSink(RoomListEvent.DismissBanner) },
-                    )
-                }
-                SecurityBannerState.None -> Unit
-            }
-
-            // TCHAP : Display banner when sync is offline
-            when (state.offlineBannerState) {
-                OfflineBannerState.ShowOfflineBanner -> {
-                    OfflineBanner(onViewServiceStatusClick = onViewServiceStatusClick)
-                }
-                OfflineBannerState.None -> {}
-            }
-=======
         RoomListBannerContainer(
             banner = state.securityBannerState.toRoomListBanner(),
         ) { banner ->
@@ -223,7 +196,14 @@ private fun EmptyView(
                 },
                 onDismissClick = { eventSink(RoomListEvent.DismissBanner) },
             )
->>>>>>> main-element
+            // TCHAP : Display banner when sync is offline
+            // TODO : Tchap Maybe check if we need a banner for the offline mode
+            when (state.offlineBannerState) {
+                OfflineBannerState.ShowOfflineBanner -> {
+                    OfflineBanner(onViewServiceStatusClick = onViewServiceStatusClick)
+                }
+                OfflineBannerState.None -> {}
+            }
         }
     }
 }
@@ -333,9 +313,7 @@ private fun RoomsViewList(
                 )
             }
         }
-<<<<<<< HEAD
-
-        // TCHAP : Display banner when sync is offline
+        // :tchap: Display banner when sync is offline
         when (state.offlineBannerState) {
             OfflineBannerState.ShowOfflineBanner -> {
                 item {
@@ -344,9 +322,8 @@ private fun RoomsViewList(
             }
             OfflineBannerState.None -> {}
         }
+        // :tchap: end
 
-=======
->>>>>>> main-element
         // Note: do not use a key for the LazyColumn, or the scroll will not behave as expected if a room
         // is moved to the top of the list.
         itemsIndexed(

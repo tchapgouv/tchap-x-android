@@ -72,11 +72,8 @@ import io.element.android.libraries.designsystem.theme.components.Text
 import io.element.android.libraries.matrix.api.media.MediaSource
 import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.matrix.ui.model.getAvatarData
-<<<<<<< HEAD
 import io.element.android.libraries.matrix.ui.model.getBestName
-=======
 import io.element.android.libraries.matrixmedia.api.MediaRequestData
->>>>>>> main-element
 import kotlinx.coroutines.launch
 
 internal val REACTION_SUMMARY_LINE_HEIGHT = 25.sp

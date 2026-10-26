@@ -22,13 +22,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 
-<<<<<<< HEAD
-@ContributesBinding(AppScope::class)
-class DefaultLocationService : LocationService {
-    override fun isServiceAvailable(): Boolean {
-        return BuildConfig.MAPTILER_BASE_URL.isNotEmpty()
-    }
-=======
 @SingleIn(SessionScope::class)
 @ContributesBinding(SessionScope::class)
 class DefaultLocationService(
@@ -42,5 +35,4 @@ class DefaultLocationService(
         started = SharingStarted.Eagerly,
         initialValue = buildTimeMapTilerConfig(),
     )
->>>>>>> main-element
 }

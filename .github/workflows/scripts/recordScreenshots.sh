@@ -58,15 +58,6 @@ fi
 echo "Record screenshots"
 ./gradlew recordPaparazziTchapWithpinningDebug --stacktrace $GRADLE_ARGS
 
-<<<<<<< HEAD
-echo "Deleting previous screenshots"
-./gradlew removeOldScreenshots --stacktrace --warn $GRADLE_ARGS
-
-echo "Record screenshots (Compound)"
-./gradlew :libraries:compound:recordRoborazziTchapWithpinningDebug --stacktrace -PpreDexEnable=false --max-workers 4 --warn $GRADLE_ARGS
-
-=======
->>>>>>> main-element
 echo "Committing changes"
 git config http.sslVerify false
 

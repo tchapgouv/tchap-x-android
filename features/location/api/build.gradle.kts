@@ -72,11 +72,7 @@ dependencies {
     implementation(projects.libraries.uiStrings)
     implementation(projects.features.enterprise.api)
     implementation(libs.coil.compose)
-<<<<<<< HEAD
     implementation(libs.maplibre)
-    implementation(libs.datetime)
-=======
->>>>>>> main-element
 
     testCommonDependencies(libs)
 }

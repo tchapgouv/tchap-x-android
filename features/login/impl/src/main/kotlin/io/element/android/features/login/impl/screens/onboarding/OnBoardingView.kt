@@ -8,6 +8,9 @@
 
 package io.element.android.features.login.impl.screens.onboarding
 
+import android.R.attr.enabled
+import android.R.attr.onClick
+import android.R.attr.text
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -310,11 +313,10 @@ private fun OnBoardingButtons(
             )
         } else {
             Button(
-<<<<<<< HEAD
-                text = stringResource(id = R.string.tchap_screen_onboarding_sign_in_to, defaultAccountProvider),
-=======
-                text = stringResource(id = R.string.screen_onboarding_sign_in_to, defaultAccountProvider.friendlyServerName()),
->>>>>>> main-element
+                // :tchap: Custom welcome text
+//                text = stringResource(id = R.string.screen_onboarding_sign_in_to, defaultAccountProvider.friendlyServerName()),
+                text = stringResource(id = R.string.tchap_screen_onboarding_sign_in_to),
+                // :tchap: end
                 showProgress = isLoading,
                 onClick = {
                     state.eventSink(OnBoardingEvent.OnSignIn(defaultAccountProvider))

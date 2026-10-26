@@ -112,29 +112,14 @@ fun PreferencesRootView(
             snackbarHost = { SnackbarHost(snackbarHostState) }
         ) {
             UserPreferences(
-<<<<<<< HEAD
-                showMatrixId = state.showMatrixId,
-                modifier = Modifier.clickable {
-                    onOpenUserProfile(state.myUser)
-                },
-                matrixUser = state.myUser,
-            )
-            if (state.isMultiAccountEnabled) {
-                MultiAccountSection(
-                    state = state,
-                    onAddAccountClick = onAddAccountClick,
-                    showMatrixId = state.showMatrixId,
-                )
-            }
-=======
                 modifier = Modifier
                     .testTag(TestTags.settingsUserProfile)
                     .clickable {
                         onEditProfileClick(state.myUser)
                     },
                 matrixUser = state.myUser,
+                showMatrixId = showMatrixId
             )
->>>>>>> main-element
             if (state.userStatusState != null) {
                 UserStatusSection(
                     userStatusState = state.userStatusState,
@@ -146,6 +131,7 @@ fun PreferencesRootView(
                     state = state,
                     onAddAccountClick = onAddAccountClick,
                     onSwitchToSession = onSwitchToSession,
+                    showMatrixId = showMatrixId
                 )
             }
             HorizontalDivider(
@@ -240,18 +226,6 @@ private fun ColumnScope.MultiAccountSection(
         thickness = 8.dp,
         color = ElementTheme.colors.bgSubtleSecondary,
     )
-<<<<<<< HEAD
-    state.otherSessions.forEach { matrixUser ->
-        MatrixUserRow(
-            modifier = Modifier.clickable {
-                state.eventSink(PreferencesRootEvent.SwitchToSession(matrixUser.userId))
-            },
-            matrixUser = matrixUser,
-            avatarSize = AvatarSize.AccountItem,
-            showMatrixId = showMatrixId,
-        )
-        HorizontalDivider()
-=======
     if (state.otherSessions.isEmpty()) {
         AddAccountItem(onAddAccountClick)
     } else {
@@ -325,12 +299,12 @@ private fun ColumnScope.MultiAccountSection(
                         } else {
                             null
                         },
+                        matrixUser = matrixUser,
                     )
                 }
                 AddAccountItem(onAddAccountClick)
             }
         }
->>>>>>> main-element
     }
 }
 
@@ -484,13 +458,10 @@ private fun ContentToPreview(state: PreferencesRootState) {
         onSwitchToSession = {},
         onOpenAnalytics = {},
         onOpenDeveloperSettings = {},
-<<<<<<< HEAD
         onOpenAdvancedSettings = {},
         onOpenFAQ = {},
-=======
         onOpenLocationSettings = {},
         onOpenMediaSettings = {},
->>>>>>> main-element
         onOpenLabs = {},
         onOpenAbout = {},
         onOpenLockScreenSettings = {},

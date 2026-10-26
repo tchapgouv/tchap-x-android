@@ -299,13 +299,10 @@ class FetchPendingNotificationWorkerTest : RobolectricTest() {
         resultProcessor: FakeNotificationResultProcessor = FakeNotificationResultProcessor(),
         systemClock: FakeSystemClock = FakeSystemClock(),
         pushHandlingWakeLock: FakeFetchPushForegroundServiceManager = FakeFetchPushForegroundServiceManager(),
-<<<<<<< HEAD
         // :tchap: AutoClean System Notifications on sync
         notificationCleaner: FakeNotificationCleaner = FakeNotificationCleaner(),
         // :tchap: end
-=======
         buildVersionSdkIntProvider: FakeBuildVersionSdkIntProvider = FakeBuildVersionSdkIntProvider(33),
->>>>>>> main-element
     ) = FetchPendingNotificationsWorker(
         params = createWorkerParams(workDataOf("session_id" to input)),
         context = InstrumentationRegistry.getInstrumentation().context,
@@ -317,13 +314,10 @@ class FetchPendingNotificationWorkerTest : RobolectricTest() {
         resultProcessor = resultProcessor,
         systemClock = systemClock,
         fetchPushForegroundServiceManager = pushHandlingWakeLock,
-<<<<<<< HEAD
         // :tchap: AutoClean System Notifications on sync
         notificationCleaner = notificationCleaner,
         // :tchap: end
-=======
         buildVersionSdkIntProvider = buildVersionSdkIntProvider,
->>>>>>> main-element
     )
 
     private fun TestScope.createWorkerParams(

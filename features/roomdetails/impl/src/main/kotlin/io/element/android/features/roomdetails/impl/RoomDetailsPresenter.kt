@@ -35,11 +35,8 @@ import io.element.android.features.roomdetailsedit.api.roomDetailsEditPermission
 import io.element.android.features.securityandprivacy.api.SecurityAndPrivacyPermissions
 import io.element.android.features.securityandprivacy.api.securityAndPrivacyPermissions
 import io.element.android.libraries.androidutils.clipboard.ClipboardHelper
-<<<<<<< HEAD
 import io.element.android.libraries.architecture.AsyncData
-=======
 import io.element.android.libraries.androidutils.toast.ToastHelper
->>>>>>> main-element
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runUpdatingState
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
@@ -228,8 +225,9 @@ class RoomDetailsPresenter(
                     scope.launch(dispatchers.io) {
                         room.getPermalink()
                             .onSuccess { permalink ->
-                                clipboardHelper.copyPlainText(permalink)
-                                snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
+                                clipboardHelper.copyPlainText(permalink) {
+                                    snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
+                                }
                             }
                             .onFailure {
                                 Timber.e(it, "Failed to get permalink for room ${room.roomId}")

@@ -1,5 +1,6 @@
 import extension.setupDependencyInjection
 import extension.testCommonDependencies
+import org.gradle.kotlin.dsl.resolver.SourceDistributionResolver.Companion.artifactType
 
 /*
  * Copyright (c) 2025 Element Creations Ltd.
@@ -42,18 +43,12 @@ if (usesLocalRustSdk) {
 }
 
 dependencies {
-<<<<<<< HEAD
-    if (file("${rootDir.path}/libraries/rustsdk/matrix-rust-sdk.aar").exists()) {
-        println("\nNote: Using local binary of the Rust SDK.\n")
-=======
-    releaseImplementation(libs.matrix.sdk)
     if (usesLocalRustSdk) {
         println(
             "\nNote: Using local binary of the Rust SDK." +
                 "\n      element-call-matrix is substituted onto it as well, so the native call runs" +
                 "\n      against this SDK rather than the one it was published against.\n"
         )
->>>>>>> main-element
         debugImplementation(projects.libraries.rustsdk)
         releaseImplementation(projects.libraries.rustsdk)
     } else {

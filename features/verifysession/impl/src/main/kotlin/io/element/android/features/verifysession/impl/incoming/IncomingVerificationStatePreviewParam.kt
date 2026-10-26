@@ -51,16 +51,15 @@ open class IncomingVerificationStatePreviewParam : PreviewParameterProvider<Inco
 internal fun aStepInitial(
     isWaiting: Boolean = false,
 ) = Step.Initial(
-<<<<<<< HEAD
-    deviceDisplayName = "Tchap Android",
-=======
     currentUser = MatrixUser(
         userId = UserId("@bob:example.com"),
         displayName = USER_NAME_BOB,
         avatarUrl = null,
     ),
-    deviceDisplayName = "Element X Android",
->>>>>>> main-element
+    // :tchap: Tchap AppName
+//    deviceDisplayName = "Element X Android",
+    deviceDisplayName = "Tchap Android",
+    // :tchap: end
     deviceId = DeviceId("ILAKNDNASDLK"),
     formattedSignInTime = "12:34",
     isWaiting = isWaiting,

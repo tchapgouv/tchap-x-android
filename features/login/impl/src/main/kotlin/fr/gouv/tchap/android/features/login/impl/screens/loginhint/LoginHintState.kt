@@ -26,7 +26,7 @@ package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 
 import android.os.Parcelable
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns
-import io.element.android.features.login.impl.accountprovider.AccountProvider
+import io.element.android.libraries.matrix.api.accountprovider.AccountProvider
 import io.element.android.features.login.impl.login.LoginModeState
 import io.element.android.libraries.architecture.AsyncData
 import kotlinx.parcelize.Parcelize
@@ -41,7 +41,7 @@ data class LoginHintState(
     val eventSink: (LoginHintEvents) -> Unit
 ) {
     val submitEnabled: Boolean
-        get() = accountProvider.url.isNotEmpty() && formState.login.isNotEmpty() &&
+        get() = accountProvider.serverNameOrBaseUrl().isNotEmpty() && formState.login.isNotEmpty() &&
             TchapPatterns.isEmail(formState.login) &&
             (loginModeState.loginMode is AsyncData.Uninitialized || loginModeState.loginMode is AsyncData.Loading)
 }

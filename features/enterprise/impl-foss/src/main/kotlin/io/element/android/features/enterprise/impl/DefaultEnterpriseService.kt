@@ -25,12 +25,18 @@ import io.element.android.libraries.matrix.api.accountprovider.AccountProvider
 import io.element.android.libraries.matrix.api.core.SessionId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-<<<<<<< HEAD
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import timber.log.Timber
 import kotlin.random.Random
 
 @ContributesBinding(AppScope::class)
 class DefaultEnterpriseService(
-    private val homeserverConfiguration: HomeserverConfiguration
+    private val homeserverConfiguration: HomeserverConfiguration,
+    private val temporaryMatrixClientFactory: TemporaryMatrixClientFactory,
+    private val jsonProvider: JsonProvider,
+    private val dispatchers: CoroutineDispatchers,
 ) : EnterpriseService {
     // :tchap: Get a random HomeServeur from a known list to determine account HomeServer
     override var selectedHomeserver: Int = -1
@@ -47,20 +53,6 @@ class DefaultEnterpriseService(
 
     override fun defaultHomeserverList(): List<String> = homeserverConfiguration.defaultHomeserverList
     // :tchap: end
-
-=======
-import kotlinx.coroutines.withContext
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import timber.log.Timber
-
-@ContributesBinding(AppScope::class)
-class DefaultEnterpriseService(
-    private val temporaryMatrixClientFactory: TemporaryMatrixClientFactory,
-    private val jsonProvider: JsonProvider,
-    private val dispatchers: CoroutineDispatchers,
-) : EnterpriseService {
->>>>>>> main-element
     override suspend fun isEnterpriseUser(sessionId: SessionId) = false
     override suspend fun tweakMasUrl(url: String, urlContentFetcher: ClientUrlContentFetcher) = url
     override fun accountProviderAllowList(): List<AccountProvider> = emptyList()

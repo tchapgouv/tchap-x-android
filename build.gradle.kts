@@ -227,12 +227,6 @@ subprojects {
             snapshotsDir.deleteRecursively()
         }
     }
-<<<<<<< HEAD
-    tasks.findByName("recordPaparazziTchapWithpinning")?.dependsOn(removeOldScreenshotsTask)
-    tasks.findByName("recordPaparazziTchapWithpinningDebug")?.dependsOn(removeOldScreenshotsTask)
-    tasks.findByName("recordPaparazziTchapWithpinningRelease")?.dependsOn(removeOldScreenshotsTask)
-=======
->>>>>>> main-element
 }
 
 // Delete the screenshots of previews that no longer exist, *after* recording.
@@ -304,17 +298,11 @@ subprojects {
             println("Pruned ${obsolete.size} obsolete screenshot(s), kept ${existing.size - obsolete.size}.\n")
         }
     }
-<<<<<<< HEAD
-    tasks.findByName("recordRoborazziTchapWithpinning")?.dependsOn(removeOldScreenshotsTask)
-    tasks.findByName("recordRoborazziTchapWithpinningDebug")?.dependsOn(removeOldScreenshotsTask)
-    tasks.findByName("recordRoborazziTchapWithpinningRelease")?.dependsOn(removeOldScreenshotsTask)
-=======
     // `configureEach` on a live filtered collection, and not `findByName`, because the Paparazzi plugin
     // registers its record tasks per variant, long after this block runs.
     tasks.matching { it.name.startsWith("recordPaparazzi") }.configureEach {
         finalizedBy(pruneObsoleteSnapshots)
     }
->>>>>>> main-element
 }
 
 subprojects {

@@ -260,37 +260,6 @@ fun MessagesView(
             Scaffold(
                 contentWindowInsets = scaffoldScrollableContentInsets,
                 topBar = {
-<<<<<<< HEAD
-                    if (state.timelineState.timelineMode is Timeline.Mode.Thread) {
-                        ThreadTopBar(
-                            roomName = state.roomName,
-                            roomAvatarData = state.roomAvatar,
-                            heroes = state.heroes,
-                            isTombstoned = state.isTombstoned,
-                            onBackClick = onBackClick,
-                        )
-                    } else {
-                        MessagesViewTopBar(
-                            roomBadges = state.roomBadges,
-                            roomName = state.roomName,
-                            roomAvatar = state.roomAvatar,
-                            isTombstoned = state.isTombstoned,
-                            heroes = state.heroes,
-                            dmUserIdentityState = state.dmUserVerificationState,
-                            sharedHistoryIcon = state.topBarSharedHistoryIcon,
-                            dmUserStatus = state.dmUserStatus,
-                            onBackClick = { hidingKeyboard { onBackClick() } },
-                            onRoomDetailsClick = { hidingKeyboard { onRoomDetailsClick() } },
-                            menuActions = {
-                                MessagesMenuActions(
-                                    displayThreads = state.timelineState.timelineMode !is Timeline.Mode.Thread && state.threads.hasThreads,
-                                    roomCallState = state.roomCallState,
-                                    onJoinCallClick = onJoinCallClick,
-                                    onThreadsListClick = onThreadsListClick
-                                )
-                            }
-                        )
-=======
                     when {
                         state.timelineState.isSelectionModeActive -> {
                             val selection = state.timelineState.selectionState as SelectionState.Active
@@ -316,6 +285,9 @@ fun MessagesView(
                         }
                         else -> {
                             MessagesViewTopBar(
+                                // :tchap: Tchap Room Badges
+                                roomBadges = state.roomBadges,
+                                // :tchap: end
                                 roomName = state.roomName,
                                 roomAvatar = state.roomAvatar,
                                 isTombstoned = state.isTombstoned,
@@ -335,7 +307,6 @@ fun MessagesView(
                                 }
                             )
                         }
->>>>>>> main-element
                     }
                 },
                 content = { padding ->

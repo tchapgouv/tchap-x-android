@@ -36,15 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-<<<<<<< HEAD
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
-import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
-import dev.chrisbanes.haze.materials.HazeMaterials
-import dev.chrisbanes.haze.rememberHazeState
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
-=======
->>>>>>> main-element
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.home.impl.components.HomeTopBar
@@ -305,19 +297,10 @@ private fun HomeScaffold(
                                 // :tchap: end
                             }
                         }
-<<<<<<< HEAD
                     },
+                    totalUnreadCount = state.totalUnreadCount,
                 )
             }
-=======
-                        HomeNavigationBarItem.Spaces -> {
-                            HomeFloatingActionButton(onCreateSpaceClick, CommonStrings.action_create_space)
-                        }
-                    }
-                },
-                totalUnreadCount = state.totalUnreadCount,
-            )
->>>>>>> main-element
         },
         floatingActionButtonPosition = FabPosition.Center,
         contentWindowInsets = scaffoldScrollableContentInsets,
@@ -332,63 +315,6 @@ private fun HomeScaffold(
             val contentPadding = PaddingValues(
                 bottom = 96.dp,
             )
-<<<<<<< HEAD
-            when (state.currentHomeNavigationBarItem) {
-                HomeNavigationBarItem.Chats -> {
-                    RoomListContentView(
-                        contentState = roomListState.contentState,
-                        filtersState = roomListState.filtersState,
-                        spaceFiltersState = roomListState.spaceFiltersState,
-                        lazyListState = roomsLazyListState,
-                        hideInvitesAvatars = roomListState.hideInvitesAvatars,
-                        eventSink = roomListState.eventSink,
-                        onSetUpRecoveryClick = onSetUpRecoveryClick,
-                        onConfirmRecoveryKeyClick = onConfirmRecoveryKeyClick,
-                        // TCHAP : Display banner when sync is offline
-                        onViewServiceStatusClick = onViewServiceStatusClick,
-                        onRoomClick = ::onRoomClick,
-                        onCreateRoomClick = onStartChatClick,
-                        contentPadding = lazyColumnContentPadding + contentPadding,
-                        modifier = Modifier
-                            .padding(outerPadding)
-                            .consumeWindowInsets(outerPadding)
-                            .hazeSource(state = hazeState)
-                    )
-                    SpaceFiltersView(roomListState.spaceFiltersState)
-                }
-                HomeNavigationBarItem.Spaces -> {
-                    HomeSpacesView(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(outerPadding)
-                            .consumeWindowInsets(outerPadding)
-                            .hazeSource(state = hazeState),
-                        contentPadding = lazyColumnContentPadding + contentPadding,
-                        state = state.homeSpacesState,
-                        lazyListState = spacesLazyListState,
-                        // TCHAP : Space default action is now conversation filtering
-                        onSpaceClick = { spaceId ->
-//                            onRoomClick(spaceId)
-                            if (roomListState.spaceFiltersState is SpaceFiltersState.Selecting) {
-                                val spaceFilter = roomListState.spaceFiltersState.availableFilters.find { it.spaceRoom.roomId == spaceId }
-                                if (spaceFilter != null) {
-                                    roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Selecting.SelectFilter(spaceFilter))
-                                } else {
-                                    roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Selecting.Cancel)
-                                }
-                                state.eventSink(HomeEvent.SelectHomeNavigationBarItem(HomeNavigationBarItem.Chats, reselectLastFilters = false))
-                            }
-                        },
-                        onTrailingSpaceClick = { spaceId ->
-                            onRoomClick(spaceId)
-                        },
-                        // :tchap: space-admin-limitations
-//                        onCreateSpaceClick = onCreateSpaceClick,
-                        // :tchap: end
-                        // TODO use actual callbacks for this
-                        onExploreClick = {},
-                    )
-=======
             // The nested scroll connection is set on the content and not on the Scaffold, else the top bar would
             // consume the scroll events of its own content.
             Box(
@@ -407,6 +333,9 @@ private fun HomeScaffold(
                             eventSink = roomListState.eventSink,
                             onSetUpRecoveryClick = onSetUpRecoveryClick,
                             onConfirmRecoveryKeyClick = onConfirmRecoveryKeyClick,
+                            // :tchap: Display banner when sync is offline
+                            onViewServiceStatusClick = onViewServiceStatusClick,
+                            // :tchap: end
                             onRoomClick = ::onRoomClick,
                             onCreateRoomClick = onStartChatClick,
                             contentPadding = lazyColumnContentPadding + contentPadding,
@@ -425,15 +354,31 @@ private fun HomeScaffold(
                             contentPadding = lazyColumnContentPadding + contentPadding,
                             state = state.homeSpacesState,
                             lazyListState = spacesLazyListState,
+                            // :tchap: Space default action is now conversation filtering
+//                            onSpaceClick = { spaceId ->
+//                                onRoomClick(spaceId)
+//                            },
                             onSpaceClick = { spaceId ->
+                                if (roomListState.spaceFiltersState is SpaceFiltersState.Selecting) {
+                                    val spaceFilter = roomListState.spaceFiltersState.availableFilters.find { it.spaceRoom.roomId == spaceId }
+                                    if (spaceFilter != null) {
+                                        roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Selecting.SelectFilter(spaceFilter))
+                                    } else {
+                                        roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Selecting.Cancel)
+                                    }
+                                    state.eventSink(HomeEvent.SelectHomeNavigationBarItem(HomeNavigationBarItem.Chats, reselectLastFilters = false))
+                                }
+                            },
+                            onTrailingSpaceClick = { spaceId ->
                                 onRoomClick(spaceId)
                             },
-                            onCreateSpaceClick = onCreateSpaceClick,
+                            // :tchap: end
+                            // :tchap: space-admin-limitations
+//                            onCreateSpaceClick = onCreateSpaceClick,
                             // TODO use actual callbacks for this
                             onExploreClick = {},
                         )
                     }
->>>>>>> main-element
                 }
             }
         },

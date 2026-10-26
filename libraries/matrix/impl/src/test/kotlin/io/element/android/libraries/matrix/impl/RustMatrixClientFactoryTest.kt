@@ -34,11 +34,8 @@ import io.element.android.services.analytics.test.FakeAnalyticsService
 import io.element.android.services.toolbox.test.systemclock.FakeSystemClock
 import io.element.android.tests.testutils.lambda.lambdaRecorder
 import io.element.android.tests.testutils.testCoroutineDispatchers
-<<<<<<< HEAD
 import io.mockk.mockk
-=======
 import kotlinx.coroutines.ExperimentalCoroutinesApi
->>>>>>> main-element
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest

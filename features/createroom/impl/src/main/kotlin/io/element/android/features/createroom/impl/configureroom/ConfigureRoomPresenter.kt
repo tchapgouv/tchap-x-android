@@ -25,6 +25,7 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import im.vector.app.features.analytics.plan.CreatedRoom
+import io.element.android.features.enterprise.api.SessionEnterpriseService
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runCatchingUpdatingState
@@ -74,6 +75,7 @@ class ConfigureRoomPresenter(
     private val featureFlagService: FeatureFlagService,
     private val roomAliasHelper: RoomAliasHelper,
     private val mediaOptimizationConfigProvider: MediaOptimizationConfigProvider,
+    private val sessionEnterpriseService: SessionEnterpriseService,
 ) : Presenter<ConfigureRoomState> {
     @AssistedFactory
     interface Factory {
@@ -154,30 +156,27 @@ class ConfigureRoomPresenter(
         // 3. If knocking is enabled.
         // 4. If the homeserver forbids public rooms.
         val parentSpace = createRoomConfig.parentSpace
-<<<<<<< HEAD
-        val availableJoinRules = remember(parentSpace, isSpace, isKnockFeatureEnabled, isPrivateNotEncryptedRoomsActive) {
-            when {
-                isSpace && parentSpace != null -> TODO("Adding a space to a parent space is not supported yet! How did you get here?")
-                parentSpace == null || parentSpace.joinRule == JoinRule.Public -> listOfNotNull(
-                    JoinRuleItem.PrivateVisibility.Private,
-                    // TCHAP - Enable PrivateNotEncrypted room
-                    JoinRuleItem.PrivateVisibility.PrivateNotEncrypted.takeIf { isPrivateNotEncryptedRoomsActive },
-                    JoinRuleItem.PublicVisibility.Public,
-=======
-        val availableJoinRules = remember(parentSpace, isSpace, isKnockFeatureEnabled, arePublicRoomsDisabled) {
+        // :tchap: Enable PrivateNotEncrypted room
+//        val availableJoinRules = remember(parentSpace, isSpace, isKnockFeatureEnabled, ) {
+        val availableJoinRules = remember(parentSpace, isSpace, isKnockFeatureEnabled, arePublicRoomsDisabled, isPrivateNotEncryptedRoomsActive) {
+        // :tchap: end
             when {
                 isSpace && parentSpace != null -> TODO("Adding a space to a parent space is not supported yet! How did you get here?")
                 parentSpace == null || parentSpace.joinRule == JoinRule.Public -> listOfNotNull(
                     JoinRuleItem.PublicVisibility.Public.takeIf { !arePublicRoomsDisabled },
->>>>>>> main-element
                     JoinRuleItem.PublicVisibility.AskToJoin.takeIf { !isSpace && isKnockFeatureEnabled },
+                    JoinRuleItem.PrivateVisibility.Private,
+                    // :tchap: Enable PrivateNotEncrypted room
+                    JoinRuleItem.PrivateVisibility.PrivateNotEncrypted.takeIf { isPrivateNotEncryptedRoomsActive },
+                    // :tchap: end
                 ).toImmutableList()
                 else -> listOfNotNull(
-                    JoinRuleItem.PrivateVisibility.Private,
-                    // TCHAP - Enable PrivateNotEncrypted room
-                    JoinRuleItem.PrivateVisibility.PrivateNotEncrypted.takeIf { isPrivateNotEncryptedRoomsActive },
                     JoinRuleItem.PrivateVisibility.Restricted(parentSpace.roomId),
                     JoinRuleItem.PrivateVisibility.AskToJoinRestricted(parentSpace.roomId).takeIf { isKnockFeatureEnabled },
+                    JoinRuleItem.PrivateVisibility.Private,
+                    // :tchap: Enable PrivateNotEncrypted room
+                    JoinRuleItem.PrivateVisibility.PrivateNotEncrypted.takeIf { isPrivateNotEncryptedRoomsActive },
+                    // :tchap: end
                 ).toImmutableList()
             }
         }

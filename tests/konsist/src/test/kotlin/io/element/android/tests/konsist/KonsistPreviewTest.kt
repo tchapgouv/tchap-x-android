@@ -135,11 +135,8 @@ class KonsistPreviewTest {
         "SasEmojisPreview",
         "SecureBackupSetupViewChangePreview",
         "SelectedUserCannotRemovePreview",
-<<<<<<< HEAD
         "SelectedUserExternalPreview",
-=======
         "SelectionIndicatorSelectedPreview",
->>>>>>> main-element
         "SpaceMembersViewNoHeroesPreview",
         "SyncStateViewServerUnreachablePreview",
         "TextComposerAddCaptionPreview",

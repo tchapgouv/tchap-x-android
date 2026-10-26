@@ -144,11 +144,7 @@ class OnBoardingPresenter(
             defaultAccountProvider = defaultAccountProvider,
             mustChooseAccountProvider = mustChooseAccountProvider,
             canLoginWithQrCode = canLoginWithQrCode,
-<<<<<<< HEAD
-            canCreateAccount = defaultAccountProvider == null && OnBoardingConfig.CAN_CREATE_ACCOUNT,
-=======
             canCreateAccount = defaultAccountProvider == null && canConnectToAnyAccountProvider && OnBoardingConfig.CAN_CREATE_ACCOUNT,
->>>>>>> main-element
             canReportBug = canReportBug && showReportBug,
             loginModeState = loginModeState,
             version = buildMeta.versionName,

@@ -117,7 +117,7 @@ class HomePresenter(
 
         fun handleEvent(event: HomeEvent) {
             when (event) {
-                is HomeEvent.SelectHomeNavigationBarItem -> coroutineState.launch {
+                is HomeEvent.SelectHomeNavigationBarItem -> coroutineScope.launch {
                     currentHomeNavigationBarItemOrdinal = event.item.ordinal
                     if (event.item == HomeNavigationBarItem.Spaces) {
                         // TCHAP : Space default action is now conversation filtering (set state to ShowFilters when showing spaces)

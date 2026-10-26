@@ -133,19 +133,10 @@ class PreferencesRootPresenter(
 
         val showLabsItem = remember { featureFlagService.getAvailableFeatures(isInLabs = true).isNotEmpty() }
 
-<<<<<<< HEAD
-        val directLogoutState = directLogoutPresenter.present()
-
-        LaunchedEffect(Unit) {
-            initAccountManagementUrl(accountManagementUrl)
-        }
-
         val showMatrixId by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
         }.collectAsState(false)
 
-=======
->>>>>>> main-element
         val showDeveloperSettings by showDeveloperSettingsProvider.showDeveloperSettings.collectAsState()
 
         val isLocationServiceAvailable by remember { locationService.isServiceAvailable() }.collectAsState()

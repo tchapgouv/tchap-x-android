@@ -34,7 +34,6 @@ class DefaultEnterpriseServiceTest {
     )
 
     @Test
-<<<<<<< HEAD
     fun homeserverWhitelist() {
         val defaultEnterpriseService = DefaultEnterpriseService(homeserverList)
         assertThat(defaultEnterpriseService.homeserverAllowList()).isEmpty()
@@ -44,7 +43,8 @@ class DefaultEnterpriseServiceTest {
     fun `isAllowedToConnectToHomeserver is true for all homeserver urls`() = runTest {
         val defaultEnterpriseService = DefaultEnterpriseService(homeserverList)
         assertThat(defaultEnterpriseService.isAllowedToConnectToHomeserver(A_HOMESERVER_URL)).isTrue()
-=======
+    }
+
     fun accountProviderAllowList() = runTest {
         val defaultEnterpriseService = createDefaultEnterpriseService()
         assertThat(defaultEnterpriseService.accountProviderAllowList()).isEmpty()
@@ -60,26 +60,17 @@ class DefaultEnterpriseServiceTest {
     fun `isAllowedToConnectToAccountProvider is true for all account providers`() = runTest {
         val defaultEnterpriseService = createDefaultEnterpriseService()
         assertThat(defaultEnterpriseService.isAllowedToConnectToAccountProvider(anAccountProviderGeneric())).isTrue()
->>>>>>> main-element
     }
 
     @Test
     fun `isEnterpriseUser always return false`() = runTest {
-<<<<<<< HEAD
-        val defaultEnterpriseService = DefaultEnterpriseService(homeserverList)
-=======
         val defaultEnterpriseService = createDefaultEnterpriseService()
->>>>>>> main-element
         assertThat(defaultEnterpriseService.isEnterpriseUser(A_SESSION_ID)).isFalse()
     }
 
     @Test
     fun `semanticColorsFlow always emits the same value`() = runTest {
-<<<<<<< HEAD
-        val defaultEnterpriseService = DefaultEnterpriseService(homeserverList)
-=======
         val defaultEnterpriseService = createDefaultEnterpriseService()
->>>>>>> main-element
         defaultEnterpriseService.semanticColorsFlow(null).test {
             val initialState = awaitItem()
             assertThat(initialState).isEqualTo(SemanticColorsLightDark.default)
@@ -89,11 +80,7 @@ class DefaultEnterpriseServiceTest {
 
     @Test
     fun `brandColorsFlow always emits null`() = runTest {
-<<<<<<< HEAD
-        val defaultEnterpriseService = DefaultEnterpriseService(homeserverList)
-=======
         val defaultEnterpriseService = createDefaultEnterpriseService()
->>>>>>> main-element
         defaultEnterpriseService.brandColorsFlow(null).test {
             val initialState = awaitItem()
             assertThat(initialState).isNull()
@@ -103,11 +90,7 @@ class DefaultEnterpriseServiceTest {
 
     @Test
     fun `semanticColorsFlow always emits the same value for a session`() = runTest {
-<<<<<<< HEAD
-        val defaultEnterpriseService = DefaultEnterpriseService(homeserverList)
-=======
         val defaultEnterpriseService = createDefaultEnterpriseService()
->>>>>>> main-element
         defaultEnterpriseService.semanticColorsFlow(A_SESSION_ID).test {
             val initialState = awaitItem()
             assertThat(initialState).isEqualTo(SemanticColorsLightDark.default)
@@ -117,41 +100,25 @@ class DefaultEnterpriseServiceTest {
 
     @Test
     fun `overrideBrandColor has no effect`() = runTest {
-<<<<<<< HEAD
-        val defaultEnterpriseService = DefaultEnterpriseService(homeserverList)
-=======
         val defaultEnterpriseService = createDefaultEnterpriseService()
->>>>>>> main-element
         defaultEnterpriseService.overrideBrandColor(A_SESSION_ID, "aColor")
     }
 
     @Test
     fun `firebasePushGateway returns null`() = runTest {
-<<<<<<< HEAD
-        val defaultEnterpriseService = DefaultEnterpriseService(homeserverList)
-=======
         val defaultEnterpriseService = createDefaultEnterpriseService()
->>>>>>> main-element
         assertThat(defaultEnterpriseService.firebasePushGateway()).isNull()
     }
 
     @Test
     fun `unifiedPushDefaultPushGateway returns null`() = runTest {
-<<<<<<< HEAD
-        val defaultEnterpriseService = DefaultEnterpriseService(homeserverList)
-=======
         val defaultEnterpriseService = createDefaultEnterpriseService()
->>>>>>> main-element
         assertThat(defaultEnterpriseService.unifiedPushDefaultPushGateway()).isNull()
     }
 
     @Test
     fun `bugReportUrlFlow only emits UseDefault`() = runTest {
-<<<<<<< HEAD
-        val defaultEnterpriseService = DefaultEnterpriseService(homeserverList)
-=======
         val defaultEnterpriseService = createDefaultEnterpriseService()
->>>>>>> main-element
         defaultEnterpriseService.bugReportUrlFlow(A_SESSION_ID).test {
             assertThat(awaitItem()).isEqualTo(BugReportUrl.UseDefault)
             awaitComplete()
@@ -160,11 +127,7 @@ class DefaultEnterpriseServiceTest {
 
     @Test
     fun `getNoisyNotificationChannelId returns null`() = runTest {
-<<<<<<< HEAD
-        val defaultEnterpriseService = DefaultEnterpriseService(homeserverList)
-=======
         val defaultEnterpriseService = createDefaultEnterpriseService()
->>>>>>> main-element
         assertThat(defaultEnterpriseService.getNoisyNotificationChannelId(A_SESSION_ID)).isNull()
     }
 
