@@ -129,10 +129,6 @@ class ChangeRolesPresenter(
             }
         }
 
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
-
         val hasPendingChanges by remember {
             derivedStateOf {
                 usersWithRole.value.toSet() != selectedUsers.value.toSet()
@@ -200,7 +196,6 @@ class ChangeRolesPresenter(
             }
         }
         return ChangeRolesState(
-            showMatrixId = showMatrixId,
             role = role,
             searchQuery = queryState,
             isSearchActive = searchActive,

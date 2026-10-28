@@ -234,10 +234,6 @@ class MessagesPresenter(
         val dmRoomMember by room.getDirectRoomMember(membersState)
         val roomMemberIdentityStateChanges = identityChangeState.roomMemberIdentityStateChanges
 
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
-
         // TCHAP : Show public badge only when the room is visible in the room directory
         val savedIsVisibleInRoomDirectory = remember { mutableStateOf<AsyncData<Boolean>>(AsyncData.Uninitialized) }
         LaunchedEffect(Unit) {
@@ -345,7 +341,6 @@ class MessagesPresenter(
         }
 
         return MessagesState(
-            showMatrixId = showMatrixId,
             isEncrypted = room.roomInfoFlow.value.isEncrypted ?: false,
             // TCHAP : Show public badge only when the room is visible in the room directory
 //            isPublic = room.roomInfoFlow.value.isPublic ?: false,

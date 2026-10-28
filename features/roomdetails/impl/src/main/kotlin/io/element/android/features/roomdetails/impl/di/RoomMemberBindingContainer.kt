@@ -15,7 +15,6 @@ import io.element.android.features.roomdetails.impl.members.details.RoomMemberDe
 import io.element.android.features.userprofile.api.UserProfilePresenterFactory
 import io.element.android.libraries.androidutils.clipboard.ClipboardHelper
 import io.element.android.libraries.di.RoomScope
-import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.encryption.EncryptionService
 import io.element.android.libraries.matrix.api.room.JoinedRoom
@@ -25,7 +24,6 @@ import io.element.android.libraries.matrix.api.room.JoinedRoom
 object RoomMemberBindingContainer {
     @Provides
     fun providesRoomMemberDetailsPresenterFactory(
-        featureFlagService: FeatureFlagService,
         room: JoinedRoom,
         userProfilePresenterFactory: UserProfilePresenterFactory,
         encryptionService: EncryptionService,
@@ -35,7 +33,6 @@ object RoomMemberBindingContainer {
             override fun create(roomMemberId: UserId): RoomMemberDetailsPresenter {
                 return RoomMemberDetailsPresenter(
                     roomMemberId = roomMemberId,
-                    featureFlagService = featureFlagService,
                     room = room,
                     userProfilePresenterFactory = userProfilePresenterFactory,
                     encryptionService = encryptionService,

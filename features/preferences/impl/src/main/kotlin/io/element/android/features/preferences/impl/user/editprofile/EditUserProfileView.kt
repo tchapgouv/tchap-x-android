@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.preferences.impl.R
 import io.element.android.libraries.architecture.AsyncAction
@@ -121,7 +122,7 @@ fun EditUserProfileView(
                 enabled = state.canChangeAvatarUrl,
             )
             // TCHAP hide the Matrix Id depending of showMatrixId feature flag
-            if (state.showMatrixId) {
+            if (LocalShowMatrixId.current) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     modifier = Modifier.fillMaxWidth(),

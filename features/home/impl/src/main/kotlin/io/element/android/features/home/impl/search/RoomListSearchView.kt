@@ -179,7 +179,6 @@ private fun RoomListSearchContent(
                     contentType = { room -> room.contentType() },
                 ) { room ->
                     RoomSummaryRow(
-                        showMatrixId = state.showMatrixId,
                         room = room,
                         hideInviteAvatars = hideInvitesAvatars,
                         // TODO

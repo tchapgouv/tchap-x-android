@@ -16,7 +16,6 @@ import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.user.DisplayedStatus
 
 data class UserProfileState(
-    val showMatrixId: Boolean,
     val userId: UserId,
     val userName: String?,
     val avatarUrl: String?,

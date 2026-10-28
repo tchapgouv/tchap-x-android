@@ -23,7 +23,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 data class RoomDetailsState(
-    val showMatrixId: Boolean,
     // TCHAP external user
     val isOpenToExternalUsers: Boolean,
     val roomId: RoomId,

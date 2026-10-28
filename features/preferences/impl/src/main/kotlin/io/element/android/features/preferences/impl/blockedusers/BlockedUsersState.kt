@@ -14,7 +14,6 @@ import io.element.android.libraries.matrix.api.user.MatrixUser
 import kotlinx.collections.immutable.ImmutableList
 
 data class BlockedUsersState(
-    val showMatrixId: Boolean,
     val blockedUsers: ImmutableList<MatrixUser>,
     val unblockUserAction: AsyncAction<Unit>,
     val snackbarMessage: SnackbarMessage?,

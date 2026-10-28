@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.libraries.designsystem.components.avatar.Avatar
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
@@ -35,7 +36,6 @@ import io.element.android.libraries.matrix.ui.model.getBestName
 
 @Composable
 fun MatrixUserHeader(
-    showMatrixId: Boolean,
     matrixUser: MatrixUser,
     modifier: Modifier = Modifier,
 ) {
@@ -69,7 +69,7 @@ fun MatrixUserHeader(
             )
             // Id
             // TCHAP show the Matrix Id depending of feature flag showMatrixId
-            if (showMatrixId && matrixUser.displayName.isNullOrEmpty().not()) {
+            if (LocalShowMatrixId.current && matrixUser.displayName.isNullOrEmpty().not()) {
                 Text(
                     text = matrixUser.userId.value,
                     style = ElementTheme.typography.fontBodyMdRegular,
@@ -85,5 +85,5 @@ fun MatrixUserHeader(
 @PreviewsDayNight
 @Composable
 internal fun MatrixUserHeaderPreview(@PreviewParameter(MatrixUserPreviewParam::class) matrixUser: MatrixUser) = ElementPreview {
-    MatrixUserHeader(showMatrixId = false, matrixUser)
+    MatrixUserHeader(matrixUser)
 }

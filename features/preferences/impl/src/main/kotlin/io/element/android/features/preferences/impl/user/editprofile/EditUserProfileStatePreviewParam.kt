@@ -39,7 +39,6 @@ fun aEditUserProfileState(
     canChangeAvatarUrl: Boolean = true,
     eventSink: (EditUserProfileEvent) -> Unit = {},
 ) = EditUserProfileState(
-    showMatrixId = false,
     userId = userId,
     displayName = displayName,
     userAvatarUrl = userAvatarUrl,

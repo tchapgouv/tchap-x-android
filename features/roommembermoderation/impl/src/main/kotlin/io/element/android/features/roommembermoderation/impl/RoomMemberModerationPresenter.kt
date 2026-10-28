@@ -80,10 +80,6 @@ class RoomMemberModerationPresenter(
         }
         val moderationActions = remember { mutableStateOf<ImmutableList<ModerationActionState>>(persistentListOf()) }
 
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
-
         fun handleEvent(event: RoomMemberModerationEvent) {
             when (event) {
                 is RoomMemberModerationEvent.ShowActionsForUser -> {
@@ -146,7 +142,6 @@ class RoomMemberModerationPresenter(
         }
 
         return InternalRoomMemberModerationState(
-            showMatrixId = showMatrixId,
             permissions = permissions,
             selectedUser = selectedUser,
             actions = moderationActions.value,

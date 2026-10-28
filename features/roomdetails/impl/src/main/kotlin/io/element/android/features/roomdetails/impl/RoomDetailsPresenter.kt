@@ -43,8 +43,6 @@ import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.designsystem.utils.snackbar.LocalSnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.designsystem.utils.snackbar.collectSnackbarMessageAsState
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityState
@@ -86,7 +84,6 @@ class RoomDetailsPresenter(
     private val clipboardHelper: ClipboardHelper,
     private val toastHelper: ToastHelper,
     private val appPreferencesStore: AppPreferencesStore,
-    private val featureFlagService: FeatureFlagService,
     private val sessionPreferencesStore: SessionPreferencesStore,
     private val notificationCleaner: NotificationCleaner,
 ) : Presenter<RoomDetailsState> {
@@ -135,10 +132,6 @@ class RoomDetailsPresenter(
 
         // TCHAP external user
         val isOpenToExternalUsers by remember { derivedStateOf { roomInfo.isOpenToExternalUsers } }
-
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
 
         val permissions by getPermissions()
         val canonicalAlias by remember { derivedStateOf { roomInfo.canonicalAlias } }
@@ -260,7 +253,6 @@ class RoomDetailsPresenter(
         val canReportRoom by produceState(false) { value = client.canReportRoom() }
 
         return RoomDetailsState(
-            showMatrixId = showMatrixId,
             // TCHAP external user
             isOpenToExternalUsers = isOpenToExternalUsers,
             roomId = room.roomId,

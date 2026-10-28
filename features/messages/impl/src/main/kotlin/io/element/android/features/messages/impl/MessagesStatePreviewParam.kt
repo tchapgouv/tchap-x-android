@@ -136,7 +136,6 @@ fun aMessagesState(
     eventSink: (MessagesEvent) -> Unit = {},
     redactEventAction: AsyncAction<Unit> = AsyncAction.Uninitialized,
 ) = MessagesState(
-    showMatrixId = false,
     isEncrypted = true,
     isPublic = true,
     // TCHAP external user
@@ -219,7 +218,6 @@ fun aReadReceiptBottomSheetState(
     selectedEvent: TimelineItem.Event? = null,
     eventSink: (ReadReceiptBottomSheetEvent) -> Unit = {},
 ) = ReadReceiptBottomSheetState(
-    showMatrixId = false,
     selectedEvent = selectedEvent,
     eventSink = eventSink,
 )

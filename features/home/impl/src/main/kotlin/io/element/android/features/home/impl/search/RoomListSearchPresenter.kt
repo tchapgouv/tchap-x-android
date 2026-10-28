@@ -62,7 +62,6 @@ class RoomListSearchPresenter(
         val searchResults by dataSource.roomSummaries.collectAsState(initial = persistentListOf())
 
         return RoomListSearchState(
-            showMatrixId = buildMeta.isDebuggable,
             isSearchActive = isSearchActive,
             query = searchQuery,
             results = searchResults,

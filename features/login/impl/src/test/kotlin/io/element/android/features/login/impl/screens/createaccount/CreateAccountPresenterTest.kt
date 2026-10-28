@@ -39,7 +39,6 @@ class CreateAccountPresenterTest {
             assertThat(initialState.url).isEqualTo("aUrl")
             assertThat(initialState.pageProgress).isEqualTo(0)
             assertThat(initialState.createAction).isEqualTo(AsyncAction.Uninitialized)
-            assertThat(initialState.showMatrixId).isTrue()
         }
     }
 

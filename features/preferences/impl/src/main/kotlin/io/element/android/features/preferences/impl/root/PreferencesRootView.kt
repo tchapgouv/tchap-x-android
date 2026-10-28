@@ -99,7 +99,6 @@ fun PreferencesRootView(
     onOpenNotificationSettings: () -> Unit,
     onSignOutClick: () -> Unit,
     onDeactivateClick: () -> Unit,
-    showMatrixId: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = rememberSnackbarHostState(snackbarMessage = state.snackbarMessage)
@@ -118,7 +117,6 @@ fun PreferencesRootView(
                         onEditProfileClick(state.myUser)
                     },
                 matrixUser = state.myUser,
-                showMatrixId = showMatrixId
             )
             if (state.userStatusState != null) {
                 UserStatusSection(
@@ -131,7 +129,6 @@ fun PreferencesRootView(
                     state = state,
                     onAddAccountClick = onAddAccountClick,
                     onSwitchToSession = onSwitchToSession,
-                    showMatrixId = showMatrixId
                 )
             }
             HorizontalDivider(
@@ -217,7 +214,6 @@ private fun ColumnScope.UserStatusSection(
  */
 @Composable
 private fun ColumnScope.MultiAccountSection(
-    showMatrixId: Boolean,
     state: PreferencesRootState,
     onAddAccountClick: () -> Unit,
     onSwitchToSession: (SessionId) -> Unit,
@@ -299,7 +295,6 @@ private fun ColumnScope.MultiAccountSection(
                         } else {
                             null
                         },
-                        matrixUser = matrixUser,
                     )
                 }
                 AddAccountItem(onAddAccountClick)
@@ -474,6 +469,5 @@ private fun ContentToPreview(state: PreferencesRootState) {
         onOpenNotificationSettings = {},
         onSignOutClick = {},
         onDeactivateClick = {},
-        showMatrixId = false,
     )
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.userprofile.api.UserProfileVerificationState
@@ -51,7 +52,6 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun UserProfileHeaderSection(
-    showMatrixId: Boolean,
     avatarUrl: String?,
     userId: UserId,
     userName: String?,
@@ -106,7 +106,7 @@ fun UserProfileHeaderSection(
             Spacer(modifier = Modifier.height(12.dp))
         }
         // :tchap: Show the Matrix Id depending of feature flag showMatrixId
-        if (showMatrixId) {
+        if (LocalShowMatrixId.current) {
             // :tchap: end
             Text(
                 modifier = Modifier.niceClickable { onUserIdClick() },
@@ -158,7 +158,6 @@ fun UserProfileHeaderSection(
 @Composable
 internal fun UserProfileHeaderSectionPreview() = ElementPreview {
     UserProfileHeaderSection(
-        showMatrixId = false,
         avatarUrl = null,
         userId = UserId("@alice:example.com"),
         userName = USER_NAME_ALICE,
@@ -174,7 +173,6 @@ internal fun UserProfileHeaderSectionPreview() = ElementPreview {
 @Composable
 internal fun UserProfileHeaderSectionWithVerificationViolationPreview() = ElementPreview {
     UserProfileHeaderSection(
-        showMatrixId = false,
         avatarUrl = null,
         userId = UserId("@alice:example.com"),
         userName = USER_NAME_ALICE,

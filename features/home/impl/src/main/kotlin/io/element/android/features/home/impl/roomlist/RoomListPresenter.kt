@@ -286,10 +286,6 @@ class RoomListPresenter(
             }
         }
 
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
-
         return when {
             showEmpty -> RoomListContentState.Empty(
                 securityBannerState = securityBannerState,
@@ -301,7 +297,6 @@ class RoomListPresenter(
                 coldStartWatcher.onRoomListVisible()
 
                 RoomListContentState.Rooms(
-                    showMatrixId = showMatrixId,
                     securityBannerState = securityBannerState,
                     // TCHAP : Display banner when sync is offline
                     offlineBannerState = offlineBannerState,

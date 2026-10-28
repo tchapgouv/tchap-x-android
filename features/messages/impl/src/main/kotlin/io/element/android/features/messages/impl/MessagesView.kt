@@ -360,7 +360,6 @@ fun MessagesView(
                         )
 
                         SuggestionsPickerView(
-                            showMatrixId = state.showMatrixId,
                             modifier = Modifier
                                 .shadow(10.dp)
                                 .background(ElementTheme.colors.bgCanvasDefault)
@@ -696,7 +695,6 @@ private fun MessagesViewComposerBottomSheetContents(
                     state.showIdentityChangeStateView) {
                     // :tchap: end
                     IdentityChangeStateView(
-                        showMatrixId = state.showMatrixId,
                         state = state.identityChangeState,
                         onLinkClick = onLinkClick,
                     )

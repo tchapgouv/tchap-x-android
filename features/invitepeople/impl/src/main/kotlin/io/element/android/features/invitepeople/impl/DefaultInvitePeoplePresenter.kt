@@ -105,10 +105,6 @@ class DefaultInvitePeoplePresenter(
         val sendInvitesAction = remember { mutableStateOf<AsyncAction<Unit>>(AsyncAction.Uninitialized) }
         val createRoomFromDmAction = remember { mutableStateOf<AsyncAction<RoomId>>(AsyncAction.Uninitialized) }
 
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
-
         val recentDirectRooms by produceState(emptyList(), roomMembers.value) {
             if (roomMembers.value.isSuccess()) {
                 val activeMemberIds = roomMembers.value.dataOrNull().orEmpty()
@@ -308,7 +304,6 @@ class DefaultInvitePeoplePresenter(
 
         return DefaultInvitePeopleState(
             room = room.map { },
-            showMatrixId = showMatrixId,
             canInvite = selectedUsers.value.isNotEmpty() && !sendInvitesAction.value.isLoading(),
             selectedUsers = selectedUsers.value,
             searchQuery = queryState,

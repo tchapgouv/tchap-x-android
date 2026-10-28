@@ -77,10 +77,6 @@ class PreferencesRootNode(
         val activity = requireNotNull(LocalActivity.current)
         val isDark = ElementTheme.isLightTheme.not()
 
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
-
         PreferencesRootView(
             state = state,
             emojiPickerRenderer = emojiPickerRenderer,
@@ -105,7 +101,6 @@ class PreferencesRootNode(
             onEditProfileClick = callback::navigateToUserProfile,
             onSignOutClick = callback::startSignOutFlow,
             onDeactivateClick = callback::startAccountDeactivationFlow,
-            showMatrixId = showMatrixId,
         )
     }
 }

@@ -27,6 +27,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.libraries.designsystem.atomic.atoms.RoundedIconAtom
 import io.element.android.libraries.designsystem.atomic.atoms.RoundedIconAtomSize
@@ -136,7 +137,7 @@ private fun DeviceInfoRow(
 
 @Composable
 private fun AccountInfoCardUser(matrixUser: MatrixUser) {
-    val subtext = if (matrixUser.displayName.isNullOrEmpty()) null else matrixUser.userId.value
+    val subtext = if (!LocalShowMatrixId.current || matrixUser.displayName.isNullOrEmpty()) null else matrixUser.userId.value
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,

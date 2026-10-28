@@ -34,7 +34,6 @@ import io.element.android.libraries.ui.strings.CommonStrings
 @Suppress("MultipleEmitters") // False positive
 @Composable
 fun AccountSelectView(
-    showMatrixId: Boolean,
     state: AccountSelectState,
     onSelectAccount: (SessionId) -> Unit,
     onDismiss: () -> Unit,
@@ -68,7 +67,6 @@ fun AccountSelectView(
                                 }
                                 .padding(vertical = 8.dp),
                             matrixUser = matrixUser,
-                            showMatrixId = showMatrixId,
                         )
                         HorizontalDivider()
                     }
@@ -85,6 +83,5 @@ internal fun AccountSelectViewPreview(@PreviewParameter(AccountSelectStatePrevie
         state = state,
         onSelectAccount = {},
         onDismiss = {},
-        showMatrixId = false,
     )
 }

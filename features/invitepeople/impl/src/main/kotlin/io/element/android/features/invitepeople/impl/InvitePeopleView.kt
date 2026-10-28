@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
@@ -107,7 +108,6 @@ private fun InvitePeopleContentView(
         }
 
         InvitePeopleSearchBar(
-            showMatrixId = state.showMatrixId,
             modifier = Modifier.imePadding().fillMaxWidth(),
             queryState = state.searchQuery,
             showLoader = state.showSearchLoader,
@@ -165,7 +165,6 @@ private fun InvitePeopleContentView(
 
         if (state.sendInvitesAction is ConfirmingUnknownUserInvitation) {
             InvitePeopleConfirmModal(
-                showMatrixId = state.showMatrixId,
                 users = state.sendInvitesAction.users,
                 onDismiss = { state.eventSink.invoke(DefaultInvitePeopleEvent.DismissUnknownUsersModal) },
                 onInvite = { state.eventSink.invoke(InvitePeopleEvent.SendInvites) },
@@ -177,7 +176,6 @@ private fun InvitePeopleContentView(
 
 @Composable
 private fun InvitePeopleSearchBar(
-    showMatrixId: Boolean,
     queryState: TextFieldState,
     state: SearchBarResultState<ImmutableList<InvitableUser>>,
     showLoader: Boolean,
@@ -240,7 +238,7 @@ private fun InvitePeopleSearchBar(
                                 invitableUser.isAlreadyJoined -> stringResource(R.string.screen_invite_users_already_a_member)
                                 invitableUser.isAlreadyInvited -> stringResource(R.string.screen_invite_users_already_invited)
                                 // Otherwise show the ID, unless that's already used for their name
-                                showMatrixId && invitableUser.matrixUser.displayName.isNullOrEmpty()
+                                LocalShowMatrixId.current && invitableUser.matrixUser.displayName.isNullOrEmpty()
                                     .not() -> invitableUser.matrixUser.userId.value // Tchap ShowMatrixId feature flag
                                 else -> null
                             },
@@ -263,7 +261,6 @@ private fun InvitePeopleSearchBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InvitePeopleConfirmModal(
-    showMatrixId: Boolean,
     users: ImmutableList<MatrixUser>,
     onDismiss: () -> Unit,
     onInvite: () -> Unit,
@@ -296,7 +293,7 @@ private fun InvitePeopleConfirmModal(
 
         LazyColumn {
             items(users) { user ->
-                MatrixUserRow(showMatrixId, user)
+                MatrixUserRow(user)
             }
         }
 

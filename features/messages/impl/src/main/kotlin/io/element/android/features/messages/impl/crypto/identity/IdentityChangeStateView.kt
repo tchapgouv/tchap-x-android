@@ -18,6 +18,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.libraries.designsystem.atomic.molecules.ComposerAlertLevel
@@ -31,7 +32,6 @@ import io.element.android.libraries.ui.strings.CommonStrings
 
 @Composable
 fun IdentityChangeStateView(
-    showMatrixId: Boolean,
     state: IdentityChangeState,
     onLinkClick: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -42,7 +42,6 @@ fun IdentityChangeStateView(
     }
     when (identityChangeViolation?.identityState) {
         IdentityState.PinViolation -> ViolationAlert(
-            showMatrixId = showMatrixId,
             identityChangeViolation = identityChangeViolation,
             onLinkClick = onLinkClick,
             textId = CommonStrings.crypto_identity_change_pin_violation_new,
@@ -52,7 +51,6 @@ fun IdentityChangeStateView(
             modifier = modifier,
         )
         IdentityState.VerificationViolation -> ViolationAlert(
-            showMatrixId = showMatrixId,
             identityChangeViolation = identityChangeViolation,
             onLinkClick = onLinkClick,
             textId = CommonStrings.crypto_identity_change_verification_violation_new,
@@ -67,7 +65,6 @@ fun IdentityChangeStateView(
 
 @Composable
 private fun ViolationAlert(
-    showMatrixId: Boolean,
     identityChangeViolation: RoomMemberIdentityStateChange,
     onLinkClick: (String, Boolean) -> Unit,
     @StringRes textId: Int,
@@ -82,7 +79,7 @@ private fun ViolationAlert(
         content = buildAnnotatedString {
             val learnMoreStr = stringResource(CommonStrings.action_learn_more)
             val displayName = identityChangeViolation.identityRoomMember.displayNameOrDefault
-            val userIdStr = if (showMatrixId) {
+            val userIdStr = if (LocalShowMatrixId.current) {
                 stringResource(
                     CommonStrings.crypto_identity_change_pin_violation_new_user_id,
                     identityChangeViolation.identityRoomMember.userId,
@@ -133,7 +130,6 @@ internal fun IdentityChangeStateViewPreview(
     @PreviewParameter(IdentityChangeStatePreviewParam::class) state: IdentityChangeState,
 ) = ElementPreview {
     IdentityChangeStateView(
-        showMatrixId = false,
         state = state,
         onLinkClick = { _, _ -> },
     )

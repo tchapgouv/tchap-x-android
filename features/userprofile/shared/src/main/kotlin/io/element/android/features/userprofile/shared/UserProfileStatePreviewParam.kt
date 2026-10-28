@@ -32,7 +32,7 @@ open class UserProfileStatePreviewParam : PreviewParameterProvider<UserProfileSt
             aUserProfileState(isBlocked = AsyncData.Loading(true), verificationState = UserProfileVerificationState.UNKNOWN),
             aUserProfileState(startDmActionState = AsyncAction.Loading),
             aUserProfileState(canCall = true),
-            aUserProfileState(startDmActionState = ConfirmingStartDmWithMatrixUser(showMatrixId = false, aMatrixUser(), isUserIdentityUnknown = false)),
+            aUserProfileState(startDmActionState = ConfirmingStartDmWithMatrixUser(aMatrixUser(), isUserIdentityUnknown = false)),
             aUserProfileState(verificationState = UserProfileVerificationState.VERIFICATION_VIOLATION),
         )
 }
@@ -53,7 +53,6 @@ fun aUserProfileState(
     displayedStatus: DisplayedStatus? = null,
     eventSink: (UserProfileEvent) -> Unit = {},
 ) = UserProfileState(
-    showMatrixId = false,
     userId = userId,
     userName = userName,
     avatarUrl = avatarUrl,

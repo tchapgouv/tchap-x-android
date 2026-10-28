@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.rolesandpermissions.impl.R
 import io.element.android.libraries.architecture.AsyncAction
@@ -122,7 +123,6 @@ fun ChangeRolesView(
                     resultState = state.searchResults,
                 ) { members ->
                     SearchResultsList(
-                        showMatrixId = state.showMatrixId,
                         currentRole = state.role,
                         lazyListState = lazyListState,
                         searchResults = members,
@@ -139,7 +139,6 @@ fun ChangeRolesView(
                 ) {
                     Column {
                         SearchResultsList(
-                            showMatrixId = state.showMatrixId,
                             currentRole = state.role,
                             lazyListState = lazyListState,
                             searchResults = (state.searchResults as? SearchBarResultState.Results)?.results ?: MembersByRole(),
@@ -208,7 +207,6 @@ fun ChangeRolesView(
 
 @Composable
 private fun SearchResultsList(
-    showMatrixId: Boolean,
     currentRole: RoomMember.Role,
     searchResults: MembersByRole,
     selectedUsers: ImmutableList<MatrixUser>,
@@ -240,7 +238,6 @@ private fun SearchResultsList(
                     canRemoveMember = canRemoveMember,
                     onToggleSelection = onToggleSelection,
                     selectedUsers = selectedUsers,
-                    showMatrixId = showMatrixId,
                 )
             }
         }
@@ -260,7 +257,6 @@ private fun SearchResultsList(
             }
             items(searchResults.admins, key = { it.userId }) { roomMember ->
                 ListMemberItem(
-                    showMatrixId = showMatrixId,
                     roomMember = roomMember,
                     canRemoveMember = canRemoveMember,
                     onToggleSelection = onToggleSelection,
@@ -272,7 +268,6 @@ private fun SearchResultsList(
             stickyHeader { ListSectionHeader(text = stringResource(R.string.screen_room_roles_and_permissions_moderators)) }
             items(searchResults.moderators, key = { it.userId }) { roomMember ->
                 ListMemberItem(
-                    showMatrixId = showMatrixId,
                     roomMember = roomMember,
                     canRemoveMember = canRemoveMember,
                     onToggleSelection = onToggleSelection,
@@ -284,7 +279,6 @@ private fun SearchResultsList(
             stickyHeader { ListSectionHeader(text = stringResource(R.string.screen_room_member_list_mode_members)) }
             items(searchResults.members, key = { it.userId }) { roomMember ->
                 ListMemberItem(
-                    showMatrixId = showMatrixId,
                     roomMember = roomMember,
                     canRemoveMember = canRemoveMember,
                     onToggleSelection = onToggleSelection,
@@ -309,7 +303,6 @@ private fun ListSectionHeader(text: String) {
 
 @Composable
 private fun ListMemberItem(
-    showMatrixId: Boolean,
     roomMember: RoomMember,
     canRemoveMember: (UserId) -> Boolean,
     onToggleSelection: (RoomMember) -> Unit,
@@ -326,7 +319,6 @@ private fun ListMemberItem(
     }
     Column {
         MemberRow(
-            showMatrixId = showMatrixId,
             modifier = Modifier.clickable(enabled = canToggle, onClick = { onToggleSelection(roomMember) }),
             avatarData = roomMember.getAvatarData(size = AvatarSize.UserListItem),
             name = roomMember.getBestName(),
@@ -340,7 +332,6 @@ private fun ListMemberItem(
 
 @Composable
 private fun MemberRow(
-    showMatrixId: Boolean,
     avatarData: AvatarData,
     name: String,
     userId: String?,
@@ -386,7 +377,7 @@ private fun MemberRow(
             }
             // Id
             // TCHAP show the Matrix Id depending of feature flag showMatrixId
-            if (showMatrixId) {
+            if (LocalShowMatrixId.current) {
                 userId?.let {
                     Text(
                         text = userId,
@@ -419,7 +410,6 @@ internal fun PendingMemberRowWithLongNamePreview() {
         drawableFallbackForImages = CommonDrawables.sample_avatar,
     ) {
         MemberRow(
-            showMatrixId = false,
             avatarData = AvatarData("userId", "A very long name that should be truncated", "https://example.com/avatar.png", AvatarSize.UserListItem),
             name = "A very long name that should be truncated",
             userId = "@alice:matrix.org",

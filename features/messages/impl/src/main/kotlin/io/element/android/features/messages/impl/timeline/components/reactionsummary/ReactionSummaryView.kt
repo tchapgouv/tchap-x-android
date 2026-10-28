@@ -55,6 +55,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.messages.impl.timeline.a11y.a11yReactionDetails
 import io.element.android.features.messages.impl.timeline.components.REACTION_IMAGE_ASPECT_RATIO
@@ -150,9 +151,8 @@ private fun ReactionSummaryViewContent(
                 items(summary.reactions[page].senders) { sender ->
                     val user = sender.user ?: MatrixUser(userId = sender.senderId)
                     SenderRow(
-                        showMatrixId = summary.showMatrixId,
                         avatarData = user.getAvatarData(AvatarSize.UserListItem),
-                        // TCHAP TODO should be applied in Element X
+                        // TODO : TCHAP should be applied in Element X
                         name = user.getBestName(),
                         userId = user.userId.value,
                         sentTime = sender.sentTime
@@ -240,7 +240,6 @@ private fun AggregatedReactionButton(
 
 @Composable
 private fun SenderRow(
-    showMatrixId: Boolean,
     avatarData: AvatarData,
     name: String,
     userId: String,
@@ -284,7 +283,7 @@ private fun SenderRow(
                 )
             }
             // TCHAP show the Matrix Id depending of feature flag showMatrixId
-            if (showMatrixId) {
+            if (LocalShowMatrixId.current) {
                 Text(
                     text = userId,
                     color = ElementTheme.colors.textSecondary,

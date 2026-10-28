@@ -127,7 +127,6 @@ private fun aDefaultInvitePeopleState(
 ): DefaultInvitePeopleState {
     return DefaultInvitePeopleState(
         room = room,
-        showMatrixId = false,
         canInvite = canInvite,
         searchQuery = TextFieldState(initialText = searchQuery),
         searchResults = searchResults,

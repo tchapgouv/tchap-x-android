@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.home.impl.R
@@ -73,7 +74,6 @@ internal val minHeight = 84.dp
 
 @Composable
 internal fun RoomSummaryRow(
-    showMatrixId: Boolean,
     room: RoomListRoomSummary,
     hideInviteAvatars: Boolean,
     isInviteSeen: Boolean,
@@ -98,7 +98,7 @@ internal fun RoomSummaryRow(
                     },
                 ) {
                     InviteNameAndIndicatorRow(name = room.name, isInviteSeen = isInviteSeen)
-                    InviteSubtitle(showMatrixId = showMatrixId, isDm = room.isDm, inviteSender = room.inviteSender)
+                    InviteSubtitle(isDm = room.isDm, inviteSender = room.inviteSender)
                     if (!room.isDm && room.inviteSender != null) {
                         Spacer(modifier = Modifier.height(4.dp))
                         InviteSenderView(
@@ -254,13 +254,12 @@ private fun NameAndTimestampRow(
 
 @Composable
 private fun InviteSubtitle(
-    showMatrixId: Boolean,
     isDm: Boolean,
     inviteSender: InviteSender?,
     modifier: Modifier = Modifier
 ) {
     val subtitle = if (isDm) {
-        inviteSender?.userId?.value.takeIf { showMatrixId } // TCHAP hide the Matrix Id depending of showMatrixId feature flag
+        inviteSender?.userId?.value.takeIf { LocalShowMatrixId.current } // TCHAP hide the Matrix Id depending of showMatrixId feature flag
     } else {
         null
     }
@@ -464,7 +463,6 @@ private fun MentionIndicatorAtom() {
 @Composable
 internal fun RoomSummaryRowPreview(@PreviewParameter(RoomListRoomSummaryPreviewParam::class) data: RoomListRoomSummary) = ElementPreview {
     RoomSummaryRow(
-        showMatrixId = false,
         room = data,
         hideInviteAvatars = false,
         // Set isInviteSeen to true for the preview when the room has name "Bob"

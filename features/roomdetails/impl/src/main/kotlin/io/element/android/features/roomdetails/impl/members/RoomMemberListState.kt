@@ -18,7 +18,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 data class RoomMemberListState(
-    val showMatrixId: Boolean,
     // Only used to know if we can show the banned section
     private val roomMembers: AsyncData<RoomMembers>,
     val filteredRoomMembers: AsyncData<RoomMembers>,

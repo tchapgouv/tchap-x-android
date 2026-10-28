@@ -174,12 +174,7 @@ class EditUserProfilePresenter(
             }
         }
 
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
-
         return EditUserProfileState(
-            showMatrixId = showMatrixId,
             userId = matrixUser.userId,
             displayName = userDisplayName.orEmpty(),
             userAvatarUrl = userAvatarUri,

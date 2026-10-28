@@ -59,12 +59,6 @@ class LoginWithClassicPresenter(
         val loginModeState = loginModePresenter.present()
         val elementClassicConnectionState by elementClassicConnection.stateFlow.collectAsState()
 
-        // :tchap: tchap-legacy-connection
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
-        // :tchap: end
-
         fun handleEvent(event: LoginWithClassicEvent) {
             when (event) {
                 LoginWithClassicEvent.Submit -> {
@@ -123,9 +117,6 @@ class LoginWithClassicPresenter(
 
         val elementClassicReady = elementClassicConnectionState as? ElementClassicConnectionState.ElementClassicReady
         return LoginWithClassicState(
-            // :tchap: tchap-legacy-connection
-            showMatrixId = showMatrixId,
-            // :tchap: end
             isElementPro = buildMeta.isEnterpriseBuild,
             userId = userId,
             displayName = elementClassicReady?.displayName,

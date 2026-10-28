@@ -20,7 +20,6 @@ fun aReactionSummaryState(): ReactionSummaryState {
     val reactions = aTimelineItemReactions(8, true).reactions
     return ReactionSummaryState(
         target = ReactionSummaryState.Summary(
-            showMatrixId = false,
             reactions = reactions,
             selectedKey = reactions[0].key,
             selectedEventId = EventId("$1234"),

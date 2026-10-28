@@ -49,7 +49,6 @@ internal fun aRoomsContentState(
     showAllActivity: Boolean = false,
     seenRoomInvites: Set<RoomId> = emptySet(),
 ) = RoomListContentState.Rooms(
-    showMatrixId = false,
     securityBannerState = securityBannerState,
     // TCHAP : Display banner when sync is offline
     offlineBannerState = offlineBannerState,

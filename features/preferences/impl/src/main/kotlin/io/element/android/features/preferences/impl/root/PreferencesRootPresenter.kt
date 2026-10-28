@@ -133,10 +133,6 @@ class PreferencesRootPresenter(
 
         val showLabsItem = remember { featureFlagService.getAvailableFeatures(isInLabs = true).isNotEmpty() }
 
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
-
         val showDeveloperSettings by showDeveloperSettingsProvider.showDeveloperSettings.collectAsState()
 
         val isLocationServiceAvailable by remember { locationService.isServiceAvailable() }.collectAsState()
@@ -161,7 +157,6 @@ class PreferencesRootPresenter(
         }
 
         return PreferencesRootState(
-            showMatrixId = showMatrixId,
             myUser = matrixUser.value,
             userStatusState = userStatusState,
             preferencesAccountState = preferencesAccountState,

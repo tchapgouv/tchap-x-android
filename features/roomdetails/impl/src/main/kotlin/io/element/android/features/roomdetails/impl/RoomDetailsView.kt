@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import im.vector.app.features.analytics.plan.Interaction
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
@@ -166,7 +167,6 @@ fun RoomDetailsView(
             when (state.roomType) {
                 RoomDetailsType.Room -> {
                     RoomHeaderSection(
-                        showMatrixId = state.showMatrixId,
                         avatarUrl = state.roomAvatarUrl,
                         roomId = state.roomId,
                         roomName = state.roomName,
@@ -183,7 +183,6 @@ fun RoomDetailsView(
                 }
                 is RoomDetailsType.Dm -> {
                     DmHeaderSection(
-                        showMatrixId = state.showMatrixId,
                         otherMember = state.roomType.otherMember,
                         roomName = state.roomName,
                         isTombstoned = state.isTombstoned,
@@ -490,7 +489,6 @@ private fun MainActionsSection(
 
 @Composable
 private fun RoomHeaderSection(
-    showMatrixId: Boolean,
     avatarUrl: String?,
     roomId: RoomId,
     roomName: String,
@@ -533,7 +531,7 @@ private fun RoomHeaderSection(
         )
         // :tchap: Hide the Matrix Id depending of showMatrixId feature flag
 //        if (roomAlias != null) {
-        if (roomAlias != null && showMatrixId) {
+        if (roomAlias != null && LocalShowMatrixId.current) {
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 modifier = Modifier.niceClickable { onSubtitleClick(roomAlias.value) },
@@ -549,7 +547,6 @@ private fun RoomHeaderSection(
 
 @Composable
 private fun DmHeaderSection(
-    showMatrixId: Boolean,
     otherMember: RoomMember,
     roomName: String,
     isTombstoned: Boolean,
@@ -603,7 +600,7 @@ private fun DmHeaderSection(
             )
         }
         // :tchap: Hide the Matrix Id depending of showMatrixId feature flag
-        if (showMatrixId) {
+        if (LocalShowMatrixId.current) {
             // :tchap: end
             Spacer(modifier = Modifier.height(12.dp))
             Text(

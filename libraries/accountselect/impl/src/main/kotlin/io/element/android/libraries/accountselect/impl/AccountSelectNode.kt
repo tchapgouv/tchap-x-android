@@ -39,16 +39,11 @@ class AccountSelectNode(
     override fun View(modifier: Modifier) {
         val state = presenter.present()
 
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
-
         AccountSelectView(
             state = state,
             onDismiss = callback::onCancel,
             onSelectAccount = callback::onAccountSelected,
             modifier = modifier,
-            showMatrixId = showMatrixId,
         )
     }
 }

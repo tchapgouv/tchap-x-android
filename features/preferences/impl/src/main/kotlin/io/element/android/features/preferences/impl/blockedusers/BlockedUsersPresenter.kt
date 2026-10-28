@@ -56,9 +56,6 @@ class BlockedUsersPresenter(
         val renderBlockedUsersDetail by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowBlockedUsersDetails)
         }.collectAsState(initial = false)
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(initial = false)
         val ignoredUserIds by matrixClient.ignoredUsersFlow.collectAsState()
         val ignoredMatrixUser by produceState(
             initialValue = ignoredUserIds.map { MatrixUser(userId = it) },
@@ -101,7 +98,6 @@ class BlockedUsersPresenter(
             }
         }
         return BlockedUsersState(
-            showMatrixId = showMatrixId,
             blockedUsers = ignoredMatrixUser.toImmutableList(),
             unblockUserAction = unblockUserAction.value,
             snackbarMessage = snackbarMessage,

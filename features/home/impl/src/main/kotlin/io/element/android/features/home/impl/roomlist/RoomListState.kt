@@ -77,7 +77,6 @@ sealed interface RoomListContentState {
     ) : RoomListContentState
 
     data class Rooms(
-        val showMatrixId: Boolean,
         val securityBannerState: SecurityBannerState,
         // TCHAP : Display banner when sync is offline
         val offlineBannerState: OfflineBannerState,

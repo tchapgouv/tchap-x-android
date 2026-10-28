@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.login.impl.R
 import io.element.android.features.login.impl.login.LoginModeEvent
@@ -167,7 +168,7 @@ fun LoginWithClassicView(
                 }
                 // UserId
                 // :tchap: tchap-legacy-connection
-                if (state.showMatrixId) {
+                if (LocalShowMatrixId.current) {
                 // :tchap: end
                     Text(
                         text = state.userId.value,

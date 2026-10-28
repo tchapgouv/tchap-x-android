@@ -83,7 +83,6 @@ fun aPreferencesRootState(
     snackbarMessage: SnackbarMessage? = null,
     eventSink: (PreferencesRootEvent) -> Unit = {},
 ) = PreferencesRootState(
-    showMatrixId = false,
     myUser = myUser,
     preferencesAccountState = preferencesAccountState,
     version = version,

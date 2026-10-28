@@ -73,7 +73,6 @@ fun UserProfileView(
         ) {
             // TCHAP display a value generated from userId if displayname does not exist
             UserProfileHeaderSection(
-                showMatrixId = state.showMatrixId,
                 avatarUrl = state.avatarUrl,
                 userId = state.userId,
                 userName = state.userName ?: state.userId.extractedDisplayName,
@@ -115,7 +114,6 @@ fun UserProfileView(
                 confirmationDialog = { data ->
                     if (data is ConfirmingStartDmWithMatrixUser) {
                         CreateDmConfirmationBottomSheet(
-                            showMatrixId = data.showMatrixId,
                             matrixUser = data.matrixUser,
                             isUserIdentityUnknown = data.isUserIdentityUnknown,
                             onSendInvite = {

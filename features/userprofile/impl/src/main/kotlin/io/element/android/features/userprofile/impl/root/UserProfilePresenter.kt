@@ -118,10 +118,6 @@ class UserProfilePresenter(
         }
         val userProfile by produceState<MatrixUser?>(null) { value = client.getProfile(userId).getOrNull() }
 
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
-
         fun handleEvent(event: UserProfileEvent) {
             when (event) {
                 is UserProfileEvent.BlockUser -> {
@@ -147,7 +143,6 @@ class UserProfilePresenter(
                 UserProfileEvent.StartDM -> {
                     coroutineScope.launch {
                         startDMAction.execute(
-                            showMatrixId = showMatrixId,
                             matrixUser = userProfile ?: MatrixUser(userId),
                             createIfDmDoesNotExist = startDmActionState.value is AsyncAction.Confirming,
                             actionState = startDmActionState,
@@ -164,7 +159,6 @@ class UserProfilePresenter(
         }
 
         return UserProfileState(
-            showMatrixId = showMatrixId,
             userId = userId,
             userName = userProfile?.displayName,
             avatarUrl = userProfile?.avatarUrl,
