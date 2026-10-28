@@ -84,16 +84,21 @@ fun PreferencesRootView(
     onSwitchToSession: (SessionId) -> Unit,
     onOpenAnalytics: () -> Unit,
     onOpenLockScreenSettings: () -> Unit,
-    onOpenFAQ: () -> Unit,
     onOpenAbout: () -> Unit,
     onOpenDeveloperSettings: () -> Unit,
     onOpenMediaSettings: () -> Unit,
     onOpenLocationSettings: () -> Unit,
+    // :tchap: Add Rageshake Settings
+    onOpenRageshakeSettings: () -> Unit,
+    // :tchap: end
     onOpenLabs: () -> Unit,
     onEditProfileClick: (MatrixUser) -> Unit,
     onSecureBackupClick: () -> Unit,
     onManageAccountClick: (url: String) -> Unit,
     onLinkNewDeviceClick: () -> Unit,
+    // :tchap: Add open FAQ
+    onOpenFAQ: () -> Unit,
+    // :tchap: end
     onOpenRageShake: () -> Unit,
     onModerationAndSafetyClick: () -> Unit,
     onOpenNotificationSettings: () -> Unit,
@@ -141,6 +146,9 @@ fun PreferencesRootView(
                 onSecureBackupClick = onSecureBackupClick,
                 onManageAccountClick = onManageAccountClick,
                 onLinkNewDeviceClick = onLinkNewDeviceClick,
+                // :tchap: Add open FAQ
+                onOpenFAQ = onOpenFAQ,
+                // :tchap: end
                 onOpenRageShake = onOpenRageShake,
                 onModerationAndSafetyClick = onModerationAndSafetyClick,
                 onOpenNotificationSettings = onOpenNotificationSettings,
@@ -153,13 +161,13 @@ fun PreferencesRootView(
                 onOpenLockScreenSettings = onOpenLockScreenSettings,
                 onOpenMediaSettings = onOpenMediaSettings,
                 onOpenLocationSettings = onOpenLocationSettings,
+                // :tchap: Add Rageshake Settings
+                onOpenRageshakeSettings = onOpenRageshakeSettings,
+                // :tchap: end
             )
             // General section
             GeneralSection(
                 state = state,
-                // :tchap: Add open FAQ
-                onOpenFAQ = onOpenFAQ,
-                // :tchap: end
                 onOpenAbout = onOpenAbout,
                 onOpenAnalytics = onOpenAnalytics,
                 onOpenDeveloperSettings = onOpenDeveloperSettings,
@@ -320,6 +328,9 @@ private fun AppSettingsSection(
     onOpenLockScreenSettings: () -> Unit,
     onOpenLocationSettings: () -> Unit,
     onOpenMediaSettings: () -> Unit,
+    // :tchap: Add Rageshake Settings
+    onOpenRageshakeSettings: () -> Unit,
+    // :tchap: end
 ) {
     PreferenceCategory(
         title = stringResource(CommonStrings.common_app_settings),
@@ -351,13 +362,19 @@ private fun AppSettingsSection(
                 onClick = onOpenLocationSettings,
             )
         }
+        // :tchap: Add Rageshake Settings
+        ListItem(
+            content = { Text(stringResource(id = CommonStrings.tchap_common_rageshake)) },
+            leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Warning())),
+            onClick = onOpenRageshakeSettings,
+        )
+        // :tchap: end
     }
 }
 
 @Composable
 private fun ColumnScope.GeneralSection(
     state: PreferencesRootState,
-    onOpenFAQ: () -> Unit,
     onOpenAbout: () -> Unit,
     onOpenAnalytics: () -> Unit,
     onOpenLabs: () -> Unit,
@@ -382,16 +399,12 @@ private fun ColumnScope.GeneralSection(
         )
     }
     ListItem(
-        // :tchap: Replace about item by FAQ
+        // :tchap: Replace label About with Legal
 //        content = { Text(stringResource(id = CommonStrings.common_about)) },
-        content = { Text(stringResource(id = CommonStrings.tchap_common_faq)) },
-        // :tchap: end
-        leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Info())),
-        onClick = { onOpenFAQ() },
-    )
-    ListItem(
+//        leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Info())),
         content = { Text(stringResource(id = CommonStrings.tchap_common_legals)) },
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.ListBulleted())),
+        // :tchap: end
         onClick = onOpenAbout,
     )
     // Put developer settings at the end, so nothing bad happens if the user clicks 8 times to enable the entry
@@ -453,9 +466,10 @@ private fun ContentToPreview(state: PreferencesRootState) {
         onSwitchToSession = {},
         onOpenAnalytics = {},
         onOpenDeveloperSettings = {},
-        onOpenAdvancedSettings = {},
-        onOpenFAQ = {},
         onOpenLocationSettings = {},
+        // :tchap: Add Rageshake Settings
+        onOpenRageshakeSettings = {},
+        // :tchap: end
         onOpenMediaSettings = {},
         onOpenLabs = {},
         onOpenAbout = {},
@@ -464,6 +478,9 @@ private fun ContentToPreview(state: PreferencesRootState) {
         onSecureBackupClick = {},
         onManageAccountClick = {},
         onLinkNewDeviceClick = {},
+        // :tchap: Add open FAQ
+        onOpenFAQ = {},
+        // :tchap: end
         onOpenRageShake = {},
         onModerationAndSafetyClick = {},
         onOpenNotificationSettings = {},

@@ -32,6 +32,10 @@ object BuildTimeConfig {
     // TCHAP : specific URL
     val URL_POLICY = "https://tchap.numerique.gouv.fr/politique-de-confidentialite"
 
+    // :tchap: Add URL_FAQ URL
+    val URL_FAQ = "https://aide.tchap.numerique.gouv.fr"
+    // :tchap: end
+
     // TCHAP : specific URL
     val SERVICES_MAPTILER_BASE_URL = "https://openmaptiles.geo.data.gouv.fr/styles"
 

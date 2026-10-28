@@ -47,11 +47,16 @@ class PreferencesRootNode(
         fun navigateToSession(sessionId: SessionId)
         fun navigateToAnalyticsSettings()
         fun navigateToAbout()
+        // :tchap: Add open FAQ
         fun onOpenFAQ(activity: Activity, darkTheme: Boolean)
+        // :tchap: end
         fun navigateToDeveloperSettings()
         fun navigateToLockScreenSettings()
         fun navigateToMediaSettings()
         fun navigateToLocationSettings()
+        // :tchap: Add Rageshake Settings
+        fun navigateToRageshakeSettings()
+        // :tchap: end
         fun navigateToLabs()
     }
 
@@ -86,11 +91,16 @@ class PreferencesRootNode(
             onSwitchToSession = callback::navigateToSession,
             onOpenAnalytics = callback::navigateToAnalyticsSettings,
             onOpenAbout = callback::navigateToAbout,
+            // :tchap: Add open FAQ
             onOpenFAQ = { callback.onOpenFAQ(activity, isDark) },
+            // :tchap: end
             onSecureBackupClick = callback::navigateToSecureBackup,
             onOpenDeveloperSettings = callback::navigateToDeveloperSettings,
             onOpenMediaSettings = callback::navigateToMediaSettings,
             onOpenLocationSettings = callback::navigateToLocationSettings,
+            // :tchap: Add Rageshake Settings
+            onOpenRageshakeSettings = callback::navigateToRageshakeSettings,
+            // :tchap: end
             onOpenLabs = callback::navigateToLabs,
             onOpenLockScreenSettings = callback::navigateToLockScreenSettings,
             onOpenRageShake = callback::navigateToBugReport,

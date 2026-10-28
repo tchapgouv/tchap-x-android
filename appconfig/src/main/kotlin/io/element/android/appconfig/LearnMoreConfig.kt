@@ -18,8 +18,7 @@ object LearnMoreConfig {
 
     const val IDENTITY_CHANGE_URL: String = "https://element.io/help#encryption18"
 
-    // :tchap: Change FAQ_URL, HOW_TO_CREATE_SPACE & HOW_TO_RENEW_MY_ACCOUNT URLS
-    const val FAQ_URL: String = "https://aide.tchap.numerique.gouv.fr"
+    // :tchap: Change HOW_TO_CREATE_SPACE & HOW_TO_RENEW_MY_ACCOUNT URLS
     const val HOW_TO_CREATE_SPACE: String = "https://aide.tchap.numerique.gouv.fr/fr/article/comment-creer-un-espace-sur-tchap-web-1wmlenx/"
     const val HOW_TO_RENEW_MY_ACCOUNT = "https://aide.tchap.numerique.gouv.fr/fr/article/renouvellement-de-votre-compte-tchap-expiration-1g4e6xh/"
     // :tchap: end

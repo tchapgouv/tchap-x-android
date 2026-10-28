@@ -32,6 +32,9 @@ fun PreferencesAccountView(
     onSecureBackupClick: () -> Unit,
     onManageAccountClick: (url: String) -> Unit,
     onLinkNewDeviceClick: () -> Unit,
+    // :tchap: Add open FAQ
+    onOpenFAQ: () -> Unit,
+    // :tchap: end
     onOpenRageShake: () -> Unit,
     onModerationAndSafetyClick: () -> Unit,
     onOpenNotificationSettings: () -> Unit,
@@ -55,6 +58,9 @@ fun PreferencesAccountView(
         GeneralSection(
             state = state,
             onModerationAndSafetyClick = onModerationAndSafetyClick,
+            // :tchap: Add open FAQ
+            onOpenFAQ = onOpenFAQ,
+            // :tchap: end
             onOpenRageShake = onOpenRageShake,
             onSignOutClick = onSignOutClick,
             onDeactivateClick = onDeactivateClick,
@@ -115,6 +121,9 @@ private fun ColumnScope.OtherSettingsSection(
 private fun ColumnScope.GeneralSection(
     state: PreferencesAccountState,
     onModerationAndSafetyClick: () -> Unit,
+    // :tchap: Add open FAQ
+    onOpenFAQ: () -> Unit,
+    // :tchap: end
     onOpenRageShake: () -> Unit,
     onSignOutClick: () -> Unit,
     onDeactivateClick: () -> Unit,
@@ -125,6 +134,14 @@ private fun ColumnScope.GeneralSection(
         leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Admin())),
         onClick = onModerationAndSafetyClick,
     )
+
+    // :tchap: Add open FAQ item
+    ListItem(
+        content = { Text(stringResource(id = CommonStrings.tchap_common_faq)) },
+        leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.Info())),
+        onClick = { onOpenFAQ() },
+    )
+    // :tchap: end
 
     if (state.canReportBug) {
         ListItem(
@@ -157,6 +174,9 @@ internal fun PreferencesAccountViewPreview(@PreviewParameter(PreferencesAccountS
         PreferencesAccountView(
             state = state,
             onModerationAndSafetyClick = {},
+            // :tchap: Add open FAQ
+            onOpenFAQ = {},
+            // :tchap: end
             onOpenRageShake = {},
             onSecureBackupClick = {},
             onManageAccountClick = {},

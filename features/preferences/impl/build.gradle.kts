@@ -41,6 +41,12 @@ android {
             name = "URL_PRIVACY",
             value = BuildTimeConfig.URL_PRIVACY ?: "https://element.io/privacy",
         )
+        // :tchap: Add URL_FAQ URL
+        buildConfigFieldStr(
+            name = "URL_FAQ",
+            value = BuildTimeConfig.URL_FAQ ?: "https://aide.tchap.numerique.gouv.fr",
+        )
+        // :tchap: end
     }
 }
 

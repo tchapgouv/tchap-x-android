@@ -21,7 +21,6 @@ import com.bumble.appyx.navmodel.backstack.operation.push
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
-import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.features.deactivation.api.AccountDeactivationEntryPoint
 import io.element.android.features.licenses.api.OpenSourceLicensesEntryPoint
 import io.element.android.features.lockscreen.api.LockScreenEntryPoint
@@ -39,6 +38,7 @@ import io.element.android.features.preferences.impl.notifications.NotificationSe
 import io.element.android.features.preferences.impl.notifications.edit.EditDefaultNotificationSettingNode
 import io.element.android.features.preferences.impl.root.PreferencesRootNode
 import io.element.android.features.preferences.impl.user.editprofile.EditUserProfileNode
+import fr.gouv.tchap.android.features.preferences.impl.rageshake.RageshakeSettingsNode
 import io.element.android.libraries.androidutils.browser.openUrlInChromeCustomTab
 import io.element.android.libraries.architecture.BackstackView
 import io.element.android.libraries.architecture.BaseFlowNode
@@ -88,6 +88,11 @@ class PreferencesFlowNode(
 
         @Parcelize
         data object LocationSettings : NavTarget
+
+        // :tchap: Add Rageshake Settings
+        @Parcelize
+        data object RageshakeSettings : NavTarget
+        // :tchap: end
 
         @Parcelize
         data object Labs : NavTarget
@@ -157,14 +162,15 @@ class PreferencesFlowNode(
                         backstack.push(NavTarget.About)
                     }
 
-                    // TCHAP - Add FAQ_URL in Preferences
+                    // :tchap: Add open FAQ
                     override fun onOpenFAQ(activity: Activity, darkTheme: Boolean) {
                         activity.openUrlInChromeCustomTab(
                             null,
                             darkTheme,
-                            url = LearnMoreConfig.FAQ_URL
+                            url = BuildConfig.URL_FAQ
                         )
                     }
+                    // :tchap: end
 
                     override fun navigateToDeveloperSettings() {
                         backstack.push(NavTarget.DeveloperSettings)
@@ -181,6 +187,12 @@ class PreferencesFlowNode(
                     override fun navigateToLocationSettings() {
                         backstack.push(NavTarget.LocationSettings)
                     }
+
+                    // :tchap: Add Rageshake Settings
+                    override fun navigateToRageshakeSettings() {
+                        backstack.push(NavTarget.RageshakeSettings)
+                    }
+                    // :tchap: end
 
                     override fun navigateToLabs() {
                         backstack.push(NavTarget.Labs)
@@ -259,6 +271,11 @@ class PreferencesFlowNode(
             NavTarget.LocationSettings -> {
                 createNode<LocationSettingsNode>(buildContext)
             }
+            // :tchap: Add Rageshake Settings
+            NavTarget.RageshakeSettings -> {
+                createNode<RageshakeSettingsNode>(buildContext)
+            }
+            // :tchap: end
             NavTarget.About -> {
                 val callback = object : AboutNode.Callback {
                     override fun navigateToOssLicenses() {
