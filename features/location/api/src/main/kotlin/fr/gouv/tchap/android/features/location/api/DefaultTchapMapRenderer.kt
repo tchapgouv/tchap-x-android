@@ -26,18 +26,18 @@ package fr.gouv.tchap.android.features.location.api
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Size
-import io.element.android.features.location.api.Location
+import androidx.compose.ui.graphics.asAndroidBitmap
+import io.element.android.features.location.api.buildTimeMapTilerConfig
 import io.element.android.features.location.api.internal.MapTilerTileServerStyleUriBuilder
 import io.element.android.libraries.core.extensions.runCatchingExceptions
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
-import org.maplibre.android.MapLibre
-import org.maplibre.android.camera.CameraPosition
-import org.maplibre.android.geometry.LatLng
-import org.maplibre.android.maps.Style
-import org.maplibre.android.snapshotter.MapSnapshotter
+import org.maplibre.compose.camera.CameraPosition
+import org.maplibre.compose.map.MapRuntimeOptions
+import org.maplibre.compose.map.MapSnapshotRequest
+import org.maplibre.compose.map.createMapRuntime
+import org.maplibre.compose.style.BaseStyle
+import org.maplibre.spatialk.geojson.Position
 import timber.log.Timber
 import java.io.File
 import java.security.MessageDigest
@@ -51,15 +51,7 @@ class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context
         private const val MAP_SNAPSHOT_SUBDIR = "tchap/map-snapshot-cache"
         private const val MAP_SNAPSHOT_MAX_AGE_DAYS = 30L
 
-        private var isMapLibreInitialized = false
         private var hasCleanedSnapshots = false
-
-        private fun initializeMapLibre(context: Context) {
-            if (!isMapLibreInitialized) {
-                MapLibre.getInstance(context.applicationContext)
-                isMapLibreInitialized = true
-            }
-        }
 
         // Limit the number of concurrent snapshots to avoid crashing Vulkan/GPU resources,
         // especially on emulators or low-end devices.
@@ -86,11 +78,9 @@ class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context
         }
     }
 
-    private val styleBuilder: Style.Builder = Style.Builder().fromUri(MapTilerTileServerStyleUriBuilder().build(null, darkMode))
     private val pendingGenerationSnapshot = Collections.newSetFromMap(ConcurrentHashMap<String, Boolean>())
 
     init {
-        initializeMapLibre(context)
         cleanOldSnapshots(context)
     }
 
@@ -128,29 +118,34 @@ class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context
 
         try {
             snapshotSemaphore.withPermit {
-                suspendCancellableCoroutine { continuation ->
-                    val mapSnapshotter = getMapSnapshotter(context, locationUiData.location, locationUiData.mapZoom, locationUiData.mapSize)
-                    continuation.invokeOnCancellation {
-                        mapSnapshotter.cancel()
-                    }
-
-                    mapSnapshotter.start(
-                        { mapSnapshot ->
-                            runCatchingExceptions {
-                                mapSnapshotFile.outputStream().use {
-                                    mapSnapshot.bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
-                                }
-                                continuation.resumeWith(Result.success(Unit))
-                            }.onFailure {
-                                Timber.e(it, "Map snapshot was not stored at this time")
-                                continuation.resumeWith(Result.failure(it))
-                            }
-                        },
-                        { error ->
-                            Timber.e("Map snapshot generation failed: $error")
-                            continuation.resumeWith(Result.failure(Exception(error)))
-                        }
+                runCatchingExceptions {
+                    val mapRuntime = createMapRuntime(MapRuntimeOptions())
+                    val mapTilerConfig = buildTimeMapTilerConfig() ?: error("Missing MapTiler API Key")
+                    val mapSnapshotter = mapRuntime.createSnapshotter(
+                        baseStyle = BaseStyle.Uri(MapTilerTileServerStyleUriBuilder().build(mapTilerConfig, darkMode)),
+                        content = {}
                     )
+
+                    val imageBitmap = mapSnapshotter.capture(
+                        MapSnapshotRequest(
+                            width = locationUiData.mapSize.width,
+                            height = locationUiData.mapSize.height,
+                            cameraPosition = CameraPosition(
+                                target = Position(locationUiData.location.lon, locationUiData.location.lat),
+                                zoom = locationUiData.mapZoom
+                            )
+                        )
+                    )
+                    
+                    val bitmap = imageBitmap.asAndroidBitmap()
+                    mapSnapshotFile.outputStream().use {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+                    }
+                    
+                    mapSnapshotter.close()
+                    mapRuntime.close()
+                }.onFailure {
+                    Timber.e(it, "Error during map snapshot generation")
                 }
             }
         } catch (e: Exception) {
@@ -159,19 +154,4 @@ class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context
             pendingGenerationSnapshot.remove(mapSnapshotFilename)
         }
     }
-
-    private fun getMapSnapshotter(
-        context: Context,
-        location: Location,
-        zoom: Double,
-        size: Size
-    ) = MapSnapshotter.Options(size.width, size.height)
-        .withStyleBuilder(styleBuilder)
-        .withCameraPosition(
-            CameraPosition.Builder()
-                .zoom(zoom)
-                .target(LatLng(location.lat, location.lon))
-                .build()
-        )
-        .let { MapSnapshotter(context, it) }
 }
