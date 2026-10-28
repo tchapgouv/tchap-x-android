@@ -165,10 +165,11 @@ class HomeFlowNode(
         stateFlow.value.roomListState.eventSink(RoomListEvent.LeaveRoom(roomId, needsConfirmation = false))
     }
 
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     private fun onViewServiceStatusClick(activity: Activity, darkTheme: Boolean) {
         activity.openUrlInChromeCustomTab(null, darkTheme, TchapConfig.SERVICE_STATUS_URL)
     }
+    // :tchap: end
 
     private fun rootNode(buildContext: BuildContext): Node {
         return node(buildContext) { modifier ->
@@ -238,8 +239,9 @@ class HomeFlowNode(
                 // :tchap: end
                 onSetUpRecoveryClick = callback::navigateToSetUpRecovery,
                 onConfirmRecoveryKeyClick = callback::navigateToEnterRecoveryKey,
-                // TCHAP : Display banner when sync is offline
+                // :tchap: Display banner when sync is offline
                 onViewServiceStatusClick = { onViewServiceStatusClick(activity, isDark) },
+                // :tchap: end
                 onRoomSettingsClick = callback::navigateToRoomSettings,
                 onMenuActionClick = { onMenuActionClick(activity, it) },
                 onReportRoomClick = ::navigateToReportRoom,

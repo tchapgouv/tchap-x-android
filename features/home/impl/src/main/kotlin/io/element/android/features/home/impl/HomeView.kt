@@ -84,8 +84,9 @@ fun HomeView(
     onSwitchToAccount: (SessionId) -> Unit,
     onSetUpRecoveryClick: () -> Unit,
     onConfirmRecoveryKeyClick: () -> Unit,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     onViewServiceStatusClick: () -> Unit,
+    // :tchap: end
     onStartChatClick: () -> Unit,
     // :tchap: space-admin-limitations
 //    onCreateSpaceClick: () -> Unit,
@@ -176,8 +177,9 @@ private fun HomeScaffold(
     state: HomeState,
     onSetUpRecoveryClick: () -> Unit,
     onConfirmRecoveryKeyClick: () -> Unit,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     onViewServiceStatusClick: () -> Unit,
+    // :tchap: end
     onRoomClick: (RoomId) -> Unit,
     onOpenSettings: () -> Unit,
     onStartChatClick: () -> Unit,
@@ -442,8 +444,9 @@ internal fun HomeViewPreview(@PreviewParameter(HomeStatePreviewParam::class) sta
         onSwitchToAccount = {},
         onSetUpRecoveryClick = {},
         onConfirmRecoveryKeyClick = {},
-        // TCHAP : Display banner when sync is offline
+        // :tchap: Display banner when sync is offline
         onViewServiceStatusClick = {},
+        // :tchap: end
         onStartChatClick = {},
         // :tchap: space-admin-limitations
 //        onCreateSpaceClick = {},
@@ -468,8 +471,9 @@ internal fun HomeViewA11yPreview() = ElementPreview {
         onSwitchToAccount = {},
         onSetUpRecoveryClick = {},
         onConfirmRecoveryKeyClick = {},
-        // TCHAP : Display banner when sync is offline
+        // :tchap: Display banner when sync is offline
         onViewServiceStatusClick = {},
+        // :tchap: end
         onStartChatClick = {},
         // :tchap: space-admin-limitations
 //        onCreateSpaceClick = {},

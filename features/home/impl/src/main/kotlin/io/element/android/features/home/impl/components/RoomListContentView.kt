@@ -81,8 +81,9 @@ fun RoomListContentView(
     eventSink: (RoomListEvent) -> Unit,
     onSetUpRecoveryClick: () -> Unit,
     onConfirmRecoveryKeyClick: () -> Unit,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     onViewServiceStatusClick: () -> Unit,
+    // :tchap: end
     onRoomClick: (RoomListRoomSummary) -> Unit,
     onCreateRoomClick: () -> Unit,
     contentPadding: PaddingValues,
@@ -104,8 +105,9 @@ fun RoomListContentView(
                 onSetUpRecoveryClick = onSetUpRecoveryClick,
                 onConfirmRecoveryKeyClick = onConfirmRecoveryKeyClick,
                 onCreateRoomClick = onCreateRoomClick,
-                // TCHAP : Display banner when sync is offline
+                // :tchap: Display banner when sync is offline
                 onViewServiceStatusClick = onViewServiceStatusClick,
+                // :tchap: end
             )
         }
         is RoomListContentState.Rooms -> {
@@ -118,8 +120,9 @@ fun RoomListContentView(
                 eventSink = eventSink,
                 onSetUpRecoveryClick = onSetUpRecoveryClick,
                 onConfirmRecoveryKeyClick = onConfirmRecoveryKeyClick,
-                // TCHAP : Display banner when sync is offline
+                // :tchap: Display banner when sync is offline
                 onViewServiceStatusClick = onViewServiceStatusClick,
+                // :tchap: end
                 onRoomClick = onRoomClick,
                 lazyListState = lazyListState,
                 contentPadding = contentPadding,
@@ -158,8 +161,9 @@ private fun EmptyView(
     eventSink: (RoomListEvent) -> Unit,
     onSetUpRecoveryClick: () -> Unit,
     onConfirmRecoveryKeyClick: () -> Unit,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     onViewServiceStatusClick: () -> Unit,
+    // :tchap: end
     onCreateRoomClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -196,14 +200,14 @@ private fun EmptyView(
                 },
                 onDismissClick = { eventSink(RoomListEvent.DismissBanner) },
             )
-            // TCHAP : Display banner when sync is offline
-            // TODO : Tchap Maybe check if we need a banner for the offline mode
+            // :tchap: Display banner when sync is offline
             when (state.offlineBannerState) {
                 OfflineBannerState.ShowOfflineBanner -> {
                     OfflineBanner(onViewServiceStatusClick = onViewServiceStatusClick)
                 }
                 OfflineBannerState.None -> {}
             }
+            // :tchap: end
         }
     }
 }
@@ -217,8 +221,9 @@ private fun RoomsView(
     eventSink: (RoomListEvent) -> Unit,
     onSetUpRecoveryClick: () -> Unit,
     onConfirmRecoveryKeyClick: () -> Unit,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     onViewServiceStatusClick: () -> Unit,
+    // :tchap: end
     onRoomClick: (RoomListRoomSummary) -> Unit,
     contentPadding: PaddingValues,
     lazyListState: LazyListState,
@@ -239,8 +244,9 @@ private fun RoomsView(
             eventSink = eventSink,
             onSetUpRecoveryClick = onSetUpRecoveryClick,
             onConfirmRecoveryKeyClick = onConfirmRecoveryKeyClick,
-            // TCHAP : Display banner when sync is offline
+            // :tchap: Display banner when sync is offline
             onViewServiceStatusClick = onViewServiceStatusClick,
+            // :tchap: end
             onRoomClick = onRoomClick,
             contentPadding = contentPadding,
             lazyListState = lazyListState,
@@ -256,8 +262,9 @@ private fun RoomsViewList(
     eventSink: (RoomListEvent) -> Unit,
     onSetUpRecoveryClick: () -> Unit,
     onConfirmRecoveryKeyClick: () -> Unit,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     onViewServiceStatusClick: () -> Unit,
+    // :tchap: end
     onRoomClick: (RoomListRoomSummary) -> Unit,
     contentPadding: PaddingValues,
     lazyListState: LazyListState,
@@ -481,8 +488,9 @@ internal fun RoomListContentViewPreview(@PreviewParameter(RoomListContentStatePr
         eventSink = {},
         onSetUpRecoveryClick = {},
         onConfirmRecoveryKeyClick = {},
-        // TCHAP : Display banner when sync is offline
+        // :tchap: Display banner when sync is offline
         onViewServiceStatusClick = {},
+        // :tchap: end
         onRoomClick = {},
         onCreateRoomClick = {},
         lazyListState = rememberLazyListState(),

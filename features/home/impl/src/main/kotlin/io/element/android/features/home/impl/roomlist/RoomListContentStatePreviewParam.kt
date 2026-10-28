@@ -38,8 +38,9 @@ open class RoomListContentStatePreviewParam : PreviewParameterProvider<RoomListC
 
 internal fun aRoomsContentState(
     securityBannerState: SecurityBannerState = SecurityBannerState.None,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     offlineBannerState: OfflineBannerState = OfflineBannerState.None,
+    // :tchap: end
     showNewNotificationSoundBanner: Boolean = false,
     showSwipeAvatarBanner: Boolean = false,
     showUnreadCount: Boolean = false,
@@ -50,8 +51,9 @@ internal fun aRoomsContentState(
     seenRoomInvites: Set<RoomId> = emptySet(),
 ) = RoomListContentState.Rooms(
     securityBannerState = securityBannerState,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     offlineBannerState = offlineBannerState,
+    // :tchap: end
     showNewNotificationSoundBanner = showNewNotificationSoundBanner,
     showSwipeAvatarBanner = showSwipeAvatarBanner,
     showUnreadCount = showUnreadCount,
@@ -66,10 +68,12 @@ internal fun aSkeletonContentState() = RoomListContentState.Skeleton(16)
 
 internal fun anEmptyContentState(
     securityBannerState: SecurityBannerState = SecurityBannerState.None,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     offlineBannerState: OfflineBannerState = OfflineBannerState.None,
+    // :tchap: end
 ) = RoomListContentState.Empty(
     securityBannerState = securityBannerState,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     offlineBannerState = offlineBannerState,
+    // :tchap: end
 )

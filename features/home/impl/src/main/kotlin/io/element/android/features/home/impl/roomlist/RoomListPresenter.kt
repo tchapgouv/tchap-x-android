@@ -88,8 +88,9 @@ class RoomListPresenter(
     private val markRoomAsRead: MarkRoomAsRead,
     private val seenInvitesStore: SeenInvitesStore,
     private val announcementService: AnnouncementService,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     private val syncService: SyncService,
+    // :tchap: end
     private val coldStartWatcher: AnalyticsColdStartWatcher,
     private val spaceFiltersPresenter: Presenter<SpaceFiltersState>,
     private val globalSearchPresenter: Presenter<GlobalSearchState>,
@@ -275,7 +276,7 @@ class RoomListPresenter(
         val seenRoomInvites by remember { seenInvitesStore.seenRoomIds() }.collectAsState(emptySet())
         val securityBannerState by rememberSecurityBannerState(securityBannerDismissed)
 
-        // TCHAP : Display banner when sync is offline
+        // :tchap: Display banner when sync is offline
         val isOnlineState by syncService.isOnline.collectAsState()
         val offlineBannerState by remember {
             derivedStateOf {
@@ -285,12 +286,14 @@ class RoomListPresenter(
                 }
             }
         }
+        // :tchap: end
 
         return when {
             showEmpty -> RoomListContentState.Empty(
                 securityBannerState = securityBannerState,
-                // TCHAP : Display banner when sync is offline
+                // :tchap: Display banner when sync is offline
                 offlineBannerState = offlineBannerState,
+                // :tchap: end
             )
             showSkeleton -> RoomListContentState.Skeleton(count = 16)
             else -> {
@@ -298,8 +301,9 @@ class RoomListPresenter(
 
                 RoomListContentState.Rooms(
                     securityBannerState = securityBannerState,
-                    // TCHAP : Display banner when sync is offline
+                    // :tchap: Display banner when sync is offline
                     offlineBannerState = offlineBannerState,
+                    // :tchap: end
                     showNewNotificationSoundBanner = showNewNotificationSoundBanner,
                     showSwipeAvatarBanner = showSwipeAvatarBanner,
                     showUnreadCount = showUnreadCount,
