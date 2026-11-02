@@ -27,6 +27,8 @@ package fr.gouv.tchap.android.features.location.api
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import io.element.android.features.location.api.buildTimeMapTilerConfig
 import io.element.android.features.location.api.internal.MapTilerTileServerStyleUriBuilder
 import io.element.android.libraries.core.extensions.runCatchingExceptions
@@ -34,7 +36,6 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import org.maplibre.compose.camera.CameraPosition
 import org.maplibre.compose.map.MapRuntimeOptions
-import org.maplibre.compose.map.MapSnapshotRequest
 import org.maplibre.compose.map.createMapRuntime
 import org.maplibre.compose.style.BaseStyle
 import org.maplibre.spatialk.geojson.Position
@@ -119,7 +120,7 @@ class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context
         try {
             snapshotSemaphore.withPermit {
                 runCatchingExceptions {
-                    val mapRuntime = createMapRuntime(MapRuntimeOptions())
+                    val mapRuntime = createMapRuntime(MapRuntimeOptions.Standard)
                     val mapTilerConfig = buildTimeMapTilerConfig() ?: error("Missing MapTiler API Key")
                     val mapSnapshotter = mapRuntime.createSnapshotter(
                         baseStyle = BaseStyle.Uri(MapTilerTileServerStyleUriBuilder().build(mapTilerConfig, darkMode)),
@@ -127,15 +128,13 @@ class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context
                     )
 
                     val imageBitmap = mapSnapshotter.capture(
-                        MapSnapshotRequest(
-                            width = locationUiData.mapSize.width,
-                            height = locationUiData.mapSize.height,
-                            cameraPosition = CameraPosition(
-                                target = Position(locationUiData.location.lon, locationUiData.location.lat),
-                                zoom = locationUiData.mapZoom
-                            )
+                        size = DpSize(locationUiData.mapSize.width.dp, locationUiData.mapSize.height.dp)
+                    ) {
+                        cameraPosition = CameraPosition(
+                            center = Position(locationUiData.location.lon, locationUiData.location.lat),
+                            zoom = locationUiData.mapZoom
                         )
-                    )
+                    }
                     
                     val bitmap = imageBitmap.asAndroidBitmap()
                     mapSnapshotFile.outputStream().use {

@@ -138,11 +138,25 @@ private fun NotificationSettingsContentView(
     if (systemSettings.appNotificationsEnabled && !systemSettings.systemNotificationsEnabled) {
         SystemNotificationOffItem()
     }
-    MainNotificationSwitch(
-        appNotificationsEnabled = systemSettings.appNotificationsEnabled,
-        onNotificationsEnabledChange = onNotificationsEnabledChange,
+
+    // :tchap: Allow to enable/disable account notifications
+//    MainNotificationSwitch(
+//        appNotificationsEnabled = systemSettings.appNotificationsEnabled,
+//        onNotificationsEnabledChange = onNotificationsEnabledChange,
+//    )
+    AccountNotificationSwitch(
+        accountNotificationsEnabled = matrixSettings.accountNotificationsEnabled,
+        onAccountNotificationsEnabledChange = onAccountNotificationsEnabledChange,
     )
-    if (systemSettings.appNotificationsEnabled) {
+    if (matrixSettings.accountNotificationsEnabled) {
+        MainNotificationSwitch(
+            appNotificationsEnabled = systemSettings.appNotificationsEnabled,
+            onNotificationsEnabledChange = onNotificationsEnabledChange,
+        )
+    }
+//    if (systemSettings.appNotificationsEnabled) {
+    if (systemSettings.appNotificationsEnabled && matrixSettings.accountNotificationsEnabled) {
+    // :tchap: end
         if (!state.fullScreenIntentPermissionsState.permissionGranted) {
             FullScreenPermissionNotGrantedItem(
                 onClick = {
@@ -198,6 +212,31 @@ private fun SystemNotificationOffItem() {
         }
     )
 }
+
+// :tchap: Allow to enable/disable account notifications
+@Composable
+private fun AccountNotificationSwitch(
+    accountNotificationsEnabled: Boolean,
+    onAccountNotificationsEnabledChange: (Boolean) -> Unit
+) {
+    if (!accountNotificationsEnabled) {
+        PreferenceCategory(showTopDivider = false) {
+            ListItem(
+                leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.NotificationsOffSolid())),
+                content = {
+                    Text(stringResource(id = R.string.tchap_screen_notification_settings_account_notifications_disabled_banner))
+                },
+            )
+        }
+    }
+
+    PreferenceSwitch(
+        title = stringResource(id = R.string.tchap_screen_notification_settings_account_notifications_title),
+        isChecked = accountNotificationsEnabled,
+        onCheckedChange = onAccountNotificationsEnabledChange
+    )
+}
+// :tchap: end
 
 @Composable
 private fun MainNotificationSwitch(
@@ -333,55 +372,6 @@ private fun AdvancedSettingsCategory(
             }
         )
     }
-<<<<<<< HEAD
-
-    // :tchap: Allow to enable/disable account notifications
-//    PreferenceSwitch(
-//        title = stringResource(id = R.string.screen_notification_settings_enable_notifications),
-//        isChecked = systemSettings.appNotificationsEnabled,
-//        onCheckedChange = onNotificationsEnabledChange
-//    )
-    if (!matrixSettings.accountNotificationsEnabled) {
-        PreferenceCategory(showTopDivider = false) {
-            ListItem(
-                leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.NotificationsOffSolid())),
-                content = {
-                    Text(stringResource(id = R.string.tchap_screen_notification_settings_account_notifications_disabled_banner))
-                },
-            )
-        }
-    }
-
-    PreferenceSwitch(
-        title = stringResource(id = R.string.tchap_screen_notification_settings_account_notifications_title),
-        isChecked = matrixSettings.accountNotificationsEnabled,
-        onCheckedChange = onAccountNotificationsEnabledChange
-    )
-
-    if (matrixSettings.accountNotificationsEnabled) {
-        PreferenceSwitch(
-            title = stringResource(id = R.string.screen_notification_settings_enable_notifications),
-            isChecked = systemSettings.appNotificationsEnabled,
-            onCheckedChange = onNotificationsEnabledChange
-        )
-    }
-
-    if (systemSettings.appNotificationsEnabled && matrixSettings.accountNotificationsEnabled) {
-        // :tchap: end
-        if (!state.fullScreenIntentPermissionsState.permissionGranted) {
-            PreferenceCategory {
-                ListItem(
-                    leadingContent = ListItemContent.Icon(IconSource.Vector(CompoundIcons.VoiceCallSolid())),
-                    content = {
-                        Text(stringResource(id = R.string.full_screen_intent_banner_title))
-                    },
-                    supportingContent = {
-                        Text(stringResource(R.string.full_screen_intent_banner_message))
-                    },
-                    onClick = {
-                        state.fullScreenIntentPermissionsState.eventSink(FullScreenIntentPermissionsEvent.OpenSettings)
-                    }
-=======
     if (state.showChangePushProviderDialog) {
         SingleSelectionDialog(
             title = stringResource(id = R.string.screen_advanced_settings_choose_distributor_dialog_title_android),
@@ -398,7 +388,6 @@ private fun AdvancedSettingsCategory(
             onSelectOption = { index ->
                 state.eventSink(
                     NotificationSettingsEvent.SetPushProvider(index)
->>>>>>> main-element
                 )
             },
             onDismissRequest = { state.eventSink(NotificationSettingsEvent.CancelChangePushProvider) },
