@@ -33,6 +33,7 @@ import im.vector.app.features.analytics.plan.Composer
 import im.vector.app.features.analytics.plan.Interaction
 import io.element.android.features.contentscanner.api.ContentScannerService
 import io.element.android.features.location.api.LocationService
+import io.element.android.features.messages.api.timeline.TextPillificator
 import io.element.android.features.messages.impl.MessagesNavigator
 import io.element.android.features.messages.impl.attachments.Attachment
 import io.element.android.features.messages.impl.attachments.preview.error.sendAttachmentError
@@ -40,7 +41,6 @@ import io.element.android.features.messages.impl.draft.ComposerDraftService
 import io.element.android.features.messages.impl.messagecomposer.suggestions.RoomAliasSuggestionsDataSource
 import io.element.android.features.messages.impl.messagecomposer.suggestions.SuggestionsProcessor
 import io.element.android.features.messages.impl.timeline.TimelineController
-import io.element.android.features.messages.impl.utils.TextPillificationHelper
 import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
@@ -137,7 +137,7 @@ class MessageComposerPresenter(
     permissionsPresenterFactory: PermissionsPresenter.Factory,
     private val draftService: ComposerDraftService,
     private val mentionSpanProvider: MentionSpanProvider,
-    private val pillificationHelper: TextPillificationHelper,
+    private val pillificationHelper: TextPillificator,
     private val suggestionsProcessor: SuggestionsProcessor,
     private val mediaOptimizationConfigProvider: MediaOptimizationConfigProvider,
     private val notificationConversationService: NotificationConversationService,
