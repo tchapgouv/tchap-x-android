@@ -31,8 +31,6 @@ import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runUpdatingState
 import io.element.android.libraries.designsystem.theme.components.SearchBarResultState
 import io.element.android.libraries.di.annotations.RoomCoroutineScope
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomMember
@@ -62,7 +60,6 @@ import kotlin.time.Duration.Companion.seconds
 
 @AssistedInject
 class ChangeRolesPresenter(
-    private val featureFlagService: FeatureFlagService,
     @Assisted private val role: RoomMember.Role,
     private val room: JoinedRoom,
     private val dataSource: RoomMemberListDataSource,

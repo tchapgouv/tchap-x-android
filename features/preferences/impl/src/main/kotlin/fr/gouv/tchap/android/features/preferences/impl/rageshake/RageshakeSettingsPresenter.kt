@@ -26,14 +26,13 @@ package fr.gouv.tchap.android.features.preferences.impl.rageshake
 
 import androidx.compose.runtime.Composable
 import dev.zacsweers.metro.Inject
-import io.element.android.features.rageshake.api.preferences.RageshakePreferencesPresenter
+import io.element.android.features.rageshake.api.preferences.RageshakePreferencesState
 import io.element.android.libraries.architecture.Presenter
 
 @Inject
 class RageshakeSettingsPresenter(
-    private val rageshakePreferencesPresenter: RageshakePreferencesPresenter,
+    private val rageshakePreferencesPresenter: Presenter<RageshakePreferencesState>,
 ) : Presenter<RageshakeSettingsState> {
-
     @Composable
     override fun present(): RageshakeSettingsState {
         val rageshakePreferencesState = rageshakePreferencesPresenter.present()

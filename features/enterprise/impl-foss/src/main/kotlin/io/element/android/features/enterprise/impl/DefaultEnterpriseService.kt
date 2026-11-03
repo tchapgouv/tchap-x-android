@@ -33,7 +33,9 @@ import kotlin.random.Random
 
 @ContributesBinding(AppScope::class)
 class DefaultEnterpriseService(
+    // :tchap: Get a random HomeServeur from a known list to determine account HomeServer
     private val homeserverConfiguration: HomeserverConfiguration,
+    // :tchap: end
     private val temporaryMatrixClientFactory: TemporaryMatrixClientFactory,
     private val jsonProvider: JsonProvider,
     private val dispatchers: CoroutineDispatchers,
@@ -53,6 +55,7 @@ class DefaultEnterpriseService(
 
     override fun defaultHomeserverList(): List<String> = homeserverConfiguration.defaultHomeserverList
     // :tchap: end
+
     override suspend fun isEnterpriseUser(sessionId: SessionId) = false
     override suspend fun tweakMasUrl(url: String, urlContentFetcher: ClientUrlContentFetcher) = url
     override fun accountProviderAllowList(): List<AccountProvider> = emptyList()

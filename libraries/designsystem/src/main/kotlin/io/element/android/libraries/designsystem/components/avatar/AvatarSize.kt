@@ -30,10 +30,12 @@ enum class AvatarSize(val dp: Dp) {
     UserPreference(52.dp),
 
     UserHeader(96.dp),
+
     // :tchap: Tchap Custom Design
 //    UserListItem(36.dp),
     UserListItem(40.dp),
     // :tchap: end
+
     AccountInfoUser(36.dp),
 
     SelectedUser(52.dp),

@@ -8,13 +8,12 @@
 
 package io.element.android.features.home.impl
 
-import io.element.android.libraries.matrix.api.core.SessionId
-
 sealed interface HomeEvent {
     // :tchap: Space default action is now conversation filtering (add automatic Reselect Last filter)
 //    data class SelectHomeNavigationBarItem(val item: HomeNavigationBarItem) : HomeEvent
     data class SelectHomeNavigationBarItem(val item: HomeNavigationBarItem, val reselectLastFilters: Boolean = true) : HomeEvent
     // :tchap: end
+
     data object DismissMultiAccountAnnouncement : HomeEvent
     data object DismissSwipeAvatarAnnouncement : HomeEvent
 }

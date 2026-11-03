@@ -32,6 +32,7 @@ class FakeEnterpriseService(
     private val firebasePushGatewayResult: () -> String? = { lambdaError() },
     private val unifiedPushDefaultPushGatewayResult: () -> String? = { lambdaError() },
     // :tchap: Get randomised homeserver for getHomeserverFromEmail
+    private val defaultHomeserverListResult: () -> List<String> = { emptyList() },
     override var selectedHomeserver: Int,
     // :tchap: end
     private val getNoisyNotificationChannelIdResult: (SessionId?) -> String? = { lambdaError() },

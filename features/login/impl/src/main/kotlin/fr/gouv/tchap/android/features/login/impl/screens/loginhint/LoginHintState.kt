@@ -26,9 +26,9 @@ package fr.gouv.tchap.android.features.login.impl.screens.loginhint
 
 import android.os.Parcelable
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns
-import io.element.android.libraries.matrix.api.accountprovider.AccountProvider
 import io.element.android.features.login.impl.login.LoginModeState
 import io.element.android.libraries.architecture.AsyncData
+import io.element.android.libraries.matrix.api.accountprovider.AccountProvider
 import kotlinx.parcelize.Parcelize
 
 data class LoginHintState(

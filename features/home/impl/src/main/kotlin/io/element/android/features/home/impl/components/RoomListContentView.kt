@@ -49,8 +49,6 @@ import io.element.android.features.home.impl.filters.aRoomListFiltersState
 import io.element.android.features.home.impl.filters.selection.FilterSelectionState
 import io.element.android.features.home.impl.model.RoomListRoomSummary
 import io.element.android.features.home.impl.model.RoomSummaryDisplayType
-import io.element.android.features.home.impl.roomlist.SecurityBannerState
-
 import io.element.android.features.home.impl.roomlist.OfflineBannerState
 import io.element.android.features.home.impl.roomlist.RoomListBanner
 import io.element.android.features.home.impl.roomlist.RoomListContentState

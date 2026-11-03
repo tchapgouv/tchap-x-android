@@ -157,7 +157,7 @@ class ConfigureRoomPresenter(
         // 4. If the homeserver forbids public rooms.
         val parentSpace = createRoomConfig.parentSpace
         // :tchap: Enable PrivateNotEncrypted room
-//        val availableJoinRules = remember(parentSpace, isSpace, isKnockFeatureEnabled, ) {
+//        val availableJoinRules = remember(parentSpace, isSpace, isKnockFeatureEnabled, arePublicRoomsDisabled) {
         val availableJoinRules = remember(parentSpace, isSpace, isKnockFeatureEnabled, arePublicRoomsDisabled, isPrivateNotEncryptedRoomsActive) {
         // :tchap: end
             when {

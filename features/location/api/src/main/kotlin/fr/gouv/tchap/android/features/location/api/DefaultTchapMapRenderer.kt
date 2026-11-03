@@ -135,12 +135,12 @@ class DefaultTchapMapRenderer(private val darkMode: Boolean, private val context
                             zoom = locationUiData.mapZoom
                         )
                     }
-                    
+
                     val bitmap = imageBitmap.asAndroidBitmap()
                     mapSnapshotFile.outputStream().use {
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
                     }
-                    
+
                     mapSnapshotter.close()
                     mapRuntime.close()
                 }.onFailure {
