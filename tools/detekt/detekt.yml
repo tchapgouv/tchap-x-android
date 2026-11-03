@@ -241,6 +241,9 @@ Compose:
       - LocalBuildMeta
       - LocalUiTestMode
       - LocalSdkIntVersionProvider
+      # :tchap: Show the Matrix Id depending of feature flag showMatrixId
+      - LocalShowMatrixId
+      # :tchap: end
       - LocalTimelineEventRendererConfig
   CompositionLocalNaming:
     active: true

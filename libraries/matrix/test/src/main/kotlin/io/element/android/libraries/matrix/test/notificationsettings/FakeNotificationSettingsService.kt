@@ -37,10 +37,12 @@ class FakeNotificationSettingsService(
     private var defaultEncryptedOneToOneRoomNotificationMode: RoomNotificationMode = initialEncryptedOneToOneDefaultMode
     private var roomNotificationMode: RoomNotificationMode = initialRoomMode
     private var roomNotificationModeIsDefault: Boolean = initialRoomModeIsDefault
+
     // :tchap: Allow to enable/disable account notifications
     private var accountNotificationsEnabled = initialAccountNotificationsEnabled
     private var setAccountNotificationsError: Throwable? = null
     // :tchap: end
+
     private var callNotificationsEnabled = false
     private var inviteNotificationsEnabled = false
     private var atRoomNotificationsEnabled = false

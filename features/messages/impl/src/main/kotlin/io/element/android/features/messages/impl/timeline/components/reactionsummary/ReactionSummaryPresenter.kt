@@ -17,8 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import dev.zacsweers.metro.Inject
 import io.element.android.libraries.architecture.Presenter
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.room.BaseRoom
 import io.element.android.libraries.matrix.api.room.RoomMember
 import io.element.android.libraries.matrix.api.room.roomMembers
@@ -28,7 +26,6 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Inject
 class ReactionSummaryPresenter(
-    private val featureFlagService: FeatureFlagService,
     private val room: BaseRoom,
 ) : Presenter<ReactionSummaryState> {
     @Composable

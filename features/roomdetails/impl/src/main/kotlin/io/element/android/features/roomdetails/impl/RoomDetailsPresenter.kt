@@ -35,8 +35,8 @@ import io.element.android.features.roomdetailsedit.api.roomDetailsEditPermission
 import io.element.android.features.securityandprivacy.api.SecurityAndPrivacyPermissions
 import io.element.android.features.securityandprivacy.api.securityAndPrivacyPermissions
 import io.element.android.libraries.androidutils.clipboard.ClipboardHelper
-import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.androidutils.toast.ToastHelper
+import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runUpdatingState
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers

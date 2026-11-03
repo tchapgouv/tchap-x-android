@@ -11,9 +11,6 @@ package io.element.android.features.preferences.impl.root
 import android.app.Activity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.bumble.appyx.core.modality.BuildContext
 import com.bumble.appyx.core.node.Node
@@ -22,15 +19,11 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
 import io.element.android.compound.theme.ElementTheme
-import io.element.android.features.logout.api.direct.DirectLogoutEvent
 import io.element.android.features.preferences.impl.account.PreferencesAccountCallback
 import io.element.android.libraries.androidutils.browser.openUrlInChromeCustomTab
 import io.element.android.libraries.architecture.callback
 import io.element.android.libraries.di.SessionScope
 import io.element.android.libraries.emoji.api.picker.EmojiPickerRenderer
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
-import io.element.android.libraries.matrix.api.user.MatrixUser
 import io.element.android.libraries.matrix.api.core.SessionId
 
 @ContributesNode(SessionScope::class)
@@ -38,7 +31,6 @@ import io.element.android.libraries.matrix.api.core.SessionId
 class PreferencesRootNode(
     @Assisted buildContext: BuildContext,
     @Assisted plugins: List<Plugin>,
-    private val featureFlagService: FeatureFlagService,
     private val presenter: PreferencesRootPresenter,
     private val emojiPickerRenderer: EmojiPickerRenderer,
 ) : Node(buildContext, plugins = plugins) {
@@ -47,16 +39,20 @@ class PreferencesRootNode(
         fun navigateToSession(sessionId: SessionId)
         fun navigateToAnalyticsSettings()
         fun navigateToAbout()
+
         // :tchap: Add open FAQ
         fun onOpenFAQ(activity: Activity, darkTheme: Boolean)
         // :tchap: end
+
         fun navigateToDeveloperSettings()
         fun navigateToLockScreenSettings()
         fun navigateToMediaSettings()
         fun navigateToLocationSettings()
+
         // :tchap: Add Rageshake Settings
         fun navigateToRageshakeSettings()
         // :tchap: end
+
         fun navigateToLabs()
     }
 

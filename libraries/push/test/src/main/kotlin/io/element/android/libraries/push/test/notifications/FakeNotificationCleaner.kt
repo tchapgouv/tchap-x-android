@@ -13,8 +13,6 @@ import io.element.android.libraries.matrix.api.core.RoomId
 import io.element.android.libraries.matrix.api.core.SessionId
 import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.push.api.notifications.NotificationCleaner
-import io.element.android.libraries.push.test.notifications.cleanObsoleteNotificationsLambda
-import io.element.android.libraries.push.test.notifications.clearReadRoomsNotificationsLambda
 import io.element.android.tests.testutils.lambda.lambdaError
 
 class FakeNotificationCleaner(
@@ -25,7 +23,7 @@ class FakeNotificationCleaner(
     private val clearMembershipNotificationForSessionLambda: (SessionId) -> Unit = { lambdaError() },
     private val clearMembershipNotificationForRoomLambda: (SessionId, RoomId) -> Unit = { _, _ -> lambdaError() },
     // :tchap: AutoClean System Notifications on sync
-    private val cleanObsoleteNotificationsLambda: (SessionId) -> Unit = { lambdaError() }
+    private val cleanObsoleteNotificationsLambda: (SessionId) -> Unit = { lambdaError() },
     // :tchap: end
     private val clearReadRoomsNotificationsLambda: (SessionId) -> Unit = { lambdaError() },
 ) : NotificationCleaner {
@@ -58,6 +56,7 @@ class FakeNotificationCleaner(
         cleanObsoleteNotificationsLambda(sessionId)
     }
     // :tchap: end
+
     override fun clearReadRoomsNotifications(sessionId: SessionId) {
         clearReadRoomsNotificationsLambda(sessionId)
     }
