@@ -1,12 +1,26 @@
-@file:SuppressLint("LogNotTimber", "ObsoleteSdkInt")
-@file:Suppress("KotlinConstantConditions")
-
-// IMPORTANT: this file comes from rustls-platform-verifier and should not be modified locally.
-
-/*
- * Copyright (c) 2022 1Password
+/**
+ * MIT License
  *
- * SPDX-License-Identifier: MIT
+ * Copyright (c) 2022 1Password
+ * Copyright (c) 2026 Element Creations Ltd.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 package org.rustls.platformverifier
@@ -32,6 +46,11 @@ import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 import javax.security.auth.x500.X500Principal
 
+// NOTE: This is a copy of the code in the `rustls-platform-verifier` library, which contains mandatory certificate revocation checks
+// and has been problematic for us for some time. This copy does not contain the certificate revocation logic, which was causing
+// both ANRs in the app when trying to resolve CRLs on the main thread, or OOM exceptions when trying to do so in background threads,
+// which ran in parallel each downloading and parsing its own copy of the CRL.
+
 // If this is updated, update the Rust definition too.
 // Marked private as this is not meant to be used in Android code.
 private enum class StatusCode(val value: Int) {
@@ -47,7 +66,7 @@ private enum class StatusCode(val value: Int) {
 // Marked private as this is not meant to be used in Android code.
 private class VerificationResult(
     status: StatusCode,
-    @Suppress("unused") val message: String? = null
+    @Suppress("unused") val message: String? = null,
 ) {
     @Suppress("unused")
     private val code: Int = status.value
@@ -60,7 +79,7 @@ private class VerificationResult(
 // Internal for test code - no other Kotlin code should use this object directly.
 @Suppress("unused")
 // We want to show a difference between Kotlin-side logs and those in Rust code
-@SuppressLint("LongLogTag")
+@SuppressLint("LongLogTag", "LogNotTimber")
 internal object CertificateVerifier {
     private const val TAG = "rustls-platform-verifier-android"
 
@@ -107,20 +126,6 @@ internal object CertificateVerifier {
     @get:Synchronized
     private var mockTrustManager: Lazy<X509TrustManagerExtensions?> =
         makeLazyTrustManager(mockKeystore)
-
-    @JvmStatic
-    private fun addMockRoot(root: ByteArray) {
-        if (!BuildConfig.TEST) {
-            throw Exception("attempted to add a mock root outside a test!")
-        }
-
-        val alias = "root_${mockKeystore.size()}"
-        // Throwing here is fine since test roots should always be well-formed
-        val cert = certFactory.generateCertificate(ByteArrayInputStream(root))
-        mockKeystore.setCertificateEntry(alias, cert)
-
-        reloadMockData()
-    }
 
     @JvmStatic
     private fun clearMockRoots() {
@@ -186,6 +191,7 @@ internal object CertificateVerifier {
         makeLazyTrustManager(null)
         // :tchap: end
 
+    @SuppressLint("ObsoleteSdkInt")
     @JvmStatic
     private fun verifyCertificateChain(
         @Suppress("UNUSED_PARAMETER") context: Context,
@@ -194,7 +200,7 @@ internal object CertificateVerifier {
         allowedEkus: Array<String>,
         ocspResponse: ByteArray?,
         time: Long,
-        certChain: Array<ByteArray>
+        certChain: Array<ByteArray>,
     ): VerificationResult {
         // Convert the array of (supposedly) DER bytes into certificates.
         val certificateChain = mutableListOf<X509Certificate>()
@@ -233,20 +239,8 @@ internal object CertificateVerifier {
         // - If built for tests:
         //      - If the mock CA store has any values, use the mock trust manager.
         //      - Otherwise, use the system trust manager.
-        val (trustManager, keystore) = if (!BuildConfig.TEST) {
-            val trustManager =
-                systemTrustManager.value ?: return VerificationResult(StatusCode.Unavailable)
-            Pair(trustManager, systemKeystore)
-        } else {
-            if (mockKeystore.size() != 0) {
-                val trustManager = mockTrustManager.value!!
-                Pair(trustManager, mockKeystore)
-            } else {
-                val trustManager =
-                    systemTrustManager.value ?: return VerificationResult(StatusCode.Unavailable)
-                Pair(trustManager, systemKeystore)
-            }
-        }
+        val trustManager =
+            systemTrustManager.value ?: return VerificationResult(StatusCode.Unavailable)
 
         // Verify that the certificate chain is valid and correct, and nothing more.
         //
@@ -258,51 +252,16 @@ internal object CertificateVerifier {
         //
         // Returns the "the properly ordered chain used for verification as a list of X509Certificates.",
         // meaning a list from end-entity certificate to trust-anchor.
-        val validChain = try {
+        try {
             trustManager.checkServerTrusted(certificateChain.toTypedArray(), authMethod, serverName)
         } catch (e: CertificateException) {
-            // In test configurations we may see `checkServerTrusted` fail once vendored test
-            // certificates pass their expiry date. We try to avoid that by using a fixed
-            // verification time when calling `endEntity.checkValidity` above, however we can't
-            // fix the time for the `checkServerTrusted` call.
-            //
-            // To make diagnosing CI test failures easier we try to find the root cause of
-            // checkServerTrusted failing, returning a different `StatusCode` as appropriate.
-            if (BuildConfig.TEST) {
-                var rootCause: Throwable? = e
-                while (rootCause?.cause != null && rootCause.cause != rootCause) {
-                    rootCause = rootCause.cause
-                }
-                return when (rootCause) {
-                    is CertificateExpiredException, is CertificateNotYetValidException -> VerificationResult(
-                        StatusCode.Expired,
-                        rootCause.toString()
-                    )
-
-                    else -> VerificationResult(StatusCode.UnknownCert, rootCause.toString())
-                }
-            }
             // In non-test configurations we should have caught expiry errors earlier and
             // can simply return an unknown cert error without digging through the exception
             // cause chain.
             return VerificationResult(StatusCode.UnknownCert, e.toString())
         }
 
-        // TEST ONLY: Mock test suite cannot attempt to check revocation status if no OSCP data has been stapled,
-        // because Android requires certificates to an specify OCSP responder for network fetch in this case.
-        // If in testing w/o OCSP stapled, short-circuit here - only prior checks apply.
-        if (BuildConfig.TEST && (mockKeystore.size() != 0) && (ocspResponse == null)) {
-            return VerificationResult(StatusCode.Ok)
-        }
-
-        // =================================================================================================
-        // IMPORTANT! DIFF WITH THE ORIGINAL SOURCES HERE:
-        //
-        // We removed the cert revocation checks because Android won't do them by default
-        // and supporting them would be quite difficult given CRLs won't work out of the box.
-        //
-        // See https://github.com/rustls/rustls-platform-verifier/issues/221 for more info.
-        // =================================================================================================
+        // Do NOT check revocation status for now. The path doing this has been causing several issues.
 
         return VerificationResult(StatusCode.Ok)
     }
@@ -363,6 +322,7 @@ internal object CertificateVerifier {
                 var i = 0
                 while (true) {
                     val alias = "$hash.$i"
+                    i += 1
 
                     if (!File(loadedSystemCertificateDirectory, alias).exists()) {
                         break
@@ -389,8 +349,6 @@ internal object CertificateVerifier {
                             return true
                         }
                     }
-
-                    i += 1
                 }
             }
         }

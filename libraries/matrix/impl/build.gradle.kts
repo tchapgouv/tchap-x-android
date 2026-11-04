@@ -55,7 +55,8 @@ dependencies {
         debugImplementation(libs.matrix.sdk)
         releaseImplementation(libs.matrix.sdk)
     }
-    implementation(variantOf(libs.rustls.platform.verifier) { artifactType("aar") })
+    // Disabled until the platform verifier is ready for production. See CertificateVerifier.kt.
+//    implementation(variantOf(libs.rustls.platform.verifier) { artifactType("aar") })
 
     // The native call's Matrix transport. Only this module may hand it a raw SDK client.
     implementation(platform("io.element.android:element-call-bom:$elementCallVersion"))
