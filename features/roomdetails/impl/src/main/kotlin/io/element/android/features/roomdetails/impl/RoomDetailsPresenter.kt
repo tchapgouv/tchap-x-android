@@ -35,6 +35,7 @@ import io.element.android.features.roomdetailsedit.api.roomDetailsEditPermission
 import io.element.android.features.securityandprivacy.api.SecurityAndPrivacyPermissions
 import io.element.android.features.securityandprivacy.api.securityAndPrivacyPermissions
 import io.element.android.libraries.androidutils.clipboard.ClipboardHelper
+import io.element.android.libraries.androidutils.toast.ToastHelper
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runUpdatingState
@@ -42,8 +43,6 @@ import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.designsystem.utils.snackbar.LocalSnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.designsystem.utils.snackbar.collectSnackbarMessageAsState
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.MatrixClient
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityState
@@ -83,8 +82,8 @@ class RoomDetailsPresenter(
     private val dispatchers: CoroutineDispatchers,
     private val analyticsService: AnalyticsService,
     private val clipboardHelper: ClipboardHelper,
+    private val toastHelper: ToastHelper,
     private val appPreferencesStore: AppPreferencesStore,
-    private val featureFlagService: FeatureFlagService,
     private val sessionPreferencesStore: SessionPreferencesStore,
     private val notificationCleaner: NotificationCleaner,
 ) : Presenter<RoomDetailsState> {
@@ -133,10 +132,6 @@ class RoomDetailsPresenter(
 
         // TCHAP external user
         val isOpenToExternalUsers by remember { derivedStateOf { roomInfo.isOpenToExternalUsers } }
-
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
 
         val permissions by getPermissions()
         val canonicalAlias by remember { derivedStateOf { roomInfo.canonicalAlias } }
@@ -223,8 +218,9 @@ class RoomDetailsPresenter(
                     scope.launch(dispatchers.io) {
                         room.getPermalink()
                             .onSuccess { permalink ->
-                                clipboardHelper.copyPlainText(permalink)
-                                snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
+                                clipboardHelper.copyPlainText(permalink) {
+                                    snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
+                                }
                             }
                             .onFailure {
                                 Timber.e(it, "Failed to get permalink for room ${room.roomId}")
@@ -232,8 +228,14 @@ class RoomDetailsPresenter(
                     }
                 }
                 is RoomDetailsEvent.CopyToClipboard -> {
-                    clipboardHelper.copyPlainText(event.text)
-                    snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
+                    clipboardHelper.copyPlainText(event.text) {
+                        snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
+                    }
+                }
+                is RoomDetailsEvent.CopyRoomId -> {
+                    clipboardHelper.copyPlainText(room.roomId.value) {
+                        toastHelper.show(CommonStrings.common_copied_to_clipboard)
+                    }
                 }
                 is RoomDetailsEvent.MarkAsRead -> scope.markAsRead()
                 is RoomDetailsEvent.MarkAsUnread -> scope.markAsUnread()
@@ -251,7 +253,6 @@ class RoomDetailsPresenter(
         val canReportRoom by produceState(false) { value = client.canReportRoom() }
 
         return RoomDetailsState(
-            showMatrixId = showMatrixId,
             // TCHAP external user
             isOpenToExternalUsers = isOpenToExternalUsers,
             roomId = room.roomId,

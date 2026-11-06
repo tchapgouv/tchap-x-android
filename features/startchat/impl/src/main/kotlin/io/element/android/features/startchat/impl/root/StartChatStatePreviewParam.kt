@@ -59,12 +59,10 @@ open class StartChatStatePreviewParam : PreviewParameterProvider<StartChatState>
 }
 
 fun aConfirmingStartDmWithMatrixUser(
-    showMatrixId: Boolean = false,
     matrixUser: MatrixUser = aMatrixUser(),
     isUserIdentityUnknown: Boolean = false
 ): ConfirmingStartDmWithMatrixUser {
     return ConfirmingStartDmWithMatrixUser(
-        showMatrixId,
         matrixUser,
         isUserIdentityUnknown
     )
@@ -76,7 +74,6 @@ fun aCreateRoomRootState(
     startDmAction: AsyncAction<RoomId> = AsyncAction.Uninitialized,
     eventSink: (StartChatEvent) -> Unit = {},
 ) = StartChatState(
-    showMatrixId = false,
     applicationName = applicationName,
     userListState = userListState,
     startDmAction = startDmAction,

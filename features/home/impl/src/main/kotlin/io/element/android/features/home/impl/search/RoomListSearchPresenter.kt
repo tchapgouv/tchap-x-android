@@ -20,13 +20,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import dev.zacsweers.metro.Inject
 import io.element.android.libraries.architecture.Presenter
-import io.element.android.libraries.core.meta.BuildMeta
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 
 @Inject
 class RoomListSearchPresenter(
-    private val buildMeta: BuildMeta,
     private val dataSourceFactory: RoomListSearchDataSource.Factory,
 ) : Presenter<RoomListSearchState> {
     @Composable
@@ -41,7 +39,7 @@ class RoomListSearchPresenter(
         val dataSource = remember { dataSourceFactory.create(coroutineScope) }
 
         LaunchedEffect(searchQuery.text) {
-            dataSource.setSearchQuery(searchQuery.text.toString())
+            dataSource.setSearchQuery(searchQuery = searchQuery.text.toString(), additionalFilters = null)
         }
 
         fun handleEvent(event: RoomListSearchEvent) {
@@ -62,7 +60,6 @@ class RoomListSearchPresenter(
         val searchResults by dataSource.roomSummaries.collectAsState(initial = persistentListOf())
 
         return RoomListSearchState(
-            showMatrixId = buildMeta.isDebuggable,
             isSearchActive = isSearchActive,
             query = searchQuery,
             results = searchResults,

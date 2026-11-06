@@ -19,7 +19,6 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 data class ChangeRolesState(
-    val showMatrixId: Boolean,
     val role: RoomMember.Role,
     val searchQuery: TextFieldState,
     val isSearchActive: Boolean,

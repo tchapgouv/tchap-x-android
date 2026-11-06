@@ -27,8 +27,6 @@ import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.core.uri.ensureProtocol
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.UserId
 import kotlinx.coroutines.launch
 
@@ -36,7 +34,6 @@ import kotlinx.coroutines.launch
 class LoginWithClassicPresenter(
     @Assisted private val userId: UserId,
     @Assisted private val navigator: LoginWithClassicNavigator,
-    private val featureFlagService: FeatureFlagService,
     private val loginModePresenter: Presenter<LoginModeState>,
     private val elementClassicConnection: ElementClassicConnection,
     private val accountProviderDataSource: AccountProviderDataSource,
@@ -58,12 +55,6 @@ class LoginWithClassicPresenter(
         }
         val loginModeState = loginModePresenter.present()
         val elementClassicConnectionState by elementClassicConnection.stateFlow.collectAsState()
-
-        // :tchap: tchap-legacy-connection
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
-        // :tchap: end
 
         fun handleEvent(event: LoginWithClassicEvent) {
             when (event) {
@@ -123,9 +114,6 @@ class LoginWithClassicPresenter(
 
         val elementClassicReady = elementClassicConnectionState as? ElementClassicConnectionState.ElementClassicReady
         return LoginWithClassicState(
-            // :tchap: tchap-legacy-connection
-            showMatrixId = showMatrixId,
-            // :tchap: end
             isElementPro = buildMeta.isEnterpriseBuild,
             userId = userId,
             displayName = elementClassicReady?.displayName,

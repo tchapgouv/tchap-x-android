@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.preferences.impl.R
 import io.element.android.libraries.architecture.AsyncAction
@@ -55,7 +55,6 @@ import io.element.android.libraries.ui.strings.CommonStrings
 /**
  * https://www.figma.com/design/pDlJZGBsri47FNTXMnEdXB/Compound-Android-Templates?node-id=3182-36115&t=U1vS3px9HzlzWYd7-4
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditUserProfileView(
     state: EditUserProfileState,
@@ -123,7 +122,7 @@ fun EditUserProfileView(
                 enabled = state.canChangeAvatarUrl,
             )
             // TCHAP hide the Matrix Id depending of showMatrixId feature flag
-            if (state.showMatrixId) {
+            if (LocalShowMatrixId.current) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     modifier = Modifier.fillMaxWidth(),

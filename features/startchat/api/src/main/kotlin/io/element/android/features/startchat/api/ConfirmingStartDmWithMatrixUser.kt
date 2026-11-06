@@ -12,7 +12,6 @@ import io.element.android.libraries.architecture.AsyncAction
 import io.element.android.libraries.matrix.api.user.MatrixUser
 
 data class ConfirmingStartDmWithMatrixUser(
-    val showMatrixId: Boolean,
     val matrixUser: MatrixUser,
     val isUserIdentityUnknown: Boolean,
 ) : AsyncAction.Confirming

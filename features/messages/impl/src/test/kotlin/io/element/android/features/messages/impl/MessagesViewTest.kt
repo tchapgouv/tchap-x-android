@@ -90,7 +90,6 @@ import org.junit.Test
 import org.robolectric.annotation.Config
 import kotlin.time.Duration.Companion.milliseconds
 
-@Suppress("LargeClass")
 class MessagesViewTest : RobolectricTest() {
     @Test
     fun `clicking on back invoke expected callback`() = runAndroidComposeUiTest {
@@ -607,7 +606,7 @@ class MessagesViewTest : RobolectricTest() {
         timelineEventsRecorder.clear()
 
         clickOn(CommonStrings.action_remove_message)
-        messagesEventsRecorder.assertSingle(MessagesEvent.HandleAction(TimelineItemAction.Redact, timelineItem))
+        messagesEventsRecorder.assertSingle(MessagesEvent.HandleAction(TimelineItemAction.AbortSending, timelineItem))
         timelineEventsRecorder.assertSingle(TimelineEvent.HideSendFailureDialog)
     }
 

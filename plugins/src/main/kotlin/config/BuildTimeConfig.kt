@@ -32,10 +32,14 @@ object BuildTimeConfig {
     // TCHAP : specific URL
     val URL_POLICY = "https://tchap.numerique.gouv.fr/politique-de-confidentialite"
 
+    // :tchap: Add URL_FAQ URL
+    val URL_FAQ = "https://aide.tchap.numerique.gouv.fr"
+    // :tchap: end
+
     // TCHAP : specific URL
     val SERVICES_MAPTILER_BASE_URL = "https://openmaptiles.geo.data.gouv.fr/styles"
 
-    val SERVICES_MAPTILER_APIKEY: String? = null
+    val SERVICES_MAPTILER_APIKEY: String = "MAPTILER_APIKEY_NOT_REEQUIRED"
 
     // TCHAP : specific MapID
     const val SERVICES_MAPTILER_LIGHT_MAPID = "osm-bright"

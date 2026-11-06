@@ -35,7 +35,6 @@ internal fun aBlockedUsersState(
     eventSink: (BlockedUsersEvent) -> Unit = {},
 ): BlockedUsersState {
     return BlockedUsersState(
-        showMatrixId = false,
         blockedUsers = blockedUsers.toImmutableList(),
         unblockUserAction = unblockUserAction,
         snackbarMessage = snackbarMessage,

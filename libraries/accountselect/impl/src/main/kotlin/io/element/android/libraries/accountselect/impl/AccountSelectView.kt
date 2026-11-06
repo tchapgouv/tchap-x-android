@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,10 +32,8 @@ import io.element.android.libraries.matrix.ui.components.MatrixUserRow
 import io.element.android.libraries.ui.strings.CommonStrings
 
 @Suppress("MultipleEmitters") // False positive
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountSelectView(
-    showMatrixId: Boolean,
     state: AccountSelectState,
     onSelectAccount: (SessionId) -> Unit,
     onDismiss: () -> Unit,
@@ -70,7 +67,6 @@ fun AccountSelectView(
                                 }
                                 .padding(vertical = 8.dp),
                             matrixUser = matrixUser,
-                            showMatrixId = showMatrixId,
                         )
                         HorizontalDivider()
                     }
@@ -87,6 +83,5 @@ internal fun AccountSelectViewPreview(@PreviewParameter(AccountSelectStatePrevie
         state = state,
         onSelectAccount = {},
         onDismiss = {},
-        showMatrixId = false,
     )
 }

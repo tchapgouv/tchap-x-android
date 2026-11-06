@@ -30,29 +30,37 @@ open class RoomListContentStatePreviewParam : PreviewParameterProvider<RoomListC
             aRoomsContentState(
                 showNewNotificationSoundBanner = true,
             ),
+            aRoomsContentState(
+                showSwipeAvatarBanner = true,
+            ),
         )
 }
 
 internal fun aRoomsContentState(
     securityBannerState: SecurityBannerState = SecurityBannerState.None,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     offlineBannerState: OfflineBannerState = OfflineBannerState.None,
+    // :tchap: end
     showNewNotificationSoundBanner: Boolean = false,
+    showSwipeAvatarBanner: Boolean = false,
     showUnreadCount: Boolean = false,
     summaries: ImmutableList<RoomListRoomSummary> = aRoomListRoomSummaryList(),
     fullScreenIntentPermissionsState: FullScreenIntentPermissionsState = aFullScreenIntentPermissionsState(),
     batteryOptimizationState: BatteryOptimizationState = aBatteryOptimizationState(),
+    showAllActivity: Boolean = false,
     seenRoomInvites: Set<RoomId> = emptySet(),
 ) = RoomListContentState.Rooms(
-    showMatrixId = false,
     securityBannerState = securityBannerState,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     offlineBannerState = offlineBannerState,
+    // :tchap: end
     showNewNotificationSoundBanner = showNewNotificationSoundBanner,
+    showSwipeAvatarBanner = showSwipeAvatarBanner,
     showUnreadCount = showUnreadCount,
     fullScreenIntentPermissionsState = fullScreenIntentPermissionsState,
     batteryOptimizationState = batteryOptimizationState,
     summaries = summaries,
+    showAllActivity = showAllActivity,
     seenRoomInvites = seenRoomInvites.toImmutableSet(),
 )
 
@@ -60,10 +68,12 @@ internal fun aSkeletonContentState() = RoomListContentState.Skeleton(16)
 
 internal fun anEmptyContentState(
     securityBannerState: SecurityBannerState = SecurityBannerState.None,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     offlineBannerState: OfflineBannerState = OfflineBannerState.None,
+    // :tchap: end
 ) = RoomListContentState.Empty(
     securityBannerState = securityBannerState,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     offlineBannerState = offlineBannerState,
+    // :tchap: end
 )

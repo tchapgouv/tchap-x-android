@@ -38,7 +38,6 @@ import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns
 import io.element.android.features.enterprise.api.EnterpriseService
-import io.element.android.features.login.impl.accountprovider.AccountProvider
 import io.element.android.features.login.impl.accountprovider.AccountProviderDataSource
 import io.element.android.features.login.impl.login.LoginModeEvent
 import io.element.android.features.login.impl.login.LoginModeState
@@ -79,7 +78,7 @@ class LoginHintPresenter(
         var externalHomeserverUrlToConfirm by remember { mutableStateOf<String?>(null) }
 
         suspend fun submitToLoginMode(homeServerUrl: String, loginHint: String) {
-            accountProviderDataSource.setAccountProvider(AccountProvider(url = homeServerUrl))
+            accountProviderDataSource.setUrl(homeServerUrl)
             loginModeState.eventSink(
                 LoginModeEvent.Submit(
                     isAccountCreation = params.isAccountCreation,

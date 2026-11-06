@@ -97,7 +97,6 @@ internal fun aRoomMemberListState(
     canInvite: Boolean = false,
     eventSink: (RoomMemberListEvent) -> Unit = {},
 ) = RoomMemberListState(
-    showMatrixId = false,
     roomMembers = roomMembers,
     filteredRoomMembers = roomMembers.map { it.filter(searchQuery) },
     searchQuery = TextFieldState(searchQuery),
