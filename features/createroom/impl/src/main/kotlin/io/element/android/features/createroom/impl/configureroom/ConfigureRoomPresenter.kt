@@ -163,12 +163,12 @@ class ConfigureRoomPresenter(
             when {
                 isSpace && parentSpace != null -> TODO("Adding a space to a parent space is not supported yet! How did you get here?")
                 parentSpace == null || parentSpace.joinRule == JoinRule.Public -> listOfNotNull(
-                    JoinRuleItem.PublicVisibility.Public.takeIf { !arePublicRoomsDisabled },
-                    JoinRuleItem.PublicVisibility.AskToJoin.takeIf { !isSpace && isKnockFeatureEnabled },
                     JoinRuleItem.PrivateVisibility.Private,
                     // :tchap: Enable PrivateNotEncrypted room
                     JoinRuleItem.PrivateVisibility.PrivateNotEncrypted.takeIf { isPrivateNotEncryptedRoomsActive },
                     // :tchap: end
+                    JoinRuleItem.PublicVisibility.Public.takeIf { !arePublicRoomsDisabled },
+                    JoinRuleItem.PublicVisibility.AskToJoin.takeIf { !isSpace && isKnockFeatureEnabled },
                 ).toImmutableList()
                 else -> listOfNotNull(
                     JoinRuleItem.PrivateVisibility.Restricted(parentSpace.roomId),
