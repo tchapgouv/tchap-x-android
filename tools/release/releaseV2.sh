@@ -302,7 +302,6 @@ if [[ ${is_resuming} == 0 ]]; then
 
     git commit -a -m "Version ${version}"
 
-git tag -a "v${version}" -m "v${version}" || fail "unable to create the tag v${version}."
 printf "\n================================================================================\n"
 printf "OK, finishing the release...\n"
 # Merge the release branch into main, tag it, then merge the tag back into develop and delete the
