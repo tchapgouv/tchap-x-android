@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.features.startchat.impl.userlist.UserListEvent
 import io.element.android.features.startchat.impl.userlist.UserListState
@@ -55,7 +56,6 @@ fun UserListView(
     ) {
         val contentPaddingValues = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal).asPaddingValues()
         SearchUserBar(
-            showMatrixId = state.showMatrixId,
             modifier = Modifier.fillMaxWidth()
                 .padding(contentPaddingValues),
             queryState = state.searchQuery,
@@ -116,7 +116,7 @@ fun UserListView(
                             data = CheckableUserRowData.Resolved(
                                 avatarData = recentDirectRoom.matrixUser.getAvatarData(AvatarSize.UserListItem),
                                 name = recentDirectRoom.matrixUser.getBestName(),
-                                subtext = if (state.showMatrixId) recentDirectRoom.matrixUser.userId.value else null,
+                                subtext = if (LocalShowMatrixId.current) recentDirectRoom.matrixUser.userId.value else null,
                                 isExternalTchapUser = recentDirectRoom.matrixUser.userId.value.isExternalTchapUser(),
                             ),
                         )

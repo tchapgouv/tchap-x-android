@@ -113,8 +113,7 @@ interface NotificationSettingsService {
      */
     suspend fun setInviteForMeEnabled(enabled: Boolean): Result<Unit>
 
-    // :tchap: Allow to enable/disable account notifications
-    /** Whether global account notifications are enabled (.m.rule.master is disabled). */
+    /** :tchap: Whether global account notifications are enabled (.m.rule.master is disabled). */
     suspend fun isAccountNotificationsEnabled(): Result<Boolean>
 
     /**

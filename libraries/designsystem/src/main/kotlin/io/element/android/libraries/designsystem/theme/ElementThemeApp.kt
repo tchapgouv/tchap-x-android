@@ -16,6 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.theme.Theme
 import io.element.android.compound.theme.mapToTheme
@@ -61,6 +62,11 @@ fun ElementThemeApp(
     buildMeta: BuildMeta,
     content: @Composable () -> Unit,
 ) {
+    // :tchap: Show MatrixId only if needed
+    val showMatrixId by remember {
+        featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
+    }.collectAsState(initial = false)
+    // :tchap: end
     val isBlackThemeAllowed by remember {
         featureFlagService.isFeatureEnabledFlow(FeatureFlags.AllowBlackTheme)
     }.collectAsState(initial = false)
@@ -78,6 +84,9 @@ fun ElementThemeApp(
     }
     CompositionLocalProvider(
         LocalBuildMeta provides buildMeta,
+        // :tchap: Show MatrixId only if needed
+        LocalShowMatrixId provides showMatrixId,
+        // :tchap: end
     ) {
         ElementTheme(
             theme = theme,

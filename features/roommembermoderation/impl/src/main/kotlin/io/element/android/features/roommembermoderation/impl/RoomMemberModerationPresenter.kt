@@ -29,8 +29,6 @@ import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runUpdatingState
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.coroutine.mapState
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.RoomMember
@@ -52,7 +50,6 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @Inject
 class RoomMemberModerationPresenter(
-    private val featureFlagService: FeatureFlagService,
     private val room: JoinedRoom,
     private val dispatchers: CoroutineDispatchers,
     private val analyticsService: AnalyticsService,
@@ -79,10 +76,6 @@ class RoomMemberModerationPresenter(
             mutableStateOf<MatrixUser?>(null)
         }
         val moderationActions = remember { mutableStateOf<ImmutableList<ModerationActionState>>(persistentListOf()) }
-
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
 
         fun handleEvent(event: RoomMemberModerationEvent) {
             when (event) {
@@ -146,7 +139,6 @@ class RoomMemberModerationPresenter(
         }
 
         return InternalRoomMemberModerationState(
-            showMatrixId = showMatrixId,
             permissions = permissions,
             selectedUser = selectedUser,
             actions = moderationActions.value,

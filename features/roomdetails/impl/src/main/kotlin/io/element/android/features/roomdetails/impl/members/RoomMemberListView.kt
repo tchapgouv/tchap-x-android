@@ -27,7 +27,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -104,7 +103,6 @@ fun RoomMemberListView(
                 placeholder = stringResource(CommonStrings.common_search_for_someone),
             )
             RoomMemberList(
-                showMatrixId = state.showMatrixId,
                 roomMembersData = state.filteredRoomMembers,
                 selectedSection = state.selectedSection,
                 showBannedSection = state.showBannedSection,
@@ -118,7 +116,6 @@ fun RoomMemberListView(
 
 @Composable
 private fun RoomMemberList(
-    showMatrixId: Boolean,
     roomMembersData: AsyncData<RoomMembers>,
     selectedSection: SelectedSection,
     showBannedSection: Boolean,
@@ -169,7 +166,6 @@ private fun RoomMemberList(
                     emptySearchItem(searchQuery)
                 } else {
                     memberItems(
-                        showMatrixId = showMatrixId,
                         roomMembers = roomMembers,
                         selectedSection = selectedSection,
                         onSelectUser = onSelectUser,
@@ -182,7 +178,6 @@ private fun RoomMemberList(
 }
 
 private fun LazyListScope.memberItems(
-    showMatrixId: Boolean,
     roomMembers: RoomMembers,
     selectedSection: SelectedSection,
     onSelectUser: (RoomMember) -> Unit,
@@ -197,7 +192,6 @@ private fun LazyListScope.memberItems(
                     },
                 )
                 roomMemberListSectionItems(
-                    showMatrixId = showMatrixId,
                     members = roomMembers.invited,
                     onMemberSelected = { onSelectUser(it) }
                 )
@@ -210,7 +204,6 @@ private fun LazyListScope.memberItems(
                     },
                 )
                 roomMemberListSectionItems(
-                    showMatrixId = showMatrixId,
                     members = roomMembers.joined,
                     onMemberSelected = { onSelectUser(it) }
                 )
@@ -226,7 +219,6 @@ private fun LazyListScope.memberItems(
                     isCritical = true,
                 )
                 roomMemberListSectionItems(
-                    showMatrixId = showMatrixId,
                     members = roomMembers.banned,
                     onMemberSelected = { onSelectUser(it) }
                 )
@@ -264,13 +256,11 @@ private fun LazyListScope.roomMemberListSectionHeader(
 }
 
 private fun LazyListScope.roomMemberListSectionItems(
-    showMatrixId: Boolean,
     members: ImmutableList<RoomMemberWithIdentityState>?,
     onMemberSelected: (RoomMember) -> Unit,
 ) {
     items(members.orEmpty()) { matrixUser ->
         RoomMemberListItem(
-            showMatrixId = showMatrixId,
             modifier = Modifier.fillMaxWidth(),
             roomMemberWithIdentity = matrixUser,
             onClick = { onMemberSelected(matrixUser.roomMember) }
@@ -296,7 +286,6 @@ private fun LazyListScope.emptySearchItem(searchQuery: String) {
 
 @Composable
 private fun RoomMemberListItem(
-    showMatrixId: Boolean,
     roomMemberWithIdentity: RoomMemberWithIdentityState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -310,7 +299,6 @@ private fun RoomMemberListItem(
     }
 
     MatrixUserRow(
-        showMatrixId = showMatrixId,
         modifier = modifier.clickable(onClick = onClick),
         matrixUser = roomMemberWithIdentity.roomMember.toMatrixUser(),
         avatarSize = AvatarSize.UserListItem,
@@ -363,7 +351,6 @@ private fun RoomMemberListItem(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RoomMemberListTopBar(
     canInvite: Boolean,

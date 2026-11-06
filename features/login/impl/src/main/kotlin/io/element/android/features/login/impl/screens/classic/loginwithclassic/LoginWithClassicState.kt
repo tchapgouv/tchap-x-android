@@ -15,7 +15,6 @@ import io.element.android.libraries.matrix.api.core.UserId
 
 @Stable
 data class LoginWithClassicState(
-    val showMatrixId: Boolean,
     val isElementPro: Boolean,
     val userId: UserId,
     val displayName: String?,

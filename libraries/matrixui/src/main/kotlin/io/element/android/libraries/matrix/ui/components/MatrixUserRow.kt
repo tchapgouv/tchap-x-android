@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.libraries.designsystem.components.avatar.AvatarSize
@@ -24,7 +25,6 @@ import io.element.android.libraries.matrix.ui.model.getBestName
 
 @Composable
 fun MatrixUserRow(
-    showMatrixId: Boolean,
     matrixUser: MatrixUser,
     modifier: Modifier = Modifier,
     avatarSize: AvatarSize = AvatarSize.UserListItem,
@@ -42,7 +42,7 @@ fun MatrixUserRow(
     },
     // :tchap: Display MatrixID only if needed
 //    subtext = if (matrixUser.displayName.isNullOrEmpty()) null else matrixUser.userId.value,
-    subtext = if (!showMatrixId || matrixUser.displayName.isNullOrEmpty()) null else matrixUser.userId.value,
+    subtext = if (!LocalShowMatrixId.current || matrixUser.displayName.isNullOrEmpty()) null else matrixUser.userId.value,
     // :tchap: end
     modifier = modifier,
     verticalSpaceWidth = verticalSpaceWidth,
@@ -53,5 +53,5 @@ fun MatrixUserRow(
 @PreviewsDayNight
 @Composable
 internal fun MatrixUserRowPreview(@PreviewParameter(MatrixUserPreviewParam::class) matrixUser: MatrixUser) = ElementPreview {
-    MatrixUserRow(showMatrixId = false, matrixUser)
+    MatrixUserRow(matrixUser)
 }

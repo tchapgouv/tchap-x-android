@@ -20,7 +20,7 @@ interface PushHistoryService {
      * Create a new push history entry.
      * Do not use directly, prefer using the extension functions.
      */
-    fun onPushResult(
+    suspend fun onPushResult(
         providerInfo: String,
         eventId: EventId?,
         roomId: RoomId?,
@@ -52,7 +52,7 @@ interface PushHistoryService {
     suspend fun removeOldPushRequests(sessionId: SessionId): Result<Unit>
 }
 
-fun PushHistoryService.onInvalidPushReceived(
+suspend fun PushHistoryService.onInvalidPushReceived(
     providerInfo: String,
     data: String,
 ) = onPushResult(
@@ -65,7 +65,7 @@ fun PushHistoryService.onInvalidPushReceived(
     comment = "Invalid or ignored push data:\n$data",
 )
 
-fun PushHistoryService.onUnableToRetrieveSession(
+suspend fun PushHistoryService.onUnableToRetrieveSession(
     providerInfo: String,
     // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
 //    eventId: EventId,
@@ -84,7 +84,7 @@ fun PushHistoryService.onUnableToRetrieveSession(
     comment = "Unable to retrieve session: $reason",
 )
 
-fun PushHistoryService.onUnableToResolveEvent(
+suspend fun PushHistoryService.onUnableToResolveEvent(
     providerInfo: String,
     // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
 //    eventId: EventId,
@@ -104,7 +104,7 @@ fun PushHistoryService.onUnableToResolveEvent(
     comment = "Unable to resolve event: $reason",
 )
 
-fun PushHistoryService.onSuccess(
+suspend fun PushHistoryService.onSuccess(
     providerInfo: String,
     // :tchap: AutoClean System Notifications on sync - Allow Push without eventId or roomId
 //    eventId: EventId,
@@ -129,7 +129,7 @@ fun PushHistoryService.onSuccess(
     },
 )
 
-fun PushHistoryService.onDiagnosticPush(
+suspend fun PushHistoryService.onDiagnosticPush(
     providerInfo: String,
 ) = onPushResult(
     providerInfo = providerInfo,

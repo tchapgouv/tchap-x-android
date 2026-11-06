@@ -24,7 +24,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,8 +39,8 @@ import androidx.compose.ui.unit.dp
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.invite.api.InviteData
+import io.element.android.libraries.designsystem.atomic.atoms.CopiableTextAtom
 import io.element.android.libraries.designsystem.atomic.atoms.PlaceholderAtom
-import io.element.android.libraries.designsystem.atomic.atoms.RoomPreviewAliasAtom
 import io.element.android.libraries.designsystem.atomic.atoms.RoomPreviewDescriptionAtom
 import io.element.android.libraries.designsystem.atomic.atoms.RoomPreviewTitleAtom
 import io.element.android.libraries.designsystem.atomic.molecules.ButtonRowMolecule
@@ -514,7 +513,7 @@ private fun IncompleteContent(
         title = {
             when (roomIdOrAlias) {
                 is RoomIdOrAlias.Alias -> {
-                    RoomPreviewAliasAtom(roomIdOrAlias.identifier)
+                    CopiableTextAtom(roomIdOrAlias.identifier)
                 }
                 is RoomIdOrAlias.Id -> {
                     PlaceholderAtom(width = 200.dp, height = 22.dp)
@@ -567,7 +566,7 @@ private fun DefaultLoadedContent(
         },
         subtitle = {
             if (contentState.alias != null) {
-                RoomPreviewAliasAtom(contentState.alias.value)
+                CopiableTextAtom(contentState.alias.value)
             }
             if (contentState.details is LoadedDetails.Space) {
                 Spacer(Modifier.height(8.dp))
@@ -593,7 +592,6 @@ private fun DefaultLoadedContent(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun JoinRoomTopBar(
     contentState: ContentState,

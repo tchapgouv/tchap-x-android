@@ -42,7 +42,6 @@ import io.element.android.libraries.designsystem.modifiers.onKeyboardContextMenu
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
 import io.element.android.libraries.designsystem.theme.components.Text
-import io.element.android.libraries.designsystem.theme.unreadIndicator
 import io.element.android.libraries.matrix.api.room.CurrentUserMembership
 import io.element.android.libraries.matrix.api.spaces.SpaceRoom
 import io.element.android.libraries.matrix.ui.model.getAvatarData
@@ -167,9 +166,7 @@ private fun NameAndIndicatorRow(
             overflow = TextOverflow.Ellipsis
         )
         if (showIndicator) {
-            UnreadIndicatorAtom(
-                color = ElementTheme.colors.unreadIndicator
-            )
+            UnreadIndicatorAtom(count = 0)
         }
     }
 }

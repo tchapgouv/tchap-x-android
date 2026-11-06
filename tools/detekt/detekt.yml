@@ -175,6 +175,8 @@ complexity:
     active: true
   LargeClass:
     active: true
+    # Do not report large test classes.
+    excludes: [ '**/test/**', '**/androidTest/**' ]
 
 naming:
   VariableNaming:
@@ -239,6 +241,10 @@ Compose:
       - LocalBuildMeta
       - LocalUiTestMode
       - LocalSdkIntVersionProvider
+      # :tchap: Show the Matrix Id depending of feature flag showMatrixId
+      - LocalShowMatrixId
+      # :tchap: end
+      - LocalTimelineEventRendererConfig
   CompositionLocalNaming:
     active: true
   ContentEmitterReturningValues:

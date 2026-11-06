@@ -25,8 +25,6 @@ import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.map
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
 import io.element.android.libraries.matrix.api.core.UserId
 import io.element.android.libraries.matrix.api.encryption.EncryptionService
 import io.element.android.libraries.matrix.api.encryption.identity.IdentityState
@@ -50,7 +48,6 @@ import kotlinx.coroutines.withContext
 
 @Inject
 class RoomMemberListPresenter(
-    private val featureFlagService: FeatureFlagService,
     private val room: JoinedRoom,
     private val coroutineDispatchers: CoroutineDispatchers,
     private val roomMembersModerationPresenter: Presenter<RoomMemberModerationState>,
@@ -65,10 +62,6 @@ class RoomMemberListPresenter(
         val roomInfo by room.roomInfoFlow.collectAsState()
         val canInvite by room.permissionsAsState(false) { perms -> perms.canOwnUserInvite() }
         val roomModerationState = roomMembersModerationPresenter.present()
-
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(false)
 
         val roomMemberIdentityStates by produceState(persistentMapOf()) {
             room.roomMemberIdentityStateChange(waitForEncryption = true)
@@ -148,7 +141,6 @@ class RoomMemberListPresenter(
         }
 
         val state = RoomMemberListState(
-            showMatrixId = showMatrixId,
             roomMembers = roomMembers,
             filteredRoomMembers = filteredRoomMembers,
             searchQuery = searchQuery,

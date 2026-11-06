@@ -96,7 +96,6 @@ private fun ReadReceiptBottomSheetContent(
         ) {
             val userId = UserId(it.avatarData.id)
             MatrixUserRow(
-                showMatrixId = state.showMatrixId,
                 modifier = Modifier.clickable { onUserDataClick(userId) },
                 matrixUser = MatrixUser(
                     userId = userId,

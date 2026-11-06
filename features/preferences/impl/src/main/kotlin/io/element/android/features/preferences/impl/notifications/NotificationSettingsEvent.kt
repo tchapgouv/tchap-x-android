@@ -13,9 +13,11 @@ import io.element.android.libraries.preferences.api.store.NotificationSound
 sealed interface NotificationSettingsEvent {
     data object RefreshSystemNotificationsEnabled : NotificationSettingsEvent
     data class SetNotificationsEnabled(val enabled: Boolean) : NotificationSettingsEvent
+
     // :tchap: Allow to enable/disable account notifications
     data class SetAccountNotificationsEnabled(val enabled: Boolean) : NotificationSettingsEvent
     // :tchap: end
+
     data class SetAtRoomNotificationsEnabled(val enabled: Boolean) : NotificationSettingsEvent
     data class SetCallNotificationsEnabled(val enabled: Boolean) : NotificationSettingsEvent
     data class SetInviteForMeNotificationsEnabled(val enabled: Boolean) : NotificationSettingsEvent
@@ -37,4 +39,5 @@ sealed interface NotificationSettingsEvent {
     data object DismissCallRingtoneDialog : NotificationSettingsEvent
     data class SelectCallRingtonePreset(val sound: NotificationSound) : NotificationSettingsEvent
     data object LaunchCallRingtonePicker : NotificationSettingsEvent
+    data class ToggleShowAllActivityInRoomList(val newValue: Boolean) : NotificationSettingsEvent
 }

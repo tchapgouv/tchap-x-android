@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -47,7 +46,6 @@ import io.element.android.libraries.matrix.api.notification.CallIntent
 import io.element.android.libraries.matrix.ui.components.CreateDmConfirmationBottomSheet
 import io.element.android.libraries.ui.strings.CommonStrings
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserProfileView(
     state: UserProfileState,
@@ -75,7 +73,6 @@ fun UserProfileView(
         ) {
             // TCHAP display a value generated from userId if displayname does not exist
             UserProfileHeaderSection(
-                showMatrixId = state.showMatrixId,
                 avatarUrl = state.avatarUrl,
                 userId = state.userId,
                 userName = state.userName ?: state.userId.extractedDisplayName,
@@ -117,7 +114,6 @@ fun UserProfileView(
                 confirmationDialog = { data ->
                     if (data is ConfirmingStartDmWithMatrixUser) {
                         CreateDmConfirmationBottomSheet(
-                            showMatrixId = data.showMatrixId,
                             matrixUser = data.matrixUser,
                             isUserIdentityUnknown = data.isUserIdentityUnknown,
                             onSendInvite = {

@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -49,7 +50,9 @@ import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.platform.ViewConfiguration
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
@@ -57,6 +60,7 @@ import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
@@ -70,13 +74,12 @@ import io.element.android.features.messages.impl.timeline.TimelineEvent
 import io.element.android.features.messages.impl.timeline.TimelineRoomInfo
 import io.element.android.features.messages.impl.timeline.aTimelineItemEvent
 import io.element.android.features.messages.impl.timeline.components.event.TimelineItemEventContentView
-import io.element.android.features.messages.impl.timeline.components.layout.ContentAvoidingLayout
-import io.element.android.features.messages.impl.timeline.components.layout.ContentAvoidingLayoutData
 import io.element.android.features.messages.impl.timeline.components.receipt.ReadReceiptViewState
 import io.element.android.features.messages.impl.timeline.components.receipt.TimelineItemReadReceiptView
 import io.element.android.features.messages.impl.timeline.model.TimelineItem
 import io.element.android.features.messages.impl.timeline.model.TimelineItemGroupPosition
 import io.element.android.features.messages.impl.timeline.model.TimelineItemReactions
+import io.element.android.features.messages.impl.timeline.model.TimelineItemSelectionData
 import io.element.android.features.messages.impl.timeline.model.TimelineItemThreadInfo
 import io.element.android.features.messages.impl.timeline.model.bubble.BubbleState
 import io.element.android.features.messages.impl.timeline.model.event.TimelineItemAttachmentsContent
@@ -137,6 +140,8 @@ import io.element.android.libraries.matrix.ui.messages.sender.SenderName
 import io.element.android.libraries.matrix.ui.messages.sender.SenderNameMode
 import io.element.android.libraries.testtags.TestTags
 import io.element.android.libraries.testtags.testTag
+import io.element.android.libraries.ui.common.layout.ContentAvoidingLayout
+import io.element.android.libraries.ui.common.layout.ContentAvoidingLayoutData
 import io.element.android.libraries.ui.strings.CommonPlurals
 import io.element.android.libraries.ui.strings.CommonStrings
 import io.element.android.libraries.ui.utils.a11y.isTalkbackActive
@@ -155,6 +160,9 @@ val NEGATIVE_MARGIN_FOR_BUBBLE = (-8).dp
 val SENDER_AVATAR_BORDER_WIDTH = 3.dp
 
 private val BUBBLE_INCOMING_OFFSET = 16.dp
+
+/** Shared instance so that rows which never slide keep comparing equal, and keep skipping. */
+internal val NoSelectionOffset: Density.() -> IntOffset = { IntOffset.Zero }
 
 @Composable
 fun TimelineItemEventRow(
@@ -178,6 +186,7 @@ fun TimelineItemEventRow(
     onSwipeToReply: () -> Unit,
     eventSink: (TimelineEvent.TimelineItemEvent) -> Unit,
     modifier: Modifier = Modifier,
+    selectionData: TimelineItemSelectionData = TimelineItemSelectionData(),
     eventContentView: @Composable (Modifier, (ContentAvoidingLayoutData) -> Unit) -> Unit = { contentModifier, onContentLayoutChange ->
         // Only pass down a custom clickable lambda if the content can be clicked separately
         val onContentClick = onEventClick.takeUnless { event.isWholeContentClickable }
@@ -200,6 +209,24 @@ fun TimelineItemEventRow(
     val coroutineScope = rememberCoroutineScope()
     val interactionSource = remember { MutableInteractionSource() }
 
+    // While selecting, the row acts as a selection toggle rather than opening the context menu.
+    val isSelectionToggle = selectionData.isSelectionModeActive && selectionData.canBeSelected
+    // Selection mode opens a column of [SELECTION_COLUMN_WIDTH] at the start edge for the tick. Both offsets below are derived from this single
+    // slide and resolved in the layout phase, so an animation frame moves them together without recomposing the row, and they cannot disagree.
+    val selectionProgress = selectionData.progress
+    val selectionSlide: Density.() -> Int = { (SELECTION_COLUMN_WIDTH * selectionProgress()).roundToPx() }
+    // Incoming bubbles slide aside to open that column. Outgoing (own) ones are end-aligned, opposite the tick, so they already have room.
+    val selectionContentOffset: Density.() -> IntOffset = if (event.isMine) {
+        NoSelectionOffset
+    } else {
+        { IntOffset(x = selectionSlide(), y = 0) }
+    }
+    // The tick is a child of the layout the offset above slides, so it cancels that out to be positioned against the row, then sits one column
+    // width before its resting place until the slide is complete. For an incoming row the two terms cancel and it simply rides the content in.
+    val selectionIndicatorOffset: Density.() -> IntOffset = {
+        IntOffset(x = selectionSlide() - SELECTION_COLUMN_WIDTH.roundToPx() - selectionContentOffset().x, y = 0)
+    }
+
     val onContentClick = if (event.mustBeProtected()) {
         // In this case, let the content handle the click
         {}
@@ -217,24 +244,41 @@ fun TimelineItemEventRow(
         inReplyToClick(inReplyToEventId)
     }
 
-    Column(modifier = modifier.fillMaxWidth()) {
+    val canReply = timelineRoomInfo.userHasPermissionToSendMessage && event.canBeRepliedTo
+    val accessibilityActions = rememberTimelineItemAccessibilityActions(
+        isEnabled = !isSelectionToggle,
+        canReply = canReply,
+        onLongClick = onLongClick,
+        onSwipeToReply = onSwipeToReply,
+    )
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .semantics { customActions = accessibilityActions }
+    ) {
         if (event.groupPosition.isNew()) {
             Spacer(modifier = Modifier.height(16.dp))
         } else {
             Spacer(modifier = Modifier.height(2.dp))
         }
-        val canReply = timelineRoomInfo.userHasPermissionToSendMessage && event.canBeRepliedTo
         if (canReply) {
             val state: SwipeableActionsState = rememberSwipeableActionsState()
             val offset = state.offset.floatValue
             val swipeThresholdPx = 40.dp.toPx()
             val thresholdCrossed = abs(offset) > swipeThresholdPx
             SwipeSensitivity(3f) {
-                Box(Modifier.fillMaxWidth()) {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .offset(selectionContentOffset)
+                ) {
                     Row(modifier = Modifier.matchParentSize()) {
                         ReplySwipeIndicator({ offset / 120 })
                     }
                     TimelineItemEventRowContent(
+                        selectionData = selectionData,
+                        selectionIndicatorOffset = selectionIndicatorOffset,
                         event = event,
                         timelineMode = timelineMode,
                         timelineProtectionState = timelineProtectionState,
@@ -251,7 +295,7 @@ fun TimelineItemEventRow(
                             .absoluteOffset { IntOffset(x = offset.roundToInt(), y = 0) }
                             .draggable(
                                 orientation = Orientation.Horizontal,
-                                enabled = !state.isResettingOnRelease,
+                                enabled = !state.isResettingOnRelease && !isSelectionToggle,
                                 onDragStopped = {
                                     coroutineScope.launch {
                                         if (thresholdCrossed) {
@@ -269,6 +313,9 @@ fun TimelineItemEventRow(
             }
         } else {
             TimelineItemEventRowContent(
+                modifier = Modifier.offset(selectionContentOffset),
+                selectionData = selectionData,
+                selectionIndicatorOffset = selectionIndicatorOffset,
                 event = event,
                 timelineMode = timelineMode,
                 timelineProtectionState = timelineProtectionState,
@@ -294,7 +341,10 @@ fun TimelineItemEventRow(
                         .padding(end = 16.dp)
                 } else {
                     if (timelineRoomInfo.isDm) Modifier else Modifier.padding(start = 16.dp)
-                }.padding(top = 2.dp),
+                }
+                    .padding(top = 2.dp)
+                    .offset(selectionContentOffset)
+                    .hiddenFromAccessibilityWhile(isSelectionToggle),
                 threadSummary = event.threadInfo.summary,
                 latestEventText = event.threadInfo.latestEventText,
                 isOutgoing = event.isMine,
@@ -307,15 +357,67 @@ fun TimelineItemEventRow(
         }
 
         // Read receipts / Send state
+        val sendState = event.pendingSend()?.second
         TimelineItemReadReceiptView(
             state = ReadReceiptViewState(
-                sendState = event.localSendState,
+                sendState = sendState,
                 isLastOutgoingMessage = isLastOutgoingMessage,
                 receipts = event.readReceiptState.receipts,
             ),
             onReadReceiptsClick = { onReadReceiptClick(event) },
-            modifier = Modifier.padding(top = 4.dp)
+            // Not slid: the read receipts sit outside the slid content, so they stay pinned to the end edge in selection mode.
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .hiddenFromAccessibilityWhile(isSelectionToggle)
         )
+    }
+}
+
+/**
+ * Hides this element and its descendants from screen readers while [hidden] is true.
+ *
+ * A clickable descendant stays an accessibility node of its own even though the row merges its descendants, so while the row acts as a selection toggle
+ * it would otherwise still be reachable and activatable by a screen reader. Reactions already hide themselves this way at all times.
+ */
+private fun Modifier.hiddenFromAccessibilityWhile(hidden: Boolean): Modifier = if (hidden) {
+    semantics { hideFromAccessibility() }
+} else {
+    this
+}
+
+/**
+ * Exposes the gestures of a timeline item — long press for the action list, swipe for a reply — as TalkBack actions, since neither gesture is reachable
+ * with a screen reader enabled.
+ */
+@Composable
+private fun rememberTimelineItemAccessibilityActions(
+    isEnabled: Boolean,
+    canReply: Boolean,
+    onLongClick: () -> Unit,
+    onSwipeToReply: () -> Unit,
+): List<CustomAccessibilityAction> {
+    val messageActionsLabel = stringResource(CommonStrings.common_message_actions)
+    val replyLabel = stringResource(CommonStrings.action_reply)
+    val latestOnLongClick by rememberUpdatedState(onLongClick)
+    val latestOnSwipeToReply by rememberUpdatedState(onSwipeToReply)
+    return remember(isEnabled, canReply, messageActionsLabel, replyLabel) {
+        buildList {
+            if (!isEnabled) return@buildList
+            add(
+                CustomAccessibilityAction(messageActionsLabel) {
+                    latestOnLongClick()
+                    true
+                }
+            )
+            if (canReply) {
+                add(
+                    CustomAccessibilityAction(replyLabel) {
+                        latestOnSwipeToReply()
+                        true
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -433,6 +535,8 @@ private fun TimelineItemEventRowContent(
     onMoreReactionsClick: (event: TimelineItem.Event) -> Unit,
     eventSink: (TimelineEvent.TimelineItemEvent) -> Unit,
     modifier: Modifier = Modifier,
+    selectionData: TimelineItemSelectionData = TimelineItemSelectionData(),
+    selectionIndicatorOffset: Density.() -> IntOffset = NoSelectionOffset,
     eventContentView: @Composable (Modifier, (ContentAvoidingLayoutData) -> Unit) -> Unit,
 ) {
     fun ConstrainScope.linkStartOrEnd(event: TimelineItem.Event) = if (event.isMine) {
@@ -451,7 +555,23 @@ private fun TimelineItemEventRowContent(
             message,
             reactions,
             pinIcon,
+            selectionIndicator,
         ) = createRefs()
+
+        if (selectionData.canBeSelected) {
+            SelectionIndicator(
+                selected = selectionData.isSelected,
+                modifier = Modifier
+                    .constrainAs(selectionIndicator) {
+                        start.linkTo(parent.start)
+                        top.linkTo(message.top)
+                        bottom.linkTo(message.bottom)
+                    }
+                    .offset(selectionIndicatorOffset)
+                    .padding(start = 16.dp)
+                    .size(24.dp),
+            )
+        }
 
         // Sender
         if (event.showSenderInformation && !timelineRoomInfo.isDm) {

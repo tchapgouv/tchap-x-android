@@ -1,3 +1,23 @@
+Changements dans Tchap Android v26.10.0
+=======================================
+
+<!-- Release notes generated using configuration in .github/release.yml at v26.10.0 -->
+
+## Qu'est-ce qui a changé ?
+### ✨ Nouveautés
+* Affichage du texte des messages Web animés (sans afficher l'animation) by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/298
+* Nettoyage automatique des notifications pour les discussions déjà lues by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/299
+* Autoriser la lecture des notifications push sans eventId ni roomId by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/300
+* Gestion des notifications globales du compte by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/301
+### 🙌 Améliorations
+* Vérification de l'email à la connexion et à la création de compte by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/296
+* Affichage d'une alerte lors de la saisie d'une adresse email externe by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/297
+### Autres
+* Configuration des URLs Sentry by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/295
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v26.09.2...v26.10.0
+
 Changements dans Tchap Android v26.09.2
 =======================================
 

@@ -62,7 +62,6 @@ import kotlinx.collections.immutable.toImmutableList
 import org.junit.Test
 import kotlin.time.Duration.Companion.seconds
 
-@Suppress("LargeClass")
 class EventItemFactoryTest {
     @Test
     fun `create check all null cases`() {
@@ -171,6 +170,7 @@ class EventItemFactoryTest {
                     filename = "filename.apk",
                     fileSize = 123L,
                     caption = "caption",
+                    htmlCaption = null,
                     formattedFileSize = "123 Bytes",
                     fileExtension = "apk",
                     senderId = A_USER_ID,
@@ -223,6 +223,7 @@ class EventItemFactoryTest {
                     filename = "filename.jpg",
                     fileSize = 123L,
                     caption = "caption",
+                    htmlCaption = null,
                     formattedFileSize = "123 Bytes",
                     fileExtension = "jpg",
                     senderId = A_USER_ID,
@@ -273,6 +274,7 @@ class EventItemFactoryTest {
                     filename = "filename.mp3",
                     fileSize = 123L,
                     caption = "caption",
+                    htmlCaption = null,
                     formattedFileSize = "123 Bytes",
                     fileExtension = "mp3",
                     senderId = A_USER_ID,
@@ -326,6 +328,7 @@ class EventItemFactoryTest {
                     filename = "filename.mp4",
                     fileSize = 123L,
                     caption = "caption",
+                    htmlCaption = null,
                     formattedFileSize = "123 Bytes",
                     fileExtension = "mp4",
                     senderId = A_USER_ID,
@@ -380,6 +383,7 @@ class EventItemFactoryTest {
                     filename = "filename.ogg",
                     fileSize = 123L,
                     caption = "caption",
+                    htmlCaption = null,
                     formattedFileSize = "123 Bytes",
                     fileExtension = "ogg",
                     senderId = A_USER_ID,
@@ -440,6 +444,7 @@ class EventItemFactoryTest {
                     filename = "image.jpg",
                     fileSize = 123L,
                     caption = "caption",
+                    htmlCaption = null,
                     formattedFileSize = "123 Bytes",
                     fileExtension = "jpg",
                     senderId = A_USER_ID,
@@ -503,6 +508,7 @@ class EventItemFactoryTest {
                     filename = "video.mp4",
                     fileSize = 123L,
                     caption = "caption",
+                    htmlCaption = null,
                     formattedFileSize = "123 Bytes",
                     fileExtension = "mp4",
                     senderId = A_USER_ID,
@@ -561,6 +567,7 @@ class EventItemFactoryTest {
                     filename = "audio.mp3",
                     fileSize = 123L,
                     caption = "caption",
+                    htmlCaption = null,
                     formattedFileSize = "123 Bytes",
                     fileExtension = "mp3",
                     senderId = A_USER_ID,
@@ -618,6 +625,7 @@ class EventItemFactoryTest {
                     filename = "document.pdf",
                     fileSize = 456L,
                     caption = "caption",
+                    htmlCaption = null,
                     formattedFileSize = "456 Bytes",
                     fileExtension = "pdf",
                     senderId = A_USER_ID,
@@ -753,6 +761,7 @@ class EventItemFactoryTest {
                     filename = "filename.gif",
                     fileSize = 123L,
                     caption = "caption",
+                    htmlCaption = null,
                     formattedFileSize = "123 Bytes",
                     fileExtension = "gif",
                     senderId = A_USER_ID,

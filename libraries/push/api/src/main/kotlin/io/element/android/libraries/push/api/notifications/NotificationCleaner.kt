@@ -72,4 +72,11 @@ interface NotificationCleaner {
      * @param sessionId the session to check.
      */
     suspend fun cleanObsoleteNotifications(sessionId: SessionId)
+
+    /**
+     * Dismisses the notifications of every read room.
+     *
+     * @param sessionId the session whose notifications should be dismissed.
+     */
+    fun clearReadRoomsNotifications(sessionId: SessionId)
 }

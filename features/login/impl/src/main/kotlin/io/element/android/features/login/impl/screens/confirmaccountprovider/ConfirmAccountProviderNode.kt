@@ -57,6 +57,7 @@ class ConfirmAccountProviderNode(
         ConfirmAccountProviderView(
             state = state,
             modifier = modifier,
+            onBackClick = ::navigateUp,
             onOAuthDetails = callback::navigateToOAuth,
             onNeedLoginHint = callback::navigateToLoginHint,
             onNeedLoginPassword = callback::navigateToLoginPassword,

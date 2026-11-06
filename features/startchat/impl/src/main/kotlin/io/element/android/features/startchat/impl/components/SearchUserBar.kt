@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
@@ -38,10 +37,8 @@ import io.element.android.libraries.ui.strings.CommonStrings
 import io.element.android.libraries.usersearch.api.UserSearchResult
 import kotlinx.collections.immutable.ImmutableList
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchUserBar(
-    showMatrixId: Boolean,
     queryState: TextFieldState,
     resultState: SearchBarResultState<ImmutableList<UserSearchResult>>,
     showLoader: Boolean,
@@ -104,7 +101,6 @@ fun SearchUserBar(
                 if (isMultiSelectionEnable) {
                     itemsIndexed(users) { index, searchResult ->
                         SearchMultipleUsersResultItem(
-                            showMatrixId = showMatrixId,
                             modifier = Modifier.fillMaxWidth(),
                             searchResult = searchResult,
                             isUserSelected = selectedUsers.contains(searchResult.matrixUser),
@@ -123,7 +119,6 @@ fun SearchUserBar(
                 } else {
                     itemsIndexed(users) { index, searchResult ->
                         SearchSingleUserResultItem(
-                            showMatrixId = showMatrixId,
                             modifier = Modifier.fillMaxWidth(),
                             searchResult = searchResult,
                             onClick = { onUserSelect(searchResult.matrixUser) }

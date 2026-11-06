@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.messages.impl.R
 import io.element.android.libraries.designsystem.components.avatar.Avatar
@@ -51,7 +52,6 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun SuggestionsPickerView(
-    showMatrixId: Boolean,
     roomId: RoomId,
     roomName: String?,
     roomAvatarData: AvatarData,
@@ -75,7 +75,6 @@ fun SuggestionsPickerView(
         ) {
             Column(modifier = Modifier.fillParentMaxWidth()) {
                 SuggestionItemView(
-                    showMatrixId = showMatrixId,
                     suggestion = it,
                     roomId = roomId.value,
                     roomName = roomName,
@@ -91,7 +90,6 @@ fun SuggestionsPickerView(
 
 @Composable
 private fun SuggestionItemView(
-    showMatrixId: Boolean,
     suggestion: ResolvedSuggestion,
     roomId: String,
     roomName: String?,
@@ -136,7 +134,7 @@ private fun SuggestionItemView(
         val subtitle = when (suggestion) {
             is ResolvedSuggestion.AtRoom -> "@room"
             // TCHAP hide the Matrix Id depending of showMatrixId feature flag
-            is ResolvedSuggestion.Member -> suggestion.roomMember.userId.value.takeIf { showMatrixId }
+            is ResolvedSuggestion.Member -> suggestion.roomMember.userId.value.takeIf { LocalShowMatrixId.current }
             is ResolvedSuggestion.Alias -> suggestion.roomAlias.value
             is ResolvedSuggestion.Command -> suggestion.command.description
         }
@@ -207,7 +205,6 @@ internal fun SuggestionsPickerViewPreview() {
         )
         val anAlias = remember { RoomAlias("#room:domain.org") }
         SuggestionsPickerView(
-            showMatrixId = false,
             roomId = RoomId("!room:matrix.org"),
             roomName = "Room",
             roomAvatarData = anAvatarData(),

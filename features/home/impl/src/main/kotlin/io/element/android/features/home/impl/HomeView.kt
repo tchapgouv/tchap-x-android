@@ -6,8 +6,6 @@
  * Please see LICENSE files in the repository root for full details.
  */
 
-@file:OptIn(ExperimentalHazeMaterialsApi::class)
-
 package io.element.android.features.home.impl
 
 import androidx.activity.compose.BackHandler
@@ -24,8 +22,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -40,15 +36,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
-import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
-import dev.chrisbanes.haze.materials.HazeMaterials
-import dev.chrisbanes.haze.rememberHazeState
 import fr.gouv.tchap.libraries.tchaputils.TchapPatterns.isExternalTchapUser
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.home.impl.components.HomeTopBar
+import io.element.android.features.home.impl.components.MultiAccountAnnouncementBottomSheet
 import io.element.android.features.home.impl.components.RoomListContentView
 import io.element.android.features.home.impl.components.RoomListMenuAction
 import io.element.android.features.home.impl.model.RoomListRoomSummary
@@ -79,6 +71,7 @@ import io.element.android.libraries.designsystem.utils.snackbar.SnackbarHost
 import io.element.android.libraries.designsystem.utils.snackbar.rememberSnackbarHostState
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.RoomId
+import io.element.android.libraries.matrix.api.core.SessionId
 import io.element.android.libraries.ui.strings.CommonStrings
 import kotlinx.coroutines.launch
 
@@ -87,10 +80,13 @@ fun HomeView(
     homeState: HomeState,
     onRoomClick: (RoomId, EventId?) -> Unit,
     onSettingsClick: () -> Unit,
+    onAddAccountClick: () -> Unit,
+    onSwitchToAccount: (SessionId) -> Unit,
     onSetUpRecoveryClick: () -> Unit,
     onConfirmRecoveryKeyClick: () -> Unit,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     onViewServiceStatusClick: () -> Unit,
+    // :tchap: end
     onStartChatClick: () -> Unit,
     // :tchap: space-admin-limitations
 //    onCreateSpaceClick: () -> Unit,
@@ -125,6 +121,13 @@ fun HomeView(
             )
         }
 
+        if (homeState.showMultiAccountAnnouncement) {
+            MultiAccountAnnouncementBottomSheet(
+                onDismiss = { homeState.eventSink(HomeEvent.DismissMultiAccountAnnouncement) },
+                onAddAccountClick = { if (firstThrottler.canHandle()) onAddAccountClick() },
+            )
+        }
+
         leaveRoomView()
 
         HomeScaffold(
@@ -141,6 +144,7 @@ fun HomeView(
 //            onCreateSpaceClick = { if (firstThrottler.canHandle()) onCreateSpaceClick() },
             // :tchap: end
             onMenuActionClick = onMenuActionClick,
+            onSwitchToAccount = onSwitchToAccount,
         )
 
         if (state.globalSearchState.isEnabled) {
@@ -168,14 +172,14 @@ fun HomeView(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeScaffold(
     state: HomeState,
     onSetUpRecoveryClick: () -> Unit,
     onConfirmRecoveryKeyClick: () -> Unit,
-    // TCHAP : Display banner when sync is offline
+    // :tchap: Display banner when sync is offline
     onViewServiceStatusClick: () -> Unit,
+    // :tchap: end
     onRoomClick: (RoomId) -> Unit,
     onOpenSettings: () -> Unit,
     onStartChatClick: () -> Unit,
@@ -183,6 +187,7 @@ private fun HomeScaffold(
 //    onCreateSpaceClick: () -> Unit,
     // :tchap: end
     onMenuActionClick: (RoomListMenuAction) -> Unit,
+    onSwitchToAccount: (SessionId) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     fun onRoomClick(room: RoomListRoomSummary) {
@@ -205,7 +210,6 @@ private fun HomeScaffold(
         }
     }
 
-    val hazeState = rememberHazeState()
     val roomsLazyListState = rememberLazyListState()
     val spacesLazyListState = rememberLazyListState()
 
@@ -224,7 +228,7 @@ private fun HomeScaffold(
     val currentUserIsExternal = state.currentUserAndNeighbors.any { it.userId.value.isExternalTchapUser() }
 
     Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier,
         topBar = {
             HomeTopBar(
                 selectedNavigationItem = state.currentHomeNavigationBarItem,
@@ -244,18 +248,16 @@ private fun HomeScaffold(
                 },
                 onMenuActionClick = onMenuActionClick,
                 onOpenSettings = onOpenSettings,
-                onAccountSwitch = {
-                    state.eventSink(HomeEvent.SwitchToAccount(it))
+                onAccountSwitch = { sessionId ->
+                    // The user has switched account by swiping their avatar, so they know the gesture.
+                    state.eventSink(HomeEvent.DismissSwipeAvatarAnnouncement)
+                    onSwitchToAccount(sessionId)
                 },
                 scrollBehavior = scrollBehavior,
                 displayFilters = state.displayRoomListFilters,
                 filtersState = roomListState.filtersState,
                 spaceFiltersState = roomListState.spaceFiltersState,
                 canReportBug = state.canReportBug,
-                modifier = Modifier.hazeEffect(
-                    state = hazeState,
-                    style = HazeMaterials.thick(),
-                )
             )
         },
         floatingActionButton = {
@@ -298,6 +300,7 @@ private fun HomeScaffold(
                             }
                         }
                     },
+                    totalUnreadCount = state.totalUnreadCount,
                 )
             }
         },
@@ -314,61 +317,70 @@ private fun HomeScaffold(
             val contentPadding = PaddingValues(
                 bottom = 96.dp,
             )
-            when (state.currentHomeNavigationBarItem) {
-                HomeNavigationBarItem.Chats -> {
-                    RoomListContentView(
-                        contentState = roomListState.contentState,
-                        filtersState = roomListState.filtersState,
-                        spaceFiltersState = roomListState.spaceFiltersState,
-                        lazyListState = roomsLazyListState,
-                        hideInvitesAvatars = roomListState.hideInvitesAvatars,
-                        eventSink = roomListState.eventSink,
-                        onSetUpRecoveryClick = onSetUpRecoveryClick,
-                        onConfirmRecoveryKeyClick = onConfirmRecoveryKeyClick,
-                        // TCHAP : Display banner when sync is offline
-                        onViewServiceStatusClick = onViewServiceStatusClick,
-                        onRoomClick = ::onRoomClick,
-                        onCreateRoomClick = onStartChatClick,
-                        contentPadding = lazyColumnContentPadding + contentPadding,
-                        modifier = Modifier
-                            .padding(outerPadding)
-                            .consumeWindowInsets(outerPadding)
-                            .hazeSource(state = hazeState)
-                    )
-                    SpaceFiltersView(roomListState.spaceFiltersState)
-                }
-                HomeNavigationBarItem.Spaces -> {
-                    HomeSpacesView(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(outerPadding)
-                            .consumeWindowInsets(outerPadding)
-                            .hazeSource(state = hazeState),
-                        contentPadding = lazyColumnContentPadding + contentPadding,
-                        state = state.homeSpacesState,
-                        lazyListState = spacesLazyListState,
-                        // TCHAP : Space default action is now conversation filtering
-                        onSpaceClick = { spaceId ->
-//                            onRoomClick(spaceId)
-                            if (roomListState.spaceFiltersState is SpaceFiltersState.Selecting) {
-                                val spaceFilter = roomListState.spaceFiltersState.availableFilters.find { it.spaceRoom.roomId == spaceId }
-                                if (spaceFilter != null) {
-                                    roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Selecting.SelectFilter(spaceFilter))
-                                } else {
-                                    roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Selecting.Cancel)
+            // The nested scroll connection is set on the content and not on the Scaffold, else the top bar would
+            // consume the scroll events of its own content.
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+            ) {
+                when (state.currentHomeNavigationBarItem) {
+                    HomeNavigationBarItem.Chats -> {
+                        RoomListContentView(
+                            contentState = roomListState.contentState,
+                            filtersState = roomListState.filtersState,
+                            spaceFiltersState = roomListState.spaceFiltersState,
+                            lazyListState = roomsLazyListState,
+                            hideInvitesAvatars = roomListState.hideInvitesAvatars,
+                            eventSink = roomListState.eventSink,
+                            onSetUpRecoveryClick = onSetUpRecoveryClick,
+                            onConfirmRecoveryKeyClick = onConfirmRecoveryKeyClick,
+                            // :tchap: Display banner when sync is offline
+                            onViewServiceStatusClick = onViewServiceStatusClick,
+                            // :tchap: end
+                            onRoomClick = ::onRoomClick,
+                            onCreateRoomClick = onStartChatClick,
+                            contentPadding = lazyColumnContentPadding + contentPadding,
+                            modifier = Modifier
+                                .padding(outerPadding)
+                                .consumeWindowInsets(outerPadding)
+                        )
+                        SpaceFiltersView(roomListState.spaceFiltersState)
+                    }
+                    HomeNavigationBarItem.Spaces -> {
+                        HomeSpacesView(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(outerPadding)
+                                .consumeWindowInsets(outerPadding),
+                            contentPadding = lazyColumnContentPadding + contentPadding,
+                            state = state.homeSpacesState,
+                            lazyListState = spacesLazyListState,
+                            // :tchap: Space default action is now conversation filtering
+//                            onSpaceClick = { spaceId ->
+//                                onRoomClick(spaceId)
+//                            },
+                            onSpaceClick = { spaceId ->
+                                if (roomListState.spaceFiltersState is SpaceFiltersState.Selecting) {
+                                    val spaceFilter = roomListState.spaceFiltersState.availableFilters.find { it.spaceRoom.roomId == spaceId }
+                                    if (spaceFilter != null) {
+                                        roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Selecting.SelectFilter(spaceFilter))
+                                    } else {
+                                        roomListState.spaceFiltersState.eventSink(SpaceFiltersEvent.Selecting.Cancel)
+                                    }
+                                    state.eventSink(HomeEvent.SelectHomeNavigationBarItem(HomeNavigationBarItem.Chats, reselectLastFilters = false))
                                 }
-                                state.eventSink(HomeEvent.SelectHomeNavigationBarItem(HomeNavigationBarItem.Chats, reselectLastFilters = false))
-                            }
-                        },
-                        onTrailingSpaceClick = { spaceId ->
-                            onRoomClick(spaceId)
-                        },
-                        // :tchap: space-admin-limitations
-//                        onCreateSpaceClick = onCreateSpaceClick,
-                        // :tchap: end
-                        // TODO use actual callbacks for this
-                        onExploreClick = {},
-                    )
+                            },
+                            onTrailingSpaceClick = { spaceId ->
+                                onRoomClick(spaceId)
+                            },
+                            // :tchap: end
+                            // :tchap: space-admin-limitations
+//                            onCreateSpaceClick = onCreateSpaceClick,
+                            // TODO use actual callbacks for this
+                            onExploreClick = {},
+                        )
+                    }
                 }
             }
         },
@@ -390,9 +402,9 @@ private fun HomeFloatingActionButton(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun HomeBottomBar(
+    totalUnreadCount: Int,
     currentHomeNavigationBarItem: HomeNavigationBarItem,
     onItemClick: (HomeNavigationBarItem) -> Unit,
     modifier: Modifier = Modifier,
@@ -413,6 +425,7 @@ private fun HomeBottomBar(
                 tooltipLabel = stringResource(item.labelRes),
                 isSelected = isSelected,
                 onClick = { onItemClick(item) },
+                counter = totalUnreadCount.takeIf { item == HomeNavigationBarItem.Chats && it > 0 }
             )
         }
     }
@@ -427,10 +440,13 @@ internal fun HomeViewPreview(@PreviewParameter(HomeStatePreviewParam::class) sta
         homeState = state,
         onRoomClick = { _, _ -> },
         onSettingsClick = {},
+        onAddAccountClick = {},
+        onSwitchToAccount = {},
         onSetUpRecoveryClick = {},
         onConfirmRecoveryKeyClick = {},
-        // TCHAP : Display banner when sync is offline
+        // :tchap: Display banner when sync is offline
         onViewServiceStatusClick = {},
+        // :tchap: end
         onStartChatClick = {},
         // :tchap: space-admin-limitations
 //        onCreateSpaceClick = {},
@@ -451,10 +467,13 @@ internal fun HomeViewA11yPreview() = ElementPreview {
         homeState = aHomeState(),
         onRoomClick = { _, _ -> },
         onSettingsClick = {},
+        onAddAccountClick = {},
+        onSwitchToAccount = {},
         onSetUpRecoveryClick = {},
         onConfirmRecoveryKeyClick = {},
-        // TCHAP : Display banner when sync is offline
+        // :tchap: Display banner when sync is offline
         onViewServiceStatusClick = {},
+        // :tchap: end
         onStartChatClick = {},
         // :tchap: space-admin-limitations
 //        onCreateSpaceClick = {},

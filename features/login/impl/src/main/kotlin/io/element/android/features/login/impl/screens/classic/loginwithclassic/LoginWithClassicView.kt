@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -31,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.features.login.impl.R
 import io.element.android.features.login.impl.login.LoginModeEvent
@@ -52,7 +52,6 @@ import io.element.android.libraries.permissions.api.localnetwork.LocalNetworkPer
 import io.element.android.libraries.testtags.TestTags
 import io.element.android.libraries.testtags.testTag
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginWithClassicView(
     state: LoginWithClassicState,
@@ -167,7 +166,7 @@ fun LoginWithClassicView(
                 }
                 // UserId
                 // :tchap: tchap-legacy-connection
-                if (state.showMatrixId) {
+                if (LocalShowMatrixId.current) {
                 // :tchap: end
                     Text(
                         text = state.userId.value,

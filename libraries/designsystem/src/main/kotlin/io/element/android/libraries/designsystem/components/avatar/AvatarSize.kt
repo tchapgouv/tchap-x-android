@@ -30,7 +30,13 @@ enum class AvatarSize(val dp: Dp) {
     UserPreference(52.dp),
 
     UserHeader(96.dp),
+
+    // :tchap: Tchap Custom Design
+//    UserListItem(36.dp),
     UserListItem(40.dp),
+    // :tchap: end
+
+    AccountInfoUser(36.dp),
 
     SelectedUser(52.dp),
     SelectedRoom(56.dp),
@@ -72,8 +78,6 @@ enum class AvatarSize(val dp: Dp) {
 
     DmCreationConfirmation(64.dp),
 
-    UserVerification(52.dp),
-
     OrganizationHeader(64.dp),
     SpaceHeader(64.dp),
     RoomPreviewHeader(64.dp),
@@ -82,6 +86,7 @@ enum class AvatarSize(val dp: Dp) {
     LeaveSpaceRoom(32.dp),
     SelectParentSpace(32.dp),
     AccountItem(32.dp),
+    OtherAccountItem(20.dp),
     LocationPin(32.dp),
     ActiveCallItem(20.dp)
 }

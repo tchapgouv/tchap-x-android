@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.gouv.tchap.android.libraries.designsystem.theme.LocalShowMatrixId
 import io.element.android.compound.theme.ElementTheme
 import io.element.android.compound.tokens.generated.CompoundIcons
 import io.element.android.features.roommembermoderation.api.ModerationAction
@@ -73,7 +74,6 @@ fun RoomMemberModerationView(
         val selectedUser = state.selectedUser
         if (selectedUser != null && state.canDisplayActions) {
             RoomMemberActionsBottomSheet(
-                showMatrixId = state.showMatrixId,
                 user = selectedUser,
                 actions = state.actions,
                 onSelectAction = onSelectAction,
@@ -216,7 +216,6 @@ private fun RoomMemberAsyncActions(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RoomMemberActionsBottomSheet(
-    showMatrixId: Boolean,
     user: MatrixUser,
     actions: ImmutableList<ModerationActionState>,
     onSelectAction: (ModerationAction, MatrixUser) -> Unit,
@@ -286,7 +285,7 @@ private fun RoomMemberActionsBottomSheet(
             // Show user ID only if it's different from the display name
             // :tchap: Show the Matrix Id depending of feature flag showMatrixId
 //            if (bestName != user.userId.value) {
-            if (showMatrixId && bestName != user.userId.value) {
+            if (LocalShowMatrixId.current && bestName != user.userId.value) {
                 // :tchap: end
                 Text(
                     text = user.userId.value,

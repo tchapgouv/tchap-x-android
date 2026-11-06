@@ -13,7 +13,6 @@ import io.element.android.features.home.impl.model.RoomListRoomSummary
 import kotlinx.collections.immutable.ImmutableList
 
 data class RoomListSearchState(
-    val showMatrixId: Boolean,
     val isSearchActive: Boolean,
     val query: TextFieldState,
     val results: ImmutableList<RoomListRoomSummary>,

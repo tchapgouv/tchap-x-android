@@ -56,9 +56,6 @@ class BlockedUsersPresenter(
         val renderBlockedUsersDetail by remember {
             featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowBlockedUsersDetails)
         }.collectAsState(initial = false)
-        val showMatrixId by remember {
-            featureFlagService.isFeatureEnabledFlow(FeatureFlags.ShowMatrixId)
-        }.collectAsState(initial = false)
         val ignoredUserIds by matrixClient.ignoredUsersFlow.collectAsState()
         val ignoredMatrixUser by produceState(
             initialValue = ignoredUserIds.map { MatrixUser(userId = it) },
@@ -84,8 +81,9 @@ class BlockedUsersPresenter(
                     unblockUserAction.value = AsyncAction.ConfirmingNoParams
                 }
                 is BlockedUsersEvent.CopyToClipboard -> {
-                    clipboardHelper.copyPlainText(event.userId.value)
-                    snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
+                    clipboardHelper.copyPlainText(event.userId.value) {
+                        snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_copied_to_clipboard))
+                    }
                 }
                 BlockedUsersEvent.ConfirmUnblock -> {
                     pendingUserToUnblock?.let {
@@ -100,7 +98,6 @@ class BlockedUsersPresenter(
             }
         }
         return BlockedUsersState(
-            showMatrixId = showMatrixId,
             blockedUsers = ignoredMatrixUser.toImmutableList(),
             unblockUserAction = unblockUserAction.value,
             snackbarMessage = snackbarMessage,
