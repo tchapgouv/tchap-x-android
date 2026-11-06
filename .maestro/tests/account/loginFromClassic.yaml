@@ -1,0 +1,5 @@
+appId: ${MAESTRO_APP_ID}
+---
+- tapOn: "Continuer avec ce compte"
+## MAS page
+- runFlow: ./loginInMAS.yaml

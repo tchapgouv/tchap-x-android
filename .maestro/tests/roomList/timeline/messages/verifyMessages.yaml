@@ -1,0 +1,62 @@
+appId: ${MAESTRO_APP_ID}
+---
+- takeScreenshot: build/maestro/520-TimelineMessages
+- scrollUntilVisible:
+    element: "Hello world!"
+    direction: UP
+- assertVisible: "Hello world!"
+- longPressOn: "Hello world!"
+- assertVisible: "👍️"
+- assertVisible: "Réagir avec d’autres émojis"
+- scrollUntilVisible:
+    element: "Supprimer"
+- assertVisible: "Répondre"
+- assertVisible: "Répondre dans le fil de discussion"
+- assertVisible: "Transférer"
+- assertVisible: "Modifier"
+- assertVisible: "Copier le lien vers le message"
+- assertVisible: "Épingler"
+- assertVisible: "Copier le texte"
+- assertVisible: "Supprimer"
+- tapOn: "👍️"
+# TODO : Test other actions on longpress message
+# TODO : Re-enable bellow
+# - scrollUntilVisible:
+#     element: "Position partagée"
+#     direction: DOWN
+# - assertVisible: "Position partagée"
+# - tapOn: "Position partagée"
+# - assertVisible: "Position"
+# - assertVisible: "Affichage d’une carte créée avec MapLibre. Faites la glisser en traînant deux doigts. Zoomez ou dézoomez en écartant ou rapprochant deux doigts."
+# - tapOn: "Déplacer la carte vers ma position"
+# - assertVisible: "Partager"
+# - back
+- scrollUntilVisible:
+    element: "I am a poll"
+    direction: DOWN
+- assertVisible: "I am a poll"
+- assertVisible: "Answer 1. 0 vote"
+- tapOn: "Answer 1. 0 vote"
+- assertVisible: "Answer 1. 1 vote. 100 pour cent du total des votes"
+- tapOn: "Terminer le sondage"
+- tapOn:
+    id: "dialog-positive"
+- assertVisible: "Answer 1. 1 vote. 100 pour cent du total des votes. C’est la réponse gagnante"
+- scrollUntilVisible:
+    element: "Image: I am a picture legend!"
+    direction: DOWN
+- assertVisible: "Image: I am a picture legend!"
+- tapOn: "Image: I am a picture legend!"
+- assertVisible: "Partager"
+- assertVisible: "Télécharger"
+- assertVisible: "Afficher les détails"
+- back
+- scrollUntilVisible:
+    element: "Image: I am a gallery legend!"
+    direction: DOWN
+- assertVisible: "Image: I am a gallery legend!"
+- scrollUntilVisible:
+    element: "Image"
+    direction: DOWN
+- assertVisible: "Image"
+- takeScreenshot: build/maestro/521-TimelineMessages

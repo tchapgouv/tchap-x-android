@@ -1,29 +1,30 @@
 appId: ${MAESTRO_APP_ID}
 ---
 # Purpose: Test the creation and deletion of a DM room.
-- tapOn: "Create room"
-- tapOn: "Search for someone"
+- tapOn: "Créer un salon"
+- tapOn: "Rechercher quelqu’un"
 - inputText: ${MAESTRO_INVITEE1_MXID}
+- hideKeyboard
 - tapOn:
     text: ${MAESTRO_INVITEE1_MXID}
     index: 1
 - runFlow:
     when:
-      visible: 'Start a chat with this new contact?'
+      visible: "Entamer une conversation avec ce nouveau contact ?"
     commands:
-      - tapOn: 'Continue'
+      - tapOn: "Continuer"
 - runFlow:
     when:
-      visible: 'Send invite?'
+      visible: "Envoyer l’invitation ?"
     commands:
-      - tapOn: 'Send invite'
+      - tapOn: "Envoyer l’invitation"
 - takeScreenshot: build/maestro/330-createAndDeleteDM
-- tapOn: "maestroelement2"
+- tapOn: ${MAESTRO_INVITEE1_MXID}
 - scroll
-- tapOn: "Leave room"
-- tapOn: "Leave"
+- tapOn: "Quitter le salon"
+- tapOn: "Quitter"
 - runFlow:
     when:
-      visible: 'You need an invite in order to join'
+      visible: "You need an invite in order to join"
     commands:
-      - tapOn: "Back"
+      - tapOn: "Retour"

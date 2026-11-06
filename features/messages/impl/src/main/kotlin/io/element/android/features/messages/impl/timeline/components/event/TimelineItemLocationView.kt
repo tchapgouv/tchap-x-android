@@ -55,7 +55,13 @@ fun TimelineItemLocationView(
             pinVariant = content.pinVariant,
             location = content.location,
             zoom = 15.0,
-            contentDescription = content.description
+            contentDescription = content.description?.takeIf { it.isNotBlank() } ?: stringResource(
+                if (content.mode is TimelineItemLocationContent.Mode.Live) {
+                    CommonStrings.common_shared_live_location
+                } else {
+                    CommonStrings.common_shared_location
+                },
+            ),
         )
 
         if (content.mode is TimelineItemLocationContent.Mode.Live) {
