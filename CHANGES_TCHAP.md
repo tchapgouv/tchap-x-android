@@ -1,3 +1,15 @@
+Changements dans Tchap Android v26.11.0
+=======================================
+
+<!-- Release notes generated using configuration in .github/release.yml at v26.11.0 -->
+
+## Qu'est-ce qui a changé ?
+### Autres
+* Merge Element X v26.10.1 by @raphael-chevallier in https://github.com/tchapgouv/tchap-x-android/pull/303
+
+
+**Full Changelog**: https://github.com/tchapgouv/tchap-x-android/compare/v26.10.0...v26.11.0
+
 Changements dans Tchap Android v26.10.0
 =======================================
 
