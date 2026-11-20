@@ -59,6 +59,7 @@ android {
     }
 }
 
+<<<<<<< HEAD
 // :tchap: Dynamic PUSHER_APP_ID depending on env
 androidComponents {
     onVariants { variant ->
@@ -79,6 +80,9 @@ androidComponents {
 // :tchap: end
 
 setupDependencyInjection()
+=======
+setupDependencyInjection(generateNodeFactories = false)
+>>>>>>> main-element
 
 dependencies {
     implementation(libs.androidx.corektx)
@@ -125,6 +129,7 @@ dependencies {
 
     testCommonDependencies(libs)
     testImplementation(libs.coil.test)
+    testImplementation(libs.sqldelight.driver.jvm)
     testImplementation(projects.libraries.matrix.test)
     testImplementation(projects.libraries.matrixmedia.test)
     testImplementation(projects.libraries.preferences.test)

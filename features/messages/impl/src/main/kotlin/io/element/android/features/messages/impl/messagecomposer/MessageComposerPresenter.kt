@@ -49,6 +49,14 @@ import io.element.android.libraries.core.mimetype.MimeTypes
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
+<<<<<<< HEAD
+=======
+import io.element.android.libraries.emoji.api.picker.EmojiPickerPresenter
+import io.element.android.libraries.emoji.api.recentemojis.AddRecentEmoji
+import io.element.android.libraries.emoji.api.recentemojis.GetRecentEmojis
+import io.element.android.libraries.featureflag.api.FeatureFlagService
+import io.element.android.libraries.featureflag.api.FeatureFlags
+>>>>>>> main-element
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.matrix.api.core.UserId
@@ -148,6 +156,9 @@ class MessageComposerPresenter(
     private val contentScannerService: ContentScannerService,
     private val contentValidationCache: EventContentValidationCache,
     private val dispatchers: CoroutineDispatchers,
+    emojiPickerPresenterFactory: EmojiPickerPresenter.Factory,
+    getRecentEmojis: GetRecentEmojis,
+    private val addRecentEmoji: AddRecentEmoji,
 ) : Presenter<MessageComposerState> {
     @AssistedFactory
     interface Factory {
@@ -162,6 +173,7 @@ class MessageComposerPresenter(
     private val mediaSender = mediaSenderFactory.create(timelineMode = timelineController.mainTimelineMode())
 
     private val cameraPermissionPresenter = permissionsPresenterFactory.create(Manifest.permission.CAMERA)
+    private val emojiPickerPresenter = emojiPickerPresenterFactory.create(getRecentEmojis)
     private var pendingEvent: MessageComposerEvent? = null
     private val suggestionSearchTrigger = MutableStateFlow<Suggestion?>(null)
 
@@ -219,6 +231,14 @@ class MessageComposerPresenter(
             mutableStateOf(false)
         }
         var showAttachmentSourcePicker: Boolean by remember { mutableStateOf(false) }
+        var showEmojiPicker: Boolean by remember { mutableStateOf(false) }
+        // The picker presenter is composed only while the picker is visible, so recent emojis reload each time it opens.
+        val emojiPickerState = if (showEmojiPicker) {
+            val pickerState = emojiPickerPresenter.present()
+            if (pickerState.isReady) ComposerEmojiPickerState.Shown(pickerState) else ComposerEmojiPickerState.Loading
+        } else {
+            ComposerEmojiPickerState.Hidden
+        }
 
         val sendTypingNotifications by remember {
             sessionPreferencesStore.isSendTypingNotificationsEnabled()
@@ -317,6 +337,15 @@ class MessageComposerPresenter(
                     showAttachmentSourcePicker = true
                 }
                 MessageComposerEvent.DismissAttachmentMenu -> showAttachmentSourcePicker = false
+                MessageComposerEvent.OpenEmojiPicker -> showEmojiPicker = true
+                MessageComposerEvent.DismissEmojiPicker -> showEmojiPicker = false
+                MessageComposerEvent.DeleteBackward -> markdownTextEditorState.deleteBackward()
+                is MessageComposerEvent.InsertEmoji -> {
+                    markdownTextEditorState.insertText(event.emoji)
+                    sessionCoroutineScope.launch(dispatchers.io) {
+                        addRecentEmoji(event.emoji).onFailure { Timber.e(it, "Failed to save recent emoji") }
+                    }
+                }
                 MessageComposerEvent.PickAttachmentSource.FromGallery -> localCoroutineScope.launch {
                     showAttachmentSourcePicker = false
                     // :tchap: Enable multi medias selection by sending multiple messages
@@ -367,6 +396,8 @@ class MessageComposerPresenter(
                 }
                 is MessageComposerEvent.ToggleTextFormatting -> {
                     showAttachmentSourcePicker = false
+                    // The emoji picker is available only alongside the markdown editor.
+                    showEmojiPicker = false
                     localCoroutineScope.toggleTextFormatting(event.enabled, markdownTextEditorState, richTextEditorState)
                 }
                 is MessageComposerEvent.Error -> {
@@ -446,6 +477,7 @@ class MessageComposerPresenter(
             mode = messageComposerContext.composerMode,
             isInThreadTimeline = isInThread,
             showAttachmentSourcePicker = showAttachmentSourcePicker,
+            emojiPickerState = emojiPickerState,
             showTextFormatting = showTextFormatting,
             canShareLocation = canShareLocation,
             suggestions = suggestions.toImmutableList(),

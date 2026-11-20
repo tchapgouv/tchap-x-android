@@ -20,7 +20,6 @@ open class LoggedInStatePreviewParam : PreviewParameterProvider<LoggedInState> {
             aLoggedInState(syncIndicatorState = SyncIndicatorState.Syncing),
             aLoggedInState(syncIndicatorState = SyncIndicatorState.ServerUnreachable),
             aLoggedInState(pusherRegistrationState = AsyncData.Failure(PusherRegistrationFailure.NoDistributorsAvailable())),
-            aLoggedInState(forceNativeSlidingSyncMigration = true),
             aLoggedInState(localNetworkPermissionDialog = LocalNetworkPermissionDialog.Rationale),
             aLoggedInState(localNetworkPermissionDialog = LocalNetworkPermissionDialog.Settings),
         )
@@ -29,15 +28,16 @@ open class LoggedInStatePreviewParam : PreviewParameterProvider<LoggedInState> {
 fun aLoggedInState(
     syncIndicatorState: SyncIndicatorState = SyncIndicatorState.Hidden,
     pusherRegistrationState: AsyncData<Unit> = AsyncData.Uninitialized,
+<<<<<<< HEAD
     forceNativeSlidingSyncMigration: Boolean = false,
     appName: String = "Tchap",
+=======
+>>>>>>> main-element
     localNetworkPermissionDialog: LocalNetworkPermissionDialog = LocalNetworkPermissionDialog.None,
 ) = LoggedInState(
     syncIndicatorState = syncIndicatorState,
     pusherRegistrationState = pusherRegistrationState,
     ignoreRegistrationError = false,
-    forceNativeSlidingSyncMigration = forceNativeSlidingSyncMigration,
-    appName = appName,
     localNetworkPermissionDialog = localNetworkPermissionDialog,
     eventSink = {},
 )

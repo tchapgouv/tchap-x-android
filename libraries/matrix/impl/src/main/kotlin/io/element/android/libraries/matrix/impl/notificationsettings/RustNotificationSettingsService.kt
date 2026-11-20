@@ -49,15 +49,19 @@ class RustNotificationSettingsService(
         notificationSettings.await().setDelegate(null)
     }
 
-    override suspend fun getRoomNotificationSettings(roomId: RoomId, isEncrypted: Boolean, isOneToOne: Boolean): Result<RoomNotificationSettings> =
+    override suspend fun getRoomNotificationSettings(roomId: RoomId, isEncrypted: Boolean, isOneToOne: Boolean): Result<RoomNotificationSettings> = withContext(
+        dispatchers.io
+    ) {
         runCatchingExceptions {
-            notificationSettings.await().getRoomNotificationSettings(roomId.value, isEncrypted, isOneToOne).let(RoomNotificationSettingsMapper::map)
+                notificationSettings.await().getRoomNotificationSettings(roomId.value, isEncrypted, isOneToOne).let(RoomNotificationSettingsMapper::map)
         }
+    }
 
-    override suspend fun getDefaultRoomNotificationMode(isEncrypted: Boolean, isOneToOne: Boolean): Result<RoomNotificationMode> =
+    override suspend fun getDefaultRoomNotificationMode(isEncrypted: Boolean, isOneToOne: Boolean): Result<RoomNotificationMode> = withContext(dispatchers.io) {
         runCatchingExceptions {
-            notificationSettings.await().getDefaultRoomNotificationMode(isEncrypted, isOneToOne).let(RoomNotificationSettingsMapper::mapMode)
+                notificationSettings.await().getDefaultRoomNotificationMode(isEncrypted, isOneToOne).let(RoomNotificationSettingsMapper::mapMode)
         }
+    }
 
     override suspend fun setDefaultRoomNotificationMode(
         isEncrypted: Boolean,
@@ -131,6 +135,7 @@ class RustNotificationSettingsService(
         }
     }
 
+<<<<<<< HEAD
     // :tchap: Allow to enable/disable account notifications
     override suspend fun isAccountNotificationsEnabled(): Result<Boolean> = withContext(dispatchers.io) {
         runCatchingExceptions {
@@ -146,16 +151,23 @@ class RustNotificationSettingsService(
     // :tchap: end
 
     override suspend fun getRoomsWithUserDefinedRules(): Result<List<RoomId>> =
+=======
+    override suspend fun getRoomsWithUserDefinedRules(): Result<List<RoomId>> = withContext(dispatchers.io) {
+>>>>>>> main-element
         runCatchingExceptions {
-            notificationSettings.await().getRoomsWithUserDefinedRules(enabled = true).map(::RoomId)
+                notificationSettings.await().getRoomsWithUserDefinedRules(enabled = true).map(::RoomId)
         }
+    }
 
-    override suspend fun canHomeServerPushEncryptedEventsToDevice(): Result<Boolean> =
+    override suspend fun canHomeServerPushEncryptedEventsToDevice(): Result<Boolean> = withContext(dispatchers.io) {
         runCatchingExceptions {
-            notificationSettings.await().canPushEncryptedEventToDevice()
+                notificationSettings.await().canPushEncryptedEventToDevice()
         }
+    }
 
-    override suspend fun getRawPushRules(): Result<String?> = runCatchingExceptions {
-        notificationSettings.await().getRawPushRules()
+    override suspend fun getRawPushRules(): Result<String?> = withContext(dispatchers.io) {
+        runCatchingExceptions {
+            notificationSettings.await().getRawPushRules()
+        }
     }
 }

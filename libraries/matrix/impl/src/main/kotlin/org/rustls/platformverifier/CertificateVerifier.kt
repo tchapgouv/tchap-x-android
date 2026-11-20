@@ -186,10 +186,14 @@ internal object CertificateVerifier {
 
     @get:Synchronized
     private val systemTrustManager: Lazy<X509TrustManagerExtensions?> =
+<<<<<<< HEAD
         // :tchap: Replace systemKeystore by null to allow to read custom config from network_security_config.xml file
 //        makeLazyTrustManager(systemKeystore)
         makeLazyTrustManager(null)
         // :tchap: end
+=======
+        makeLazyTrustManager(systemKeystore)
+>>>>>>> main-element
 
     @SuppressLint("ObsoleteSdkInt")
     @JvmStatic
@@ -240,7 +244,11 @@ internal object CertificateVerifier {
         //      - If the mock CA store has any values, use the mock trust manager.
         //      - Otherwise, use the system trust manager.
         val trustManager =
+<<<<<<< HEAD
             systemTrustManager.value ?: return VerificationResult(StatusCode.Unavailable)
+=======
+                systemTrustManager.value ?: return VerificationResult(StatusCode.Unavailable)
+>>>>>>> main-element
 
         // Verify that the certificate chain is valid and correct, and nothing more.
         //

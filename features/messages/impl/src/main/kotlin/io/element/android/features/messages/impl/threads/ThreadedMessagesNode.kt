@@ -38,6 +38,7 @@ import io.element.android.features.messages.impl.actionlist.model.TimelineItemAc
 import io.element.android.features.messages.impl.attachments.Attachment
 import io.element.android.features.messages.impl.messagecomposer.MessageComposerEvent
 import io.element.android.features.messages.impl.messagecomposer.MessageComposerPresenter
+import io.element.android.features.messages.impl.messagecomposer.composerEmojiPickerContent
 import io.element.android.features.messages.impl.timeline.TimelineController
 import io.element.android.features.messages.impl.timeline.TimelineEvent
 import io.element.android.features.messages.impl.timeline.TimelinePresenter
@@ -71,7 +72,6 @@ import io.element.android.libraries.matrix.api.room.CreateTimelineParams
 import io.element.android.libraries.matrix.api.room.JoinedRoom
 import io.element.android.libraries.matrix.api.room.alias.matches
 import io.element.android.libraries.matrix.api.timeline.Timeline
-import io.element.android.libraries.matrix.api.timeline.TimelineProvider
 import io.element.android.libraries.matrix.api.timeline.item.TimelineItemDebugInfo
 import io.element.android.libraries.matrix.ui.model.getBestName
 import io.element.android.libraries.ui.utils.a11y.hasExternalKeyboard
@@ -108,6 +108,7 @@ class ThreadedMessagesNode(
     private val inputs = inputs<Inputs>()
     private val callback: Callback = callback()
 
+    private lateinit var threadedTimeline: Timeline
     private var timelineController: TimelineController? by mutableStateOf(null)
     private var presenter: Presenter<MessagesState>? by mutableStateOf(null)
     private var timelinePresenter: TimelinePresenter? = null
@@ -117,7 +118,7 @@ class ThreadedMessagesNode(
      * We'll load the [presenter] in an async way to prevent this.
      */
     private suspend fun createPresenter(): Presenter<MessagesState> {
-        val threadedTimeline = room.createTimeline(CreateTimelineParams.Threaded(threadRootEventId = inputs.threadRootEventId)).getOrThrow()
+        threadedTimeline = room.createTimeline(CreateTimelineParams.Threaded(threadRootEventId = inputs.threadRootEventId)).getOrThrow()
         val timelineController = TimelineController(
             room,
             liveTimeline = threadedTimeline,
@@ -142,12 +143,12 @@ class ThreadedMessagesNode(
 
     interface Callback : Plugin {
         fun handleEventClick(timelineMode: Timeline.Mode, event: TimelineItem.Event, canUseOverlay: Boolean): Boolean
-        fun handleGalleryItemClick(timelineMode: Timeline.Mode, event: TimelineItem.Event, galleryItemIndex: Int, canUseOverlay: Boolean): Boolean
+        fun handleGalleryItemClick(event: TimelineItem.Event, galleryItemIndex: Int, canUseOverlay: Boolean): Boolean
         fun navigateToPreviewAttachments(attachments: ImmutableList<Attachment>, inReplyToEventId: EventId?)
         fun navigateToRoomMemberDetails(userId: UserId)
         fun handlePermalinkClick(data: PermalinkData)
         fun navigateToEventDebugInfo(eventId: EventId?, debugInfo: TimelineItemDebugInfo)
-        fun handleForwardEventClick(eventIds: List<EventId>, timelineProvider: TimelineProvider)
+        fun handleForwardEventClick(eventIds: List<EventId>)
         fun navigateToReportMessage(eventId: EventId, senderId: UserId)
         fun navigateToSendLocation()
         fun navigateToCreatePoll()
@@ -175,6 +176,12 @@ class ThreadedMessagesNode(
             onStop = {
                 appNavigationStateService.onLeavingThread(id)
             },
+            onDestroy = {
+                if (this::threadedTimeline.isInitialized) {
+                    threadedTimeline.close()
+                }
+                timelineController?.close()
+            }
         )
     }
 
@@ -231,8 +238,8 @@ class ThreadedMessagesNode(
         callback.navigateToEventDebugInfo(eventId, debugInfo)
     }
 
-    override fun forwardEvents(eventIds: List<EventId>, timelineProvider: TimelineProvider) {
-        callback.handleForwardEventClick(eventIds, timelineProvider)
+    override fun forwardEvents(eventIds: List<EventId>) {
+        callback.handleForwardEventClick(eventIds)
     }
 
     override fun exitTimelineSelection() {
@@ -312,15 +319,10 @@ class ThreadedMessagesNode(
                     },
                     onGalleryEventItemClick = { isLive, event, index ->
                         timelineController?.let { controller ->
-                            if (isLive) {
-                                callback.handleGalleryItemClick(controller.mainTimelineMode(), event, index, canUseOverlay)
+                            if (isLive || controller.detachedTimelineMode() != null) {
+                                callback.handleGalleryItemClick(event, index, canUseOverlay)
                             } else {
-                                val detachedTimelineMode = controller.detachedTimelineMode()
-                                if (detachedTimelineMode != null) {
-                                    callback.handleGalleryItemClick(detachedTimelineMode, event, index, canUseOverlay)
-                                } else {
-                                    false
-                                }
+                                false
                             }
                         } == true
                     },
@@ -351,6 +353,7 @@ class ThreadedMessagesNode(
                             emojiPickerRenderer = emojiPickerRenderer,
                         )
                     },
+                    composerEmojiPicker = composerEmojiPickerContent(state.composerState, emojiPickerRenderer),
                     onThreadsListClick = {},
                 )
 

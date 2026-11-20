@@ -224,7 +224,7 @@ private fun EmptySpaceHomeView(
                     style = BigIcon.Style.Default(CompoundIcons.SpaceSolid())
                 )
                 Text(
-                    text = stringResource(CommonStrings.screen_space_list_empty_state_title),
+                    text = stringResource(R.string.screen_space_list_empty_state_title),
                     style = ElementTheme.typography.fontHeadingMdBold,
                     color = ElementTheme.colors.textPrimary,
                     textAlign = TextAlign.Center,

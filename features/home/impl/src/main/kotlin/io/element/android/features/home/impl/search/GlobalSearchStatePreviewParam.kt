@@ -56,7 +56,7 @@ class GlobalSearchStatePreviewParam : PreviewParameterProvider<GlobalSearchState
             return sequenceOf(
                 // Not enabled, no preview
                 aGlobalSearchState(isEnabled = false),
-                aGlobalSearchState(isSearchActive = true, queryState = TextFieldState("Query")),
+                aGlobalSearchState(isSearchActive = true, queryState = TextFieldState("")),
                 aGlobalSearchState(
                     isSearchActive = true,
                     currentTarget = GlobalSearchTarget.ROOMS,
@@ -159,6 +159,19 @@ class GlobalSearchStatePreviewParam : PreviewParameterProvider<GlobalSearchState
                             ),
                         )
                     )
+                ),
+                aGlobalSearchState(
+                    isSearchActive = true,
+                    currentTarget = GlobalSearchTarget.ROOMS,
+                    queryState = TextFieldState("Query"),
+                    results = AsyncData.Success(GlobalSearchResults.RoomListResults(persistentListOf())),
+                    showLearnMoreBottomSheet = true,
+                ),
+                aGlobalSearchState(
+                    isSearchActive = true,
+                    currentTarget = GlobalSearchTarget.ROOMS,
+                    queryState = TextFieldState("Query"),
+                    results = AsyncData.Success(GlobalSearchResults.RoomListResults(persistentListOf())),
                 ),
             )
         }
@@ -304,6 +317,7 @@ internal fun aGlobalSearchState(
     currentTarget: GlobalSearchTarget = GlobalSearchTarget.ROOMS,
     results: AsyncData<GlobalSearchResults> = AsyncData.Uninitialized,
     history: AsyncData<ImmutableList<SearchHistoryListItem>> = AsyncData.Uninitialized,
+    showLearnMoreBottomSheet: Boolean = false,
     eventSink: (GlobalSearchEvent) -> Unit = {},
 ) = GlobalSearchState(
     isEnabled = isEnabled,
@@ -312,5 +326,6 @@ internal fun aGlobalSearchState(
     currentTarget = currentTarget,
     results = results,
     history = history,
+    showLearnMoreBottomSheet = showLearnMoreBottomSheet,
     eventSink = eventSink
 )

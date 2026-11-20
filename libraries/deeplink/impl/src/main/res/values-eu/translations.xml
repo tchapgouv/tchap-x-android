@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<<<<<<< HEAD:features/poll/impl/src/main/res/values/temporary.xml
+  <string name="screen_create_poll_max_selections_headline">"Nombre de votes autorisés par personne"</string><!-- Tchap: Custom string -->
+=======
+  <string name="invite_friends_rich_title">"🔐️ Zatoz nirekin %1$s(e)ra"</string>
+>>>>>>> main-element:libraries/deeplink/impl/src/main/res/values-eu/translations.xml
+</resources>

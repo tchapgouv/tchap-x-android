@@ -30,7 +30,10 @@ class KonsistLicenseTest {
             .files
             .filter {
                 it.moduleName.startsWith("enterprise").not() &&
+<<<<<<< HEAD
                     it.path.contains("/fr/gouv/tchap/").not() &&
+=======
+>>>>>>> main-element
                     it.nameWithExtension != "locales.kt" &&
                     it.nameWithExtension != "CertificateVerifier.kt" &&
                     it.name.startsWith("Template ").not()
