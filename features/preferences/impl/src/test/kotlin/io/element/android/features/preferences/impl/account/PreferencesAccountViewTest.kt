@@ -162,6 +162,7 @@ private fun AndroidComposeUiTest<ComponentActivity>.setView(
     onOpenNotificationSettings: () -> Unit = EnsureNeverCalled(),
     onSignOutClick: () -> Unit = EnsureNeverCalled(),
     onDeactivateClick: () -> Unit = EnsureNeverCalled(),
+    onOpenFAQ: () -> Unit = EnsureNeverCalled(),
 ) {
     setContent {
         PreferencesAccountView(
@@ -174,6 +175,7 @@ private fun AndroidComposeUiTest<ComponentActivity>.setView(
             onOpenNotificationSettings = onOpenNotificationSettings,
             onSignOutClick = onSignOutClick,
             onDeactivateClick = onDeactivateClick,
+            onOpenFAQ = onOpenFAQ,
         )
     }
 }
