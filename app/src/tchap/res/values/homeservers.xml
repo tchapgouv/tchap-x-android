@@ -32,6 +32,7 @@
         <item>"agent.finances.tchap.gouv.fr"</item>
         <item>"agent.social.tchap.gouv.fr"</item>
         <item>"agent.interieur.tchap.gouv.fr"</item>
+        <item>"agent.interieur2.tchap.gouv.fr"</item>
         <item>"agent.agriculture.tchap.gouv.fr"</item>
         <item>"agent.justice.tchap.gouv.fr"</item>
         <item>"agent.diplomatie.tchap.gouv.fr"</item>
@@ -40,5 +41,6 @@
         <item>"agent.culture.tchap.gouv.fr"</item>
         <item>"agent.dev-durable.tchap.gouv.fr"</item>
         <item>"agent.education.tchap.gouv.fr"</item>
+        <item>"agent.education2.tchap.gouv.fr"</item>
     </string-array>
 </resources>
