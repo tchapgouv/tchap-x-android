@@ -21,6 +21,9 @@ data class NotificationSettingsState(
     val appSettings: AppSettings,
     val changeNotificationSettingAction: AsyncAction<Unit>,
     val currentPushDistributor: AsyncData<Distributor>,
+    // :tchap: Enable PushDistributor selection only for F-droid builds
+    val allowShowAdvancedSettings: Boolean,
+    // :tchap: end
     val availablePushDistributors: ImmutableList<Distributor>,
     val showChangePushProviderDialog: Boolean,
     val fullScreenIntentPermissionsState: FullScreenIntentPermissionsState,
@@ -84,7 +87,9 @@ data class NotificationSettingsState(
     /**
      * Whether the advanced settings should be shown.
      * This is true if the current push distributor is in a failure state or if there are multiple push distributors available.
+     * :tchap: Enable PushDistributor selection only for F-droid builds
      */
-    val showAdvancedSettings: Boolean = currentPushDistributor.isFailure()
-        // || availablePushDistributors.size > 0 :tchap: disable PushDistributor selection
+    val showAdvancedSettings: Boolean = currentPushDistributor.isFailure() ||
+        availablePushDistributors.size > 1 && allowShowAdvancedSettings
+//    val showAdvancedSettings: Boolean = currentPushDistributor.isFailure() || availablePushDistributors.size > 1
 }

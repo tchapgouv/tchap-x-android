@@ -28,6 +28,7 @@ import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.runUpdatingStateNoSuccess
 import io.element.android.libraries.core.coroutine.CoroutineDispatchers
 import io.element.android.libraries.core.extensions.runCatchingExceptions
+import io.element.android.libraries.core.meta.BuildMeta
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
 import io.element.android.libraries.featureflag.api.FeatureFlagService
 import io.element.android.libraries.featureflag.api.ShowAllActivityInRoomListFeature
@@ -79,6 +80,9 @@ class NotificationSettingsPresenter(
     private val sessionCoroutineScope: CoroutineScope,
     private val featureFlagService: FeatureFlagService,
     private val dispatchers: CoroutineDispatchers,
+    // :tchap: Enable PushDistributor selection only for F-droid builds
+    private val buildMeta: BuildMeta,
+    // :tchap: end
 ) : Presenter<NotificationSettingsState> {
     // Serializes the pick → copy → persist → recreate pipeline per slot. The copier already locks
     // its `<slot>.tmp` file, but the persist+recreate window outside the copier is unprotected;
@@ -309,6 +313,9 @@ class NotificationSettingsPresenter(
             ),
             changeNotificationSettingAction = changeNotificationSettingAction.value,
             currentPushDistributor = currentDistributor,
+            // :tchap: Enable PushDistributor selection only for F-droid builds
+            allowShowAdvancedSettings = buildMeta.flavorShortDescription == "F",
+            // :tchap: end
             availablePushDistributors = availableDistributors,
             showChangePushProviderDialog = showChangePushProviderDialog,
             fullScreenIntentPermissionsState = key(refreshFullScreenIntentSettings) { fullScreenIntentPermissionsPresenter.present() },

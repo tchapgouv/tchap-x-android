@@ -17,6 +17,7 @@ import io.element.android.libraries.matrix.api.room.RoomNotificationMode
 import io.element.android.libraries.preferences.api.store.NotificationSound
 import io.element.android.libraries.pushproviders.api.Distributor
 import kotlinx.collections.immutable.toImmutableList
+import kotlin.Boolean
 
 open class NotificationSettingsStatePreviewParam : PreviewParameterProvider<NotificationSettingsState> {
     override val values: Sequence<NotificationSettingsState>
@@ -164,6 +165,9 @@ fun aNotificationSettingsState(
     appSettings: NotificationSettingsState.AppSettings = anAppSettings(),
     changeNotificationSettingAction: AsyncAction<Unit> = AsyncAction.Uninitialized,
     currentPushDistributor: AsyncData<Distributor> = AsyncData.Success(aDistributor("Firebase")),
+    // :tchap: Enable PushDistributor selection only for F-droid builds
+    allowShowAdvancedSettings: Boolean = false,
+    // :tchap: end
     availablePushDistributors: List<Distributor> = listOf(
         aDistributor("Firebase"),
     ),
@@ -182,6 +186,9 @@ fun aNotificationSettingsState(
     appSettings = appSettings,
     changeNotificationSettingAction = changeNotificationSettingAction,
     currentPushDistributor = currentPushDistributor,
+    // :tchap: Enable PushDistributor selection only for F-droid builds
+    allowShowAdvancedSettings = allowShowAdvancedSettings,
+    // :tchap: end
     availablePushDistributors = availablePushDistributors.toImmutableList(),
     showChangePushProviderDialog = showChangePushProviderDialog,
     fullScreenIntentPermissionsState = fullScreenIntentPermissionsState,
