@@ -59,7 +59,6 @@ android {
     }
 }
 
-<<<<<<< HEAD
 // :tchap: Dynamic PUSHER_APP_ID depending on env
 androidComponents {
     onVariants { variant ->
@@ -79,10 +78,7 @@ androidComponents {
 }
 // :tchap: end
 
-setupDependencyInjection()
-=======
 setupDependencyInjection(generateNodeFactories = false)
->>>>>>> main-element
 
 dependencies {
     implementation(libs.androidx.corektx)

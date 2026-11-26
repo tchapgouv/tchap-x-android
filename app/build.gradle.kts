@@ -266,7 +266,6 @@ androidComponents {
     val gitBranchName = providers.of(GitBranchNameValueSource::class.java) {}
 
     onVariants { variant ->
-<<<<<<< HEAD
         // :tchap: AppName based on "target" flavor & buildType
         val targetFlavor = variant.productFlavors.find { it.first == "target" }?.second
 
@@ -291,10 +290,9 @@ androidComponents {
             ResValue(flavorBaseName + suffix, null)
         )
         // :tchap: end
-=======
+
         variant.buildConfigFields?.put("GIT_REVISION", gitRevision.map { BuildConfigField("String", "\"$it\"", null) })
         variant.buildConfigFields?.put("GIT_BRANCH_NAME", gitBranchName.map { BuildConfigField("String", "\"$it\"", null) })
->>>>>>> main-element
 
         // Register the R8 keep rules source folders for optimized build types (release, nightly).
         // Replaces the deprecated `optimization.keepRules.files` DSL (AGP 9+).

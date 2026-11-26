@@ -135,7 +135,6 @@ class RustNotificationSettingsService(
         }
     }
 
-<<<<<<< HEAD
     // :tchap: Allow to enable/disable account notifications
     override suspend fun isAccountNotificationsEnabled(): Result<Boolean> = withContext(dispatchers.io) {
         runCatchingExceptions {
@@ -150,10 +149,7 @@ class RustNotificationSettingsService(
     }
     // :tchap: end
 
-    override suspend fun getRoomsWithUserDefinedRules(): Result<List<RoomId>> =
-=======
     override suspend fun getRoomsWithUserDefinedRules(): Result<List<RoomId>> = withContext(dispatchers.io) {
->>>>>>> main-element
         runCatchingExceptions {
                 notificationSettings.await().getRoomsWithUserDefinedRules(enabled = true).map(::RoomId)
         }

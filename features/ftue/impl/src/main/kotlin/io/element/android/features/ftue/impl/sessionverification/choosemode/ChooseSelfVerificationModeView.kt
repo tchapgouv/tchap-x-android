@@ -35,6 +35,7 @@ import io.element.android.libraries.designsystem.atomic.pages.HeaderFooterPage
 import io.element.android.libraries.designsystem.components.BigIcon
 import io.element.android.libraries.designsystem.preview.ElementPreview
 import io.element.android.libraries.designsystem.preview.PreviewsDayNight
+import io.element.android.libraries.designsystem.theme.components.Button
 import io.element.android.libraries.designsystem.theme.components.IconSource
 import io.element.android.libraries.designsystem.theme.components.OutlinedButton
 import io.element.android.libraries.designsystem.theme.components.Text
@@ -140,27 +141,8 @@ private fun ChooseSelfVerificationModeButtons(
                 LoadingButtonAtom()
             }
             is AsyncData.Success -> {
-<<<<<<< HEAD
-                if (state.buttonsState.data.canUseAnotherDevice) {
-                    OutlinedButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = stringResource(R.string.screen_identity_use_another_device),
-                        onClick = onUseAnotherDevice,
-                        leadingIcon = IconSource.Vector(CompoundIcons.Devices()),
-                    )
-                }
-                if (state.buttonsState.data.canUseRecoveryKey) {
-                    OutlinedButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = stringResource(R.string.screen_identity_confirmation_use_recovery_key),
-                        onClick = onUseRecoveryKey,
-                    )
-                }
-                TextButton(
-=======
                 val buttonsState = state.buttonsState.data
                 Button(
->>>>>>> main-element
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(R.string.screen_identity_use_another_device),
                     onClick = onUseAnotherDevice,

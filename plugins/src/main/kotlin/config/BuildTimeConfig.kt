@@ -55,7 +55,6 @@ object BuildTimeConfig {
 
     const val PUSH_CONFIG_INCLUDE_FIREBASE: Boolean = true
     const val PUSH_CONFIG_INCLUDE_UNIFIED_PUSH: Boolean = true
-<<<<<<< HEAD
 
     // :tchap: Dynamic PUSHER_APP_ID depending on env in build.gradle.kts
 //    val PUSHER_APP_ID_RELEASE: String? = null
@@ -80,11 +79,8 @@ object BuildTimeConfig {
     const val GOOGLE_APP_ID_DEV_NIGHTLY = "1:1092909174787:android:190ed65bcb2965002a7e36"
     const val GOOGLE_APP_ID_DEV_DEBUG = "1:1092909174787:android:ab600c14603565a62a7e36"
     // :tchap: end
-=======
-    val PUSHER_APP_ID_RELEASE: String? = null
-    val PUSHER_APP_ID_DEBUG: String? = null
-    val PUSHER_APP_ID_NIGHTLY: String? = null
+
+    // TODO: Tchap - Check what is mobile link
     const val ELEMENT_LINKS_ENABLED: Boolean = true
     const val ELEMENT_MOBILE_LINK_PATH: String = "/element/"
->>>>>>> main-element
 }

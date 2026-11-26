@@ -510,15 +510,14 @@ interface MatrixClient : ClientUrlContentFetcher {
     suspend fun resetWellKnownConfig(): Result<Unit>
 
     /**
-<<<<<<< HEAD
      * TCHAP account-expiration : request to send a new email to provide the user with an updated link to renew their account.
      */
     suspend fun accountExpiredSendEmail(): Result<Unit>
-=======
+
+    /**
      * Release all the resources of the client. The client must not be used afterwards.
      */
     suspend fun destroy()
->>>>>>> main-element
 
     /** Returns a provider for the capabilities the homeserver advertises, such as whether the display name can be changed. */
     fun homeserverCapabilities(): HomeserverCapabilitiesProvider

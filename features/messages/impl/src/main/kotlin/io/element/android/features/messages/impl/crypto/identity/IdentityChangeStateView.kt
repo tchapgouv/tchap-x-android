@@ -80,21 +80,14 @@ private fun ViolationAlert(
         content = buildAnnotatedString {
             val learnMoreStr = stringResource(CommonStrings.action_learn_more)
             val displayName = identityChangeViolation.identityRoomMember.displayNameOrDefault
-<<<<<<< HEAD
             val userIdStr = if (LocalShowMatrixId.current) {
                 stringResource(
-                    CommonStrings.crypto_identity_change_pin_violation_new_user_id,
+                    R.string.crypto_identity_change_pin_violation_new_user_id,
                     identityChangeViolation.identityRoomMember.userId,
                 )
             } else {
                 ""
             }
-=======
-            val userIdStr = stringResource(
-                R.string.crypto_identity_change_pin_violation_new_user_id,
-                identityChangeViolation.identityRoomMember.userId,
-            )
->>>>>>> main-element
             val fullText = stringResource(textId, displayName, userIdStr, learnMoreStr)
             append(fullText)
             val userIdStartIndex = fullText.indexOf(userIdStr)

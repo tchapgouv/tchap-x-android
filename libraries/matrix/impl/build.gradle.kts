@@ -27,18 +27,8 @@ val elementCallVersion: String = providers.gradleProperty("elementCallLocalVersi
     .getOrElse(libs.versions.element.call.get())
 
 dependencies {
-<<<<<<< HEAD
-    if (usesLocalRustSdk) {
-        println(
-            "\nNote: Using local binary of the Rust SDK." +
-                "\n      element-call-matrix is substituted onto it as well, so the native call runs" +
-                "\n      against this SDK rather than the one it was published against.\n"
-        )
-=======
-    releaseImplementation(libs.matrix.sdk)
     if (file("${rootDir.path}/libraries/rustsdk/matrix-rust-sdk.aar").exists()) {
         println("\nNote: Using local binary of the Rust SDK.\n")
->>>>>>> main-element
         debugImplementation(projects.libraries.rustsdk)
         releaseImplementation(projects.libraries.rustsdk)
     } else {

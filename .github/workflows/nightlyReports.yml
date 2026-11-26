@@ -17,11 +17,7 @@ jobs:
   nightlyReports:
     name: Create kover report artifact and upload sonar result
     runs-on: ubuntu-latest
-<<<<<<< HEAD
-    # Skip in forks
-=======
     timeout-minutes: 120
->>>>>>> main-element
     if: ${{ github.repository == 'element-hq/element-x-android' }}
     steps:
       - name: ⏬ Checkout with LFS
@@ -57,17 +53,12 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           ORG_GRADLE_PROJECT_SONAR_LOGIN: ${{ secrets.SONAR_TOKEN }}
-<<<<<<< HEAD
-        if: ${{ always() && env.SONAR_TOKEN != '' && env.ORG_GRADLE_PROJECT_SONAR_LOGIN != '' }}
-        run: ./gradlew assembleDebug createFullJarTchapWithpinningDebugTestFixtures :app:createFullJarGplayTchapWithpinningDebugTestFixtures $CI_GRADLE_ARG_PROPERTIES
-=======
         # Do not publish without the coverage report (for instance if the tests have failed), it would reset the coverage to 0%.
         if: ${{ always() && env.SONAR_TOKEN != '' && env.ORG_GRADLE_PROJECT_SONAR_LOGIN != '' && hashFiles('build/reports/kover/reportMerged.xml') != '' }}
         # The sources must be built before running the analysis, since `sonar.gradle.skipCompile` is set.
         run: |
           ./gradlew assembleGplayDebug $CI_GRADLE_ARG_PROPERTIES
           ./gradlew sonar $CI_GRADLE_ARG_PROPERTIES
->>>>>>> main-element
 
   # Dependency vulnerability analysis using https://github.com/dependency-check/dependency-check-gradle
   dependency-analysis:

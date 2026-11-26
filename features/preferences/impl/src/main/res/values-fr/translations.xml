@@ -50,14 +50,14 @@
   <string name="screen_labs_enable_gallery">"Gallerie d’images"</string>
   <string name="screen_labs_enable_gallery_description">"Envoyez plusieurs images ou vidéos en un seul message. Fonctionne parfaitement sur mobile, mais pas encore supporté sur le web."</string>
   <string name="screen_labs_enable_knocking">"Demander à rejoindre"</string>
-  <string name="screen_labs_enable_knocking_description">"Les utilisateurs peuvent demander l’accès à un salon privé. Stable sur mobile, une version web existe mais est encore expérimentale."</string>
+  <string name="screen_labs_enable_knocking_description">"Les membres peuvent demander l’accès à un salon privé. Stable sur mobile, une version web existe mais est encore expérimentale."</string><!-- Tchap: Custom string -->
   <string name="screen_labs_enable_threads">"Activez les fils de discussion."</string>
   <string name="screen_labs_enable_threads_description">"Un changement entraînera le redémarrage de l’application."</string>
   <string name="screen_labs_header_description">"Découvrez nos dernières idées en cours de développement. Ces fonctionnalités ne sont pas encore finalisées; elles peuvent être instables et évoluer."</string>
   <string name="screen_labs_header_title">"Envie d’expérimenter?"</string>
   <string name="screen_labs_title">"Expérimental"</string>
   <string name="screen_moderation_and_safety_invites_heading">"Invitations"</string>
-  <string name="screen_moderation_and_safety_other_users_heading">"Autres utilisateurs"</string>
+  <string name="screen_moderation_and_safety_other_users_heading">"Autres membres"</string><!-- Tchap: Custom string -->
   <string name="screen_moderation_and_safety_share_presence_heading">"Votre apparence"</string>
   <string name="screen_notification_settings_activity_section_title">"Activité"</string>
   <string name="screen_notification_settings_additional_settings_section_title">"Réglages supplémentaires"</string>

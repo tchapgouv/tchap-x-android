@@ -11,10 +11,7 @@ package io.element.android.features.ftue.impl.sessionverification
 import android.os.Parcelable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-<<<<<<< HEAD
 import androidx.compose.runtime.collectAsState
-=======
->>>>>>> main-element
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberUpdatedState
@@ -33,22 +30,16 @@ import dev.zacsweers.metro.AssistedInject
 import io.element.android.annotations.ContributesNode
 import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.features.ftue.impl.sessionverification.choosemode.ChooseSelfVerificationModeNode
-<<<<<<< HEAD
 import io.element.android.features.ftue.impl.sessionverification.choosemode.ChooseSelfVerificationModePresenter
-=======
 import io.element.android.features.logout.api.direct.DirectLogoutEvent
 import io.element.android.features.logout.api.direct.DirectLogoutState
 import io.element.android.features.logout.api.direct.DirectLogoutView
->>>>>>> main-element
 import io.element.android.features.securebackup.api.SecureBackupEntryPoint
 import io.element.android.features.verifysession.api.OutgoingVerificationEntryPoint
 import io.element.android.libraries.architecture.BackstackView
 import io.element.android.libraries.architecture.BaseFlowNode
-<<<<<<< HEAD
-import io.element.android.libraries.architecture.appyx.launchMolecule
-=======
 import io.element.android.libraries.architecture.Presenter
->>>>>>> main-element
+import io.element.android.libraries.architecture.appyx.launchMolecule
 import io.element.android.libraries.architecture.callback
 import io.element.android.libraries.architecture.createNode
 import io.element.android.libraries.designsystem.utils.OpenUrlInTabView
@@ -66,14 +57,11 @@ class FtueSessionVerificationFlowNode(
     @Assisted plugins: List<Plugin>,
     private val outgoingVerificationEntryPoint: OutgoingVerificationEntryPoint,
     private val secureBackupEntryPoint: SecureBackupEntryPoint,
-<<<<<<< HEAD
     // :tchap: verify-with-recover-key
     private val presenter: ChooseSelfVerificationModePresenter,
     // :tchap: end
-=======
     private val directLogoutPresenter: Presenter<DirectLogoutState>,
     private val directLogoutView: DirectLogoutView,
->>>>>>> main-element
 ) : BaseFlowNode<FtueSessionVerificationFlowNode.NavTarget>(
     backstack = BackStack(
         initialElement = NavTarget.Root,

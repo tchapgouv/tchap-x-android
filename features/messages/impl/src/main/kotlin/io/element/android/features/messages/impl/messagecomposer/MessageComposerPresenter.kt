@@ -49,14 +49,9 @@ import io.element.android.libraries.core.mimetype.MimeTypes
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.di.annotations.SessionCoroutineScope
-<<<<<<< HEAD
-=======
 import io.element.android.libraries.emoji.api.picker.EmojiPickerPresenter
 import io.element.android.libraries.emoji.api.recentemojis.AddRecentEmoji
 import io.element.android.libraries.emoji.api.recentemojis.GetRecentEmojis
-import io.element.android.libraries.featureflag.api.FeatureFlagService
-import io.element.android.libraries.featureflag.api.FeatureFlags
->>>>>>> main-element
 import io.element.android.libraries.matrix.api.core.EventId
 import io.element.android.libraries.matrix.api.core.ThreadId
 import io.element.android.libraries.matrix.api.core.UserId

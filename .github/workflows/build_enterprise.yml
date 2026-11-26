@@ -61,13 +61,8 @@ jobs:
         with:
           name: elementx-enterprise-debug
           path: |
-<<<<<<< HEAD
             app/build/outputs/apk/gplayTchapWithpinning/debug/*-universal-debug.apk
-      - name: Compile nightly and release sources
-=======
-            app/build/outputs/apk/gplay/debug/*-universal-debug.apk
       - name: Compile release sources
->>>>>>> main-element
         if: ${{ matrix.variant == 'release' }}
         run: ./gradlew compileReleaseSources -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
       - name: Compile nightly sources

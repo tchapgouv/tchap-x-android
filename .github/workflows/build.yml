@@ -16,13 +16,11 @@ env:
 
 jobs:
   build:
+
     name: Build APKs
     runs-on: ubuntu-latest
-<<<<<<< HEAD
 #    runs-on: ubuntu-latest-32GB
-=======
     timeout-minutes: 60
->>>>>>> main-element
     permissions:
       # For NejcZdovc/comment-pr
       pull-requests: write
@@ -60,11 +58,7 @@ jobs:
           ELEMENT_CALL_POSTHOG_API_HOST: ${{ secrets.ELEMENT_CALL_POSTHOG_API_HOST }}
           ELEMENT_CALL_POSTHOG_API_KEY: ${{ secrets.ELEMENT_CALL_POSTHOG_API_KEY }}
           ELEMENT_CALL_RAGESHAKE_URL: ${{ secrets.ELEMENT_CALL_RAGESHAKE_URL }}
-<<<<<<< HEAD
-        run: ./gradlew :app:assembleGplayTchapWithpinningDebug app:assembleFDroidTchapWithpinningDebug -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
-=======
-        run: ./gradlew :app:assembleGplayDebug :app:assembleFdroidDebug -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
->>>>>>> main-element
+        run: ./gradlew :app:assembleGplayTchapWithpinningDebug :app:assembleFDroidTchapWithpinningDebug -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
       - name: Upload debug APKs
         if: ${{ matrix.variant == 'debug' }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -104,14 +98,7 @@ jobs:
           ./gradlew bundleGplayTchapWithpinningRelease -PallWarningsAsErrors=true $CI_GRADLE_ARG_PROPERTIES
       - name: Run aapt dump
         if: ${{ matrix.variant == 'release' }}
-<<<<<<< HEAD
-        run: |
-          $ANDROID_HOME/build-tools/37.0.0/aapt dump badging \
-            ./app/build/outputs/apk/gplayTchapWithpinning/release/app-gplay-tchap-withpinning-universal-release.apk \
-            > /tmp/currentAaptDump.txt
-=======
         run: ./tools/manifest/aaptDump.sh --skip-build /tmp/currentAaptDump.txt
->>>>>>> main-element
       - name: Check manifest has not changed
         if: ${{ matrix.variant == 'release' }}
         run: diff /tmp/currentAaptDump.txt ./tools/manifest/gplay/release/aaptDump.txt

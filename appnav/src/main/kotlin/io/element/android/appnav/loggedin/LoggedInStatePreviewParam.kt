@@ -28,11 +28,6 @@ open class LoggedInStatePreviewParam : PreviewParameterProvider<LoggedInState> {
 fun aLoggedInState(
     syncIndicatorState: SyncIndicatorState = SyncIndicatorState.Hidden,
     pusherRegistrationState: AsyncData<Unit> = AsyncData.Uninitialized,
-<<<<<<< HEAD
-    forceNativeSlidingSyncMigration: Boolean = false,
-    appName: String = "Tchap",
-=======
->>>>>>> main-element
     localNetworkPermissionDialog: LocalNetworkPermissionDialog = LocalNetworkPermissionDialog.None,
 ) = LoggedInState(
     syncIndicatorState = syncIndicatorState,

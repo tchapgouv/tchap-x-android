@@ -39,12 +39,8 @@ import io.element.android.features.preferences.impl.notifications.NotificationSe
 import io.element.android.features.preferences.impl.notifications.edit.EditDefaultNotificationSettingNode
 import io.element.android.features.preferences.impl.root.PreferencesRootNode
 import io.element.android.features.preferences.impl.user.editprofile.EditUserProfileNode
-<<<<<<< HEAD
 import io.element.android.libraries.androidutils.browser.openUrlInChromeCustomTab
-import io.element.android.libraries.architecture.BackstackView
-=======
 import io.element.android.libraries.architecture.BackstackWithOverlayBox
->>>>>>> main-element
 import io.element.android.libraries.architecture.BaseFlowNode
 import io.element.android.libraries.architecture.appyx.canPop
 import io.element.android.libraries.architecture.callback

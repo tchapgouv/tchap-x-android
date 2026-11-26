@@ -77,7 +77,9 @@ class SecureBackupEnterRecoveryKeyPresenter(
                     displayRecoveryKeyFieldContents = event.visible
                 }
                 // :tchap: Verify device with recovery key : add signout topbar button
-                SecureBackupEnterRecoveryKeyEvent.SignOut -> directLogoutState.eventSink(DirectLogoutEvent.Logout(ignoreSdkError = false))
+                SecureBackupEnterRecoveryKeyEvent.SignOut -> directLogoutState.eventSink(
+                    DirectLogoutEvent.Logout(ignoreSdkError = false, skipConfirmation = true)
+                )
                 // :tchap: end
             }
         }

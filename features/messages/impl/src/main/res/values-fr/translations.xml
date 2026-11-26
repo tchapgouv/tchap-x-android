@@ -10,10 +10,7 @@
   <string name="crypto_event_authenticity_sent_in_clear">"Non chiffré."</string>
   <string name="crypto_event_authenticity_unknown_device">"Chiffré par un appareil inconnu ou supprimé."</string>
   <string name="crypto_event_authenticity_unsigned_device">"Chiffré par un appareil non vérifié par son propriétaire."</string>
-<<<<<<< HEAD
   <string name="crypto_event_authenticity_unverified_identity">"Chiffré par un membre non vérifié."</string><!-- Tchap: Custom string -->
-=======
-  <string name="crypto_event_authenticity_unverified_identity">"Chiffré par un utilisateur non vérifié."</string>
   <string name="crypto_event_key_forwarded_known_profile_dialog_content">"%1$s (%2$s) a partagé ce message avec vous car vous n’étiez pas dans le salon lors de son envoi."</string>
   <string name="crypto_event_key_forwarded_unknown_profile_dialog_content">"%1$s a partagé ce message avec vous car vous n’étiez pas dans le salon lors de son envoi."</string>
   <string name="crypto_identity_change_pin_violation_new">"L’identité numérique de %1$s %2$s a été réinitialisée. %3$s"</string>
@@ -30,7 +27,6 @@
   <string name="error_failed_loading_messages">"Échec du chargement des messages"</string>
   <string name="error_failed_uploading_voice_message">"Échec lors de l’envoi du message vocal."</string>
   <string name="error_missing_microphone_voice_rationale_android">"%1$s n’a pas l’autorisation d’utiliser le microphone. Autorisez l’utilisation pour enregistrer un message vocal."</string>
->>>>>>> main-element
   <string name="error_sending_failure_invalid_mime_type">"Type MIME invalide : %s"</string>
   <string name="error_sending_failure_missing_media_content">"Contenu multimédia manquant"</string>
   <string name="error_sending_failure_other">"Détails de l’erreur : %s"</string>
@@ -59,10 +55,6 @@
   <string name="screen_media_upload_preview_optimize_image_quality_title">"Optimiser la qualité de l’image"</string>
   <string name="screen_media_upload_preview_processing">"Traitement en cours…"</string>
   <string name="screen_media_upload_preview_title">"Ajouter un média"</string>
-<<<<<<< HEAD
-  <string name="screen_report_content_block_user">"Bloquer le membre"</string><!-- Tchap: Custom string -->
-  <string name="screen_report_content_block_user_hint">"Cochez si vous souhaitez masquer tous les messages actuels et futurs de ce membre."</string><!-- Tchap: Custom string -->
-=======
   <string name="screen_pinned_timeline_empty_state_description">"Cliquez (clic long) sur un message et choisissez « %1$s » pour qu‘il apparaisse ici."</string>
   <string name="screen_pinned_timeline_empty_state_headline">"Épinglez les messages importants pour leur donner plus de visibilité"</string>
   <plurals name="screen_pinned_timeline_screen_title">
@@ -70,9 +62,8 @@
     <item quantity="other">"%1$d messages épinglés"</item>
   </plurals>
   <string name="screen_pinned_timeline_screen_title_empty">"Messages épinglés"</string>
-  <string name="screen_report_content_block_user">"Bloquer l’utilisateur"</string>
-  <string name="screen_report_content_block_user_hint">"Cochez si vous souhaitez masquer tous les messages actuels et futurs de cet utilisateur."</string>
->>>>>>> main-element
+  <string name="screen_report_content_block_user">"Bloquer le membre"</string><!-- Tchap: Custom string -->
+  <string name="screen_report_content_block_user_hint">"Cochez si vous souhaitez masquer tous les messages actuels et futurs de ce membre."</string><!-- Tchap: Custom string -->
   <string name="screen_report_content_explanation">"Ce message sera signalé à l’administrateur de votre serveur d’accueil. Il ne pourra lire aucun message chiffré."</string>
   <string name="screen_report_content_hint">"Raison du signalement de ce contenu"</string>
   <string name="screen_resolve_send_failure_changed_identity_primary_button_title">"Révoquer la verification et envoyer"</string>

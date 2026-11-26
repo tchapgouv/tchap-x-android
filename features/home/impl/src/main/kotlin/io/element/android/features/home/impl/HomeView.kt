@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.ScaffoldDefaults.contentWindowInsets
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -300,20 +301,10 @@ private fun HomeScaffold(
                                 // :tchap: end
                             }
                         }
-<<<<<<< HEAD
                     },
-                    totalUnreadCount = state.totalUnreadCount,
+                    totalUnreadCount = state.totalUnreadCount.toInt(),
                 )
             }
-=======
-                        HomeNavigationBarItem.Spaces -> {
-                            HomeFloatingActionButton(onCreateSpaceClick, CommonStrings.action_create_space)
-                        }
-                    }
-                },
-                totalUnreadCount = state.totalUnreadCount.toInt(),
-            )
->>>>>>> main-element
         },
         floatingActionButtonPosition = FabPosition.Center,
         contentWindowInsets = scaffoldScrollableContentInsets,

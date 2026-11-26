@@ -14,11 +14,7 @@ jobs:
   sync-localazy:
     runs-on: ubuntu-latest
     # Skip in forks
-<<<<<<< HEAD
-    if: ${{ github.repository == 'element-hq/element-x-android' && ('pull_request' != github.event_name || github.event.pull_request.head.repo.full_name == github.repository) }}
-=======
     if: github.repository == 'element-hq/element-x-android'
->>>>>>> main-element
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

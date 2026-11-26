@@ -38,4 +38,4 @@ if [[ "${skipBuild}" == "false" ]]; then
 fi
 
 # Dump information
-"${aapt}" dump badging ./app/build/outputs/apk/gplay/release/app-gplay-universal-release.apk > "${outputFile}"
+"${aapt}" dump badging ./app/build/outputs/apk/gplayTchapWithpinning/release/app-gplay-tchap-withpinning-universal-release.apk > "${outputFile}"
