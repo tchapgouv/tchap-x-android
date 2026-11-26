@@ -55,6 +55,7 @@ class KonsistComposableTest {
                 "HorizontalFloatingToolbarItem",
                 "HorizontalFloatingToolbarSeparator",
                 "DebugNavStateNodeHost",
+                "ProvideRoomMemberProfiles",
             )
             .assertTrue(
                 additionalMessage =

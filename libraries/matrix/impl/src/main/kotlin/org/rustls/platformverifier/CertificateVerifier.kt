@@ -240,7 +240,7 @@ internal object CertificateVerifier {
         //      - If the mock CA store has any values, use the mock trust manager.
         //      - Otherwise, use the system trust manager.
         val trustManager =
-            systemTrustManager.value ?: return VerificationResult(StatusCode.Unavailable)
+                systemTrustManager.value ?: return VerificationResult(StatusCode.Unavailable)
 
         // Verify that the certificate chain is valid and correct, and nothing more.
         //

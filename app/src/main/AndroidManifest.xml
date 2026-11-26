@@ -59,21 +59,12 @@
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboardHidden|uiMode"
             android:exported="true"
             android:launchMode="singleTask"
-            android:supportsPictureInPicture="true"
             android:theme="@style/Theme.ElementX.Splash"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <!-- Handle deep-link for notification ./tools/adb/deeplink.sh -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data
-                    android:host="open"
-                    android:scheme="elementx" />
             </intent-filter>
             <!--
               OAuth redirection
@@ -86,41 +77,10 @@
 
                 <data android:scheme="@string/login_redirect_scheme" />
             </intent-filter>
-            <!-- :tchap: Remove unused Element domains -->
-<!--            &lt;!&ndash;-->
-<!--              Element web links-->
-<!--            &ndash;&gt;-->
-<!--            <intent-filter android:autoVerify="true">-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
-
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <category android:name="android.intent.category.BROWSABLE" />-->
-
-<!--                <data android:scheme="https" />-->
-<!--                &lt;!&ndash; Note: we can't use "*.element.io" here because it'll intercept the "mas.element.io" domain too. &ndash;&gt;-->
-<!--                &lt;!&ndash; Matching asset file: https://app.element.io/.well-known/assetlinks.json &ndash;&gt;-->
-<!--                <data android:host="app.element.io" />-->
-<!--                &lt;!&ndash; Matching asset file: https://develop.element.io/.well-known/assetlinks.json &ndash;&gt;-->
-<!--                <data android:host="develop.element.io" />-->
-<!--                &lt;!&ndash; Matching asset file: https://staging.element.io/.well-known/assetlinks.json &ndash;&gt;-->
-<!--                <data android:host="staging.element.io" />-->
-<!--            </intent-filter>-->
-<!--            &lt;!&ndash;-->
-<!--              Element mobile links-->
-<!--              Example: https://mobile.element.io/element/?account_provider=example.org&login_hint=mxid:@alice:example.org-->
-<!--            &ndash;&gt;-->
-<!--            <intent-filter android:autoVerify="true">-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
-
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <category android:name="android.intent.category.BROWSABLE" />-->
-
-<!--                <data android:scheme="https" />-->
-<!--                &lt;!&ndash; Matching asset file: https://mobile.element.io/.well-known/assetlinks.json &ndash;&gt;-->
-<!--                <data android:host="mobile.element.io" />-->
-<!--                <data android:path="/element/" />-->
-<!--            </intent-filter>-->
-            <!-- :tchap: end -->
+            <!--
+              Element web links and Element mobile links are declared in the activity-alias
+              ".ElementLinksActivity" below, so that they can be disabled at build time.
+            -->
             <!--
               matrix: links
             -->
@@ -191,6 +151,53 @@
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
+
+        <!-- :tchap: Remove unused Element domains -->
+<!--        &lt;!&ndash;-->
+<!--          The intent-filter element does not support the android:enabled attribute, so the-->
+<!--          Element links are declared in an activity-alias of MainActivity, which can be disabled.-->
+<!--          See BuildTimeConfig.ELEMENT_LINKS_ENABLED and BuildTimeConfig.ELEMENT_MOBILE_LINK_PATH.-->
+<!--        &ndash;&gt;-->
+<!--        <activity-alias-->
+<!--            android:name=".ElementLinksActivity"-->
+<!--            android:enabled="${elementLinksEnabled}"-->
+<!--            android:exported="true"-->
+<!--            android:targetActivity=".MainActivity">-->
+<!--            &lt;!&ndash;-->
+<!--              Element web links-->
+<!--            &ndash;&gt;-->
+<!--            <intent-filter android:autoVerify="true">-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+
+<!--                <data android:scheme="https" />-->
+<!--                &lt;!&ndash; Note: we can't use "*.element.io" here because it'll intercept the "mas.element.io" domain too. &ndash;&gt;-->
+<!--                &lt;!&ndash; Matching asset file: https://app.element.io/.well-known/assetlinks.json &ndash;&gt;-->
+<!--                <data android:host="app.element.io" />-->
+<!--                &lt;!&ndash; Matching asset file: https://develop.element.io/.well-known/assetlinks.json &ndash;&gt;-->
+<!--                <data android:host="develop.element.io" />-->
+<!--                &lt;!&ndash; Matching asset file: https://staging.element.io/.well-known/assetlinks.json &ndash;&gt;-->
+<!--                <data android:host="staging.element.io" />-->
+<!--            </intent-filter>-->
+<!--            &lt;!&ndash;-->
+<!--              Element mobile links-->
+<!--              Example: https://mobile.element.io/element/?account_provider=example.org&login_hint=mxid:@alice:example.org-->
+<!--            &ndash;&gt;-->
+<!--            <intent-filter android:autoVerify="true">-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+
+<!--                <data android:scheme="https" />-->
+<!--                &lt;!&ndash; Matching asset file: https://mobile.element.io/.well-known/assetlinks.json &ndash;&gt;-->
+<!--                <data android:host="mobile.element.io" />-->
+<!--                <data android:path="${elementMobileLinkPath}" />-->
+<!--            </intent-filter>-->
+<!--        </activity-alias>-->
+        <!-- :tchap: end -->
 
         <provider
             android:name="androidx.core.content.FileProvider"

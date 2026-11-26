@@ -14,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.bumble.appyx.core.modality.BuildContext
@@ -30,16 +31,22 @@ import io.element.android.annotations.ContributesNode
 import io.element.android.appconfig.LearnMoreConfig
 import io.element.android.features.ftue.impl.sessionverification.choosemode.ChooseSelfVerificationModeNode
 import io.element.android.features.ftue.impl.sessionverification.choosemode.ChooseSelfVerificationModePresenter
+import io.element.android.features.logout.api.direct.DirectLogoutEvent
+import io.element.android.features.logout.api.direct.DirectLogoutState
+import io.element.android.features.logout.api.direct.DirectLogoutView
 import io.element.android.features.securebackup.api.SecureBackupEntryPoint
 import io.element.android.features.verifysession.api.OutgoingVerificationEntryPoint
 import io.element.android.libraries.architecture.BackstackView
 import io.element.android.libraries.architecture.BaseFlowNode
+import io.element.android.libraries.architecture.Presenter
 import io.element.android.libraries.architecture.appyx.launchMolecule
 import io.element.android.libraries.architecture.callback
 import io.element.android.libraries.architecture.createNode
 import io.element.android.libraries.designsystem.utils.OpenUrlInTabView
 import io.element.android.libraries.di.SessionScope
 import io.element.android.libraries.matrix.api.verification.VerificationRequest
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
@@ -53,6 +60,8 @@ class FtueSessionVerificationFlowNode(
     // :tchap: verify-with-recover-key
     private val presenter: ChooseSelfVerificationModePresenter,
     // :tchap: end
+    private val directLogoutPresenter: Presenter<DirectLogoutState>,
+    private val directLogoutView: DirectLogoutView,
 ) : BaseFlowNode<FtueSessionVerificationFlowNode.NavTarget>(
     backstack = BackStack(
         initialElement = NavTarget.Root,
@@ -80,6 +89,7 @@ class FtueSessionVerificationFlowNode(
     }
 
     private val callback: Callback = callback()
+    private val signOutRequests = Channel<Unit>(Channel.CONFLATED)
 
     // :tchap: verify-with-recover-key
     private val stateFlow = launchMolecule { presenter.present() }
@@ -92,6 +102,8 @@ class FtueSessionVerificationFlowNode(
                 backstack.newRoot(NavTarget.UseAnotherDevice)
             }
         }
+
+        override fun onSignOut() = signOut()
     }
 
     override fun resolve(navTarget: NavTarget, buildContext: BuildContext): Node {
@@ -113,6 +125,8 @@ class FtueSessionVerificationFlowNode(
                     override fun navigateToLearnMoreAboutEncryption() {
                         learnMoreUrl.value = LearnMoreConfig.DEVICE_VERIFICATION_URL
                     }
+
+                    override fun onSignOut() = signOut()
                 }
                 createNode<ChooseSelfVerificationModeNode>(buildContext, plugins = listOf(callback))
             }
@@ -157,6 +171,8 @@ class FtueSessionVerificationFlowNode(
                         override fun onDone() {
                             callback.onDone()
                         }
+
+                        override fun onSignOut() = signOut()
                     },
                 )
             }
@@ -164,6 +180,10 @@ class FtueSessionVerificationFlowNode(
     }
 
     private val learnMoreUrl = mutableStateOf<String?>(null)
+
+    private fun signOut() {
+        signOutRequests.trySend(Unit)
+    }
 
     @Composable
     override fun View(modifier: Modifier) {
@@ -180,5 +200,15 @@ class FtueSessionVerificationFlowNode(
         BackstackView()
 
         OpenUrlInTabView(learnMoreUrl)
+
+        val directLogoutState = directLogoutPresenter.present()
+        val logoutEventSink by rememberUpdatedState(directLogoutState.eventSink)
+        LaunchedEffect(Unit) {
+            signOutRequests.receiveAsFlow().collect {
+                // Nothing can be lost before the identity is confirmed, so there is no need to ask for confirmation.
+                logoutEventSink(DirectLogoutEvent.Logout(ignoreSdkError = false, skipConfirmation = true))
+            }
+        }
+        directLogoutView.Render(state = directLogoutState)
     }
 }
