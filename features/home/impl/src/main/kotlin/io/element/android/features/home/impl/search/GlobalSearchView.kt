@@ -218,10 +218,37 @@ private fun GlobalSearchContent(
                             )
                         }
                     }
-                    else -> searchResultItems(
-                        results = results,
-                        onSearchResultSelected = onSelectSearchResult,
-                    )
+                    else -> {
+                        searchResultItems(
+                            results = results,
+                            onSearchResultSelected = onSelectSearchResult,
+                        )
+                        // :tchap: Explain the reason for the search history limit
+                        if (results is GlobalSearchResults.MessageSearchResults) {
+                            item {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                ) {
+                                    Spacer(modifier = Modifier.height(40.dp))
+                                    Text(
+                                        modifier = Modifier
+                                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                                        text = stringResource(R.string.screen_search_history_limit_title),
+                                        style = ElementTheme.typography.fontBodyMdMedium,
+                                        color = ElementTheme.colors.textSecondary,
+                                    )
+                                    TextButton(
+                                        text = stringResource(CommonStrings.action_learn_more),
+                                        colors = ButtonDefaults.textButtonColors(contentColor = ElementTheme.colors.textActionAccent),
+                                        onClick = onClickLearnMore,
+                                    )
+                                }
+                            }
+                        }
+                        // :tchap: end
+                    }
                 }
             }
         }

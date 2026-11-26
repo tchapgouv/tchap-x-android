@@ -60,8 +60,8 @@ Vous n’avez plus de messages non-lus !"</string>
   <string name="screen_search_empty_state_message">"Rechercher des discussions et des messages"</string>
   <string name="screen_search_empty_state_title">"Commencer la recherche…"</string>
   <string name="screen_search_from_your_messages_header">"Dans vos messages"</string>
-  <string name="screen_search_history_limit_message">"La recherche s’effectue sur votre appareil, vos messages chiffrés restent donc privés.
-Votre appareil conserve les messages des 3 derniers mois, les messages plus anciens ne peuvent donc pas apparaître dans les résultats de recherche."</string>
+  <string name="screen_search_history_limit_message">"La recherche s’effectue sur votre appareil, qui conserve les messages des 3 derniers mois.
+Nous travaillons à proposer une recherche sans limite de durée."</string><!-- Tchap: Custom string -->
   <string name="screen_search_history_limit_title">"La recherche porte sur les 3 derniers mois."</string>
   <string name="screen_search_messages_no_results_message">"Aucun résultat ne correspond à « %1$s » dans vos messages récents."</string>
   <string name="screen_search_messages_no_results_title">"Aucun résultat au cours des 3 derniers mois"</string>
