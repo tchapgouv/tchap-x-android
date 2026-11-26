@@ -77,10 +77,12 @@ jobs:
               warnings.push("You seem to have made changes to some images. Please consider using a vector drawable.");
             }
 
-            if (!TRANSLATION_ALLOW_LIST.includes(pr.user.login) && paths.some(path => path.endsWith("translations.xml"))) {
-              failures.push("Some translation files have been edited. Only user `ElementBot` (i.e. translations coming from Localazy) is allowed to do that. " +
-                "Please read more about translations management [in the doc](https://github.com/element-hq/element-x-android/blob/develop/CONTRIBUTING.md#strings).");
-            }
+            // :tchap: Disable PR checks for translations in Tchap
+//             if (!TRANSLATION_ALLOW_LIST.includes(pr.user.login) && paths.some(path => path.endsWith("translations.xml"))) {
+//               failures.push("Some translation files have been edited. Only user `ElementBot` (i.e. translations coming from Localazy) is allowed to do that. " +
+//                 "Please read more about translations management [in the doc](https://github.com/element-hq/element-x-android/blob/develop/CONTRIBUTING.md#strings).");
+//             }
+            // :tchap: end
 
             warnings.forEach(warning => core.warning(warning));
             failures.forEach(failure => core.error(failure));
